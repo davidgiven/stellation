@@ -27,17 +27,11 @@ $stringutils.syllables3 = {"drew", "rine", "vid", "a", "na", "sten", "niel", "cc
 		number = number / 2;
 		s1 = number % length($stringutils.syllables1);
 		number = number / length($stringutils.syllables1);
-		/* s2 = number % length($stringutils.syllables2); */
-		/* number = number / length($stringutils.syllables2); */
+		s2 = number % length($stringutils.syllables2);
+		number = number / length($stringutils.syllables2);
 		s3 = number % length($stringutils.syllables3);
 		number = number / length($stringutils.syllables3);
-		if (number > 0)
-			s2 = number;
-			s1 = 1;
-		else
-			s0 = 0;
-			s2 = 0;
-		endif
+		s3 = random(length(this.syllables3))-1;
 		s1 = s1 + 1;
 		s2 = s2 + 1;
 		s3 = s3 + 1;
@@ -54,7 +48,10 @@ $stringutils.syllables3 = {"drew", "rine", "vid", "a", "na", "sten", "niel", "cc
 
 rem Revision History
 rem $Log: namegen.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/29 23:59:59  dtrg
+rem Tweaked the name generator to produce better names (again).
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 
