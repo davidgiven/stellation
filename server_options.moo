@@ -17,9 +17,10 @@ $god:prop($server_options, "http_serverversion", "1.0");
 $god:prop($server_options, "http_authenticationrealm", "Stellation");
 $god:prop($server_options, "fg_ticks", 30000);
 $god:prop($server_options, "fg_seconds", 5);
-$god:prop($server_options, "gdrender_url", "http://zhaneel.local/cgi-bin/gdrender.cgi");
-#$god:prop($server_options, "gdrender_url", "http://stellation.sourceforge.net/cgi-bin/gdrender.cgi");
-$god:prop($server_options, "server_url", "http://pyanfar.local:7778/player/mapdata");
+#$god:prop($server_options, "gdrender_url", "http://zhaneel.local/cgi-bin/gdrender.cgi");
+$god:prop($server_options, "gdrender_url", "http://stellation.sourceforge.net/cgi-bin/gdrender.cgi");
+#$god:prop($server_options, "server_url", "http://pyanfar.local:7778/player/mapdata");
+$god:prop($server_options, "server_url", "http://plover.net:7778/metaplayer/mapdata");
 $god:prop($server_options, "maxplayers", 75);
 
 $god:prop($server_options, "motd", {});
@@ -27,6 +28,7 @@ $god:prop($server_options, "motd", {});
 $server_options.motd = {"Welcome to Stellation, the hot new on-line gaming service! Please note that this game is currently in ALPHA testing. It's not guaranteed to do anything useful. In fact, it is guaranteed not to work. However, you're welcome to poke around as much as you like. If you see any bugs, or traceback messages, please drop me a note and I'll look into it. Send me (Hjalfi) an FRM. <B>Big warning:</B> every so often I will need to rebuild the server from scratch as I make major changes. This will involve wiping the database, including all your players, units, etc. It is only alpha, remember."};
 $server_options.motd = {@$server_options.motd, "<B>Panic!</B> Following the Freshmeat announcement, about five million people tried to log in at once. I've had to disable player creation because the universe was getting far too full (73 new players in ten minutes!). While I thank you all for the interest, things have broken left, right and centre, including the map. (Apparently a lot of the web infrastructure out there objects to 8kB URLs. Can't think why.) Please bear with me; I'm working on it..."};
 
+$server_options.motd = {@$server_options.motd, "268.89: Added a URL redirection option to the map renderer. Now Internet Explorer users should be able to see maps properly. It's a hack, but it ought to work..."};
 $server_options.motd = {@$server_options.motd, "268.74: Some frantic bug fixes. The map no longer shows `Interstellar Space' objects; this also has made it start working with Netscape again. Also added maximum number of players feature and fixed a few minor things."};
 $server_options.motd = {@$server_options.motd, "268.55: Server reset. New features: cosmetic makeover, bug fixes. The nova cannon now looks as if it actually works (but doesn't, yet)."};
 $server_options.motd = {@$server_options.motd, "268.31: Server reset. New features: threw away the nasty text-mode map and replaced it with the nice, smooth GIF one; rewrote the name generator --- again --- and now it produces decent names; set up a SourceForge project to put everything in after I had a very scary disk crash; fiddled with the animatter and organics refinery stats (the hydroponics plant was producing far too much, the antimatter refinery far too little). Various other minor changes, including some base structure for the combat system."};
@@ -37,6 +39,11 @@ $server_options.motd = {@$server_options.motd, "267.670: Server reset. New featu
 
 rem Revision History
 rem $Log: server_options.moo,v $
+rem Revision 1.6  2000/08/01 09:54:21  dtrg
+rem Finally fixed the map so it works on Internet Explorer systems.
+rem (Now, instead of feeding all the map data in in the URL, it gives gdrender
+rem a URL where it can fetch the data itself. It's a bit nasty, but works.)
+rem
 rem Revision 1.5  2000/07/31 23:50:16  dtrg
 rem First interim checkin of the new indirected map code.
 rem

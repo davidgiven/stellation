@@ -700,7 +700,7 @@ $god:prop($player, "displaymode", 1);
 	$htell(c, "<INPUT TYPE=submit>");
 	$htell(c, "</TD></TR>");
 	$htell(c, "<TR><TD>");
-	s = $server_options.gdrender_url+"?url."+$server_options.server_url+"?x="+tostr(x)+"&y="+tostr(y)+"&scale="+tostr(scale);
+	s = $server_options.gdrender_url+"?url."+$server_options.server_url+"?x="+tostr(x)+"&y="+tostr(y)+"&scale="+tostr(scale)+"&objnum="+tostr(toint(player));
 	$htell(c, "<A HREF=\""+s+"\"><IMG SRC=\""+s+"\" WIDTH="+tostr(player.mapwidth)+" HEIGHT="+tostr(player.mapheight)+"></A>");
 	$htell(c, "</TD></TR>");
 	$htell(c, "<TR><TD ALIGN=center BGCOLOR=#000064><FONT COLOR=#FFFF00>Star in your sphere of influence");
@@ -714,9 +714,10 @@ $god:prop($player, "displaymode", 1);
 
 .program $god $player:http_mapdata tnt
 	{c, method, param} = args;
-	{?x = "0.0", ?y = "0.0", ?scale = "1.0"} = $http_server:parseparam(param, {"x", "y", "scale"});
+	{?x = "0.0", ?y = "0.0", ?scale = "1.0", ?objnum = "#0"} = $http_server:parseparam(param, {"x", "y", "scale", "objnum"});
 	x = tofloat(x);
 	y = tofloat(y);
+	player = toobj(objnum);
 	width = player.mapwidth;
 	height = player.mapheight;
 	scale = tofloat(scale);
@@ -822,6 +823,11 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.6  2000/08/01 09:54:21  dtrg
+rem Finally fixed the map so it works on Internet Explorer systems.
+rem (Now, instead of feeding all the map data in in the URL, it gives gdrender
+rem a URL where it can fetch the data itself. It's a bit nasty, but works.)
+rem
 rem Revision 1.5  2000/07/31 23:50:16  dtrg
 rem First interim checkin of the new indirected map code.
 rem
