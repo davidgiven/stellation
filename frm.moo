@@ -174,7 +174,7 @@ $god:prop($player, "mail", {});
 					$htell(c, "<TR><TD COLSPAN=2 BGCOLOR=#640000 ALIGN=center><B>END OF NEW MESSAGES</B></TD></TR></TABLE>");
 				endif
 			endif
-			suspend(0);
+			$http_server:flush(c);
 		endfor
 		$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=1>");
 		$htell(c, "<TR><TD ALIGN=center BGCOLOR=#0000FF><B>END</B></TD></TR></TABLE>");
@@ -218,6 +218,9 @@ $god:prop($player, "mail", {});
 
 rem Revision History
 rem $Log: frm.moo,v $
+rem Revision 1.5  2000/09/05 23:20:42  dtrg
+rem Changed a suspend() to a $http_server:flush().
+rem
 rem Revision 1.4  2000/08/05 22:34:44  dtrg
 rem Added the mail index.
 rem A few formatting fixes.
