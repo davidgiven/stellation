@@ -117,10 +117,33 @@ $god:prop($player, "mail", {});
 		$htell(c, "</TD><TD VALIGN=top ALIGN=right>");
 		$htell(c, "<FORM ACTION=\"/player/frm\"><INPUT TYPE=submit NAME=\"cmd\" VALUE=\"Compose New\"></FORM>");
 		$htell(c, "</TD></TR></TABLE>");
+		$htell(c, "<HR WIDTH=75%>");
+		$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=3>");
+		$htell(c, "<TR><TD ALIGN=center WIDTH=15%><B>Time</B></TD>");
+		$htell(c, "<TD ALIGN=center WIDTH=15%><B>From</B></TD>");
+		$htell(c, "<TD ALIGN=width WIDTH=50%><B>Subject</B></TD></TR>");
+		i = 1;
+		for m in (this.mail)
+			$htell(c, "<TR><TD ALIGN=center WIDTH=15%>");
+			$htell(c, $numutils:timetostr(m[3]));
+			$htell(c, "</TD><TD ALIGN=center WIDTH=15%>");
+			$htell(c, $http_server:player_name(m[1]));
+			$htell(c, "</TD><TD ALIGN=left VALIGN=top WIDTH=50%>");
+			$htell(c, "<A HREF=\"#"+tostr(i)+"\">"+m[2]+"</A>");
+			$htell(c, "</TD></TR>");
+			if (i == this.newmail)
+				$htell(c, "<TR><TD><HR></TD><TD><HR></TD>");
+				$htell(c, "<TD><HR></TD></TR>");
+			endif
+			i = i + 1;
+		endfor
+		$htell(c, "</TABLE>");
+		$htell(c, "<HR WIDTH=75%>");
 		i = 1;
 		$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=1>");
 		$htell(c, "<TR><TD ALIGN=center BGCOLOR=#0000FF><B>START</B></TD></TR></TABLE>");
 		for m in (this.mail)
+			$htell(c, "<A NAME=\""+tostr(i)+"\">");
 			$htell(c, "<FORM ACTION=\"/player/frm\"><INPUT TYPE=hidden VALUE=\""+tostr(i)+"\" NAME=\"msg\">");
 			$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=2>");
 			$htell(c, "<TR><TD COLSPAN=2 BGCOLOR=#0000FF>From");
@@ -147,11 +170,11 @@ $god:prop($player, "mail", {});
 			if (this.newmail > 0)
 				this.newmail = this.newmail - 1;
 				if (this.newmail == 0)
-					$htell(c, "<TABLE WIDTH=75% BORDER=2 COLS=1>");
-					$htell(c, "<TR><TD ALIGN=center><B>END OF NEW MESSAGES</B></TD></TR></TABLE>");
+					$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=1>");
+					$htell(c, "<TR><TD COLSPAN=2 BGCOLOR=#640000 ALIGN=center><B>END OF NEW MESSAGES</B></TD></TR></TABLE>");
 				endif
-				suspend(0);
 			endif
+			suspend(0);
 		endfor
 		$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=1>");
 		$htell(c, "<TR><TD ALIGN=center BGCOLOR=#0000FF><B>END</B></TD></TR></TABLE>");
@@ -195,6 +218,10 @@ $god:prop($player, "mail", {});
 
 rem Revision History
 rem $Log: frm.moo,v $
+rem Revision 1.4  2000/08/05 22:34:44  dtrg
+rem Added the mail index.
+rem A few formatting fixes.
+rem
 rem Revision 1.3  2000/08/03 19:01:13  dtrg
 rem Now word wraps messages (hopefully stopping the monster line problem).
 rem Uses $http_server:player_name to display the known player list.
