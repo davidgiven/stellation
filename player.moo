@@ -342,9 +342,11 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum="-1"} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
+	if (!valid(objnum))
+		return $http_server:notvalid(c);
+	endif
 	if ((objnum == #-1) || (!objnum:descendentof($unit)))
-		$http_server:formsyntax(c);
-		return;
+		return $http_server:formsyntax(c);
 	endif
 	if (objnum.location:descendentof($fleet))
 		this:toplevel(c, {"left", ""}, {"fleet", "objnum="+tostr(toint(objnum.location))}, {"unit", param});
@@ -554,7 +556,11 @@ $god:prop($player, "displaymode", 1);
 		$htell(c, "<TR><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
 		$htell(c, $numutils:timetostr(i[1]));
 		$htell(c, "</TD><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
-		$htell(c, i[3]:name());
+		if (typeof(i[3]) == OBJ)
+			$htell(c, i[3]:name());
+		else
+			$htell(c, tostr(i[3]));
+		endif
 		$htell(c, "</TD><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
 		if (i[2] != #0)
 			$htell(c, "["+floatstr(i[2][1], 1)+", "+floatstr(i[2][2], 1)+"]");
@@ -876,6 +882,9 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.11  2000/08/07 20:19:08  dtrg
+rem Player names can now be strings or objects.
+rem
 rem Revision 1.10  2000/08/05 22:44:08  dtrg
 rem Many minor bug fixes.
 rem Better object visibility testing --- less scope for cheating.
@@ -922,5 +931,4 @@ rem based one.
 rem
 rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
 rem Initial checkin.
-rem
 
