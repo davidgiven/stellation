@@ -1,0 +1,24 @@
+#!/bin/sh
+# moopatch
+# Uploads a changed file to the MOO server.
+# $Source: /cvsroot/stellation/stellation/moopatch,v $
+# $State: Exp $
+SERVER="pyanfar 7777"
+PASSWORD="defaultadminpassword"
+
+tmp=/tmp/moopatch.$$
+
+while [ X$1 != X ]; do
+	rm -f $tmp
+	echo $PASSWORD > $tmp
+	cat $1 >> $tmp
+	nc $SERVER < $tmp
+	shift
+done
+
+# Revision History
+# $Log: moopatch,v $
+# Revision 1.1  2000/07/29 17:53:01  dtrg
+# Initial revision
+#
+
