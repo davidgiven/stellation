@@ -35,6 +35,19 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 	this.canon = {};
 .
 
+# --- Flush a named connection ------------------------------------------------
+
+# This keeps suspend()ing until the amount of buffered data drops below 1000
+# bytes. This is needed to prevent buffer overflows.
+
+.program $god $http_server:flush tnt
+	{c} = args;
+	suspend(0);
+	while (buffered_output_length(c) > 1000)
+		suspend(0);
+	endwhile
+.
+
 # --- Accept a connection -----------------------------------------------------
 
 # This verb is called when a new client wants to talk to us. It will get
@@ -159,6 +172,7 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 	endif
 	notify(c, "Content-Type: text/html");
 	notify(c, "Connection: close");
+	notify(c, "Expires: 0");
 	notify(c, "");
 	notify(c, this.dtd);
 	notify(c, "<HTML><HEAD>");
@@ -406,6 +420,10 @@ $server_started_list = {@$server_started_list, $http_server};
 
 rem Revision History
 rem $Log: http_server.moo,v $
+rem Revision 1.6  2000/08/27 23:58:57  dtrg
+rem Added the :flush() method.
+rem Attempted to fix the cacheing problem --- apparently without luck.
+rem
 rem Revision 1.5  2000/08/05 22:44:08  dtrg
 rem Many minor bug fixes.
 rem Better object visibility testing --- less scope for cheating.
