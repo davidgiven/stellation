@@ -413,7 +413,7 @@ $god:prop($player, "displaymode", 1);
 		return;
 	endif
 	"Reset tick counters.";
-	suspend(0);
+	$http_server:flush(c);
 	player:(cmd)(c, method, parameters);
 .
 
@@ -466,6 +466,34 @@ $god:prop($player, "displaymode", 1);
 	$htell(c, length($galaxy.stars));
 	$htell(c, "<BR><B>Game maintainer:</B>");
 	$htell(c, $http_server:anchor($server_options.maintainer, $server_options.maintainer));
+	$htell(c, "<H3>Top players</H3>");
+	list = {};
+	for i in (players())
+		m = 0.0;
+		for j in (i:fleets())
+			m = m + j:mass();
+			suspend(0);
+		endfor
+		list = {{m, i}, @list};
+	endfor
+	$htell(c, "<TABLE WIDTH=100% BORDER=0 COLS=3>");
+	$htell(c, "<TR><TD WIDTH=10% BGCOLOR=#0000FF ALIGN=center>Rank</TD>");
+	$htell(c, "<TD WIDTH=50% BGCOLOR=#0000FF ALIGN=left>Player</TD>");
+	$htell(c, "<TD BGCOLOR=#0000FF ALIGN=center>Fleet mass</TD></TR>");
+	list = $numutils:sort(list);
+	for i in [0..19]
+		j = length(list)-i;
+		if (j > 0)
+			$htell(c, "<TR><TD BGCOLOR=#000064 ALIGN=center>");
+			$htell(c, tostr(i+1));
+			$htell(c, "</TD><TD BGCOLOR=#000064 ALIGN=left>");
+			$htell(c, list[j][2]:name());
+			$htell(c, "</TD><TD BGCOLOR=#000064 ALIGN=center>");
+			$htell(c, floatstr(list[j][1], 1));
+			$htell(c, "</TD></TR>");
+		endif
+	endfor
+	$htell(c, "</TABLE>");
 	$htell(c, "</TD></TR></TABLE WIDTH=50%>");
 	this:htmlfooter(c, method);
 .
@@ -570,7 +598,8 @@ $god:prop($player, "displaymode", 1);
 		$htell(c, "</TD><TD VALIGN=top ALIGN=left BGCOLOR=#000064>");
 		$htell(c, i[4]);
 		$htell(c, "</TD></TR>");
-		suspend(0);
+		$htell(c, "<!-- "+tostr(buffered_output_length(c))+" -->");
+		$http_server:flush(c);
 	endfor
 	$htell(c, "</TABLE>");
 	this.newnews = 0;
@@ -809,7 +838,7 @@ $god:prop($player, "displaymode", 1);
 				buf = buf + "text."+tostr(sx+6)+"."+tostr(sy-6)+"."+i:name()+".";
 			endif
 		endif
-		suspend(0);
+		$http_server:flush(c);
 	endfor
 	buf = buf + "colour.255.255.255.";
 	buf = buf + "box.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
@@ -882,6 +911,10 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.12  2000/08/27 23:51:59  dtrg
+rem Replaced a lot of schedule()s with $http_server:flush()es.
+rem Top players listing.
+rem
 rem Revision 1.11  2000/08/07 20:19:08  dtrg
 rem Player names can now be strings or objects.
 rem
