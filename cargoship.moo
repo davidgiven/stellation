@@ -11,6 +11,7 @@ $cargoship.name = "cargoship";
 
 $god:prop($cargoship, "cargo", {0.0, 0.0, 0.0});
 $god:prop($cargoship, "maxcargo", {0.0, 0.0, 0.0});
+$god:prop($cargoship, "mincargo", {0.0, 0.0, 0.0});
 $god:prop($cargoship, "scale", 300.0);
 
 $cargoship.description = "Cargo ships can carry large quantities of the three main commodities. They can be used to transfer resources from one star system to another, and are also used to supply vessels in operation.";
@@ -74,6 +75,56 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 	return 0;
 .
 
+# --- Periodic operation ------------------------------------------------------
+
+.program $god $cargoship:tick tnt
+	m = this.mincargo[1] - this.cargo[1];
+	a = this.mincargo[2] - this.cargo[2];
+	o = this.mincargo[3] - this.cargo[3];
+	if (m < 0.0)
+		m = 0.0;
+	endif
+	if (a < 0.0)
+		a = 0.0;
+	endif
+	if (o < 0.0)
+		o = 0.0;
+	endif
+	if ((m > 0.0) || (a > 0.0) || (o > 0.0))
+		this:load(m, a, o);
+	endif
+	return pass(@args);
+.
+
+# --- Set the low watermark level ---------------------------------------------
+
+.program $god $cargoship:setmincargo tnt
+	{m, a, o} = args;
+	if ((m < 0.0) || (a < 0.0) || (o < 0.0))
+		return {"Negative values make no sense here."};
+	endif
+	this.mincargo = {m, a, o};
+	return {""};
+.
+
+.program $god $cargoship:http_setmincargo tnt
+	{c, method, param} = args;
+	{objnum, cmd, ?m="0.0", ?a="0.0", ?o="0.0"} = $http_server:parseparam(param, {"objnum", "cmd", "m", "a", "o"});
+	m = tofloat(m);
+	a = tofloat(a);
+	o = tofloat(o);
+	if (this.owner != player)
+		$http_server:formsyntax(c);
+		return;
+	endif
+	result = this:setmincargo(m, a, o);
+	if (result[1] != "")
+		$http_server:error(c, "Failed! "+result[1], "/player/unit?objnum="+tostr(toint(this)));
+	else
+		player:redirect(c, this);
+	endif
+.
+
 # --- HTML Load or unload -----------------------------------------------------
 
 .program $god $cargoship:http_load tnt
@@ -108,20 +159,26 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 		return this:http_load(c, method, param);
 	elseif (cmd == "transfer")
 		return this:http_transfer(c, method, param);
+	elseif (cmd == "setmincargo")
+		return this:http_setmincargo(c, method, param);
 	endif
 	contents = this:contents();
 	$htell(c, "<B>Unladen mass:</B>");
 	$htell(c, tostr($numutils:round(10, this.mass)));
 	$htell(c, "<BR><B>Cargo:</B>");
 	$htell(c, $http_server:reslist(@this.cargo));
+	$htell(c, "<BR><B>Available to pick up:</B>");
+	$htell(c, $http_server:reslist(@this.location.location:resources()));
 	$htell(c, "<BR><HR>");
-	$htell(c, "<FORM ACTION=\"/player/unit\"><INPUT NAME=\"objnum\" TYPE=hidden VALUE=\""+tostr(toint(this))+"\"><INPUT NAME=\"cmd\" TYPE=hidden VALUE=\"load\">");
-	$htell(c, "M: <INPUT NAME=\"m\" VALUE=\"0.0\" SIZE=5>");
-	$htell(c, "A: <INPUT NAME=\"a\" VALUE=\"0.0\" SIZE=5>");
-	$htell(c, "O: <INPUT NAME=\"o\" VALUE=\"0.0\" SIZE=5>");
-	$htell(c, "<INPUT TYPE=submit VALUE=\"Load\"></FORM>");
 
-	$htell(c, "<FORM ACTION=\"/player/unit\"><INPUT NAME=\"objnum\" TYPE=hidden VALUE=\""+tostr(toint(this))+"\"><INPUT NAME=\"cmd\" TYPE=hidden VALUE=\"load\">");
+	$http_server:startform(c, "/player/unit", objnum, "load");
+	$htell(c, "M: <INPUT NAME=\"m\" VALUE=\"0.0\" SIZE=6>");
+	$htell(c, "A: <INPUT NAME=\"a\" VALUE=\"0.0\" SIZE=6>");
+	$htell(c, "O: <INPUT NAME=\"o\" VALUE=\"0.0\" SIZE=6>");
+	$htell(c, "<INPUT TYPE=submit VALUE=\"Load\">");
+	$http_server:endform(c);
+
+	$http_server:startform(c, "/player/unit", objnum, "load");
 	m = this.cargo[1] - 1.0;
 	if (m<0.0)
 		m = 0.0;
@@ -137,13 +194,29 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 		m = 0.0;
 	endif
 	$htell(c, "<INPUT NAME=\"o\" TYPE=hidden VALUE=\""+tostr(-m)+"\" SIZE=5>");
-	$htell(c, "<INPUT TYPE=submit VALUE=\"Unload All\"></FORM>");
+	$htell(c, "<INPUT TYPE=submit VALUE=\"Unload All\">");
+	$http_server:endform(c);
+
+	$http_server:startform(c, "/player/unit", objnum, "setmincargo");
+	$htell(c, "Set minimum cargo level to");
+	$htell(c, "M: <INPUT NAME=\"m\" VALUE=\""+floatstr(this.mincargo[1], 1)+"\" SIZE=6>");
+	$htell(c, "A: <INPUT NAME=\"a\" VALUE=\""+floatstr(this.mincargo[2], 1)+"\" SIZE=6>");
+	$htell(c, "O: <INPUT NAME=\"o\" VALUE=\""+floatstr(this.mincargo[3], 1)+"\" SIZE=6>");
+	$htell(c, "<INPUT TYPE=submit VALUE=\"Change\"><BR>");
+	$htell(c, "(The ship will automatically load cargo to keep above this value)");
+	$http_server:endform(c);
 .
 
 .quit
 
 rem Revision History
 rem $Log: cargoship.moo,v $
+rem Revision 1.5  2000/09/05 23:09:22  dtrg
+rem Added minimum cargo level feature.
+rem Now displays the amount of cargo available to load, because it's a pain
+rem switching from the star system page to the cargoship page and
+rem remembering all the numbers.
+rem
 rem Revision 1.4  2000/08/03 10:32:08  dtrg
 rem Fixed a persistent but annoying bug preventing `Unload All' from working
 rem properly.
@@ -164,5 +237,4 @@ rem A few minor bug fixes.
 rem
 rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
 rem Initial checkin.
-rem
 
