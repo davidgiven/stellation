@@ -7,8 +7,6 @@
 open Printf;;
 open Engine;;
 
-module Super = Object
-
 let namegen _seed =
 	let syllables1 = [|
 		"an"; "ca"; "jo"; "ka"; "kri"; "da"; "re"; "de"; "ed"; "ma";
@@ -44,32 +42,41 @@ let namegen _seed =
 		let _s3 = _seed mod (Array.length syllables3) in
 		generate (_s0 = 1) _s1 _s2 _s3
 
-let eventHandler _object _event =
-	Super.eventHandler _object _event
+class starClass = object (self)
+	inherit baseObject as super
 
-let scopeHandler _object _player =
-	Super.scopeHandler _object _player
+	method event _event =
+		super#event _event
+
+	method scope _player =
+		super#scope _player
+end
 
 let galactic_radius = 400.0
 let pi = 3.14159
 
 let make () =
-	let _o = Object.make eventHandler scopeHandler in
+	let _o = new starClass in
 	let _r = Random.float galactic_radius in
 	let _theta = Random.float (2.0 *. pi) in
 	let _x = _r *. (sin _theta) in
 	let _y = _r *. (cos _theta) in
 	let _x = int_of_float (_x *. 10.0) in
 	let _y = int_of_float (_y *. 10.0) in
-	Object.setprop _o "name" (Object.StringProp (namegen 0));
-	Object.setprop _o "x" (Object.IntProp _x);
-	Object.setprop _o "y" (Object.IntProp _y);
+	_o#add "name" StringProperty;
+	_o#add "x" IntProperty;
+	_o#add "y" IntProperty;
+	(_o#get "name")#setstring (namegen 0);
+	(_o#get "x")#setint _x;
+	(_o#get "y")#setint _y;
 	_o
 
 (* Revision history
  * $Log: Star.ml,v $
+ * Revision 1.2  2004/05/28 23:27:26  dtrg
+ * Rewrote entirely, now using objects and a much cleaner design. It works!
+ *
  * Revision 1.1  2004/05/26 00:19:59  dtrg
  * First working version.
- *
  *)
 
