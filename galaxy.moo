@@ -22,6 +22,7 @@ $god:prop($galaxy, "numstars", 400);
 .program $god $galaxy:create_galaxy tnt
 	{num} = args;
 	s = {};
+	n = {};
 	while (length(s) < num)
 		r = $numutils:random(this.radius);
 		theta = $numutils:random(2.0 * $numutils.pi);
@@ -29,14 +30,18 @@ $god:prop($galaxy, "numstars", 400);
 		y = r * cos(theta);
 		x = $numutils:round(10, x);
 		y = $numutils:round(10, y);
-		s = setadd(s, {$stringutils:namegen(), x, y});
+		s = setadd(s, {x, y});
 		suspend(0);
 	endwhile
-	for i in (s)
+	while (length(n) < num)
+		n = setadd(n, $stringutils:namegen());
+		suspend(0);
+	endwhile
+	for i in [1..num]
 		star = create($star, $god);
-		star.name = i[1];
+		star.name = n[i];
 		star.name[1] = $stringutils:upper(star.name[1]);
-		star.position = {i[2], i[3]};
+		star.position = {s[i][1], s[i][2]};
 		star.asteroids = {random(10)+10, random(10)+10};
 		star.brightness = random(10)-1;
 		this.stars = {@this.stars, star};
@@ -74,6 +79,9 @@ $galaxy:create_galaxy($galaxy.numstars);
 
 rem Revision History
 rem $Log: galaxy.moo,v $
+rem Revision 1.4  2000/08/05 22:36:41  dtrg
+rem Rewrote the galaxy generator *again*. Star names should now be unique.
+rem
 rem Revision 1.3  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.
