@@ -169,12 +169,11 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 	notify(c, "</TITLE></HEAD>");
 	notify(c, "<BODY text=#FFFFFF bgcolor=#000000 link=#66FFFF vlink=#66FFFF alink=#FF0000><H1>");
 	if (!frameset)
-		notify(c, "<BODY text=#FFFFFF bgcolor=#000000 link=#66FFFF vlink=#66FFFF alink=#FF0000><H1>");
 		if (response != 200)
 			notify(c, tostr(response));
 		endif
 		notify(c, title);
-		notify(c, "</H2>");
+		notify(c, "</H1>");
 	endif
 .
 
@@ -386,6 +385,10 @@ $server_started_list = {@$server_started_list, $http_server};
 
 rem Revision History
 rem $Log: http_server.moo,v $
+rem Revision 1.3  2000/07/31 17:44:57  dtrg
+rem Fixed a formatting booboo in htmlheader that was making non-toplevel pages
+rem look fantastically ugly.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
