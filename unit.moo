@@ -145,15 +145,15 @@ $god:prop($unit, "pit", 0);
 .program $god $unit:attack tnt
 	{damage} = args;
 	this.damage = this.damage + damage;
-	notify($god, this:name()+" hit for "+floatstr(damage, 1)+" leaving "+floatstr(damage, 1));
+	/* notify($god, this:name()+" hit for "+floatstr(damage, 1)+" leaving "+floatstr(damage, 1)); */
 	this.owner:seehostileplayer(player);
 	if (this.damage > this.maxdamage)
 		star = this.location;
 		while (!star:descendentof($star))
 			star = star.location;
 		endwhile
-		this.owner:notify("<B>"+this.name+"</B> has been destroyed due to hostile action from <B>"+player:name()+"</B>.", star, player:name());
-		notify($god, this.name+" destroyed");
+		star:notify("attack has destroyed <B>"+this.name+"</B> belonging to <B>"+this.owner:name()+"</B>.");
+		/* notify($god, this.name+" destroyed"); */
 		this:destroy();
 	endif
 .
@@ -226,6 +226,9 @@ $god:prop($unit, "pit", 0);
 
 rem Revision History
 rem $Log: unit.moo,v $
+rem Revision 1.6  2000/08/07 20:12:38  dtrg
+rem Formatting fixes.
+rem
 rem Revision 1.5  2000/08/05 22:44:08  dtrg
 rem Many minor bug fixes.
 rem Better object visibility testing --- less scope for cheating.
