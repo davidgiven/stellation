@@ -15,6 +15,7 @@ $god:prop($server_options, "http_port", 7778);
 $god:prop($server_options, "http_servername", "LambdaMOO-Stellation");
 $god:prop($server_options, "http_serverversion", "1.0");
 $god:prop($server_options, "http_authenticationrealm", "Stellation");
+$god:prop($server_options, "maintainer", "dg@tao-group.com");
 $god:prop($server_options, "fg_ticks", 30000);
 $god:prop($server_options, "fg_seconds", 5);
 $god:prop($server_options, "gdrender_url", "http://zhaneel.local/cgi-bin/gdrender.cgi");
@@ -26,7 +27,10 @@ $god:prop($server_options, "maxplayers", 75);
 $god:prop($server_options, "motd", {});
 
 $server_options.motd = {"Welcome to Stellation, the hot new on-line gaming service! Please note that this game is currently in ALPHA testing. It's not guaranteed to do anything useful. In fact, it is guaranteed not to work. However, you're welcome to poke around as much as you like. If you see any bugs, or traceback messages, please drop me a note and I'll look into it. Send me (Hjalfi) an FRM. <B>Big warning:</B> every so often I will need to rebuild the server from scratch as I make major changes. This will involve wiping the database, including all your players, units, etc. It is only alpha, remember."};
+$server_options.motd = {@$server_options.motd, "Join the <A HREF=\"http://lists.sourceforge.net/mailman/listinfo/stellation-players\">mailing list</A>!"};
 
+$server_options.motd = {@$server_options.motd, "268.198: Lots of minor bug fixes in response to reports. Keep sending 'em in!"};
+$server_options.motd = {@$server_options.motd, "268.127: Server reset. Lots of major and minor changes; <B>combat system!</B>, upped the number of stars to 400 and the number of players to 300, lots of formatting fixes, minor bug fixes, etc."};
 $server_options.motd = {@$server_options.motd, "268.102: Fixed a minor map problem, and made it so that you can look at other people's units and fleets without hideous tracebacks. Also changed the server administration password, as it was embarassingly in CVS..."};
 $server_options.motd = {@$server_options.motd, "268.89: Added a URL redirection option to the map renderer. Now Internet Explorer users should be able to see maps properly. It's a hack, but it ought to work..."};
 $server_options.motd = {@$server_options.motd, "268.74: Some frantic bug fixes. The map no longer shows `Interstellar Space' objects; this also has made it start working with Netscape again. Also added maximum number of players feature and fixed a few minor things."};
@@ -39,6 +43,10 @@ $server_options.motd = {@$server_options.motd, "267.670: Server reset. New featu
 
 rem Revision History
 rem $Log: server_options.moo,v $
+rem Revision 1.9  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.8  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.

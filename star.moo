@@ -85,12 +85,9 @@ $god:prop($star, "brightness", 0);
 
 # --- Is this star visible to the player? -------------------------------------
 
-.program $god $star:isvisible tnt
-	for i in (this:contents())
-		if (i.owner == player)
-			return 1;
-		endif
-	endfor
+.program $god $star:visible tnt
+	{?p=player} = args;
+	return (this in (p:starsystems()));
 	return 0;
 .
 
@@ -163,6 +160,10 @@ $god:prop($star, "brightness", 0);
 
 rem Revision History
 rem $Log: star.moo,v $
+rem Revision 1.3  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

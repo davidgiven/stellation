@@ -24,11 +24,9 @@ $god:prop($metaplayer, "password", crypt(""));
 .program $metaplayer $metaplayer:http_notloggedin_single tnt
 	{c, method, path} = args;
 	this:htmlheader(c, method, "Not Logged In");
-	$http_server:anchor(c, "Create new player",
-		"/metaplayer/createplayer");
+	$htell(c, $http_server:anchor("Create new player", "/metaplayer/createplayer"));
 	$htell(c, "<BR>");
-	$http_server:anchor(c, "Login",
-		"/player");
+	$htell(c, $http_server:anchor("Login", "/player"));
 	this:htmlfooter(c, method);
 .
 
@@ -73,8 +71,8 @@ $god:prop($metaplayer, "password", crypt(""));
 		else
 			$htell(c, result[1]);
 			$htell(c, "<P>");
-			$http_server:anchor(c, "Try again.",
-				"/metaplayer/createplayer");
+			$htell(c, $http_server:anchor("Try again.",
+				"/metaplayer/createplayer"));
 		endif
 	endif
 	this:htmlfooter(c, method);
@@ -84,6 +82,10 @@ $god:prop($metaplayer, "password", crypt(""));
 
 rem Revision History
 rem $Log: metaplayer.moo,v $
+rem Revision 1.6  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.5  2000/08/03 10:38:50  dtrg
 rem Minor bug that was preventing new players from being created fixed.
 rem

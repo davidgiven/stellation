@@ -462,6 +462,8 @@ $god:prop($player, "displaymode", 1);
 	$htell(c, $server_options.maxplayers);
 	$htell(c, "<BR><B>Number of stars:</B>");
 	$htell(c, length($galaxy.stars));
+	$htell(c, "<BR><B>Game maintainer:</B>");
+	$htell(c, $http_server:anchor($server_options.maintainer, $server_options.maintainer));
 	$htell(c, "</TD></TR></TABLE WIDTH=50%>");
 	this:htmlfooter(c, method);
 .
@@ -562,6 +564,7 @@ $god:prop($player, "displaymode", 1);
 		$htell(c, "</TD><TD VALIGN=top ALIGN=left BGCOLOR=#000064>");
 		$htell(c, i[4]);
 		$htell(c, "</TD></TR>");
+		suspend(0);
 	endfor
 	$htell(c, "</TABLE>");
 	this.newnews = 0;
@@ -574,7 +577,10 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum = "-1"} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
-	if ((objnum == #-1) || (!objnum:descendentof($star)) || (!objnum:isvisible()))
+	if (!valid(objnum))
+		return $http_server:notvalid(c);
+	endif
+	if ((objnum == #-1) || (!objnum:descendentof($star)) || (!objnum:visible()))
 		$http_server:formsyntax(c);
 		return;
 	endif
@@ -589,9 +595,14 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum = "-1"} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
+	if (!valid(objnum))
+		return $http_server:notvalid(c);
+	endif
 	if ((objnum == #-1) || (!objnum:descendentof($fleet)) || (objnum.location:descendentof($transit)))
-		$http_server:formsyntax(c);
-		return;
+		return $http_server:formsyntax(c);
+	endif
+	if (!objnum:visible())
+		return $http_server:cheating(c);
 	endif
 	owned = (objnum.owner == player);
 	this:htmlheader(c, method, objnum:name());
@@ -629,11 +640,16 @@ $god:prop($player, "displaymode", 1);
 
 .program $god $player:http_unit_single tnt
 	{c, method, param} = args;
-	{?objnum = "-1", ?cmd=""} = $http_server:parseparam(param, {"objnum"});
+	{?objnum = "-1", ?cmd=""} = $http_server:parseparam(param, {"objnum", "cmd"});
 	objnum = toobj(objnum);
+	if (!valid(objnum))
+		return $http_server:notvalid(c);
+	endif
 	if ((objnum == #-1) || (!objnum:descendentof($unit)))
-		$http_server:formsyntax(c);
-		return;
+		return $http_server:formsyntax(c);
+	endif
+	if (!objnum:visible())
+		return $http_server:cheating(c);
 	endif
 	owned = (objnum.owner == player);
 	this:htmlheader(c, method, objnum:name());
@@ -681,6 +697,9 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum = "-1", ?cmd=""} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
+	if (!valid(objnum))
+		return $http_server:notvalid(c);
+	endif
 	if ((objnum == #-1) || (!objnum:descendentof($fleet)))
 		$http_server:formsyntax(c);
 		return;
@@ -700,8 +719,8 @@ $god:prop($player, "displaymode", 1);
 .program $god $player:http_logout tnt
 	{c, method, param} = args;
 	$http_server:htmlheader(c, 401, "Logged out");
-	$http_server:anchor(c, "Back to the main page",
-		"/");
+	$htell(c, $http_server:anchor("Back to the main page",
+		"/"));
 	$http_server:htmlfooter(c);
 .
 
@@ -857,6 +876,10 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.10  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.9  2000/08/03 19:00:25  dtrg
 rem Changed to properly emit the red pane header.
 rem

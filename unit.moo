@@ -73,6 +73,20 @@ $god:prop($unit, "pit", 0);
 	return this.description;
 .
 
+# --- Is this unit visible to the player? ------------------------------------
+
+.program $god $unit:visible tnt
+	{?p=player} = args;
+	star = this.location;
+	while (!star:descendentof($star))
+		star = star.location;
+	endwhile
+	if (star in p:starsystems())
+		return 1;
+	endif
+	return 0;
+.
+
 # --- Resource consumption ---------------------------------------------------
 
 .program $god $unit:make_alive tnt
@@ -88,8 +102,8 @@ $god:prop($unit, "pit", 0);
 .program $god $unit:tick tnt
 	this.pit = 0;
 	try
-		if (this:consume(this.time_cost[1]/10.0,
-			this.time_cost[2]/10.0, this.time_cost[3]/10.0))
+		c = this:time_cost();
+		if (this:consume(c[1]/10.0, c[2]/10.0, c[3]/10.0))
 			this:starve();
 		endif
 		this:make_alive();
@@ -112,7 +126,7 @@ $god:prop($unit, "pit", 0);
 		return 0;
 	endif
 	c = this.location:consume(m, a, o);
-	notify($god, tostr(this)+" consumed "+tostr(m)+", "+tostr(a)+", "+tostr(o)+": "+tostr(c));
+/*	notify($god, tostr(this)+" consumed "+tostr(m)+", "+tostr(a)+", "+tostr(o)+": "+tostr(c)); */
 	return c;
 .
 	
@@ -132,12 +146,13 @@ $god:prop($unit, "pit", 0);
 	{damage} = args;
 	this.damage = this.damage + damage;
 	notify($god, this:name()+" hit for "+floatstr(damage, 1)+" leaving "+floatstr(damage, 1));
+	this.owner:seehostileplayer(player);
 	if (this.damage > this.maxdamage)
 		star = this.location;
 		while (!star:descendentof($star))
 			star = star.location;
 		endwhile
-		player:notify("<B>"+this.name+"</B> has been destroyed due to hostile action from <B>"+player:name()+"</B>.", star, this.owner:name());
+		this.owner:notify("<B>"+this.name+"</B> has been destroyed due to hostile action from <B>"+player:name()+"</B>.", star, player:name());
 		notify($god, this.name+" destroyed");
 		this:destroy();
 	endif
@@ -211,6 +226,10 @@ $god:prop($unit, "pit", 0);
 
 rem Revision History
 rem $Log: unit.moo,v $
+rem Revision 1.5  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.4  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.

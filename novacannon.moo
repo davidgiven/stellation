@@ -46,11 +46,12 @@ $novacannon.description = "Nova cannons use spatial disturbances similar to thos
 .program $god $novacannon:http_menu tnt
 	{c, method, param} = args;
 	{objnum, ?cmd=""} = $http_server:parseparam(param, {"objnum", "cmd"});
-	if (cmd == "")
-		$htell(c, "<B>Firepower:</B>");
-		$htell(c, toint(this.firepower));
-		$htell(c, "per 1000.0 mass");
+	if (cmd == "transfer")
+		return this:http_transfer(c, method, param);
 	endif
+	$htell(c, "<B>Firepower:</B>");
+	$htell(c, tostr(this.firepower));
+	$htell(c, "per 1000.0 mass");
 	h = this:hostilefleets();
 	if (length(h) == 0)
 		$htell(c, "<BR>No hostile units currently engaged.");
@@ -70,6 +71,10 @@ $novacannon.description = "Nova cannons use spatial disturbances similar to thos
 
 rem Revision History
 rem $Log: novacannon.moo,v $
+rem Revision 1.4  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.3  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.

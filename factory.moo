@@ -17,18 +17,25 @@ $god:prop($factory, "deployed", 0);
 $god:prop($factory, "warehouse", {});
 $god:prop($factory, "continuous", 0);
 
+# --- Constructor/destructor --------------------------------------------------
+
+.program $god $factory:destroy tnt
+	if (this.building != {})
+		kill_task(this.building[2]);
+	endif
+	pass();
+.
+
 # --- Resource consumption ----------------------------------------------------
 
 # Only deployed units consume resources.
 
-.program $god $factory:consume tnt
-	{m, a, o} = args;
-	notify(#3, $http_server:reslist(@args));
+.program $god $factory:time_cost tnt
 	if (this.deployed)
-		notify(#3, "factory consuming");
-		return pass(@args);
+		return this.time_cost;
+	else
+		return {0.0, 0.0, 0.0};
 	endif
-	return 0;
 .
 
 # --- Deploy/mothball factory -------------------------------------------------
@@ -148,7 +155,7 @@ $god:prop($factory, "continuous", 0);
 	this.warehouse = setremove(this.warehouse, class);
 	result = target:create_unit(class);
 	if (result[1] == "")
-		this.location:notify("<B>"+class.name+"</B> has transferred <B>"+target:name()+"</B> from its warehouse to <B>"+target:name()+"</B>.");
+		this.location:notify("<B>"+this:name()+"</B> has transferred <B>"+class:name()+"</B> from its warehouse to <B>"+target:name()+"</B>.");
 	endif
 	return result;
 .
@@ -329,6 +336,10 @@ $god:prop($factory, "continuous", 0);
 
 rem Revision History
 rem $Log: factory.moo,v $
+rem Revision 1.4  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.3  2000/08/03 19:05:46  dtrg
 rem Factories can now be told to keep churning out a particular unit until
 rem further notice, or they run out of resources.

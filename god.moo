@@ -42,8 +42,7 @@ notify(player, "god.moo");
 	$http_server:htmlheader(c, 200, "Stellation Administration");
 	dump_database();
 	$htell(c, "Checkpoint initiated.<P>");
-	$http_server:anchor(c, "Back.",
-		"/player");
+	$htell(c, $http_server:anchor("Back.", "/player"));
 	$http_server:htmlfooter(c);
 .
 
@@ -54,8 +53,7 @@ notify(player, "god.moo");
 	$http_server:htmlheader(c, 200, "Stellation Administration");
 	shutdown();
 	$htell(c, "Shutdown initiated.<P>");
-	$http_server:anchor(c, "Back.",
-		"/player");
+	$htell(c, $http_server:anchor("Back.", "/player"));
 	$http_server:htmlfooter(c);
 .
 
@@ -244,6 +242,10 @@ notify(player, "god.moo");
 
 rem Revision History
 rem $Log: god.moo,v $
+rem Revision 1.4  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.3  2000/07/31 23:50:16  dtrg
 rem First interim checkin of the new indirected map code.
 rem

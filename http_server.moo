@@ -78,6 +78,7 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 			path = "metaplayer";
 		endif
 		{base, path} = $stringutils:firstword(path, "/");
+		{path, target} = $stringutils:firstword(path, "#");
 		if (base == "player")
 			playerobj = this:authenticate(options);
 		else
@@ -212,13 +213,24 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 	raise(E_INVARG, "Invalid arguments to form");
 .
 
+.program $god $http_server:cheating tnt
+	raise(E_INVARG, "Player cheating suspected --- contact "+$server_options.maintainer);
+.
+
+# --- Reference to an object that no longer exists --------------------------
+
+.program $god $http_server:notvalid tnt
+	{c} = args;
+	this:redirect(c, "/player");
+.
+
 # --- Emit an anchor --------------------------------------------------------
 
 # Utility method that emits an anchor.
 
 .program $god $http_server:anchor tnt
-	{c, name, target} = args;
-	notify(c, "<A HREF=\""+target+"\">"+name+"</A>");
+	{name, target} = args;
+	return "<A HREF=\""+target+"\">"+name+"</A>";
 .
 
 # --- Emit any text ---------------------------------------------------------
@@ -326,7 +338,7 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 	{c, msg, url} = args;
 	notify(c, msg);
 	notify(c, "<P>");
-	this:anchor(c, "Continue", url);
+	$htell(c, this:anchor("Continue", url));
 .
 
 # --- Extract values from a parameter list ----------------------------------
@@ -394,6 +406,10 @@ $server_started_list = {@$server_started_list, $http_server};
 
 rem Revision History
 rem $Log: http_server.moo,v $
+rem Revision 1.5  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.4  2000/08/01 22:06:04  dtrg
 rem Owned stars are now showed in yellow again.
 rem Fixed viewing other people's units; all the tracebacks should have gone.

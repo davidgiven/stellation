@@ -16,7 +16,7 @@ $god:prop($refinery, "production", {0.0, 0.0, 0.0});
 $god:prop($refinery, "buffer", 0.0);
 $god:prop($refinery, "deployed", 0);
 
-# --- Resource consumption ----------------------------------------------------
+# --- Resource consumption and production -------------------------------------
 
 # Only deployed units consume resources.
 
@@ -171,6 +171,10 @@ $god:prop($refinery, "deployed", 0);
 
 rem Revision History
 rem $Log: refinery.moo,v $
+rem Revision 1.3  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

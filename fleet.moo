@@ -16,6 +16,21 @@ $fleet.name = "Generic Fleet";
 	return pass();
 .
 	
+# --- Calculate the resources required by the fleet ---------------------------
+
+.program $god $fleet:time_cost tnt
+	m = 0.0;
+	a = 0.0;
+	o = 0.0;
+	for i in (this:contents())
+		c = i:time_cost();
+		m = m + c[1];
+		a = a + c[2];
+		o = o + c[3];
+	endfor
+	return {m, a, o};
+.
+
 # --- Create an instance of a unit in this fleet ------------------------------
 
 .program $god $fleet:create_unit tnt
@@ -89,6 +104,13 @@ $fleet.name = "Generic Fleet";
 		endif
 	endfor
 	return this.location:consume(m, a, o);
+.
+
+# --- Is this fleet visible to the player? ------------------------------------
+
+.program $god $fleet:visible tnt
+	{?p=player} = args;
+	return (this.location in p:starsystems());
 .
 
 # --- Calculate the mass of the fleet -----------------------------------------
@@ -293,6 +315,9 @@ $fleet.name = "Generic Fleet";
 	elseif (cmd == "disband")
 		return this:http_disband(c, method, param);
 	endif
+	$htell(c, "<B>Running costs:</B>");
+	$htell(c, $http_server:reslist(@this:time_cost()));
+	$htell(c, "<BR><HR>");
 	$http_server:startform(c, "/player/fleet", this, "changename");
 	$htell(c, "<INPUT NAME=\"name\" SIZE=25 VALUE=\""+this.name+"\">");
 	$htell(c, "<INPUT TYPE=\"submit\" VALUE=\"Change Name\">");
@@ -331,6 +356,10 @@ $fleet.name = "Generic Fleet";
 
 rem Revision History
 rem $Log: fleet.moo,v $
+rem Revision 1.5  2000/08/05 22:44:08  dtrg
+rem Many minor bug fixes.
+rem Better object visibility testing --- less scope for cheating.
+rem
 rem Revision 1.4  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.
