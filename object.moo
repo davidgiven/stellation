@@ -89,10 +89,19 @@ $object.name = "Generic Object";
 	return this.name;
 .
 
+# --- Return object's location ------------------------------------------------
+
+.program $god $object:location tnt
+	return this.location;
+.
+
 .quit
 
 rem Revision History
 rem $Log: object.moo,v $
+rem Revision 1.3  2000/09/09 22:35:19  dtrg
+rem Added the :location access method.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
