@@ -26,7 +26,7 @@ $god:prop($mapper, "SHIFT", 2);
 			$htell(c, "</PRE>");
 		elseif (player.mapmode == "gif")
 			x = this:render_gif(@args);
-			$htell(c, "<A HREF=\""+x+"\"><IMG SRC=\""+x+"\"></A>");
+			$htell(c, "<A HREF=\""+x+"\"><IMG SRC=\""+x+"\" WIDTH="+tostr(player.mapwidth)+" HEIGHT="+tostr(player.mapheight)+"></A>");
 		else
 			$htell(c, "[Invalid map mode "+player.mapmode+"]");
 		endif
@@ -137,15 +137,12 @@ $god:prop($mapper, "SHIFT", 2);
 			xs = i[4];
 			ys = i[4];
 			buf = buf + "colour.100.100.100.";
-			n = toint(tofloat(w) / xs);
-			buf = buf + "font.mb.";
-			buf = buf + "text.0.0."+tostr(n)+".";
-			for i in [(-n/2)..(n/2)]
-				xp = toint(x+tofloat(i)*xs);
-				yp = toint(y+tofloat(i)*ys);
-				buf = buf + "line."+tostr(toint(x)-w)+"."+tostr(yp)+"."+tostr(xp+w)+"."+tostr(yp)+".";
-				buf = buf + "line."+tostr(xp)+"."+tostr(toint(y)-h)+"."+tostr(xp)+"."+tostr(yp+h)+".";
-			endfor
+			buf = buf + "grid."+tostr(toint(x))+"."+tostr(toint(y))+"."+tostr(toint(xs))+"."+tostr(toint(ys))+"."+tostr(toint(tofloat(w)/xs))+"."+tostr(toint(tofloat(h)/ys))+".";
+			x = toint(x);
+			y = toint(y);
+			buf = buf + "colour.255.0.0.";
+			buf = buf + "line."+tostr(x-w)+"."+tostr(y)+"."+tostr(x+w)+"."+tostr(y)+".";
+			buf = buf + "line."+tostr(x)+"."+tostr(y-h)+"."+tostr(x)+"."+tostr(y+h)+".";
 			buf = buf + "colour.255.255.255.";
 		else
 			return "[Invalid map command "+toliteral(i)+"]";
@@ -161,7 +158,11 @@ $god:prop($mapper, "SHIFT", 2);
 
 rem Revision History
 rem $Log: mapper.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 00:00:40  dtrg
+rem Took out the nasty text-mode map and replaced it with a gdrender GIF
+rem based one.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

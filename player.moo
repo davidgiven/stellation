@@ -19,11 +19,9 @@ $god:prop($player, "news", {});
 $god:prop($player, "newnews", 0);
 $god:prop($player, "fleetcount", 0);
 $god:prop($player, "fleets", {});
-$god:prop($player, "mapmode", "text");
-$god:prop($player, "mapwidth", 75);
-$god:prop($player, "mapheight", 20);
-$god:prop($player, "mapaspect", 0.5);
-$god:prop($player, "mapdefaultscale", 15.0);
+$god:prop($player, "mapwidth", 480);
+$god:prop($player, "mapheight", 400);
+$god:prop($player, "mapdefaultscale", 50.0);
 $god:prop($player, "displaymode", 1);
 
 # =============================================================================
@@ -141,25 +139,6 @@ $god:prop($player, "displaymode", 1);
 		return {"You can't make the map smaller than that."};
 	endif
 	this.mapdefaultscale = mapdefaultscale;
-	return {""};
-.
-
-.program $god $player:set_mapaspect tnt
-	{mapaspect} = args;
-	mapaspect = tofloat(mapaspect);
-	if (mapaspect <= 0.1)
-		return {"Aspect ratios have to be bigger than that."};
-	endif
-	this.mapaspect = mapaspect;
-	return {""};
-.
-
-.program $god $player:set_mapmode tnt
-	{mapmode} = args;
-	if ((mapmode != "text") && (mapmode != "gif"))
-		return {"That is not a valid map mode."};
-	endif
-	this.mapmode = mapmode;
 	return {""};
 .
 
@@ -694,32 +673,59 @@ $god:prop($player, "displaymode", 1);
 	{?x = "0.0", ?y = "0.0", ?scale = "1.0"} = $http_server:parseparam(param, {"x", "y", "scale"});
 	x = tofloat(x);
 	y = tofloat(y);
+	width = player.mapwidth;
+	height = player.mapheight;
 	scale = tofloat(scale);
 	this:htmlheader(c, method, "Stellar Cartography");
 	$htell(c, "<HR>");
-	if (scale > 2.0)
-		buf = {{$mapper.GRID, x-tofloat(toint(x)), y-tofloat(toint(y)), scale}};
-	else
-		buf = {};
-	endif
+	buf = $server_options.gdrender_url+"?width."+tostr(width)+".height."+tostr(height)+".";
+	buf = buf + "colour.0.0.100.";
+	buf = buf + "fbox.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
+	buf = buf + "colour.100.100.100.";
+	sx = toint(tofloat(width)/scale);
+	sy = toint(tofloat(height)/scale);
+	cx = tofloat(toint(x)) - tofloat(sx/2) - 1.0 - x;
+	cy = y - tofloat(toint(y)) - tofloat(sy/2) - 1.0;
+	cx = toint(cx*scale) + width/2;
+	cy = toint(cy*scale) + height/2;
+	buf = buf + "grid."+tostr(cx)+"."+tostr(cy)+"."+tostr(toint(scale))+"."+tostr(toint(scale))+"."+tostr(toint(sx)*2)+"."+tostr(toint(sy)*2)+".";
+	buf = buf + "colour.200.0.0.";
+	buf = buf + "line.0."+tostr(toint(y*scale)+height/2)+"."+tostr(width)+"."+tostr(toint(y*scale)+height/2)+".";
+	buf = buf + "line."+tostr(toint(-x*scale)+width/2)+".0."+tostr(toint(-x*scale)+width/2)+"."+tostr(height)+".";
+	s = this:starsystems();
 	for i in ($galaxy.stars)
-		sx = (i.position[1]-x)*scale;
-		sy = (y-i.position[2])*scale;
-		buf = {@buf, {$mapper.STAR, sx, sy, i:name()}};
+		sx = toint((i.position[1]-x)*scale);
+		sy = toint((y-i.position[2])*scale);
+		sx = sx + width/2;
+		sy = sy + height/2;
+		if (i in s)
+			buf = buf + "colour.255.255.0.";
+		else
+			buf = buf + "colour.255.255.255.";
+		endif
+		buf = buf + "arc."+tostr(sx)+"."+tostr(sy)+".9.9.0.360.";
+		buf = buf + "font.s.";
+		buf = buf + "text."+tostr(sx+6)+"."+tostr(sy-6)+"."+i:name()+".";
 	endfor
+	buf = buf + "colour.255.255.255.";
+	buf = buf + "box.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
+	buf = buf + ".";
 	$htell(c, "<CENTER>");
-	$mapper:render(c, @buf);
 	$htell(c, "<FORM ACTION=\"/player/map\">");
-	$htell(c, "<TABLE BORDER=0 ROWS=3 COLS=2 WIDTH=50%>");
-	$htell(c, "<TR><TH>Map Center:</TH>");
-	$htell(c, "<TD><INPUT NAME=\"x\" VALUE=\""+tostr(x)+"\" SIZE=5></TD>");
-	$htell(c, "<TD><INPUT NAME=\"y\" VALUE=\""+tostr(y)+"\" SIZE=5></TD>");
-	$htell(c, "</TR><TR>");
-	$htell(c, "<TH>Scale:</TH>");
-	$htell(c, "<TD><INPUT NAME=\"scale\" VALUE=\""+tostr(scale)+"\" SIZE=5></TD>");
-	$htell(c, "</TR>");
-	$htell(c, "<TR><TD></TD><TD COLSPAN=2 ALIGN=center>");
-	$htell(c, "<INPUT TYPE=submit></TD></TR>");
+	$htell(c, "<TABLE WIDTH=10% BORDER=0 COLS=2>");
+	$htell(c, "<TR><TD>");
+	$htell(c, "<A HREF=\""+buf+"\"><IMG SRC=\""+buf+"\" WIDTH="+tostr(player.mapwidth)+" HEIGHT="+tostr(player.mapheight)+"></A>");
+	$htell(c, "</TD></TR>");
+	$htell(c, "<TR><TD ALIGN=center BGCOLOR=#000064><FONT COLOR=#FFFF00>Star in your sphere of influence");
+	$htell(c, "<FONT COLOR=#FFFFFF>Star you have no control over");
+	$htell(c, "</TD></TR>");
+	$htell(c, "<TR><TD>");
+	$htell(c, "Map center: X=<INPUT NAME=\"x\" VALUE=\""+tostr(x)+"\" SIZE=6>");
+	$htell(c, "Y=<INPUT NAME=\"y\" VALUE=\""+tostr(y)+"\" SIZE=6>");
+	$htell(c, "Scale:");
+	$htell(c, "<INPUT NAME=\"scale\" VALUE=\""+tostr(scale)+"\" SIZE=6>");
+	$htell(c, "<INPUT TYPE=submit>");
+	$htell(c, "</TD></TR>");
 	$htell(c, "</TABLE>");
 	$htell(c, "</FORM>");
 	$htell(c, "</CENTER>");
@@ -730,7 +736,7 @@ $god:prop($player, "displaymode", 1);
 
 .program $god $player:http_preferences_single tnt
 	{c, method, param} = args;
-	{?name=player.name, ?empire=player.empire, ?email=player.email, ?mapwidth=tostr(player.mapwidth), ?mapheight=tostr(player.mapheight), ?mapdefaultscale=tostr(player.mapdefaultscale), ?mapaspect=tostr(player.mapaspect), ?mapmode=player.mapmode} = $http_server:parseparam(param, {"name", "empire", "email", "mapwidth", "mapheight", "mapdefaultscale", "mapaspect", "mapmode"});
+	{?name=player.name, ?empire=player.empire, ?email=player.email, ?mapwidth=tostr(player.mapwidth), ?mapheight=tostr(player.mapheight), ?mapdefaultscale=tostr(player.mapdefaultscale)} = $http_server:parseparam(param, {"name", "empire", "email", "mapwidth", "mapheight", "mapdefaultscale", "mapaspect", "mapmode"});
 	this:htmlheader(c, method, "Internal Affairs");
 	$htell(c, "<HR>");
 	notify($god, toliteral(param));
@@ -759,14 +765,6 @@ $god:prop($player, "displaymode", 1);
 	if (result[1] != "")
 		$http_server:error(c, "Failed! "+result[1], "/player/preferences");
 	endif
-	result = player:set_mapaspect(mapaspect);
-	if (result[1] != "")
-		$http_server:error(c, "Failed! "+result[1], "/player/preferences");
-	endif
-	result = player:set_mapmode(mapmode);
-	if (result[1] != "")
-		$http_server:error(c, "Failed! "+result[1], "/player/preferences");
-	endif
 	$htell(c, "<FORM ACTION=\"/player/preferences\">");
 	$htell(c, "<TABLE BORDER=0 COLS=2 WIDTH=70% ALIGN=center>");
 	$htell(c, "<TR><TD ALIGN=right>Name of player:<BR>(You will need to reauthenticate if you change this)</TD>");
@@ -786,13 +784,6 @@ $god:prop($player, "displaymode", 1);
 	$htell(c, "<TD ALIGN=right>Default map scale:</TD>");
 	$htell(c, "<TD ALIGN=left><INPUT NAME=\"mapdefaultscale\" VALUE=\""+tostr(player.mapdefaultscale)+"\" SIZE=14></TD>");
 	$htell(c, "</TR><TR>");
-	$htell(c, "<TD ALIGN=right>Map aspect ratio:</TD>");
-	$htell(c, "<TD ALIGN=left><INPUT NAME=\"mapaspect\" VALUE=\""+tostr(player.mapaspect)+"\" SIZE=14></TD>");
-	$htell(c, "</TR><TR>");
-	$htell(c, "<TD ALIGN=right>Map type:</TD>");
-	$htell(c, "<TD ALIGN=left><INPUT TYPE=radio NAME=\"mapmode\" VALUE=\"text\">Nasty ASCII art<BR>");
-	$htell(c, "<INPUT TYPE=radio NAME=\"mapmode\" VALUE=\"gif\">Remotely rendered GIF</TD>");
-	$htell(c, "</TR><TR>");
 	$htell(c, "<TD></TD>");
 	$htell(c, "<TD VALIGN=top ALIGN=left><INPUT TYPE=submit VALUE=\"Submit Changes\"></TD>");
 	$htell(c, "</TR></TABLE>");
@@ -807,7 +798,11 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 00:00:40  dtrg
+rem Took out the nasty text-mode map and replaced it with a gdrender GIF
+rem based one.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

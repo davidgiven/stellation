@@ -23,6 +23,7 @@ $god:prop($server_options, "motd", {});
 
 $server_options.motd = {"Welcome to Stellation, the hot new on-line gaming service! Please note that this game is currently in ALPHA testing. It's not guaranteed to do anything useful. In fact, it is guaranteed not to work. However, you're welcome to poke around as much as you like. If you see any bugs, or traceback messages, please drop me a note and I'll look into it. Send me (Hjalfi) an FRM. <B>Big warning:</B> every so often I will need to rebuild the server from scratch as I make major changes. This will involve wiping the database, including all your players, units, etc. It is only alpha, remember."};
 
+$server_options.motd = {@$server_options.motd, "268.31: Server reset. New features: threw away the nasty text-mode map and replaced it with the nice, smooth GIF one; rewrote the name generator --- again --- and now it produces decent names; set up a SourceForge project to put everything in after I had a very scary disk crash; fiddled with the animatter and organics refinery stats (the hydroponics plant was producing far too much, the antimatter refinery far too little). Various other minor changes, including some base structure for the combat system."};
 $server_options.motd = {@$server_options.motd, "267.885: Server reset. New features: message buoys, hopefully sensible unit stats, better unit display in factories, assorted bug and spelling mistake fixes. Redid the star name generator. Star names ought to be shorter and, now, unique. The game should now, hopefully, be playable!"};
 $server_options.motd = {@$server_options.motd, "267.670: Server reset. New features: FRMs, external relations. Several bug fixes and spelling mistake fixes. This MOTD feature. Reduced the number of stars to 100 to reduce startup time."};
 
@@ -30,7 +31,11 @@ $server_options.motd = {@$server_options.motd, "267.670: Server reset. New featu
 
 rem Revision History
 rem $Log: server_options.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 00:00:40  dtrg
+rem Took out the nasty text-mode map and replaced it with a gdrender GIF
+rem based one.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 
