@@ -54,7 +54,7 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 		if (starsystem:asteroids()[2] == 0)
 			return {"This system has no carbonaceous asteroids available."};
 		endif
-		unit = $masteroid:create();
+		unit = $casteroid:create();
 		starsystem:changeasteroids(0, -1);
 	elseif (!(unit in starsystem:contents()))
 		return {"That unit is not in this system."};
@@ -227,6 +227,10 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 
 rem Revision History
 rem $Log: tug.moo,v $
+rem Revision 1.5  2000/08/03 18:59:53  dtrg
+rem When carbonaceous asteroids are picked up, they don't mysteriously turn
+rem into metallic ones any more.
+rem
 rem Revision 1.4  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.
