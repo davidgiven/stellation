@@ -14,33 +14,29 @@ $galaxy.name = "The Galaxy";
 $god:prop($galaxy, "stars", {});
 $god:prop($galaxy, "radius", 40.0);
 $god:prop($galaxy, "numstars", 400);
-$galaxy.radius = 20.0;
-$galaxy.numstars = 100;
+#$galaxy.radius = 20.0;
+#$galaxy.numstars = 100;
 
 # --- Create random galaxy ----------------------------------------------------
 
 .program $god $galaxy:create_galaxy tnt
 	{num} = args;
-	for i in [1..num]
-		if ((i % 10) == 0)
-			notify(player, tostr(i)+"/"+tostr(num));
-		endif
-		while (1)
-			r = $numutils:random(this.radius);
-			theta = $numutils:random(2.0 * $numutils.pi);
-			x = r * sin(theta);
-			y = r * cos(theta);
-			x = $numutils:round(10, x);
-			y = $numutils:round(10, y);
-			name = $stringutils:namegen(i);
-			if (this:find_star(x, y) == #-1)
-			    	break;
-			endif
-		endwhile
+	s = {};
+	while (length(s) < num)
+		r = $numutils:random(this.radius);
+		theta = $numutils:random(2.0 * $numutils.pi);
+		x = r * sin(theta);
+		y = r * cos(theta);
+		x = $numutils:round(10, x);
+		y = $numutils:round(10, y);
+		s = setadd(s, {$stringutils:namegen(), x, y});
+		suspend(0);
+	endwhile
+	for i in (s)
 		star = create($star, $god);
-		star.name = name;
-		star.name[1] = $stringutils:upper(name[1]);
-		star.position = {x, y};
+		star.name = i[1];
+		star.name[1] = $stringutils:upper(star.name[1]);
+		star.position = {i[2], i[3]};
 		star.asteroids = {random(10)+10, random(10)+10};
 		star.brightness = random(10)-1;
 		this.stars = {@this.stars, star};
@@ -78,6 +74,14 @@ $galaxy:create_galaxy($galaxy.numstars);
 
 rem Revision History
 rem $Log: galaxy.moo,v $
+rem Revision 1.3  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

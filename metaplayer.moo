@@ -16,36 +16,44 @@ $god:prop($metaplayer, "password", crypt(""));
 
 # --- Main HTML index ---------------------------------------------------------
 
-.program $metaplayer $metaplayer:http_index tnt
+.program $god $metaplayer:http_index tnt
+	{c, method, param} = args;
+	this:toplevel(c, {"notloggedin", ""}, {"index", ""});
+.
+
+.program $metaplayer $metaplayer:http_notloggedin_single tnt
 	{c, method, path} = args;
-	$http_server:htmlheader(c, 200, "Stellation");
+	this:htmlheader(c, method, "Not Logged In");
 	$http_server:anchor(c, "Create new player",
 		"/metaplayer/createplayer");
-	$htell(c, "<P>");
+	$htell(c, "<BR>");
 	$http_server:anchor(c, "Login",
 		"/player");
-	$http_server:htmlfooter(c);
+	this:htmlfooter(c, method);
 .
 
 # --- Create a new player ---------------------------------------------------
 
-.program $metaplayer $metaplayer:http_createplayer tnt
+.program $god $metaplayer:http_createplayer tnt
+	{c, method, param} = args;
+	this:toplevel(c, {"createplayer", ""}, {"index", ""});
+.
+
+.program $metaplayer $metaplayer:http_createplayer_single tnt
 	{c, method, parameters} = args;
-	$http_server:htmlheader(c, 200, "Create new player");
+	this:htmlheader(c, method, "Create new player");
 	if (length(players()) >= $server_options.maxplayers)
 		$htell(c, "Sorry! The game is full. It's currently configured to accept");
 		$htell(c, tostr($server_options.maxplayers));
 		$htell(c, "players only. I'm afraid you'll have to wait until one of the players commits suicide, gets killed, or the server limit is raised. If you <I>really</I> want in, and can give justification, contact <A HREF=\"mailto:dg@tao-group.com\">the author</A> and he'll think about it.");
-		$http_server:htmlfooter(c);
-		return;
 	endif
 	if (length(parameters[1]) == 0)
 		$htell(c, "<FORM ACTION=\"/metaplayer/createplayer\">");
-		$htell(c, "Name of player:");
+		$htell(c, "Name of player:<BR>");
 		$htell(c, "<INPUT NAME=\"name\" SIZE=20><BR>");
-		$htell(c, "Password:");
-		$htell(c, "<INPUT NAME=\"password\" SIZE=8><BR>");
-		$htell(c, "<INPUT TYPE=submit></FORM>");
+		$htell(c, "Password:<BR>");
+		$htell(c, "<INPUT NAME=\"password\" SIZE=8>");
+		$htell(c, "<BR><INPUT TYPE=submit></FORM>");
 	elseif (length(parameters[1]) == 2)
 		name = "name" in parameters[1];
 		if (!name)
@@ -61,9 +69,7 @@ $god:prop($metaplayer, "password", crypt(""));
 		password = parameters[2][password];
 		result = $player:create_player(name, password, "fnord", "fnord", "fnord");
 		if (result[1] == "")
-			$htell(c, "Success!<P>");
-			$http_server:anchor(c, "Now log in.",
-				"/player");
+			$http_server:redirect(c, "/player");
 		else
 			$htell(c, result[1]);
 			$htell(c, "<P>");
@@ -71,13 +77,21 @@ $god:prop($metaplayer, "password", crypt(""));
 				"/metaplayer/createplayer");
 		endif
 	endif
-	$http_server:htmlfooter(c);
+	this:htmlfooter(c, method);
 .
 
 .quit
 
 rem Revision History
 rem $Log: metaplayer.moo,v $
+rem Revision 1.4  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.3  2000/07/31 18:07:42  dtrg
 rem Map no longer displays deep space objects (which means it works with
 rem Netscape again).

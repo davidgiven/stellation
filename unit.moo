@@ -14,8 +14,8 @@ $god:prop($unit, "mass", 1000.0);
 $god:prop($unit, "build_cost", {100.0, 100.0, 100.0});
 $god:prop($unit, "build_time", 1.0);
 $god:prop($unit, "description", "Fnord!");
-$god:prop($unit, "damage", 0);
-$god:prop($unit, "maxdamage", 100);
+$god:prop($unit, "damage", 0.0);
+$god:prop($unit, "maxdamage", 100.0);
 
 $god:prop($unit, "pit", 0);
 
@@ -54,6 +54,10 @@ $god:prop($unit, "pit", 0);
 .
 
 .program $god $unit:mass tnt
+	return this:restmass();
+.
+
+.program $god $unit:restmass tnt
 	return this.mass;
 .
 
@@ -76,19 +80,23 @@ $god:prop($unit, "pit", 0);
 		return;
 	endif
 	fork pid (toint($tick/10.0))
-		this.pit = 0;
-		try
-			if (this:consume(this.time_cost[1]/10.0,
-				this.time_cost[2]/10.0, this.time_cost[3]/10.0))
-				this:starve();
-			endif
-			this:make_alive();
-		except v (ANY)
-			player = $god;
-			$traceback(v);
-		endtry
+		this:tick();
 	endfork
 	this.pit = pid;
+.
+
+.program $god $unit:tick tnt
+	this.pit = 0;
+	try
+		if (this:consume(this.time_cost[1]/10.0,
+			this.time_cost[2]/10.0, this.time_cost[3]/10.0))
+			this:starve();
+		endif
+		this:make_alive();
+	except v (ANY)
+		player = $god;
+		$traceback(v);
+	endtry
 .
 
 .program $god $unit:make_dead tnt
@@ -116,6 +124,23 @@ $god:prop($unit, "pit", 0);
 	player:notify("<B>"+this.name+"</B> has been lost due to lack of resources.", star);
 	notify($god, this.name+" lost");
 	this:destroy();
+.
+
+# --- Attack unit -------------------------------------------------------------
+
+.program $god $unit:attack tnt
+	{damage} = args;
+	this.damage = this.damage + damage;
+	notify($god, this:name()+" hit for "+floatstr(damage, 1)+" leaving "+floatstr(damage, 1));
+	if (this.damage > this.maxdamage)
+		star = this.location;
+		while (!star:descendentof($star))
+			star = star.location;
+		endwhile
+		player:notify("<B>"+this.name+"</B> has been destroyed due to hostile action from <B>"+player:name()+"</B>.", star, this.owner:name());
+		notify($god, this.name+" destroyed");
+		this:destroy();
+	endif
 .
 
 # --- Transfer unit from one fleet to another ---------------------------------
@@ -155,7 +180,7 @@ $god:prop($unit, "pit", 0);
 	enemies = player:enemyplayers();
 	for i in (star:contents())
 		if (i:descendentof($fleet))
-			if (i in enemies)
+			if (i.owner in enemies)
 				f = {@f, i};
 			endif
 		endif
@@ -186,6 +211,14 @@ $god:prop($unit, "pit", 0);
 
 rem Revision History
 rem $Log: unit.moo,v $
+rem Revision 1.4  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.3  2000/08/01 22:06:04  dtrg
 rem Owned stars are now showed in yellow again.
 rem Fixed viewing other people's units; all the tracebacks should have gone.

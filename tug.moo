@@ -26,9 +26,9 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 .program $god $tug:mass tnt
 	contents = this:contents();
 	if (contents != {})
-		return this.mass + contents[1]:mass();
+		return this:restmass() + contents[1]:mass();
 	endif
-	return this.mass;
+	return this:restmass();
 .
 
 # --- Pick up a new load ------------------------------------------------------
@@ -227,6 +227,14 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 
 rem Revision History
 rem $Log: tug.moo,v $
+rem Revision 1.4  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.3  2000/08/01 22:06:04  dtrg
 rem Owned stars are now showed in yellow again.
 rem Fixed viewing other people's units; all the tracebacks should have gone.

@@ -7,16 +7,16 @@ rem $State: Exp $
 notify(player, "stats.moo");
 
 #                     Mass    Time-cost        Build-cost              Time-to-build       Max damage
-$jumpship:setstats(   5000.0, {0.0, 5.0, 2.0}, {10000.0, 20000.0, 1000.0}, 5.0,              1000);
-$cargoship:setstats(  1000.0, {0.0, 2.0, 1.0}, { 5000.0, 10000.0, 1000.0}, 3.0,               300);
-$tug:setstats(        1000.0, {0.0, 4.0, 1.0}, { 3000.0,  8000.0, 1000.0}, 2.0,               100);
-$novacannon:setstats( 1500.0, {0.0, 5.0, 1.0}, { 4000.0,  8000.0, 1000.0}, 4.0,                50);
+$jumpship:setstats(   5000.0, {0.0, 5.0, 2.0}, {10000.0, 20000.0, 1000.0}, 5.0,              1000.0);
+$cargoship:setstats(  1000.0, {0.0, 2.0, 1.0}, { 5000.0, 10000.0, 1000.0}, 3.0,               300.0);
+$tug:setstats(        1000.0, {0.0, 4.0, 1.0}, { 3000.0,  8000.0, 1000.0}, 2.0,               100.0);
+$novacannon:setstats( 1500.0, {0.0, 5.0, 1.0}, { 4000.0,  8000.0, 1000.0}, 4.0,                50.0);
 
-$basicfactory:setstats(        10000.0, {0.0, 5.0, 1.0}, {20000.0, 30000.0, 2000.0}, 10.0,   5000);
-$metalmine:setstats(           10000.0, {0.0, 5.0, 1.0}, {10000.0, 30000.0, 2000.0}, 5.0,    3000);
-$antimatterdistillery:setstats( 8000.0, {0.0, 5.0, 1.0}, {10000.0, 30000.0, 2000.0}, 5.0,    3000);
-$hydroponicsplant:setstats(    10000.0, {0.0, 5.0, 1.0}, {10000.0, 30000.0, 2000.0}, 5.0,    3000);
-$messagebuoy:setstats(           100.0, {0.0, 0.0, 0.0}, {  100.0,    10.0,    0.0}, 0.2,       1);
+$basicfactory:setstats(        10000.0, {0.0, 5.0, 1.0}, {20000.0, 30000.0, 2000.0}, 10.0,   5000.0);
+$metalmine:setstats(           10000.0, {0.0, 5.0, 1.0}, {10000.0, 30000.0, 2000.0}, 5.0,    3000.0);
+$antimatterdistillery:setstats( 8000.0, {0.0, 5.0, 1.0}, {10000.0, 30000.0, 2000.0}, 5.0,    3000.0);
+$hydroponicsplant:setstats(    10000.0, {0.0, 5.0, 1.0}, {10000.0, 30000.0, 2000.0}, 5.0,    3000.0);
+$messagebuoy:setstats(           100.0, {0.0, 0.0, 0.0}, {  100.0,    10.0,    0.0}, 0.2,       1.0);
 
 $metalmine.asteroids                       = {1, 0};
 $metalmine.rate                            = 1.0/24.0;
@@ -40,6 +40,14 @@ $god.password = crypt("defaultadminpassword");
 
 rem Revision History
 rem $Log: stats.moo,v $
+rem Revision 1.4  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.3  2000/07/31 23:50:16  dtrg
 rem First interim checkin of the new indirected map code.
 rem

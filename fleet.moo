@@ -70,6 +70,14 @@ $fleet.name = "Generic Fleet";
 	return 1;
 .
 
+# --- Remove a unit from the fleet --------------------------------------------
+
+.program $god $fleet:exitfunc tnt
+	if (length(this.contents) == 0)
+		this:destroy();
+	endif
+.
+
 # --- Something has consumed resources ----------------------------------------
 
 .program $god $fleet:consume tnt
@@ -113,7 +121,7 @@ $fleet.name = "Generic Fleet";
 		return {"Fleet names can't be empty."};
 	endif
 	this.location:notify("new fleet <B>"+name+"</B> has just been created.");
-	fleet = player:create_fleet();
+	fleet = player:create_fleet(name);
 	fleet:moveto(this.location);
 	return {""};
 .
@@ -323,6 +331,14 @@ $fleet.name = "Generic Fleet";
 
 rem Revision History
 rem $Log: fleet.moo,v $
+rem Revision 1.4  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.3  2000/08/01 22:06:04  dtrg
 rem Owned stars are now showed in yellow again.
 rem Fixed viewing other people's units; all the tracebacks should have gone.

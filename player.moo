@@ -217,13 +217,13 @@ $god:prop($player, "displaymode", 1);
 # --- Notify the player of some news ------------------------------------------
 
 .program $god $player:notify tnt
-	{msg, ?star=#0} = args;
+	{msg, ?star=#0, ?src=player} = args;
 	if (star == #0)
 		p = #0;
 	else
 		p = star.position;
 	endif
-	this.news = {{time(), p, player, msg}, @this.news};
+	this.news = {{time(), p, src, msg}, @this.news};
 	this.newnews = 1;
 .
 
@@ -434,24 +434,35 @@ $god:prop($player, "displaymode", 1);
 
 .program $god $player:http_index_single tnt
 	{c, method, param} = args;
-	this:htmlheader(c, method, "");
-	$htell(c, "<TABLE WIDTH=100% COLS=10 BORDER=0><TR>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>S</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>T</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>E</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>L</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>L</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>A</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>T</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>I</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>O</TD>");
-	$htell(c, "<TD ALIGN=center WIDTH=10%>N</TD>");
-	$htell(c, "</TR></TABLE>");
+	this:htmlheader(c, method, "Stellation Game Overview");
+	$htell(c, "<HR><TABLE WIDTH=100% COLS=10 BORDER=0><TR>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>S</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>T</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>E</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>L</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>L</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>A</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>T</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>I</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>O</FONT></TD>");
+	$htell(c, "<TD ALIGN=center WIDTH=10%><FONT SIZE=+4>N</FONT></TD>");
+	$htell(c, "</TR></TABLE><HR>");
+	$htell(c, "<TABLE WIDTH=100% BORDER=0 COLS=2>");
+	$htell(c, "<TR><TD WIDTH=50% ALIGN=left VALIGN=top>");
 	$htell(c, "<H3>Message of the day</H3>");
 	for i in ($server_options.motd)
 		$htell(c, i);
 		$htell(c, "<HR>");
 	endfor
+	$htell(c, "</TD><TD ALIGN=left VALIGN=top>");
+	$htell(c, "<H3>Game status</H3>");
+	$htell(c, "<B>Number of players:</B>");
+	$htell(c, length(players()));
+	$htell(c, "<BR><B>Maximum number of players:</B>");
+	$htell(c, $server_options.maxplayers);
+	$htell(c, "<BR><B>Number of stars:</B>");
+	$htell(c, length($galaxy.stars));
+	$htell(c, "</TD></TR></TABLE WIDTH=50%>");
 	this:htmlfooter(c, method);
 .
 
@@ -603,6 +614,9 @@ $god:prop($player, "displaymode", 1);
 		for i in (contents)
 			$htell(c, "<LI><A HREF=\"/player/unit?objnum="+tostr(toint(i))+"\" TARGET=\"_top\">"+i:name()+"</A>");
 			i:http_info(c);
+			if (i.damage > 0.0)
+				$htell(c, "<BR><FONT COLOR=#FF0000>"+floatstr((i.damage*100.0)/i.maxdamage, 0)+"% damaged</FONT>");
+			endif
 		endfor
 	else
 		$htell(c, "<LI>(Empty)");
@@ -636,7 +650,7 @@ $god:prop($player, "displaymode", 1);
 			$htell(c, $http_server:player_name(objnum.owner));
 		endif
 		$htell(c, "<BR><B>Damage:</B>");
-		$htell(c, tostr(objnum.damage)+"/"+tostr(objnum.maxdamage));
+		$htell(c, floatstr(objnum.damage, 1)+"/"+floatstr(objnum.maxdamage, 1));
 		$htell(c, "<BR><HR>");
 	endif
 	if (owned)
@@ -745,21 +759,31 @@ $god:prop($player, "displaymode", 1);
 	buf = buf + "line.0."+tostr(toint(y*scale)+height/2)+"."+tostr(width)+"."+tostr(toint(y*scale)+height/2)+".";
 	buf = buf + "line."+tostr(toint(-x*scale)+width/2)+".0."+tostr(toint(-x*scale)+width/2)+"."+tostr(height)+".";
 	s = player:starsystems();
+	left = x - tofloat(sx)/2.0;
+	right = x + tofloat(sx)/2.0;
+	top = y + tofloat(sy)/2.0;
+	bottom = y - tofloat(sy)/2.0;
 	for i in ($galaxy.stars)
 		if (!i:descendentof($deepspace))
-			sx = toint((i.position[1]-x)*scale);
-			sy = toint((y-i.position[2])*scale);
-			sx = sx + width/2;
-			sy = sy + height/2;
-			if (i in s)
-				buf = buf + "colour.255.255.0.";
-			else
-				buf = buf + "colour.255.255.255.";
+			sx = i.position[1];
+			sy = i.position[2];
+			if ((sx > left) && (sx < right) && (sy > bottom) &&
+			    (sy < top))
+				sx = toint((i.position[1]-x)*scale);
+				sy = toint((y-i.position[2])*scale);
+				sx = sx + width/2;
+				sy = sy + height/2;
+				if (i in s)
+					buf = buf + "colour.255.255.0.";
+				else
+					buf = buf + "colour.255.255.255.";
+				endif
+				buf = buf + "arc."+tostr(sx)+"."+tostr(sy)+".9.9.0.360.";
+				buf = buf + "font.s.";
+				buf = buf + "text."+tostr(sx+6)+"."+tostr(sy-6)+"."+i:name()+".";
 			endif
-			buf = buf + "arc."+tostr(sx)+"."+tostr(sy)+".9.9.0.360.";
-			buf = buf + "font.s.";
-			buf = buf + "text."+tostr(sx+6)+"."+tostr(sy-6)+"."+i:name()+".";
 		endif
+		suspend(0);
 	endfor
 	buf = buf + "colour.255.255.255.";
 	buf = buf + "box.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
@@ -832,6 +856,14 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.8  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.7  2000/08/01 22:06:04  dtrg
 rem Owned stars are now showed in yellow again.
 rem Fixed viewing other people's units; all the tracebacks should have gone.

@@ -26,7 +26,6 @@ $god:prop($server_options, "maxplayers", 75);
 $god:prop($server_options, "motd", {});
 
 $server_options.motd = {"Welcome to Stellation, the hot new on-line gaming service! Please note that this game is currently in ALPHA testing. It's not guaranteed to do anything useful. In fact, it is guaranteed not to work. However, you're welcome to poke around as much as you like. If you see any bugs, or traceback messages, please drop me a note and I'll look into it. Send me (Hjalfi) an FRM. <B>Big warning:</B> every so often I will need to rebuild the server from scratch as I make major changes. This will involve wiping the database, including all your players, units, etc. It is only alpha, remember."};
-$server_options.motd = {@$server_options.motd, "<B>Panic!</B> Following the Freshmeat announcement, about five million people tried to log in at once. I've had to disable player creation because the universe was getting far too full (73 new players in ten minutes!). While I thank you all for the interest, things have broken left, right and centre, including the map. (Apparently a lot of the web infrastructure out there objects to 8kB URLs. Can't think why.) Please bear with me; I'm working on it..."};
 
 $server_options.motd = {@$server_options.motd, "268.102: Fixed a minor map problem, and made it so that you can look at other people's units and fleets without hideous tracebacks. Also changed the server administration password, as it was embarassingly in CVS..."};
 $server_options.motd = {@$server_options.motd, "268.89: Added a URL redirection option to the map renderer. Now Internet Explorer users should be able to see maps properly. It's a hack, but it ought to work..."};
@@ -40,6 +39,14 @@ $server_options.motd = {@$server_options.motd, "267.670: Server reset. New featu
 
 rem Revision History
 rem $Log: server_options.moo,v $
+rem Revision 1.8  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.7  2000/08/01 22:06:04  dtrg
 rem Owned stars are now showed in yellow again.
 rem Fixed viewing other people's units; all the tracebacks should have gone.

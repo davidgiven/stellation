@@ -17,7 +17,7 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 
 # --- Property fetchers -------------------------------------------------------
 
-.program $god $cargoship:mass tnt
+.program $god $cargoship:restmass tnt
 	scale = this.scale;
 	return this.mass + this.cargo[1]/scale + this.cargo[2]/scale +
 		this.cargo[3]/scale;
@@ -132,6 +132,14 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 
 rem Revision History
 rem $Log: cargoship.moo,v $
+rem Revision 1.3  2000/08/02 23:17:27  dtrg
+rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
+rem Made fleets disappear automatically when their last unit is removed.
+rem Fixed a minor fleet creation bug.
+rem Made the title pages look a *lot* better.
+rem Added a game statistics page to the overview.
+rem Lots of minor formatting issues.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
