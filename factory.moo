@@ -114,7 +114,8 @@ $god:prop($factory, "continuous", 0);
 			this.warehouse = {@this.warehouse, unit};
 		else
 			u = unit:create();
-			move(u, this.location);
+			u:moveto(this.location);
+			u:make_alive();
 		endif
 		this.building = {};
 		if (this.continuous)
@@ -336,6 +337,9 @@ $god:prop($factory, "continuous", 0);
 
 rem Revision History
 rem $Log: factory.moo,v $
+rem Revision 1.5  2000/08/07 20:14:55  dtrg
+rem Newly-built units are now made alive.
+rem
 rem Revision 1.4  2000/08/05 22:44:08  dtrg
 rem Many minor bug fixes.
 rem Better object visibility testing --- less scope for cheating.
