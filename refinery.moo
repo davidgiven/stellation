@@ -42,6 +42,17 @@ $god:prop($refinery, "deployed", 0);
 	return pass(@args);
 .
 
+# When a refinery starves, it doesn't die, it just shuts down.
+
+.program $god $refinery:starve tnt
+	star = this.location;
+	while (!star:descendentof($star))
+		star = star.location;
+	endwhile
+	player:notify("<B>"+this.name+"</B> has mothballed itself due to lack of resources.", star);
+	this.deployed = 0;
+.
+
 # --- Consume an asteroid -----------------------------------------------------
 
 .program $god $refinery:eatasteroid tnt
@@ -174,6 +185,10 @@ $god:prop($refinery, "deployed", 0);
 
 rem Revision History
 rem $Log: refinery.moo,v $
+rem Revision 1.5  2000/09/05 23:06:33  dtrg
+rem Stationary units no longer die when starved; now they just mothball
+rem themselves.
+rem
 rem Revision 1.4  2000/08/07 20:20:03  dtrg
 rem Formatting fixes.
 rem Rewrote the resource consumption code to make it simpler.

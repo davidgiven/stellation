@@ -38,6 +38,25 @@ $god:prop($factory, "continuous", 0);
 	endif
 .
 
+# When a factory starves, it doesn't die, it just shuts down.
+
+.program $god $factory:starve tnt
+	star = this.location;
+	while (!star:descendentof($star))
+		star = star.location;
+	endwhile
+	if (this.building != {})
+		player:notify("<B>"+this.name+"</B> has mothballed itself due to lack of resources, losing the <B>"+this.building[1]:name()+"</B> that was being built in the process.", star);
+		kill_task(this.building[2]);
+		this.building = {};
+		this.starttime = 0;
+		this.endtime = 0;
+	else	
+		player:notify("<B>"+this.name+"</B> has mothballed itself due to lack of resources.", star);
+	endif
+	this.deployed = 0;
+.
+
 # --- Deploy/mothball factory -------------------------------------------------
 
 .program $god $factory:deployed tnt
@@ -337,6 +356,10 @@ $god:prop($factory, "continuous", 0);
 
 rem Revision History
 rem $Log: factory.moo,v $
+rem Revision 1.6  2000/09/05 23:06:33  dtrg
+rem Stationary units no longer die when starved; now they just mothball
+rem themselves.
+rem
 rem Revision 1.5  2000/08/07 20:14:55  dtrg
 rem Newly-built units are now made alive.
 rem
