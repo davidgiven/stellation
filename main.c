@@ -5,6 +5,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include "gd.h"
 #include "gdfontg.h"
@@ -193,6 +194,25 @@ void do_arc(void)
 	gdImageArc(image, cx, cy, w, h, s, e, colour);
 }
 
+/* --- Draw a grid --------------------------------------------------------- */
+
+void do_grid(void)
+{
+	int x = get_number();
+	int y = get_number();
+	int xs = get_number();
+	int ys = get_number();
+	int w = get_number();
+	int h = get_number();
+	int i;
+
+	for (i=0; i<=w; i++)
+		gdImageLine(image, x+(i*xs), y, x+(i*xs), y+(h*ys), colour);
+
+	for (i=0; i<=h; i++)
+		gdImageLine(image, x, y+(i*ys), x+(w*xs), y+(i*ys), colour);
+}
+
 /* --- Main program -------------------------------------------------------- */
 
 int main(int argc, char* argv[])
@@ -231,6 +251,8 @@ int main(int argc, char* argv[])
 			do_text_up();
 		else if (strcmp(buffer, "arc") == 0)
 			do_arc();
+		else if (strcmp(buffer, "grid") == 0)
+			do_grid();
 		else if (strcmp(buffer, "") == 0)
 			break;
 		else
@@ -248,8 +270,11 @@ int main(int argc, char* argv[])
 
 /* Revision history
  * $Log: main.c,v $
- * Revision 1.1  2000/07/29 17:10:25  dtrg
- * Initial revision
+ * Revision 1.2  2000/07/29 23:58:04  dtrg
+ * Added grid.
+ *
+ * Revision 1.1.1.1  2000/07/29 17:10:25  dtrg
+ * Initial checkin.
  *
  */
 

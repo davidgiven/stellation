@@ -69,11 +69,19 @@ with:
 	
 	textup.<x>.<y>.<string>.
 		Ditto, but draws the text vertically.
+	
+	grid.<x>.<y>.<xs>.<ys>.<w>.<h>.
+		Draws a line grid, with the top-left corner at <x>,<y>. The
+		spacing between cells is <xs>,<ys>; <w> and <h> are the width
+		in height respectively in cells.
 
 ===============================================================================
 
 Revision History
 $Log: README,v $
+Revision 1.3  2000/07/29 23:58:04  dtrg
+Added grid.
+
 Revision 1.2  2000/07/29 17:23:19  dtrg
 Added contact information.
 
