@@ -20,23 +20,26 @@ $god:prop($refinery, "deployed", 0);
 
 # Only deployed units consume resources.
 
-.program $god $refinery:consume tnt
-	{m, a, o} = args;
+.program $god $refinery:time_cost tnt
+	if (this.deployed)
+		return pass(@args);
+	endif
+	return {0.0, 0.0, 0.0};
+.
+
+.program $god $refinery:tick tnt
 	if (this.deployed)
 		if (this.buffer < (this.rate/10.0))
 			if (this:eatasteroid())
 				this.deployed = 0;
-				this.location:notify(this.name+" has automatically mothballed itself because it ran out of asteroids to process.");
+				this.location:notify("<B>"+this.name+"</B> has automatically mothballed itself because it ran out of asteroids to process.");
 				return pass(@args);
 			endif
 		endif
 		this.buffer = this.buffer - (this.rate / 10.0);
-		m = m - this.production[1];
-		a = a - this.production[2];
-		o = o - this.production[3];
-		return pass(m, a, o);
+		this.location:changeresources(@this.production);
 	endif
-	return 0;
+	return pass(@args);
 .
 
 # --- Consume an asteroid -----------------------------------------------------
@@ -72,7 +75,7 @@ $god:prop($refinery, "deployed", 0);
 	if (this.deployed)
 		return {"The "+this.name+" is already deployed."};
 	endif
-	this.location:notify(this.name+" deployed.");
+	this.location:notify("<B>"+this.name+"</B> deployed.");
 	this.deployed = 1;
 	return {""};
 .
@@ -84,7 +87,7 @@ $god:prop($refinery, "deployed", 0);
 	if (!this.deployed)
 		return {"The "+this.name+" is already mothballed."};
 	endif
-	this.location:notify(this.name+" mothballed.");
+	this.location:notify("<B>"+this.name+"</B> mothballed.");
 	this.deployed = 0;
 	return {""};
 .
@@ -171,6 +174,10 @@ $god:prop($refinery, "deployed", 0);
 
 rem Revision History
 rem $Log: refinery.moo,v $
+rem Revision 1.4  2000/08/07 20:20:03  dtrg
+rem Formatting fixes.
+rem Rewrote the resource consumption code to make it simpler.
+rem
 rem Revision 1.3  2000/08/05 22:44:08  dtrg
 rem Many minor bug fixes.
 rem Better object visibility testing --- less scope for cheating.
