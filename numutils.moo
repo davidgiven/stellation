@@ -28,6 +28,14 @@ $numutils.pi = 2.0 * acos(0.0);
 	return i / tofloat(factor);
 .
 
+# --- Turn an int into a string, with left padding ----------------------------
+
+.program $god $numutils:tostrpadded tnt
+	{n, pad} = args;
+	n = floatstr(1.0, pad)+tostr(n);
+	return n[$-(pad-1)..$];
+.
+
 # --- Emit a time, as a string ------------------------------------------------
 
 .program $god $numutils:timetostr tnt
@@ -38,13 +46,16 @@ $numutils.pi = 2.0 * acos(0.0);
 	t = t / 1000;
 	t2 = t % 1000;
 	t = t / 1000;
-	return tostr(t)+"."+tostr(t2)+"."+tostr(t3);
+	return tostr(t)+"."+$numutils:tostrpadded(t2, 3)+"."+$numutils:tostrpadded(t3, 3);
 .
 
 .quit
 
 rem Revision History
 rem $Log: numutils.moo,v $
+rem Revision 1.3  2000/08/05 22:34:05  dtrg
+rem Now zero-pads time components.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
