@@ -40,6 +40,14 @@ $god:prop($player, "enemyplayers", {});
 	return {""};
 .
 
+.program $god $player:seehostileplayer tnt
+	{p} = args;
+	if (p in this.friendlyplayers)
+		return;
+	endif
+	this:makehostile(p);
+.
+
 # --- Make hostile/friendly ---------------------------------------------------
 
 .program $god $player:makehostile tnt
@@ -181,6 +189,9 @@ $god:prop($player, "enemyplayers", {});
 
 rem Revision History
 rem $Log: diplomacy.moo,v $
+rem Revision 1.3  2000/08/05 22:38:39  dtrg
+rem Added seehostileplayer.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
