@@ -15,6 +15,7 @@ $god:prop($factory, "starttime", 0);
 $god:prop($factory, "endtime", 0);
 $god:prop($factory, "deployed", 0);
 $god:prop($factory, "warehouse", {});
+$god:prop($factory, "continuous", 0);
 
 # --- Resource consumption ----------------------------------------------------
 
@@ -76,6 +77,7 @@ $god:prop($factory, "warehouse", {});
 		return {("The " + this.name) + " is building anything."};
 	endif
 	kill_task(this.building[2]);
+	this.location:notify("<B>"+this:name()+"</B> has aborted construction of <B>"+this.building[1]:name()+"</B>.");
 	this.building = {};
 	this.starttime = 0;
 	this.endtime = 0;
@@ -83,7 +85,7 @@ $god:prop($factory, "warehouse", {});
 .
 
 .program $god $factory:startbuilding tnt
-	{unit} = args;
+	{unit, ?continuous=0, ?buildmsg=1} = args;
 	if (!this.location:descendentof($star))
 		return {("The " + this.name) + " is not in a star system."};
 	endif
@@ -107,10 +109,26 @@ $god:prop($factory, "warehouse", {});
 			u = unit:create();
 			move(u, this.location);
 		endif
-		this.location:notify("<B>" + this.name + "</B> has completed building " + unit.name + ".");
 		this.building = {};
+		if (this.continuous)
+			result = this:startbuilding(unit, continuous, 0);
+			if (result[1] == "")
+				this.location:notify("<B>" + this.name + "</B> has completed building <B>" + unit.name + "</B> and has automatically started building another one.");
+			else
+				this.location:notify("<B>" + this.name + "</B> has completed building <B>" + unit.name + "</B> but cannot build any more.");
+			endif
+		else
+			this.location:notify("<B>" + this.name + "</B> has completed building <B>" + unit.name + "</B>.");
+		endif
 	endfork
-	this.location:notify("<B>"+this.name+"</B> has started building <B>"+unit.name+"</B>.");
+	if (buildmsg)
+		if (continuous)
+			this.location:notify("<B>"+this.name+"</B> has started building <B>"+unit.name+"</B> continuously.");
+		else
+			this.location:notify("<B>"+this.name+"</B> has started building <B>"+unit.name+"</B>.");
+		endif
+	endif
+	this.continuous = continuous;
 	this.building = {unit, pid};
 	this.starttime = time();
 	this.endtime = time() + toint(unit.build_time * $tick);
@@ -128,8 +146,11 @@ $god:prop($factory, "warehouse", {});
 		return {"You can only move units into a fleet in the same star system as the factory."};
 	endif
 	this.warehouse = setremove(this.warehouse, class);
-	target:create_unit(class);
-	return {""};
+	result = target:create_unit(class);
+	if (result[1] == "")
+		this.location:notify("<B>"+class.name+"</B> has transferred <B>"+target:name()+"</B> from its warehouse to <B>"+target:name()+"</B>.");
+	endif
+	return result;
 .
 
 # =============================================================================
@@ -166,12 +187,13 @@ $god:prop($factory, "warehouse", {});
 
 .program $god $factory:http_start tnt
 	{c, method, param} = args;
-	{objnum, ?unit = "-1"} = $http_server:parseparam(param, {"objnum", "unit"});
+	{objnum, ?unit="-1", ?continuous="off"} = $http_server:parseparam(param, {"objnum", "unit", "continuous"});
 	unit = toobj(unit);
+	continuous = (continuous == "on");
 	if (this.owner != player)
 		return $http_server:formsyntax(c);
 	endif
-	result = this:startbuilding(unit);
+	result = this:startbuilding(unit, continuous);
 	if (result[1] != "")
 		$http_server:error(c, "Failed! " + result[1], "/player/unit?objnum=" + tostr(toint(this)));
 	else
@@ -216,11 +238,14 @@ $god:prop($factory, "warehouse", {});
 	elseif (this.building == {})
 		$htell(c, "(idle)");
 	else
-		$htell(c, "(building");
-		$htell(c, this.building[1].name);
-		$htell(c, "ETA");
+		if (this.continuous)
+			$htell(c, "(continuously building");
+		else
+			$htell(c, "(building");
+		endif
+		$htell(c, this.building[1].name+"; ETA");
 		$htell(c, $numutils:timetostr(this.endtime) + ":");
-		$htell(c, tostr(((time() - this.starttime) * 100) / (this.endtime - this.starttime)) + "% complete");
+		$htell(c, tostr(((time() - this.starttime) * 100) / (this.endtime - this.starttime)) + "% complete)");
 	endif
 .
 
@@ -267,7 +292,8 @@ $god:prop($factory, "warehouse", {});
 				$htell(c, "</TR>");
 			endfor
 			$htell(c, "</TABLE>");
-			$htell(c, "<INPUT TYPE=submit VALUE=\"Start Building\">");
+			$htell(c, "<INPUT TYPE=checkbox NAME=\"continuous\">Build continuously");
+			$htell(c, "<BR><INPUT TYPE=submit VALUE=\"Start Building\">");
 		endif
 		$htell(c, "</FORM>");
 		$htell(c, ("<FORM ACTION=\"/player/unit\"><INPUT TYPE=hidden NAME=\"objnum\" VALUE=\"" + tostr(toint(this))) + "\"><INPUT TYPE=hidden NAME=\"cmd\" VALUE=\"mothball\"><INPUT TYPE=submit VALUE=\"Mothball\"></FORM>");
@@ -303,6 +329,11 @@ $god:prop($factory, "warehouse", {});
 
 rem Revision History
 rem $Log: factory.moo,v $
+rem Revision 1.3  2000/08/03 19:05:46  dtrg
+rem Factories can now be told to keep churning out a particular unit until
+rem further notice, or they run out of resources.
+rem Fixed a few formatting problems.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
