@@ -712,6 +712,7 @@ $god:prop($player, "displaymode", 1);
 	{?x = "0.0", ?y = "0.0", ?scale = "1.0"} = $http_server:parseparam(param, {"x", "y", "scale"});
 	x = tofloat(x);
 	y = tofloat(y);
+	this:htmlheader(c, method, "Stellar Cartography");
 	$htell(c, "<CENTER>");
 	$htell(c, "<FORM ACTION=\"/player/map\">");
 	$htell(c, "<TABLE WIDTH=10% BORDER=0 COLS=2>");
@@ -856,6 +857,9 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.9  2000/08/03 19:00:25  dtrg
+rem Changed to properly emit the red pane header.
+rem
 rem Revision 1.8  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.
