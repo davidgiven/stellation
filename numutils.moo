@@ -70,42 +70,23 @@ $numutils.pi = 2.0 * acos(0.0);
 	endif
 	outlist = {inlist[1]};
 	inlist = inlist[2..$];
-	item = 1;
-	itemv = outlist[1][1];
 	for i in (inlist)
-		notify($god, toliteral(inlist));
-		notify($god, toliteral(outlist));
-		notify($god, "item="+toliteral(item)+" itemv="+tostr(itemv));
-		if (i[1] < itemv)
-			while (item > 1)
-				item = item - 1;
-				itemv = outlist[item][1];
-				if (i[1] > itemv)
-					break;
-				endif
-			endwhile
-			if (item == 1)
-				outlist = {i, @outlist};
-			else
-				outlist = listappend(outlist, i, item);
-			endif
-		elseif (i[1] > itemv)
-			while (item < length(outlist))
+		item = 1;
+		if (length(outlist) == 1)
+			outlist = {@outlist, i};
+		elseif (outlist[1][1] > i[1])
+			outlist = {i, @outlist};
+		else
+			while ((outlist[item][1] < i[1]) && (item < length(outlist)))
 				item = item + 1;
-				itemv = outlist[item][1];
-				if (i[1] < itemv)
-					break;
-				endif
 			endwhile
 			if (item == length(outlist))
 				outlist = {@outlist, i};
 			else
-				outlist = listappend(outlist, i, item);
+				outlist = listinsert(outlist, i, item);
 			endif
-		else
-			outlist = listinsert(outlist, i, item);
 		endif
-		itemv = outlist[item][1];
+		suspend(0);
 	endfor
 	return outlist;
 .
@@ -114,6 +95,10 @@ $numutils.pi = 2.0 * acos(0.0);
 
 rem Revision History
 rem $Log: numutils.moo,v $
+rem Revision 1.5  2000/09/09 22:34:35  dtrg
+rem Stirred the :sort method a bit in the hope it will work better this
+rem time.
+rem
 rem Revision 1.4  2000/08/27 23:50:55  dtrg
 rem Added sort routine. No idea if it's an optimal algorithm or not, or
 rem even if it works properly. Seems to so far.
