@@ -16,8 +16,10 @@ $god:prop($server_options, "http_servername", "LambdaMOO-Stellation");
 $god:prop($server_options, "http_serverversion", "1.0");
 $god:prop($server_options, "http_authenticationrealm", "Stellation");
 $god:prop($server_options, "maintainer", "dg@tao-group.com");
-$god:prop($server_options, "fg_ticks", 30000);
+$god:prop($server_options, "fg_ticks", 60000);
 $god:prop($server_options, "fg_seconds", 5);
+$god:prop($server_options, "bg_ticks", 60000);
+$god:prop($server_options, "bg_seconds", 5);
 $god:prop($server_options, "gdrender_url", "http://zhaneel.local/cgi-bin/gdrender.cgi");
 #$god:prop($server_options, "gdrender_url", "http://stellation.sourceforge.net/cgi-bin/gdrender.cgi");
 $god:prop($server_options, "server_url", "http://pyanfar.local:7778/metaplayer/mapdata");
@@ -29,6 +31,11 @@ $god:prop($server_options, "motd", {});
 $server_options.motd = {"Welcome to Stellation, the hot new on-line gaming service! Please note that this game is currently in ALPHA testing. It's not guaranteed to do anything useful. In fact, it is guaranteed not to work. However, you're welcome to poke around as much as you like. If you see any bugs, or traceback messages, please drop me a note and I'll look into it. Send me (Hjalfi) an FRM. <B>Big warning:</B> every so often I will need to rebuild the server from scratch as I make major changes. This will involve wiping the database, including all your players, units, etc. It is only alpha, remember."};
 $server_options.motd = {@$server_options.motd, "Join the <A HREF=\"http://lists.sourceforge.net/mailman/listinfo/stellation-players\">mailing list</A>!"};
 
+$server_options.motd = {@$server_options.motd, "268.727: Added the top players table. Well, that was a nasty shock... my two test players make #16 and #17! Obviously people are losing lots of units somehow. Please, if you feel that the game's too hard, or that you've been hard done by, drop me an e-mail... preferably to the mailing list (it's easier for me to track that way). Also doubled the output from metal mines. Hopefully this should move things along a bit."};
+$server_options.motd = {@$server_options.motd, "268.722+a bit: Well, that was easy. Now for some extra functionality."};
+$server_options.motd = {@$server_options.motd, "268.722: I'm back! I had a lovely holiday shovelling concrete in Lochcarron and now I've discovered several bugs, that I'm now working on. In particular: the server runs out of ticks on very large fleets (like my seriously cannoned-up ones). These means certain operations, like FTL jumps, fail. Also, there seems to be a bug that limits all pages to about 60kB. This will cause Intelligence to fail if you've been doing a lot. I'll fix them ASAP."};
+$server_options.motd = {@$server_options.motd, "268.281: Reset, as promised. All players, mail, stars, etc have been destroyed. This was necessary to remove a number of dead and broken units left by prior bugs that I have now fixed. Everything should now be just tickety-boo."};
+$server_options.motd = {@$server_options.motd, "268.243: Yet more minor bug fixes, including some not-so-minor ones: newly-built refineries work, intelligence works after combat (previously it died completely), etc. Also I've doubled the amount of antimatter produced by a distillery and halved the amount of organics produced by a hydroponic plant, in an attempt to make the game a bit more balanced."};
 $server_options.motd = {@$server_options.motd, "268.198: Lots of minor bug fixes in response to reports. Keep sending 'em in!"};
 $server_options.motd = {@$server_options.motd, "268.127: Server reset. Lots of major and minor changes; <B>combat system!</B>, upped the number of stars to 400 and the number of players to 300, lots of formatting fixes, minor bug fixes, etc."};
 $server_options.motd = {@$server_options.motd, "268.102: Fixed a minor map problem, and made it so that you can look at other people's units and fleets without hideous tracebacks. Also changed the server administration password, as it was embarassingly in CVS..."};
@@ -43,6 +50,10 @@ $server_options.motd = {@$server_options.motd, "267.670: Server reset. New featu
 
 rem Revision History
 rem $Log: server_options.moo,v $
+rem Revision 1.10  2000/08/27 23:59:50  dtrg
+rem Doubled the number of ticks for fg and bg processes, as operations on
+rem big fleets were failing.
+rem
 rem Revision 1.9  2000/08/05 22:44:08  dtrg
 rem Many minor bug fixes.
 rem Better object visibility testing --- less scope for cheating.
