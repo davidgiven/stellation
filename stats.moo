@@ -6,11 +6,12 @@ rem $State: Exp $
 .patch stats.moo 6 1
 notify(player, "stats.moo");
 
-#                     Mass    Time-cost        Build-cost              Time-to-build       Max damage
-$jumpship:setstats(   5000.0, {0.0, 5.0, 2.0}, {10000.0, 20000.0, 1000.0}, 5.0,              1000.0);
-$cargoship:setstats(  1000.0, {0.0, 2.0, 1.0}, { 5000.0, 10000.0, 1000.0}, 3.0,               300.0);
-$tug:setstats(        1000.0, {0.0, 4.0, 1.0}, { 3000.0,  8000.0, 1000.0}, 2.0,               100.0);
-$novacannon:setstats( 1500.0, {0.0, 5.0, 1.0}, { 4000.0,  8000.0, 1000.0}, 4.0,                50.0);
+#                     Mass    Time-cost         Build-cost              Time-to-build       Max damage
+$jumpship:setstats(   5000.0, {0.0,  5.0, 2.0}, {10000.0, 20000.0, 1000.0}, 5.0,              1000.0);
+$cargoship:setstats(  1000.0, {0.0,  2.0, 1.0}, { 5000.0, 10000.0, 1000.0}, 3.0,               300.0);
+$tug:setstats(        1000.0, {0.0,  4.0, 1.0}, { 3000.0,  8000.0, 1000.0}, 2.0,               100.0);
+$novacannon:setstats( 1500.0, {0.0,  5.0, 1.0}, { 4000.0,  8000.0, 1000.0}, 4.0,                50.0);
+$bomber:setstats(     2000.0, {0.0, 10.0, 1.0}, { 7000.0, 10000.0, 1000.0}, 5.0,               200.0);
 
 $basicfactory:setstats(        10000.0, {0.0, 5.0, 1.0}, {20000.0, 30000.0, 2000.0}, 10.0,   5000.0);
 $metalmine:setstats(           10000.0, {0.0, 5.0, 1.0}, {10000.0, 30000.0, 2000.0}, 5.0,    3000.0);
@@ -39,6 +40,9 @@ $god.password = crypt("defaultadminpassword");
 
 rem Revision History
 rem $Log: stats.moo,v $
+rem Revision 1.6  2000/09/09 22:37:16  dtrg
+rem Added entries for the RAM bomber.
+rem
 rem Revision 1.5  2000/09/05 23:15:24  dtrg
 rem Hydroponics plant production tweak.
 rem

@@ -34,6 +34,7 @@ SRCS = \
 	asteroids.moo		\
 	messagebuoy.moo		\
 	novacannon.moo		\
+	bomber.moo		\
 	basicfactory.moo	\
 	transit.moo		\
 	deepspace.moo		\
@@ -61,6 +62,9 @@ stellation.db: $(SRCS) Makefile
 
 # Revision History
 # $Log: Makefile,v $
+# Revision 1.3  2000/09/09 22:37:16  dtrg
+# Added entries for the RAM bomber.
+#
 # Revision 1.2  2000/07/30 21:20:19  dtrg
 # Updated all the .patch lines to contain the correct line numbers.
 # Cosmetic makeover; we should now hopefully look marginally better.
