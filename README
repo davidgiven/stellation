@@ -5,6 +5,14 @@ $State: Exp $
                                     GDRENDER
 ===============================================================================
 
+Authors
+-------
+
+David Given, dg@tao-group.com
+
+Introduction 
+------------
+
 gdrender is a simple CGI front end around the libgd library. It is used by
 Stellation to generate maps and things, but gdrender isn't part of Stellation
 proper.
@@ -66,8 +74,9 @@ with:
 
 Revision History
 $Log: README,v $
-Revision 1.1  2000/07/29 17:10:25  dtrg
-Initial revision
+Revision 1.2  2000/07/29 17:23:19  dtrg
+Added contact information.
 
-
+Revision 1.1.1.1  2000/07/29 17:10:25  dtrg
+Initial checkin.
 
