@@ -3,33 +3,50 @@
 # $Source: /cvsroot/stellation/stellation2/Attic/Makefile,v $
 # $State: Exp $
 
-TOPLEVEL = ./toplevel
+SERVER = ./srv
+CLIENT = ./dclnt
 OCAMLLIB = /usr/lib/ocaml/3.07
 OCAMLFLAGS = -I server
 
 LIBS = \
 	$(OCAMLLIB)/unix.cma
 
-OBJS = \
-	server/Engine.cmo \
-	server/Interface.cmo \
-	server/Galaxy.cmo \
-	server/Star.cmo
+SERVERSRCS = \
+	server/Engine.ml \
+	server/Interface.ml \
+	server/Star.ml \
+	server/main.ml
 
-run: $(TOPLEVEL)
-	$(TOPLEVEL) $(OCAMLFLAGS) server/main.ml
+CLIENTSRCS = \
+	client/debug.ml
+
+ALLSRCS = $(SERVERSRCS) $(CLIENTSRCS)
+
+run: $(CLIENT) $(SERVER)
+	$(SERVER)
 
 clean:
-	$(RM) $(TOPLEVEL) $(OBJS)
+	$(RM) $(SERVER) $(CLIENT) \
+		$(ALLSRCS:.ml=.cmi) \
+		$(ALLSRCS:.ml=.cmx) \
+		$(ALLSRCS:.ml=.cmo) \
+		$(ALLSRCS:.ml=.o)
 
-$(TOPLEVEL): $(OBJS)
-	ocamlmktop -o $(TOPLEVEL) $(LIBS) $(OBJS)
+$(SERVER): $(SERVERSRCS)
+	ocamlmktop -o $(SERVER) -I server $(LIBS) $(SERVERSRCS)
 
-%.cmi %.cmo: %.ml
-	ocamlc $(OCAMLFLAGS) -c $<
+$(CLIENT): $(CLIENTSRCS)
+	ocamlmktop -o $(CLIENT) -I client $(LIBS) $(CLIENTSRCS)
+
+%.cmx: %.ml
+	ocamlopt $(OCAMLFLAGS) -c $<
 
 # Revision history
 # $Log: Makefile,v $
+# Revision 1.2  2004/05/28 23:28:07  dtrg
+# Updated with new changes. Doesn't attempt to incrementally compile anything any
+# more.
+#
 # Revision 1.1  2004/05/26 00:19:59  dtrg
 # First working version.
 #
