@@ -314,10 +314,20 @@ $fleet.name = "Generic Fleet";
 	endif
 .
 
+.program $god $fleet:http_menu_notowned tnt
+	{c, method, param} = args;
+	$htell(c, "No additional information available.");
+.
+
 .quit
 
 rem Revision History
 rem $Log: fleet.moo,v $
+rem Revision 1.3  2000/08/01 22:06:04  dtrg
+rem Owned stars are now showed in yellow again.
+rem Fixed viewing other people's units; all the tracebacks should have gone.
+rem Various minor bug fixes and formatting changes.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

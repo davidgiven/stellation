@@ -342,7 +342,7 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum="-1"} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
-	if ((objnum == #-1) || (!objnum:descendentof($unit)) || (objnum.owner != player))
+	if ((objnum == #-1) || (!objnum:descendentof($unit)))
 		$http_server:formsyntax(c);
 		return;
 	endif
@@ -501,12 +501,10 @@ $god:prop($player, "displaymode", 1);
 					if (i:descendentof($transit))
 						$htell(c, "&nbsp;&nbsp;"+j:name()+"<BR>");
 					else
-						$htell(c, "&nbsp;&nbsp;<A HREF=\"/player/fleet?objnum="+tostr(toint(j))+"\" TARGET=\"_top\">"+j:name()+"</A>");
-						if (j.owner == player)
-							$htell(c, "<BR>");
-						else
-							$htell(c, "(belonging to");
-							$htell(c, j.owner:name());
+						$htell(c, "&nbsp;&nbsp;<A HREF=\"/player/fleet?objnum="+tostr(toint(j))+"\" TARGET=\"_top\">"+j:name()+"</A><BR>");
+						if (j.owner != player)
+							$htell(c, "&nbsp;&nbsp;&nbsp;&nbsp(belonging to");
+							$htell(c, "<A HREF=\"/player/frm?cmd=compose+new&to="+j.owner:name()+"\">"+j.owner:name()+"</A>)");
 							$htell(c, "<BR>");
 							this:seeplayer(j.owner);
 						endif
@@ -580,18 +578,20 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum = "-1"} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
-	if ((objnum == #-1) || (!objnum:descendentof($fleet)) || (objnum.owner != player) || (objnum.location:descendentof($transit)))
+	if ((objnum == #-1) || (!objnum:descendentof($fleet)) || (objnum.location:descendentof($transit)))
 		$http_server:formsyntax(c);
 		return;
 	endif
+	owned = (objnum.owner == player);
 	this:htmlheader(c, method, objnum:name());
 	$htell(c, "<B>Location:</B>");
 	i = objnum.location;
 	$htell(c, "<A HREF=\"/player/star?objnum="+tostr(toint(i))+"\"><B>"+i:name()+"</B></A>");
 	$htell(c, "<A HREF=\"/player/map?x="+tostr(i.position[1])+"&y="+tostr(i.position[2])+"&scale="+tostr(this.mapdefaultscale)+"\" TARGET=\"_top\">("+tostr(i.position[1])+", "+tostr(i.position[2])+")</A>");
-	if (objnum.owner != player)
+	if (!owned)
 		$htell(c, "<BR><B>Owned by:</B>");
-		$htell(c, objnum.owner:name());
+		$htell(c, $http_server:player_name(objnum.owner));
+		this:seeplayer(objnum.owner);
 	endif
 	$htell(c, "<BR><B>Total mass:</B>");
 	$htell(c, $numutils:round(10, objnum:mass()));
@@ -601,12 +601,7 @@ $god:prop($player, "displaymode", 1);
 	contents = objnum:contents();
 	if (contents != {})
 		for i in (contents)
-			if (objnum.owner == player)
-				$htell(c, "<LI><A HREF=\"/player/unit?objnum="+tostr(toint(i))+"\" TARGET=\"_top\">"+i:name()+"</A>");
-			else
-				$htell(c, "<LI>"+i:name());
-				this:see_player(objnum.owner);
-			endif
+			$htell(c, "<LI><A HREF=\"/player/unit?objnum="+tostr(toint(i))+"\" TARGET=\"_top\">"+i:name()+"</A>");
 			i:http_info(c);
 		endfor
 	else
@@ -622,37 +617,46 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum = "-1", ?cmd=""} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
-	if ((objnum == #-1) || (!objnum:descendentof($unit)) || (objnum.owner != player))
+	if ((objnum == #-1) || (!objnum:descendentof($unit)))
 		$http_server:formsyntax(c);
 		return;
 	endif
+	owned = (objnum.owner == player);
 	this:htmlheader(c, method, objnum:name());
 	if (cmd == "")
 		$htell(c, objnum.description);
 		$htell(c, "<HR>");
 		$htell(c, "<B>Total Mass:</B>");
 		$htell(c, tostr($numutils:round(10, objnum:mass())));
-		$htell(c, "<BR><B>Running costs:</B>");
-		$htell(c, $http_server:reslist(@objnum:time_cost()));
+		if (owned)
+			$htell(c, "<BR><B>Running costs:</B>");
+			$htell(c, $http_server:reslist(@objnum:time_cost()));
+		else
+			$htell(c, "<BR><B>Owned by:</B>");
+			$htell(c, $http_server:player_name(objnum.owner));
+		endif
 		$htell(c, "<BR><B>Damage:</B>");
 		$htell(c, tostr(objnum.damage)+"/"+tostr(objnum.maxdamage));
 		$htell(c, "<BR><HR>");
 	endif
-	objnum:http_menu(c, method, param);
-	notify($god, "cmd="+cmd);
-	if ((cmd == "") && objnum:descendentof($ship))
-		f = this:visible_fleets(objnum.location);
-		if (f != {})
-			$http_server:startform(c, "/player/unit", objnum, "transfer");
-			$htell(c, "Transfer unit to: <SELECT NAME=\"target\">");
-			for i in (f)
-				$htell(c, "<OPTION VALUE=\""+tostr(toint(i))+"\">");
-				$htell(c, i.name);
-				$htell(c, "</OPTION>");
-			endfor
-			$htell(c, "</SELECT><INPUT TYPE=submit VALUE=\"Transfer Unit\"></FORM>");
-			$http_server:endform(c);
+	if (owned)
+		objnum:http_menu(c, method, param);
+		if ((cmd == "") && objnum:descendentof($ship))
+			f = this:visible_fleets(objnum.location);
+			if (f != {})
+				$http_server:startform(c, "/player/unit", objnum, "transfer");
+				$htell(c, "Transfer unit to: <SELECT NAME=\"target\">");
+				for i in (f)
+					$htell(c, "<OPTION VALUE=\""+tostr(toint(i))+"\">");
+					$htell(c, i.name);
+					$htell(c, "</OPTION>");
+				endfor
+				$htell(c, "</SELECT><INPUT TYPE=submit VALUE=\"Transfer Unit\"></FORM>");
+				$http_server:endform(c);
+			endif
 		endif
+	else
+		objnum:http_menu_notowned(c, method, param);
 	endif
 	this:htmlfooter(c, method);
 .
@@ -663,12 +667,17 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?objnum = "-1", ?cmd=""} = $http_server:parseparam(param, {"objnum"});
 	objnum = toobj(objnum);
-	if ((objnum == #-1) || (!objnum:descendentof($fleet)) || (objnum.owner != player))
+	if ((objnum == #-1) || (!objnum:descendentof($fleet)))
 		$http_server:formsyntax(c);
 		return;
 	endif
+	owned = (objnum.owner == player);
 	this:htmlheader(c, method, objnum:name());
-	objnum:http_menu(c, method, param);
+	if (owned)
+		objnum:http_menu(c, method, param);
+	else
+		objnum:http_menu_notowned(c, method, param);
+	endif
 	this:htmlfooter(c, method);
 .
 
@@ -735,7 +744,7 @@ $god:prop($player, "displaymode", 1);
 	buf = buf + "colour.200.0.0.";
 	buf = buf + "line.0."+tostr(toint(y*scale)+height/2)+"."+tostr(width)+"."+tostr(toint(y*scale)+height/2)+".";
 	buf = buf + "line."+tostr(toint(-x*scale)+width/2)+".0."+tostr(toint(-x*scale)+width/2)+"."+tostr(height)+".";
-	s = this:starsystems();
+	s = player:starsystems();
 	for i in ($galaxy.stars)
 		if (!i:descendentof($deepspace))
 			sx = toint((i.position[1]-x)*scale);
@@ -823,6 +832,11 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.7  2000/08/01 22:06:04  dtrg
+rem Owned stars are now showed in yellow again.
+rem Fixed viewing other people's units; all the tracebacks should have gone.
+rem Various minor bug fixes and formatting changes.
+rem
 rem Revision 1.6  2000/08/01 09:54:21  dtrg
 rem Finally fixed the map so it works on Internet Explorer systems.
 rem (Now, instead of feeding all the map data in in the URL, it gives gdrender

@@ -3,7 +3,7 @@
 # Uploads a changed file to the MOO server.
 # $Source: /cvsroot/stellation/stellation/moopatch,v $
 # $State: Exp $
-SERVER="plover.net 7777"
+SERVER="pyanfar 7777"
 PASSWORD="defaultadminpassword"
 
 tmp=/tmp/moopatch.$$
@@ -18,6 +18,11 @@ done
 
 # Revision History
 # $Log: moopatch,v $
+# Revision 1.5  2000/08/01 22:06:04  dtrg
+# Owned stars are now showed in yellow again.
+# Fixed viewing other people's units; all the tracebacks should have gone.
+# Various minor bug fixes and formatting changes.
+#
 # Revision 1.4  2000/07/31 23:50:16  dtrg
 # First interim checkin of the new indirected map code.
 #

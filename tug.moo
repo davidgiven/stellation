@@ -203,6 +203,19 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 	endif
 .
 
+.program $god $tug:http_menu_notowned tnt
+	{c, method, param} = args;
+	$htell(c, "<B>Unladen mass:</B>");
+	$htell(c, tostr($numutils:round(10, this.mass)));
+	contents = this:contents();
+	$htell(c, "<BR><B>Currently towing:</B>");
+	if (contents == {})
+		$htell(c, "nothing");
+	else
+		$htell(c, contents[1].name);
+	endif
+.
+
 # --- Accept a unit -----------------------------------------------------------
 
 .program $god $tug:accept tnt
@@ -214,6 +227,11 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 
 rem Revision History
 rem $Log: tug.moo,v $
+rem Revision 1.3  2000/08/01 22:06:04  dtrg
+rem Owned stars are now showed in yellow again.
+rem Fixed viewing other people's units; all the tracebacks should have gone.
+rem Various minor bug fixes and formatting changes.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

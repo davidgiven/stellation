@@ -375,6 +375,15 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 	$htell(c, "</FORM>");
 .
 
+# --- Display various standard-form links -------------------------------------
+
+# Displays a player name, with a FRM compose link
+
+.program $god $http_server:player_name tnt
+	{p} = args;
+	return "<A HREF=\"/player/frm?cmd=compose+new&to="+p:name()+"\">"+p:name()+"</A>";
+.
+
 # --- Start HTTP server on bootup ---------------------------------------------
 
 # Ensure the HTTP server is started whenever the system is booted up.
@@ -385,6 +394,11 @@ $server_started_list = {@$server_started_list, $http_server};
 
 rem Revision History
 rem $Log: http_server.moo,v $
+rem Revision 1.4  2000/08/01 22:06:04  dtrg
+rem Owned stars are now showed in yellow again.
+rem Fixed viewing other people's units; all the tracebacks should have gone.
+rem Various minor bug fixes and formatting changes.
+rem
 rem Revision 1.3  2000/07/31 17:44:57  dtrg
 rem Fixed a formatting booboo in htmlheader that was making non-toplevel pages
 rem look fantastically ugly.
