@@ -156,6 +156,7 @@ $god:prop($unit, "pit", 0);
 		/* notify($god, this.name+" destroyed"); */
 		this:destroy();
 	endif
+	return {""};
 .
 
 # --- Transfer unit from one fleet to another ---------------------------------
@@ -256,6 +257,9 @@ $god:prop($unit, "pit", 0);
 
 rem Revision History
 rem $Log: unit.moo,v $
+rem Revision 1.8  2000/09/09 22:41:10  dtrg
+rem Made :attack return a standard return value(TM).
+rem
 rem Revision 1.7  2000/08/30 22:51:34  dtrg
 rem Stationary units with more than 2/3 damage can now be captured by other
 rem players.
