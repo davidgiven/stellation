@@ -1,0 +1,73 @@
+$Source: /cvsroot/stellation/gdrender/gdrender/Attic/README,v $
+$State: Exp $
+
+===============================================================================
+                                    GDRENDER
+===============================================================================
+
+gdrender is a simple CGI front end around the libgd library. It is used by
+Stellation to generate maps and things, but gdrender isn't part of Stellation
+proper.
+
+How to use it:
+
+* Please gdrender in a cgi-bin directory somewhere.
+* Look up http://hostname.domain/cgi-bin/gdrender?commandstring
+* gdrender will return an image/gif or a text/plain, depending whether the 
+  image could be generated correctly.
+
+Command string syntax
+---------------------
+
+Command strings are formed from a list of words seperated by full stops.
+Terminate the string with a double dot. The beginning of the string must start
+with:
+
+	width.<w>.height.<h>.
+
+...where <w> and <h> are the width and the height of the image, respectively. After that, you can use any command:
+
+	colour.<r>.<g>.<b>.
+		Set the current colour. (You can spell it `color', if you
+		like.)
+	
+	line.<x1>.<y1>.<x2>.<y2>.
+		Draw a line from <x1>,<y1> to <x2>,<y2> in the current colour.
+
+	dash.<x1>.<y1>.<x2>.<y2>.
+		Draw a dashed line from <x1>,<y1> to <x2>,<y2> in the current
+		colour.
+
+	box.<x1>.<y1>.<x2>.<y2>.
+		Draw an empty box, etc.
+	
+	fbox.<x1>.<y1>.<x2>.<y2>.
+		Draw a filled box, etc.
+	
+	arc.<cx>.<cy>.<w>.<h>.<s>.<e>.
+		Draw an arc. <cx>,<cy> is the center, <w>,<h> is the size of
+		the bounding box, and <s> and <e> are the start and end
+		positions of the arc (in degrees).
+	
+	font.<name>.
+		Set the text font. <name> can be t, s, l, g, or mb (tiny,
+		small, large, giant, medium-bold).
+	
+	text.<x>.<y>.<string>.
+		Draw some text. <x>,<y> is the top-left corner of the text box.
+		<string> is the text to be printed. Note that + is replaced
+		with a space character. There is no provision (yet) for
+		printing any characters you can't normally put in URLs.
+	
+	textup.<x>.<y>.<string>.
+		Ditto, but draws the text vertically.
+
+===============================================================================
+
+Revision History
+$Log: README,v $
+Revision 1.1  2000/07/29 17:09:47  dtrg
+Initial revision
+
+
+
