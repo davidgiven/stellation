@@ -22,7 +22,11 @@ $god:prop($star, "brightness", 0);
 	{msg} = args;
 	p = {};
 	for i in (this.contents)
-		p = setadd(p, i.owner);
+		if (i:descendentof($fleet))
+			if (i:find_ships($jumpship) != {})
+				p = setadd(p, i.owner);
+			endif
+		endif
 	endfor
 	for i in (p)
 		i:notify(msg, this);
@@ -160,6 +164,10 @@ $god:prop($star, "brightness", 0);
 
 rem Revision History
 rem $Log: star.moo,v $
+rem Revision 1.4  2000/08/07 20:18:21  dtrg
+rem Ensured that only fleets containing jumpships make a star system
+rem visible.
+rem
 rem Revision 1.3  2000/08/05 22:44:08  dtrg
 rem Many minor bug fixes.
 rem Better object visibility testing --- less scope for cheating.
