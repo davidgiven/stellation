@@ -321,7 +321,7 @@ $god:prop($player, "displaymode", 1);
 
 .program $god $player:http_news tnt
 	{c, method, param} = args;
-	this:toplevel(c, {"left", ""}, {"news", ""});
+	this:toplevel(c, {"left", ""}, {"news", param});
 .
 
 .program $god $player:http_frm tnt
@@ -533,10 +533,18 @@ $god:prop($player, "displaymode", 1);
 	endif
 	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
 	if (this.newnews)
-		$htell(c, "<A HREF=\"/player/news\" TARGET=\"_top\"><B>Intelligence</B></A>");
+		$htell(c, "<B>Intelligence</B>");
 	else
-		$htell(c, "<A HREF=\"/player/news\" TARGET=\"_top\">Intelligence</A>");
+		$htell(c, "Intelligence");
 	endif
+	$htell(c, "<BR>");
+	$htell(c, "<A HREF=\"/player/news?until=24\" TARGET=\"_top\">Day</A>");
+	$htell(c, "<A HREF=\"/player/news?until=48\" TARGET=\"_top\">x2</A>");
+	$htell(c, "<A HREF=\"/player/news?until=72\" TARGET=\"_top\">x3</A>");
+	$htell(c, "<A HREF=\"/player/news?until=168\" TARGET=\"_top\">Week</A>");
+	$htell(c, "<A HREF=\"/player/news?until=336\" TARGET=\"_top\">x2</A>");
+	$htell(c, "<A HREF=\"/player/news?until=504\" TARGET=\"_top\">x3</A>");
+	$htell(c, "<A HREF=\"/player/news\" TARGET=\"_top\">All</A>");
 	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
 	$htell(c, "<A HREF=\"/player/map?x=0&y=0&scale=9\" TARGET=\"_top\">Stellar Cartography</A>");
 	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
@@ -587,10 +595,23 @@ $god:prop($player, "displaymode", 1);
 
 .program $god $player:http_news_single tnt
 	{c, method, param} = args;
+	{?until = ""} = $http_server:parseparam(param, {"until"});
+	if (until == "")
+		until = 0;
+	else
+		until = time() - tonum(tofloat(until)*3600.0);
+	endif
 	this:htmlheader(c, method, "Intelligence");
+	if (until > 0)
+		$htell(c, "(Only listing items more recent than");
+		$htell(c, $numutils:timetostr(until)+")<BR>");
+	endif
 	$htell(c, "<TABLE BORDER=0 COLS=4 WIDTH=100%>");
 	$htell(c, "<TR><TD WIDTH=5% ALIGN=center BGCOLOR=#0000FF><B>Time</B></TD><TD WIDTH=5% ALIGN=center BGCOLOR=#0000FF><B>Player</B></TD><TD WIDTH=5% ALIGN=center BGCOLOR=#0000FF><B>Location</B></TD><TD BGCOLOR=#0000FF><B>Message</B></TD></TR>");
 	for i in (this.news)
+		if (i[1] < until)
+			break;
+		endif
 		$htell(c, "<TR><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
 		$htell(c, $numutils:timetostr(i[1]));
 		$htell(c, "</TD><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
@@ -921,6 +942,9 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.15  2000/09/26 20:04:36  dtrg
+rem Added feature to display only some of the intelligence listing.
+rem
 rem Revision 1.14  2000/09/09 22:40:08  dtrg
 rem Give new players a RAM bomber.
 rem Added a bunch of flushes in strategic places.
