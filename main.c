@@ -7,12 +7,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include "gd.h"
-#include "gdfontg.h"
-#include "gdfontl.h"
-#include "gdfonts.h"
-#include "gdfontt.h"
-#include "gdfontmb.h"
+#include <gd.h>
+#include <gdfontg.h>
+#include <gdfontl.h>
+#include <gdfonts.h>
+#include <gdfontt.h>
+#include <gdfontmb.h>
 
 extern char* load_url(char* url);
 
@@ -281,6 +281,9 @@ loop:
 
 /* Revision history
  * $Log: main.c,v $
+ * Revision 1.4  2000/08/03 18:26:44  dtrg
+ * Replaced "..." local includes with <...> global ones.
+ *
  * Revision 1.3  2000/07/31 23:37:11  dtrg
  * Added the `url.' redirection function.
  *
