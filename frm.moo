@@ -83,7 +83,7 @@ $god:prop($player, "mail", {});
 	$htell(c, "<TD ALIGN=right><INPUT NAME=\"subject\" VALUE=\""+subject+"\" SIZE=50></TD>");
 	$htell(c, "</TR>");
 	$htell(c, "<TR><TD COLSPAN=2>");
-	$htell(c, "<TEXTAREA NAME=\"body\" COLS=60 ROWS=20>");
+	$htell(c, "<TEXTAREA WRAP=hard NAME=\"body\" COLS=60 ROWS=20>");
 	for i in (body)
 		$htell(c, "> "+i);
 	endfor
@@ -98,7 +98,7 @@ $god:prop($player, "mail", {});
 	$htell(c, "</TD></TR></TABLE></FORM>");
 	$htell(c, "<B>Known players:</B>");
 	for i in (player:knownplayers())
-		$htell(c, i:name());
+		$htell(c, $http_server:player_name(i));
 	endfor
 .
 
@@ -125,6 +125,7 @@ $god:prop($player, "mail", {});
 			$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=2>");
 			$htell(c, "<TR><TD COLSPAN=2 BGCOLOR=#0000FF>From");
 			$htell(c, "<B>"+m[1]:name()+"</B>");
+			this:seeplayer(m[1]);
 			$htell(c, "at");
 			$htell(c, "<B>"+$numutils:timetostr(m[3])+"</B>");
 			$htell(c, "<BR>Subject:");
@@ -194,6 +195,11 @@ $god:prop($player, "mail", {});
 
 rem Revision History
 rem $Log: frm.moo,v $
+rem Revision 1.3  2000/08/03 19:01:13  dtrg
+rem Now word wraps messages (hopefully stopping the monster line problem).
+rem Uses $http_server:player_name to display the known player list.
+rem Sees players when messages from them arrive.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
