@@ -467,14 +467,20 @@ $god:prop($player, "displaymode", 1);
 	$htell(c, "<BR><B>Game maintainer:</B>");
 	$htell(c, $http_server:anchor($server_options.maintainer, $server_options.maintainer));
 	$htell(c, "<H3>Top players</H3>");
-	list = {};
-	for i in (players())
-		m = 0.0;
-		for j in (i:fleets())
-			m = m + j:mass();
+	p = players();
+	l = {};
+	for i in (p)
+		l = {0.0, @l};
+	endfor
+	for i in ($galaxy.stars)
+		for j in (i:contents())
+			l[j.owner in p] = l[j.owner in p] + j:mass();
 			suspend(0);
 		endfor
-		list = {{m, i}, @list};
+	endfor
+	list = {};
+	for i in [1..length(p)]
+		list = {@list, {l[i], p[i]}};
 	endfor
 	$htell(c, "<TABLE WIDTH=100% BORDER=0 COLS=3>");
 	$htell(c, "<TR><TD WIDTH=10% BGCOLOR=#0000FF ALIGN=center>Rank</TD>");
@@ -911,6 +917,9 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.13  2000/09/05 23:12:31  dtrg
+rem Top players list now counts all units, rather than just those in fleets.
+rem
 rem Revision 1.12  2000/08/27 23:51:59  dtrg
 rem Replaced a lot of schedule()s with $http_server:flush()es.
 rem Top players listing.
