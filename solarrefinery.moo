@@ -3,7 +3,7 @@ rem A refinery that relies on the sun's brightness.
 rem $Source: /cvsroot/stellation/stellation/solarrefinery.moo,v $
 rem $State: Exp $
 
-.patch solarrefinery.moo 3 1
+.patch solarrefinery.moo 6 1
 notify(player, "solarrefinery.moo");
 
 $god:prop(#0, "solarrefinery", create($refinery, $god));
@@ -40,8 +40,14 @@ $god:prop($solarrefinery, "brightnessmultiplier", 1.0);
 
 rem Revision History
 rem $Log: solarrefinery.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 
 

@@ -3,7 +3,7 @@ rem Flaw Resonance Mail.
 rem $Source: /cvsroot/stellation/stellation/frm.moo,v $
 rem $State: Exp $
 
-.patch frm.moo 3 1
+.patch frm.moo 6 1
 notify(player, "frm.moo");
 
 $god:prop($player, "newmail", 0);
@@ -97,7 +97,7 @@ $god:prop($player, "mail", {});
 	$htell(c, "<B>Not implemented yet</B>");
 	$htell(c, "</TD></TR></TABLE></FORM>");
 	$htell(c, "<B>Known players:</B>");
-	for i in (player.knownplayers)
+	for i in (player:knownplayers())
 		$htell(c, i:name());
 	endfor
 .
@@ -118,26 +118,26 @@ $god:prop($player, "mail", {});
 		$htell(c, "<FORM ACTION=\"/player/frm\"><INPUT TYPE=submit NAME=\"cmd\" VALUE=\"Compose New\"></FORM>");
 		$htell(c, "</TD></TR></TABLE>");
 		i = 1;
-		$htell(c, "<TABLE WIDTH=75% BORDER=2 COLS=1>");
-		$htell(c, "<TR><TD ALIGN=center><B>START</B></TD></TR></TABLE>");
+		$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=1>");
+		$htell(c, "<TR><TD ALIGN=center BGCOLOR=#0000FF><B>START</B></TD></TR></TABLE>");
 		for m in (this.mail)
 			$htell(c, "<FORM ACTION=\"/player/frm\"><INPUT TYPE=hidden VALUE=\""+tostr(i)+"\" NAME=\"msg\">");
-			$htell(c, "<TABLE WIDTH=75% BORDER=2 COLS=2>");
-			$htell(c, "<TR><TD COLSPAN=2>From");
+			$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=2>");
+			$htell(c, "<TR><TD COLSPAN=2 BGCOLOR=#0000FF>From");
 			$htell(c, "<B>"+m[1]:name()+"</B>");
 			$htell(c, "at");
 			$htell(c, "<B>"+$numutils:timetostr(m[3])+"</B>");
 			$htell(c, "<BR>Subject:");
 			$htell(c, "<B>"+m[2]+"</B>");
 			$htell(c, "</TD></TR>");
-			$htell(c, "<TR><TD COLSPAN=2><PRE>");
+			$htell(c, "<TR><TD COLSPAN=2 BGCOLOR=#000064><PRE>");
 			for j in (m[4])
 				$htell(c, j);
 			endfor
 			$htell(c, "</PRE></TD></TR>");
-			$htell(c, "<TR><TD ALIGN=center>");
+			$htell(c, "<TR><TD ALIGN=center BGCOLOR=#0000FF>");
 			$htell(c, "<INPUT TYPE=submit NAME=\"cmd\" VALUE=\"Delete\">");
-			$htell(c, "</TD><TD ALIGN=center>");
+			$htell(c, "</TD><TD ALIGN=center BGCOLOR=#0000FF>");
 			$htell(c, "<INPUT TYPE=submit NAME=\"cmd\" VALUE=\"Reply\">");
 			$htell(c, "</TD></TR>");
 			$htell(c, "</TABLE>");
@@ -152,8 +152,8 @@ $god:prop($player, "mail", {});
 				suspend(0);
 			endif
 		endfor
-		$htell(c, "<TABLE WIDTH=75% BORDER=2 COLS=1>");
-		$htell(c, "<TR><TD ALIGN=center><B>END</B></TD></TR></TABLE>");
+		$htell(c, "<TABLE WIDTH=75% BORDER=0 COLS=1>");
+		$htell(c, "<TR><TD ALIGN=center BGCOLOR=#0000FF><B>END</B></TD></TR></TABLE>");
 		$htell(c, "</CENTER>");
 	elseif (cmd == "delete")
 		{msg} = $http_server:parseparam(param, {"msg"});
@@ -194,7 +194,13 @@ $god:prop($player, "mail", {});
 
 rem Revision History
 rem $Log: frm.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

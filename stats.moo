@@ -3,7 +3,7 @@ rem Unit stats.
 rem $Source: /cvsroot/stellation/stellation/stats.moo,v $
 rem $State: Exp $
 
-.patch stats.moo 3 1
+.patch stats.moo 6 1
 notify(player, "stats.moo");
 
 #                     Mass    Time-cost        Build-cost              Time-to-build       Max damage
@@ -33,15 +33,21 @@ $hydroponicsplant.production               = {0.0, 0.0, 1500.0/240.0};
 $hydroponicsplant.brightnessmultiplier     = 1.0;
 
 $tick = 3600.0;
-$god.password = crypt("defaultadminpassword");
+$god.password = crypt("omnipotence");
 
 
 .quit
 
 rem Revision History
 rem $Log: stats.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 
 

@@ -3,7 +3,7 @@ rem Player superclass.
 rem $Source: /cvsroot/stellation/stellation/player.moo,v $
 rem $State: Exp $
 
-.patch player.moo 3 1
+.patch player.moo 6 1
 notify(player, "player.moo");
 
 $god:prop(#0, "player", create($object, $god));
@@ -71,6 +71,8 @@ $god:prop($player, "displaymode", 1);
 	fleet:create_unit($antimatterdistillery);
 	fleet:create_unit($tug);
 	fleet:create_unit($hydroponicsplant);
+	fleet:create_unit($tug);
+	fleet:create_unit($novacannon);
 	{x, n} = fleet:create_unit($cargoship);
 	n.cargo = {100000.0, 100000.0, 100000.0};
 	return {"", this};
@@ -268,22 +270,30 @@ $god:prop($player, "displaymode", 1);
 		leftp = $http_server:s2p(leftp);
 		middlep = $http_server:s2p(middlep);
 		if (right == {})
-			$htell(c, "<TABLE WIDTH=100% COLS=2><TR><TD WIDTH=25% ALIGN=left VALIGN=top>");
+			$htell(c, "<TABLE WIDTH=100% COLS=2 CELLPADDING=0 CELLSPACING=0><TR><TD WIDTH=25% ALIGN=left VALIGN=top>");
 		else
-			$htell(c, "<TABLE WIDTH=100% COLS=3><TR><TD WIDTH=25% ALIGN=left VALIGN=top>");
+			$htell(c, "<TABLE WIDTH=100% COLS=3 CELLPADDING=0 CELLSPACING=0><TR><TD WIDTH=25% ALIGN=left VALIGN=top>");
 			rightp = $http_server:s2p(rightp);
 		endif
+		$htell(c, "<TABLE WIDTH=100% COLS=1 CELLPADDING=0 CELLSPACING=0>");
 		player:("http_"+left+"_single")(c, "", leftp);
+		$htell(c, "</TD></TR></TABLE>");
 		if (right == {})
 			$htell(c, "<TD WIDTH=75% ALIGN=left VALIGN=top>");
+			$htell(c, "<TABLE WIDTH=100% COLS=1 CELLPADDING=0 CELLSPACING=0>");
 			player:("http_"+middle+"_single")(c, "", middlep);
+			$htell(c, "</TD></TR></TABLE>");
 			$htell(c, "</TD>");
 		else
 			$htell(c, "<TD WIDTH=30% ALIGN=left VALIGN=top>");
+			$htell(c, "<TABLE WIDTH=100% COLS=1 CELLPADDING=0 CELLSPACING=0>");
 			player:("http_"+middle+"_single")(c, "", middlep);
+			$htell(c, "</TD></TR></TABLE>");
 			$htell(c, "</TD>");
 			$htell(c, "<TD WIDTH=45% ALIGN=left VALIGN=top>");
+			$htell(c, "<TABLE WIDTH=100% COLS=1 CELLPADDING=0 CELLSPACING=0>");
 			player:("http_"+right+"_single")(c, "", rightp);
+			$htell(c, "</TD></TR></TABLE>");
 			$htell(c, "</TD>");
 		endif
 		$htell(c, "</TR></TABLE>");
@@ -346,7 +356,7 @@ $god:prop($player, "displaymode", 1);
 .program $god $player:htmlheader tnt
 	{c, method, title} = args;
 	if (method == "")
-		$htell(c, "<H1>"+title+"</H1>");
+		$htell(c, "<TR><TD BGCOLOR=#FF0000 ALIGN=center><FONT COLOR=#FFFF00 SIZE=+1><B>"+title+"</B></FONT></TD></TR><TR><TD ALIGN=left VALIGN=top>");
 	else
 		$http_server:htmlheader(c, 200, title);
 	endif
@@ -452,25 +462,32 @@ $god:prop($player, "displaymode", 1);
 .program $god $player:http_left_single tnt
 	{c, method, param} = args;
 	this:htmlheader(c, method, player:name()+" of the "+player.empire);
-	$htell(c, "<HR>");
+	$htell(c, "<TABLE WIDTH=100% BORDER=0 COLS=1>");
+	$htell(c, "<TR><TD BGCOLOR=#000064 ALIGN=center>");
 	$htell(c, "<B>Current time:</B>");
 	$htell(c, $numutils:timetostr(time()));
-	$htell(c, "<P><HR>");
+	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
 	$htell(c, "<A HREF=\"/player\" TARGET=\"_top\">Game Status</A>");
-	$htell(c, "<BR><A HREF=\"/player/preferences\" TARGET=\"_top\">Internal Affairs</A>");
-	$htell(c, "<BR><A HREF=\"/player/diplomacy\" TARGET=\"_top\">External Relations</A>");
+	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
+	$htell(c, "<A HREF=\"/player/preferences\" TARGET=\"_top\">Internal Affairs</A>");
+	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
+	$htell(c, "<A HREF=\"/player/diplomacy\" TARGET=\"_top\">External Relations</A>");
+	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
 	if (this.newmail)
-		$htell(c, "<BR><A HREF=\"/player/frm\" TARGET=\"_top\"><B>Flaw Resonance Messages</B></A>");
+		$htell(c, "<A HREF=\"/player/frm\" TARGET=\"_top\"><B>Flaw Resonance Messages</B></A>");
 	else
-		$htell(c, "<BR><A HREF=\"/player/frm\" TARGET=\"_top\">Flaw Resonance Messages</A>");
+		$htell(c, "<A HREF=\"/player/frm\" TARGET=\"_top\">Flaw Resonance Messages</A>");
 	endif
+	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
 	if (this.newnews)
-		$htell(c, "<BR><A HREF=\"/player/news\" TARGET=\"_top\"><B>Intelligence</B></A>");
+		$htell(c, "<A HREF=\"/player/news\" TARGET=\"_top\"><B>Intelligence</B></A>");
 	else
-		$htell(c, "<BR><A HREF=\"/player/news\" TARGET=\"_top\">Intelligence</A>");
+		$htell(c, "<A HREF=\"/player/news\" TARGET=\"_top\">Intelligence</A>");
 	endif
-	$htell(c, "<BR><A HREF=\"/player/map\" TARGET=\"_top\">Stellar Cartography</A>");
-	$htell(c, "<BR><HR>");
+	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
+	$htell(c, "<A HREF=\"/player/map?x=0&y=0&scale=9\" TARGET=\"_top\">Stellar Cartography</A>");
+	$htell(c, "</TD></TR><TR><TD BGCOLOR=#640000 ALIGN=center>");
+	$htell(c, "</TD></TR></TABLE>");
 	$htell(c, "</CENTER>");
 	for i in (this:starsystems())
 		$htell(c, "<A HREF=\"/player/star?objnum="+tostr(toint(i))+"\" TARGET=\"_top\"><B>"+i:name()+"</B></A>");
@@ -521,17 +538,19 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	this:htmlheader(c, method, "Intelligence");
 	$htell(c, "<TABLE BORDER=0 COLS=4 WIDTH=100%>");
-	$htell(c, "<TR><TD WIDTH=5% ALIGN=center><B>Time</B></TD><TD WIDTH=5% ALIGN=center><B>Player</B></TD><TD WIDTH=5% ALIGN=center><B>Location</B></TD><TD><B>Message</B></TD></TR>");
+	$htell(c, "<TR><TD WIDTH=5% ALIGN=center BGCOLOR=#0000FF><B>Time</B></TD><TD WIDTH=5% ALIGN=center BGCOLOR=#0000FF><B>Player</B></TD><TD WIDTH=5% ALIGN=center BGCOLOR=#0000FF><B>Location</B></TD><TD BGCOLOR=#0000FF><B>Message</B></TD></TR>");
 	for i in (this.news)
-		$htell(c, "<TR><TD VALIGN=top ALIGN=center>");
+		$htell(c, "<TR><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
 		$htell(c, $numutils:timetostr(i[1]));
-		$htell(c, "</TD><TD VALIGN=top ALIGN=center>");
+		$htell(c, "</TD><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
 		$htell(c, i[3]:name());
-		$htell(c, "</TD><TD VALIGN=top ALIGN=center>");
+		$htell(c, "</TD><TD VALIGN=top ALIGN=center BGCOLOR=#000064>");
 		if (i[2] != #0)
 			$htell(c, "["+floatstr(i[2][1], 1)+", "+floatstr(i[2][2], 1)+"]");
+		else
+			$htell(c, "&nbsp;");
 		endif
-		$htell(c, "</TD><TD VALIGN=top ALIGN=left>");
+		$htell(c, "</TD><TD VALIGN=top ALIGN=left BGCOLOR=#000064>");
 		$htell(c, i[4]);
 		$htell(c, "</TD></TR>");
 	endfor
@@ -551,7 +570,6 @@ $god:prop($player, "displaymode", 1);
 		return;
 	endif
 	this:htmlheader(c, method, objnum:name());
-	$htell(c, "<HR>");
 	objnum:http_menu(c, method, param);
 	this:htmlfooter(c, method);
 .
@@ -567,7 +585,7 @@ $god:prop($player, "displaymode", 1);
 		return;
 	endif
 	this:htmlheader(c, method, objnum:name());
-	$htell(c, "<HR><B>Location:</B>");
+	$htell(c, "<B>Location:</B>");
 	i = objnum.location;
 	$htell(c, "<A HREF=\"/player/star?objnum="+tostr(toint(i))+"\"><B>"+i:name()+"</B></A>");
 	$htell(c, "<A HREF=\"/player/map?x="+tostr(i.position[1])+"&y="+tostr(i.position[2])+"&scale="+tostr(this.mapdefaultscale)+"\" TARGET=\"_top\">("+tostr(i.position[1])+", "+tostr(i.position[2])+")</A>");
@@ -610,7 +628,6 @@ $god:prop($player, "displaymode", 1);
 	endif
 	this:htmlheader(c, method, objnum:name());
 	if (cmd == "")
-		$htell(c, "<HR>");
 		$htell(c, objnum.description);
 		$htell(c, "<HR>");
 		$htell(c, "<B>Total Mass:</B>");
@@ -651,7 +668,6 @@ $god:prop($player, "displaymode", 1);
 		return;
 	endif
 	this:htmlheader(c, method, objnum:name());
-	$htell(c, "<HR>");
 	objnum:http_menu(c, method, param);
 	this:htmlfooter(c, method);
 .
@@ -677,18 +693,17 @@ $god:prop($player, "displaymode", 1);
 	height = player.mapheight;
 	scale = tofloat(scale);
 	this:htmlheader(c, method, "Stellar Cartography");
-	$htell(c, "<HR>");
 	buf = $server_options.gdrender_url+"?width."+tostr(width)+".height."+tostr(height)+".";
 	buf = buf + "colour.0.0.100.";
 	buf = buf + "fbox.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
 	buf = buf + "colour.100.100.100.";
 	sx = toint(tofloat(width)/scale);
 	sy = toint(tofloat(height)/scale);
-	cx = tofloat(toint(x)) - tofloat(sx/2) - 1.0 - x;
+	cx = tofloat(toint(x)) - tofloat(sx/2) - 2.0 - x;
 	cy = y - tofloat(toint(y)) - tofloat(sy/2) - 1.0;
 	cx = toint(cx*scale) + width/2;
 	cy = toint(cy*scale) + height/2;
-	buf = buf + "grid."+tostr(cx)+"."+tostr(cy)+"."+tostr(toint(scale))+"."+tostr(toint(scale))+"."+tostr(toint(sx)*2)+"."+tostr(toint(sy)*2)+".";
+	buf = buf + "grid."+tostr(cx)+"."+tostr(cy)+"."+tostr(toint(scale))+"."+tostr(toint(scale))+"."+tostr(toint(sx+1)*2)+"."+tostr(toint(sy+1)*2)+".";
 	buf = buf + "colour.200.0.0.";
 	buf = buf + "line.0."+tostr(toint(y*scale)+height/2)+"."+tostr(width)+"."+tostr(toint(y*scale)+height/2)+".";
 	buf = buf + "line."+tostr(toint(-x*scale)+width/2)+".0."+tostr(toint(-x*scale)+width/2)+"."+tostr(height)+".";
@@ -714,17 +729,17 @@ $god:prop($player, "displaymode", 1);
 	$htell(c, "<FORM ACTION=\"/player/map\">");
 	$htell(c, "<TABLE WIDTH=10% BORDER=0 COLS=2>");
 	$htell(c, "<TR><TD>");
-	$htell(c, "<A HREF=\""+buf+"\"><IMG SRC=\""+buf+"\" WIDTH="+tostr(player.mapwidth)+" HEIGHT="+tostr(player.mapheight)+"></A>");
-	$htell(c, "</TD></TR>");
-	$htell(c, "<TR><TD ALIGN=center BGCOLOR=#000064><FONT COLOR=#FFFF00>Star in your sphere of influence");
-	$htell(c, "<FONT COLOR=#FFFFFF>Star you have no control over");
-	$htell(c, "</TD></TR>");
-	$htell(c, "<TR><TD>");
 	$htell(c, "Map center: X=<INPUT NAME=\"x\" VALUE=\""+tostr(x)+"\" SIZE=6>");
 	$htell(c, "Y=<INPUT NAME=\"y\" VALUE=\""+tostr(y)+"\" SIZE=6>");
 	$htell(c, "Scale:");
 	$htell(c, "<INPUT NAME=\"scale\" VALUE=\""+tostr(scale)+"\" SIZE=6>");
 	$htell(c, "<INPUT TYPE=submit>");
+	$htell(c, "</TD></TR>");
+	$htell(c, "<TR><TD>");
+	$htell(c, "<A HREF=\""+buf+"\"><IMG SRC=\""+buf+"\" WIDTH="+tostr(player.mapwidth)+" HEIGHT="+tostr(player.mapheight)+"></A>");
+	$htell(c, "</TD></TR>");
+	$htell(c, "<TR><TD ALIGN=center BGCOLOR=#000064><FONT COLOR=#FFFF00>Star in your sphere of influence");
+	$htell(c, "<FONT COLOR=#FFFFFF>Star you have no control over");
 	$htell(c, "</TD></TR>");
 	$htell(c, "</TABLE>");
 	$htell(c, "</FORM>");
@@ -738,7 +753,6 @@ $god:prop($player, "displaymode", 1);
 	{c, method, param} = args;
 	{?name=player.name, ?empire=player.empire, ?email=player.email, ?mapwidth=tostr(player.mapwidth), ?mapheight=tostr(player.mapheight), ?mapdefaultscale=tostr(player.mapdefaultscale)} = $http_server:parseparam(param, {"name", "empire", "email", "mapwidth", "mapheight", "mapdefaultscale", "mapaspect", "mapmode"});
 	this:htmlheader(c, method, "Internal Affairs");
-	$htell(c, "<HR>");
 	notify($god, toliteral(param));
 	notify($god, "name="+tostr(name));
 	result = player:set_name(name);
@@ -798,6 +812,12 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.3  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
 rem Revision 1.2  2000/07/30 00:00:40  dtrg
 rem Took out the nasty text-mode map and replaced it with a gdrender GIF
 rem based one.

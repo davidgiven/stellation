@@ -3,7 +3,7 @@ rem Represents a single unit of any type.
 rem $Source: /cvsroot/stellation/stellation/unit.moo,v $
 rem $State: Exp $
 
-.patch unit.moo 3 1
+.patch unit.moo 6 1
 notify(player, "unit.moo");
 
 $god:prop(#0, "unit", create($object, $god));
@@ -144,6 +144,25 @@ $god:prop($unit, "pit", 0);
 	endif
 .
 
+# --- Find hostile & friendly fleets ------------------------------------------
+
+.program $god $unit:hostilefleets tnt
+	star = this.location;
+	while (!star:descendentof($star))
+		star = star.location;
+	endwhile
+	f = {};
+	enemies = player:enemyplayers();
+	for i in (star:contents())
+		if (i:descendentof($fleet))
+			if (i in enemies)
+				f = {@f, i};
+			endif
+		endif
+	endfor
+	return f;
+.
+
 # --- HTML operations ---------------------------------------------------------
 
 .program $god $unit:http_info tnt
@@ -162,8 +181,14 @@ $god:prop($unit, "pit", 0);
 
 rem Revision History
 rem $Log: unit.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 
 

@@ -3,7 +3,7 @@ rem Represents a metal mine.
 rem $Source: /cvsroot/stellation/stellation/metalmine.moo,v $
 rem $State: Exp $
 
-.patch metalmine.moo 3 1
+.patch metalmine.moo 6 1
 notify(player, "metalmine.moo");
 
 $god:prop(#0, "metalmine", create($refinery, $god));
@@ -19,7 +19,13 @@ $metalmine.description = "Automated metal mines collect metallic asteroids and p
 
 rem Revision History
 rem $Log: metalmine.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

@@ -4,7 +4,7 @@
 # $Source: /cvsroot/stellation/stellation/moopatch,v $
 # $State: Exp $
 SERVER="pyanfar 7777"
-PASSWORD="defaultadminpassword"
+PASSWORD="omnipotence"
 
 tmp=/tmp/moopatch.$$
 
@@ -18,7 +18,13 @@ done
 
 # Revision History
 # $Log: moopatch,v $
-# Revision 1.1  2000/07/29 17:53:01  dtrg
-# Initial revision
+# Revision 1.2  2000/07/30 21:20:19  dtrg
+# Updated all the .patch lines to contain the correct line numbers.
+# Cosmetic makeover; we should now hopefully look marginally better.
+# Bit more work on the nova cannon.
+# A few minor bug fixes.
+#
+# Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+# Initial checkin.
 #
 

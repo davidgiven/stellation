@@ -3,7 +3,7 @@ rem Graphics renderer
 rem $Source: /cvsroot/stellation/stellation/mapper.moo,v $
 rem $State: Exp $
 
-.patch mapper.moo 3 1
+.patch mapper.moo 6 1
 notify(player, "mapper.moo");
 
 $god:prop(#0, "mapper", create($object, $god));
@@ -158,6 +158,12 @@ $god:prop($mapper, "SHIFT", 2);
 
 rem Revision History
 rem $Log: mapper.moo,v $
+rem Revision 1.3  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
 rem Revision 1.2  2000/07/30 00:00:40  dtrg
 rem Took out the nasty text-mode map and replaced it with a gdrender GIF
 rem based one.

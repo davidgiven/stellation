@@ -3,7 +3,7 @@ rem Cargo ship.
 rem $Source: /cvsroot/stellation/stellation/cargoship.moo,v $
 rem $State: Exp $
 
-.patch cargoship.moo 3 1
+.patch cargoship.moo 6 1
 notify(player, "cargoship.moo");
 
 $god:prop(#0, "cargoship", create($ship, $god));
@@ -132,7 +132,13 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 
 rem Revision History
 rem $Log: cargoship.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

@@ -23,7 +23,7 @@ notify(player, toliteral(eval("return " + argstr + ";")[2]));
 	tb = v[4];
 	if (html)
 		notify(c, "");
-		notify(c, "</TABLE><P><HR><H2>System traceback</H2>");
+		notify(c, "</TABLE></TABLE></TABLE></TABLE><P><HR><H2>System traceback</H2>");
 	endif
 	if (length(tb) == 0)
 		notify(c, "** Illegal command: "+tostr(v[2]));
@@ -85,7 +85,13 @@ exec add_property(#0, "object", create(#-1, $god), {$god, "r"})
 
 rem Revision History
 rem $Log: _init.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

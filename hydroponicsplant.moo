@@ -3,7 +3,7 @@ rem Represents a hydroponics plant.
 rem $Source: /cvsroot/stellation/stellation/hydroponicsplant.moo,v $
 rem $State: Exp $
 
-.patch hydroponicsplant.moo 3 1
+.patch hydroponicsplant.moo 6 1
 notify(player, "hydroponicsplant.moo");
 
 $god:prop(#0, "hydroponicsplant", create($solarrefinery, $god));
@@ -19,7 +19,13 @@ $hydroponicsplant.description = "This unit searches out carbonaceous asteroids a
 
 rem Revision History
 rem $Log: hydroponicsplant.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

@@ -3,7 +3,7 @@ rem Name generator
 rem $Source: /cvsroot/stellation/stellation/namegen.moo,v $
 rem $State: Exp $
 
-.patch namegen.moo 3 1
+.patch namegen.moo 6 1
 notify(player, "namegen.moo");
 
 # Name generator is added to $stringutils.
@@ -48,6 +48,12 @@ $stringutils.syllables3 = {"drew", "rine", "vid", "a", "na", "sten", "niel", "cc
 
 rem Revision History
 rem $Log: namegen.moo,v $
+rem Revision 1.3  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
 rem Revision 1.2  2000/07/29 23:59:59  dtrg
 rem Tweaked the name generator to produce better names (again).
 rem

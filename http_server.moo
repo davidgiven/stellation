@@ -3,7 +3,7 @@ rem HTTP server front end.
 rem $Source: /cvsroot/stellation/stellation/http_server.moo,v $
 rem $State: Exp $
 
-.patch http_server.moo 4 1
+.patch http_server.moo 6 1
 notify(player, "http_server.moo");
 
 $god:prop(#0, "http_server", create(#-1, $god));
@@ -167,8 +167,9 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 	endif
 	notify(c, title);
 	notify(c, "</TITLE></HEAD>");
+	notify(c, "<BODY text=#FFFFFF bgcolor=#000000 link=#66FFFF vlink=#66FFFF alink=#FF0000><H1>");
 	if (!frameset)
-		notify(c, "<BODY><H1>");
+		notify(c, "<BODY text=#FFFFFF bgcolor=#000000 link=#66FFFF vlink=#66FFFF alink=#FF0000><H1>");
 		if (response != 200)
 			notify(c, tostr(response));
 		endif
@@ -312,6 +313,7 @@ $god:prop($http_server, "dtd", "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//E
 .program $god $http_server:redirect tnt
 	{c, url, ?target=""} = args;
 	if (target == "")
+		notify(c, "Please wait...");
 		notify(c, "<META HTTP-EQUIV=\"Refresh\" CONTENT=\"0; URL="+url+"\">");
 	else
 		notify(c, "<LINK REL=refresh HREF=\""+url+"\" TARGET=\""+target+"\">");
@@ -384,7 +386,13 @@ $server_started_list = {@$server_started_list, $http_server};
 
 rem Revision History
 rem $Log: http_server.moo,v $
-rem Revision 1.1  2000/07/29 17:53:01  dtrg
-rem Initial revision
+rem Revision 1.2  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
+rem Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+rem Initial checkin.
 rem
 

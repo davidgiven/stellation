@@ -19,6 +19,7 @@ SRCS = \
 	galaxy.moo		\
 	unit.moo		\
 	ship.moo		\
+	warship.moo		\
 	jumpship.moo		\
 	fleet.moo		\
 	mapper.moo		\
@@ -60,8 +61,14 @@ stellation.db: $(SRCS) Makefile
 
 # Revision History
 # $Log: Makefile,v $
-# Revision 1.1  2000/07/29 17:53:01  dtrg
-# Initial revision
+# Revision 1.2  2000/07/30 21:20:19  dtrg
+# Updated all the .patch lines to contain the correct line numbers.
+# Cosmetic makeover; we should now hopefully look marginally better.
+# Bit more work on the nova cannon.
+# A few minor bug fixes.
+#
+# Revision 1.1.1.1  2000/07/29 17:53:01  dtrg
+# Initial checkin.
 #
 # Revision 1.1.1.1  2000/07/29 17:10:25  dtrg
 # Initial checkin.

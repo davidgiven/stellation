@@ -3,7 +3,7 @@ rem Global server options.
 rem $Source: /cvsroot/stellation/stellation/server_options.moo,v $
 rem $State: Exp $
 
-.patch server_options.moo 4 1
+.patch server_options.moo 6 1
 notify(player, "server_options.moo");
 
 $god:prop(#0, "server_options", create($object, $god));
@@ -31,6 +31,12 @@ $server_options.motd = {@$server_options.motd, "267.670: Server reset. New featu
 
 rem Revision History
 rem $Log: server_options.moo,v $
+rem Revision 1.3  2000/07/30 21:20:19  dtrg
+rem Updated all the .patch lines to contain the correct line numbers.
+rem Cosmetic makeover; we should now hopefully look marginally better.
+rem Bit more work on the nova cannon.
+rem A few minor bug fixes.
+rem
 rem Revision 1.2  2000/07/30 00:00:40  dtrg
 rem Took out the nasty text-mode map and replaced it with a gdrender GIF
 rem based one.
