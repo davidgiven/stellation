@@ -56,6 +56,8 @@ $god:prop($bomber, "lastfire", 0.0);
 	{objnum, ?cmd=""} = $http_server:parseparam(param, {"objnum", "cmd"});
 	if (cmd == "bomb")
 		return this:http_bomb(c, method, param);
+	elseif (cmd == "transfer")
+		return this:http_transfer(c, method, param);
 	endif
 	$http_server:startform(c, "/player/unit", objnum, "bomb");
 	$htell(c, "<TABLE COLS=4>");
@@ -86,6 +88,9 @@ $god:prop($bomber, "lastfire", 0.0);
 
 rem Revision History
 rem $Log: bomber.moo,v $
+rem Revision 1.2  2000/09/26 20:07:28  dtrg
+rem Fixed a bug that was preventing unit transfer.
+rem
 rem Revision 1.1  2000/09/09 22:36:34  dtrg
 rem First working version.
 rem
