@@ -11,6 +11,16 @@ $tug.name = "tug";
 
 $tug.description = "Tugs are small, powerful craft used to tow otherwise unpowered vessels and other artifacts.";
 
+# --- Constructor/destructor --------------------------------------------------
+
+.program $god $tug:destroy tnt
+	result = this:unload();
+	if (result[1] == "")
+		result[2]:attack(result[2].maxdamage * 2.0 / 3.0);
+	endif
+	return pass();
+.
+
 # --- Resource consumption ----------------------------------------------------
 
 .program $god $tug:starve tnt
@@ -65,7 +75,7 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 	if (unit:descendentof($factory) && unit:deployed())
 		return {"Factories have to be mothballed before they can be taken under tow."};
 	endif
-	starsystem:notify(unit.name+" taken under tow.");
+	starsystem:notify("<B>"+unit.name+"</B> taken under tow.");
 	unit:make_dead();
 	unit:moveto(this);
 	return {""};
@@ -82,20 +92,18 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 	if (contents == {})
 		return {"The tug is not towing anything."};
 	endif
-	starsystem:notify(contents[1].name+" dropped by a tug.");
+	starsystem:notify("<B>"+contents[1].name+"</B> dropped by a tug.");
 	if (contents[1]:descendentof($masteroid))
-		move(contents[1], #-1);
 		contents[1]:destroy();
 		starsystem:changeasteroids(1, 0);
 	elseif (contents[1]:descendentof($casteroid))
-		move(contents[1], #-1);
 		contents[1]:destroy();
 		starsystem:changeasteroids(0, 1);
 	else
 		contents[1]:moveto(starsystem);
 		contents[1]:make_alive();
 	endif
-	return {""};
+	return {"", contents[1]};
 .
 
 # --- Make a tug drop its load ------------------------------------------------
@@ -227,6 +235,10 @@ $tug.description = "Tugs are small, powerful craft used to tow otherwise unpower
 
 rem Revision History
 rem $Log: tug.moo,v $
+rem Revision 1.6  2000/08/07 20:13:30  dtrg
+rem Changes so that when a tug is destroyed, its cargo is dealt 2/3 damage
+rem and dropped.
+rem
 rem Revision 1.5  2000/08/03 18:59:53  dtrg
 rem When carbonaceous asteroids are picked up, they don't mysteriously turn
 rem into metallic ones any more.
