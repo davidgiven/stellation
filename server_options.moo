@@ -31,7 +31,7 @@ $god:prop($server_options, "motd", {});
 $server_options.motd = {"Welcome to Stellation, the hot new on-line gaming service! Please note that this game is currently in ALPHA testing. It's not guaranteed to do anything useful. In fact, it is guaranteed not to work. However, you're welcome to poke around as much as you like. If you see any bugs, or traceback messages, please drop me a note and I'll look into it. Send me (Hjalfi) an FRM. <B>Big warning:</B> every so often I will need to rebuild the server from scratch as I make major changes. This will involve wiping the database, including all your players, units, etc. It is only alpha, remember."};
 $server_options.motd = {@$server_options.motd, "Join the <A HREF=\"http://lists.sourceforge.net/mailman/listinfo/stellation-players\">mailing list</A>!"};
 
-$server_options.motd = {@$server_options.motd, "268.942: Someone pointed out that if you jumped into a system and stole all of someone's resources, five minutes later all their units would starve to death. As a result, I've made a few minor changes: stationary units (factories and refineries) no longer die when starved. Now they just mothball themselves. (Note that mobile units still die.) Also, there's a new feature in cargo ships that will keep them automatically stocked up. So you can keep the bulk of your resources safely locked away in a cargo ship, and only keep the minimum necessary in the star system itself where anyone can pick it up. Oh, yes, and I've quadrupled the output of hydroponics plants."};
+$server_options.motd = {@$server_options.motd, "268.942: Someone pointed out that if you jumped into a system and stole all of someone's resources, five minutes later all their units would starve to death. As a result, I've made a few minor changes: stationary units (factories and refineries) no longer die when starved. Now they just mothball themselves. (Note that mobile units still die.) Also, there's a new feature in cargo ships that will keep them automatically stocked up. So you can keep the bulk of your resources safely locked away in a cargo ship, and only keep the minimum necessary in the star system itself where anyone can pick it up. Oh, yes, and I've tripled the output of hydroponics plants. <B>Important!</B> You will have to mothball and redeploy your hydro plants to make this change go into effect!"};
 $server_options.motd = {@$server_options.motd, "268.798: Stationary units with more than 2/3 damage can now be captured by other players. There's currently no way of doing damage to them, however (other than blasting their tugs when they're being towed)."};
 $server_options.motd = {@$server_options.motd, "268.774: Adjusted the top players list to include stationary units as well. Should work better, but I have since discovered that my sorting algorithm doesn't appear to work. Heigh ho."};
 $server_options.motd = {@$server_options.motd, "268.727: Added the top players table. Well, that was a nasty shock... my two test players make #16 and #17! Obviously people are losing lots of units somehow. Please, if you feel that the game's too hard, or that you've been hard done by, drop me an e-mail... preferably to the mailing list (it's easier for me to track that way). Also doubled the output from metal mines. Hopefully this should move things along a bit."};
@@ -53,6 +53,9 @@ $server_options.motd = {@$server_options.motd, "267.670: Server reset. New featu
 
 rem Revision History
 rem $Log: server_options.moo,v $
+rem Revision 1.13  2000/09/05 23:20:05  dtrg
+rem MOTD update.
+rem
 rem Revision 1.12  2000/09/05 23:13:39  dtrg
 rem MOTD update.
 rem
