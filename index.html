@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+                      "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html">
+  <title>Stellation</title>
+</head>
+
+<body text="#FFFFFF" bgcolor="#000000" link="#00FFFF">
+
+<table border="0" width="100%">
+  <tbody>
+    <tr>
+      <td align="center" bgcolor="#FF0000"><b><font
+        size="+4">STELLATION</font></b></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 style="color: #00B200">Introduction</h2>
+Stellation is a multi-player, networked game played via a web browser. It's
+very loosely based on Planetarion, but fixes a number of things that I feel
+are lacking. (But don't let me put you off Planetarion; it's a great game ---
+but I think that it could be so much better.)
+
+<p>One of Stellation's main differences is that it features real geography; a
+galaxy of about a hundred (currently) stars on a 2D grid. You can occupy as
+many of the stars as you wish, and have the military might to keep from the
+other players, of course.</p>
+
+<p>Currently it is in alpha testing. You're welcome to create a player and
+play with it. However, large portions of the game aren't finished. In
+particular, game interactions with other players don't work terribly well:
+there is no combat system yet, for example, and trying to look at another
+player's units tend to fail.</p>
+
+<p>Nevertheless, I welcome testers. The more people who play it, the sooner
+the bugs will be found. The more people who tell me how great they think the
+game is, the more encouraged I will get and the quicker development will
+proceed... <br>
+</p>
+<hr>
+
+<ul>
+  <li><a href="http://plover.net:7778">Stellation itself</a>
+    <p>If you want to play, follow this link. You'll need a web browser that
+    supports tables and Basic HTTP authentication (if you don't know what this
+    means, don't worry; I have yet to find a browser that doesn't).</p>
+  </li>
+</ul>
+<ul>
+  <li><a href="http://sourceforge.net/projects/stellation">SourceForge's
+    Stellation development page.</a>
+    <p>Stellation is open source. Where better to host it than SourceForge? If
+    you want to see how it works, want to set up your own Stellation server,
+    or feel like fixing something you think is broken, this is the place to
+    go. You can also find the (currently unused) Stellation discussion forums
+    and mailing lists here.</p>
+  </li>
+  <li><a href="http://www.moo.mud.org">LambdaMOO</a>
+    <p>Stellation uses the LambdaMOO VM as its core run-time system. This
+    gives us lots of nice features like persistant storage, an object-oriented
+    garbage-collected byte-code interpreted language, incremental development
+    so I can modify the system without having to rebuild the database, dead
+    easy network interfaces, easy remote administration, and lots of other
+    funky features.</p>
+    <p>Note that Stellation's database has been written from scratch; it
+    doesn't share any features with LambdaCore. Stellation is <i>not</i> a
+    MOO.</p>
+  </li>
+  <li><a href="http://wired.st-and.ac.uk/~dg">My home page</a>
+    <p>If you have enjoyed this program, you may like to consider others by
+    the same author...</p>
+  </li>
+</ul>
+<hr>
+
+
+<h2><span style="color: #00B200">How to play Stellation</span></h2>
+Stellation has two types of units; mobile units and stationary units. Mobile
+units are comprised of things like cargo ships, jumpships, warships, and so
+on. Stationary units are things like factories, refineries, and buoys. Mobile
+units are collected into groups called <b>fleets</b>; and it will be these,
+usually, that you will direct. Stationary units can be either built on-site or
+else built elsewhere and then towed by a tug.
+
+<p>Speed of light constraints mean, of course, that you can only communicate
+with one of your units if there's an FTL transceiver nearby. These
+transceivers are housed in special units called <b>jumpships</b>. These ships
+will be crucial to your campaign. Not only do they provide communication to
+your units (you can't even <i>see</i> a unit unless it's in the same solar
+system as one of your jumpships) but they also provide the only means of
+transport: a fleet containing a jumpship can travel from one star to another,
+at the rate of one parsec per hour, and the appropriate quantity of fuel.</p>
+
+<p>Which brings us to a major point. Consumables.</p>
+
+<p>There are three kinds of consumable in Stellation:</p>
+<ul>
+  <li>Metal
+    <p>Metal is refined from metallic asteroids by automated metal refineries.
+    Most units don't consume metal as a matter of course, but you will need
+    it, and plenty of it, when building new units.</p>
+  </li>
+  <li>Antimatter
+    <p>Antimatter is produced from sunlight by antimatter distilleries. The
+    quantity of antimatter produced, of course, depends on how bright the star
+    is. Antimatter is used as an energy source; units will consume a steady
+    stream of the stuff. It's also used as fuel by jumpships. The amount of
+    fuel needed for a particular star jump depends on the geometry of the
+    transit bubble required: in layman's terms, the mass of the fleet being
+    transported and the distance required. Oh, did I mention that a jumpship's
+    FTL transceiver doesn't work inside a transit bubble?</p>
+  </li>
+  <li>Organics
+    <p>Organic material is required to maintain the crews of your units, and
+    more importantly, their bioelectric control systems tend to die without
+    it. It is made by hydroponics plants, which colonise carbonaceous
+    asteroids with greenhouses. You need both the asteroids and sunlight to
+    produce organics. Units require a small amount to run, and a slightly
+    larger amount to build.</p>
+  </li>
+</ul>
+If one of your units needs some consumables but can't get them, it will die
+and go out of commission. You'll lose it. You really don't want this to
+happen, particularly if the unit in question is a jumpship; the fleet will
+just drop off your scanners. Later, someone may find a few bits of useless
+debris floating in empty space...
+
+<p>There are strict rules as to where units get their consumables from. Mobile
+units will always try to find a cargoship in the same fleet. If one of the
+cargoships can provide the material required, so be it. Otherwise, the
+material will be looked for in the free stocks in orbit around the current
+star.</p>
+
+<p>Be careful. Unless you keep these rules in mind, you can be in trouble. For
+example: you've just jumped into a new star system. You create a new fleet,
+and transfer some of your units to it. The units promptly die. Why? Because
+the star has no resources of consumables, and the units in the new fleet can't
+access the cargoship that's in the old fleet, and will starve. Heaven help you
+if one of the units you transferred <i>was</i> your cargo ship... all the
+units in the old fleet will die, including your jumpship, and you'll lose
+track of both of them. The cargo ship will survive, though. </p>
+
+<h2><span style="color: #00B200">Recommended starting strategy</span></h2>
+When you first start the game, you're given a few units to get started with.
+It can be fairly annoying doing the wrong thing and wiping out your entire
+fleet, so here are some tips to get you started.
+<ol>
+  <li>Unload your cargo ship. Do this by entering negative numbers into the
+    <i>Load</i> boxes. The resources will be placed in orbit around the
+  star.</li>
+  <li>Unload your tugs. You'll get a basic factory and a complete set of
+    refineries.</li>
+  <li>Deploy them all. The metal refinery and hydroponics plant will eat an
+    asteroid each and start production.</li>
+  <li>Start building something with your basic factory.</li>
+</ol>
+From here you're on your own. There are various things you can do; for
+example, you could build yourself another jumpship so you can send your
+original fleet off exploring and still keep track of what your home system's
+doing. You may decide to build a set of refineries and another factory first,
+so that if you come across a nice-looking star system you can colonise it. You
+may decide, instead, to sit tight and build lots of defensive units. You may
+build lots of factories so you can produce lots of units at once. Hey, this is
+the thing that makes the game fun.
+
+<h2><span style="color: #00B200">Contact Me</span></h2>
+
+<p>Got any advice? Think my game design sucks and want to suggest something
+better? Want to help? (I could realise use some artists and web design
+people.) Want to report a bug? Want to send me lots of money?</p>
+
+<p>Email me at: <a href="mailto:dg@tao-group.com">dg@tao-group.com</a>.</p>
+
+<p>Or send me an FRM on Stellation itself. My player name is Hjalfi.</p>
+<hr>
+
+<font color="#00B200">Revision history</font>
+<pre>$Source: /cvsroot/stellation/website/index.html,v $
+$State: Exp $
+$Log: index.html,v $
+Revision 1.1  2000/07/30 23:10:34  dtrg
+Initial revision
+</pre>
+</body>
+</html>
