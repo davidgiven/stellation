@@ -75,10 +75,27 @@ with:
 		spacing between cells is <xs>,<ys>; <w> and <h> are the width
 		in height respectively in cells.
 
+Alternatively, the command string may be of the form:
+
+	url.<url>
+
+In this case, the contents of <url> is loaded and the first line treated as a
+command string, parsed as above. If you like you can start this one with "url."
+as well, but it's not very useful.
+
+The web connector used in this case is very, very dumb. It only understands
+http: connection protocols. It doesn't understand any headers, not even
+Content-Type; the first line read, regardless of what it is, is treated as the
+command string. It's only real purpose is to allow longer command strings than
+usually allowed by web browsers.
+
 ===============================================================================
 
 Revision History
 $Log: README,v $
+Revision 1.4  2000/07/31 23:37:11  dtrg
+Added the `url.' redirection function.
+
 Revision 1.3  2000/07/29 23:58:04  dtrg
 Added grid.
 

@@ -14,6 +14,8 @@
 #include "gdfontt.h"
 #include "gdfontmb.h"
 
+extern char* load_url(char* url);
+
 char buffer[80];
 char* cmdstring;
 gdImagePtr image;
@@ -219,7 +221,16 @@ int main(int argc, char* argv[])
 {
 	cmdstring = getenv("QUERY_STRING");
 
-	expect_word("width");
+loop:
+	get_word();
+	if (strcmp(buffer, "url") == 0)
+	{
+		cmdstring = load_url(cmdstring);
+		goto loop;
+	}
+	else if (strcmp(buffer, "width") != 0)
+		error("Got `%s', expected `url' or `width'", buffer);
+
 	width = get_number();
 	expect_word("height");
 	height = get_number();
@@ -270,6 +281,9 @@ int main(int argc, char* argv[])
 
 /* Revision history
  * $Log: main.c,v $
+ * Revision 1.3  2000/07/31 23:37:11  dtrg
+ * Added the `url.' redirection function.
+ *
  * Revision 1.2  2000/07/29 23:58:04  dtrg
  * Added grid.
  *
