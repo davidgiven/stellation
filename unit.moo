@@ -203,6 +203,25 @@ $god:prop($unit, "pit", 0);
 	return f;
 .
 
+# --- Capture a unit ----------------------------------------------------------
+
+.program $god $unit:capture tnt
+	this.owner = player;
+	this.location:notify("<B>"+this:name()+"</B> has been captured by <B>"+player:name()+"</B>.");
+	return {""};
+.
+
+.program $god $unit:http_capture tnt
+	{c, method, param} = args;
+	{objnum} = $http_server:parseparam(param, {"objnum"});
+	result = this:capture();
+	if (result[1] != "")
+		$http_server:error(c, "Failed! "+result[1], "/player/unit?objnum="+tostr(toint(this)));
+	else
+		player:redirect(c, this);
+	endif
+.
+
 # --- HTML operations ---------------------------------------------------------
 
 .program $god $unit:http_info tnt
@@ -219,6 +238,17 @@ $god:prop($unit, "pit", 0);
 
 .program $god $unit:http_menu_notowned tnt
 	{c, method, param} = args;
+	if (!this:descendentof($ship) && this.location:descendentof($star))
+		{objnum, ?cmd=""} = $http_server:parseparam(param, {"objnum", "cmd"});
+		if (cmd == "capture")
+			return this:http_capture(c, method, param);
+		endif
+		if (this.damage > this.maxdamage*(2.0/3.0))
+			$http_server:startform(c, "/player/unit", objnum, "capture");
+			$htell(c, "<INPUT TYPE=submit VALUE=\"Capture\">");
+			$http_server:endform(c);
+		endif
+	endif
 	$htell(c, "No further information available.");
 .
 
@@ -226,6 +256,10 @@ $god:prop($unit, "pit", 0);
 
 rem Revision History
 rem $Log: unit.moo,v $
+rem Revision 1.7  2000/08/30 22:51:34  dtrg
+rem Stationary units with more than 2/3 damage can now be captured by other
+rem players.
+rem
 rem Revision 1.6  2000/08/07 20:12:38  dtrg
 rem Formatting fixes.
 rem
