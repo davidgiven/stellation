@@ -36,7 +36,7 @@ $god:prop($metaplayer, "password", crypt(""));
 
 .program $god $metaplayer:http_createplayer tnt
 	{c, method, param} = args;
-	this:toplevel(c, {"createplayer", ""}, {"index", ""});
+	this:toplevel(c, {"createplayer", param}, {"index", ""});
 .
 
 .program $metaplayer $metaplayer:http_createplayer_single tnt
@@ -84,6 +84,9 @@ $god:prop($metaplayer, "password", crypt(""));
 
 rem Revision History
 rem $Log: metaplayer.moo,v $
+rem Revision 1.5  2000/08/03 10:38:50  dtrg
+rem Minor bug that was preventing new players from being created fixed.
+rem
 rem Revision 1.4  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.
