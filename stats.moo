@@ -20,26 +20,28 @@ $messagebuoy:setstats(           100.0, {0.0, 0.0, 0.0}, {  100.0,    10.0,    0
 
 $metalmine.asteroids                       = {1, 0};
 $metalmine.rate                            = 1.0/24.0;
-$metalmine.production                      = {5000.0/240.0, 0.0, 0.0};
+$metalmine.production                      = {10000.0/240.0, 0.0, 0.0};
 
 $antimatterdistillery.asteroids            = {0, 0};
 $antimatterdistillery.rate                 = 2.0/24.0;
-$antimatterdistillery.production           = {0.0, 20000.0/240.0, 0.0};
+$antimatterdistillery.production           = {0.0, 40000.0/240.0, 0.0};
 $antimatterdistillery.brightnessmultiplier = 1.0;
 
 $hydroponicsplant.asteroids                = {0, 1};
 $hydroponicsplant.rate                     = 1.0/24.0;
-$hydroponicsplant.production               = {0.0, 0.0, 1500.0/240.0};
+$hydroponicsplant.production               = {0.0, 0.0, 2000.0/240.0};
 $hydroponicsplant.brightnessmultiplier     = 1.0;
 
 $tick = 3600.0;
 $god.password = crypt("defaultadminpassword");
 
-
 .quit
 
 rem Revision History
 rem $Log: stats.moo,v $
+rem Revision 1.5  2000/09/05 23:15:24  dtrg
+rem Hydroponics plant production tweak.
+rem
 rem Revision 1.4  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.
