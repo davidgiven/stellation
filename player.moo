@@ -689,11 +689,38 @@ $god:prop($player, "displaymode", 1);
 	{?x = "0.0", ?y = "0.0", ?scale = "1.0"} = $http_server:parseparam(param, {"x", "y", "scale"});
 	x = tofloat(x);
 	y = tofloat(y);
+	$htell(c, "<CENTER>");
+	$htell(c, "<FORM ACTION=\"/player/map\">");
+	$htell(c, "<TABLE WIDTH=10% BORDER=0 COLS=2>");
+	$htell(c, "<TR><TD>");
+	$htell(c, "Map center: X=<INPUT NAME=\"x\" VALUE=\""+tostr(x)+"\" SIZE=6>");
+	$htell(c, "Y=<INPUT NAME=\"y\" VALUE=\""+tostr(y)+"\" SIZE=6>");
+	$htell(c, "Scale:");
+	$htell(c, "<INPUT NAME=\"scale\" VALUE=\""+tostr(scale)+"\" SIZE=6>");
+	$htell(c, "<INPUT TYPE=submit>");
+	$htell(c, "</TD></TR>");
+	$htell(c, "<TR><TD>");
+	s = $server_options.gdrender_url+"?url."+$server_options.server_url+"?x="+tostr(x)+"&y="+tostr(y)+"&scale="+tostr(scale);
+	$htell(c, "<A HREF=\""+s+"\"><IMG SRC=\""+s+"\" WIDTH="+tostr(player.mapwidth)+" HEIGHT="+tostr(player.mapheight)+"></A>");
+	$htell(c, "</TD></TR>");
+	$htell(c, "<TR><TD ALIGN=center BGCOLOR=#000064><FONT COLOR=#FFFF00>Star in your sphere of influence");
+	$htell(c, "<FONT COLOR=#FFFFFF>Star you have no control over");
+	$htell(c, "</TD></TR>");
+	$htell(c, "</TABLE>");
+	$htell(c, "</FORM>");
+	$htell(c, "</CENTER>");
+	this:htmlfooter(c, method);
+.
+
+.program $god $player:http_mapdata tnt
+	{c, method, param} = args;
+	{?x = "0.0", ?y = "0.0", ?scale = "1.0"} = $http_server:parseparam(param, {"x", "y", "scale"});
+	x = tofloat(x);
+	y = tofloat(y);
 	width = player.mapwidth;
 	height = player.mapheight;
 	scale = tofloat(scale);
-	this:htmlheader(c, method, "Stellar Cartography");
-	buf = $server_options.gdrender_url+"?width."+tostr(width)+".height."+tostr(height)+".";
+	buf = "width."+tostr(width)+".height."+tostr(height)+".";
 	buf = buf + "colour.0.0.100.";
 	buf = buf + "fbox.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
 	buf = buf + "colour.100.100.100.";
@@ -727,26 +754,7 @@ $god:prop($player, "displaymode", 1);
 	buf = buf + "colour.255.255.255.";
 	buf = buf + "box.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
 	buf = buf + ".";
-	$htell(c, "<CENTER>");
-	$htell(c, "<FORM ACTION=\"/player/map\">");
-	$htell(c, "<TABLE WIDTH=10% BORDER=0 COLS=2>");
-	$htell(c, "<TR><TD>");
-	$htell(c, "Map center: X=<INPUT NAME=\"x\" VALUE=\""+tostr(x)+"\" SIZE=6>");
-	$htell(c, "Y=<INPUT NAME=\"y\" VALUE=\""+tostr(y)+"\" SIZE=6>");
-	$htell(c, "Scale:");
-	$htell(c, "<INPUT NAME=\"scale\" VALUE=\""+tostr(scale)+"\" SIZE=6>");
-	$htell(c, "<INPUT TYPE=submit>");
-	$htell(c, "</TD></TR>");
-	$htell(c, "<TR><TD>");
-	$htell(c, "<A HREF=\""+buf+"\"><IMG SRC=\""+buf+"\" WIDTH="+tostr(player.mapwidth)+" HEIGHT="+tostr(player.mapheight)+"></A>");
-	$htell(c, "</TD></TR>");
-	$htell(c, "<TR><TD ALIGN=center BGCOLOR=#000064><FONT COLOR=#FFFF00>Star in your sphere of influence");
-	$htell(c, "<FONT COLOR=#FFFFFF>Star you have no control over");
-	$htell(c, "</TD></TR>");
-	$htell(c, "</TABLE>");
-	$htell(c, "</FORM>");
-	$htell(c, "</CENTER>");
-	this:htmlfooter(c, method);
+	$htell(c, buf);
 .
 
 # --- User preferences --------------------------------------------------------
@@ -814,6 +822,9 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.5  2000/07/31 23:50:16  dtrg
+rem First interim checkin of the new indirected map code.
+rem
 rem Revision 1.4  2000/07/31 18:07:42  dtrg
 rem Map no longer displays deep space objects (which means it works with
 rem Netscape again).

@@ -203,6 +203,7 @@ notify(player, "god.moo");
 .program $god $god:http_viewverb tnt
 	{c, method, param} = args;
 	{?objnum = {}, ?verb = {}, ?dis = 0} = $http_server:parseparam(param, {"objnum", "verb", "dis"});
+	dis = toint(dis);
 	if ((objnum == {}) || (verb == {}))
 		$http_server:formsyntax(c);
 		return;
@@ -243,6 +244,9 @@ notify(player, "god.moo");
 
 rem Revision History
 rem $Log: god.moo,v $
+rem Revision 1.3  2000/07/31 23:50:16  dtrg
+rem First interim checkin of the new indirected map code.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

@@ -33,13 +33,16 @@ $hydroponicsplant.production               = {0.0, 0.0, 1500.0/240.0};
 $hydroponicsplant.brightnessmultiplier     = 1.0;
 
 $tick = 3600.0;
-$god.password = crypt("omnipotence");
+$god.password = crypt("defaultadminpassword");
 
 
 .quit
 
 rem Revision History
 rem $Log: stats.moo,v $
+rem Revision 1.3  2000/07/31 23:50:16  dtrg
+rem First interim checkin of the new indirected map code.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

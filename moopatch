@@ -4,7 +4,7 @@
 # $Source: /cvsroot/stellation/stellation/moopatch,v $
 # $State: Exp $
 SERVER="plover.net 7777"
-PASSWORD="omnipotence"
+PASSWORD="defaultadminpassword"
 
 tmp=/tmp/moopatch.$$
 
@@ -18,6 +18,9 @@ done
 
 # Revision History
 # $Log: moopatch,v $
+# Revision 1.4  2000/07/31 23:50:16  dtrg
+# First interim checkin of the new indirected map code.
+#
 # Revision 1.3  2000/07/31 18:07:42  dtrg
 # Map no longer displays deep space objects (which means it works with
 # Netscape again).
