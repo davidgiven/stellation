@@ -122,9 +122,21 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 	$htell(c, "<INPUT TYPE=submit VALUE=\"Load\"></FORM>");
 
 	$htell(c, "<FORM ACTION=\"/player/unit\"><INPUT NAME=\"objnum\" TYPE=hidden VALUE=\""+tostr(toint(this))+"\"><INPUT NAME=\"cmd\" TYPE=hidden VALUE=\"load\">");
-	$htell(c, "<INPUT NAME=\"m\" TYPE=hidden VALUE=\""+tostr(-this.cargo[1])+"\" SIZE=5>");
-	$htell(c, "<INPUT NAME=\"a\" TYPE=hidden VALUE=\""+tostr(-this.cargo[2])+"\" SIZE=5>");
-	$htell(c, "<INPUT NAME=\"o\" TYPE=hidden VALUE=\""+tostr(-this.cargo[3])+"\" SIZE=5>");
+	m = this.cargo[1] - 1.0;
+	if (m<0.0)
+		m = 0.0;
+	endif
+	$htell(c, "<INPUT NAME=\"m\" TYPE=hidden VALUE=\""+tostr(-m)+"\" SIZE=7>");
+	m = this.cargo[2] - 1.0;
+	if (m<0.0)
+		m = 0.0;
+	endif
+	$htell(c, "<INPUT NAME=\"a\" TYPE=hidden VALUE=\""+tostr(-m)+"\" SIZE=5>");
+	m = this.cargo[3] - 1.0;
+	if (m<0.0)
+		m = 0.0;
+	endif
+	$htell(c, "<INPUT NAME=\"o\" TYPE=hidden VALUE=\""+tostr(-m)+"\" SIZE=5>");
 	$htell(c, "<INPUT TYPE=submit VALUE=\"Unload All\"></FORM>");
 .
 
@@ -132,6 +144,10 @@ $cargoship.description = "Cargo ships can carry large quantities of the three ma
 
 rem Revision History
 rem $Log: cargoship.moo,v $
+rem Revision 1.4  2000/08/03 10:32:08  dtrg
+rem Fixed a persistent but annoying bug preventing `Unload All' from working
+rem properly.
+rem
 rem Revision 1.3  2000/08/02 23:17:27  dtrg
 rem Finished off nova cannon. Destroyed my first unit! All seems to work OK.
 rem Made fleets disappear automatically when their last unit is removed.
