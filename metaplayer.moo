@@ -32,6 +32,13 @@ $god:prop($metaplayer, "password", crypt(""));
 .program $metaplayer $metaplayer:http_createplayer tnt
 	{c, method, parameters} = args;
 	$http_server:htmlheader(c, 200, "Create new player");
+	if (length(players()) >= $server_options.maxplayers)
+		$htell(c, "Sorry! The game is full. It's currently configured to accept");
+		$htell(c, tostr($server_options.maxplayers));
+		$htell(c, "players only. I'm afraid you'll have to wait until one of the players commits suicide, gets killed, or the server limit is raised. If you <I>really</I> want in, and can give justification, contact <A HREF=\"mailto:dg@tao-group.com\">the author</A> and he'll think about it.");
+		$http_server:htmlfooter(c);
+		return;
+	endif
 	if (length(parameters[1]) == 0)
 		$htell(c, "<FORM ACTION=\"/metaplayer/createplayer\">");
 		$htell(c, "Name of player:");
@@ -71,6 +78,12 @@ $god:prop($metaplayer, "password", crypt(""));
 
 rem Revision History
 rem $Log: metaplayer.moo,v $
+rem Revision 1.3  2000/07/31 18:07:42  dtrg
+rem Map no longer displays deep space objects (which means it works with
+rem Netscape again).
+rem Added maximum number of players feature.
+rem A few formatting fixes.
+rem
 rem Revision 1.2  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.

@@ -709,18 +709,20 @@ $god:prop($player, "displaymode", 1);
 	buf = buf + "line."+tostr(toint(-x*scale)+width/2)+".0."+tostr(toint(-x*scale)+width/2)+"."+tostr(height)+".";
 	s = this:starsystems();
 	for i in ($galaxy.stars)
-		sx = toint((i.position[1]-x)*scale);
-		sy = toint((y-i.position[2])*scale);
-		sx = sx + width/2;
-		sy = sy + height/2;
-		if (i in s)
-			buf = buf + "colour.255.255.0.";
-		else
-			buf = buf + "colour.255.255.255.";
+		if (!i:descendentof($deepspace))
+			sx = toint((i.position[1]-x)*scale);
+			sy = toint((y-i.position[2])*scale);
+			sx = sx + width/2;
+			sy = sy + height/2;
+			if (i in s)
+				buf = buf + "colour.255.255.0.";
+			else
+				buf = buf + "colour.255.255.255.";
+			endif
+			buf = buf + "arc."+tostr(sx)+"."+tostr(sy)+".9.9.0.360.";
+			buf = buf + "font.s.";
+			buf = buf + "text."+tostr(sx+6)+"."+tostr(sy-6)+"."+i:name()+".";
 		endif
-		buf = buf + "arc."+tostr(sx)+"."+tostr(sy)+".9.9.0.360.";
-		buf = buf + "font.s.";
-		buf = buf + "text."+tostr(sx+6)+"."+tostr(sy-6)+"."+i:name()+".";
 	endfor
 	buf = buf + "colour.255.255.255.";
 	buf = buf + "box.0.0."+tostr(width-1)+"."+tostr(height-1)+".";
@@ -812,6 +814,12 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.4  2000/07/31 18:07:42  dtrg
+rem Map no longer displays deep space objects (which means it works with
+rem Netscape again).
+rem Added maximum number of players feature.
+rem A few formatting fixes.
+rem
 rem Revision 1.3  2000/07/30 21:20:19  dtrg
 rem Updated all the .patch lines to contain the correct line numbers.
 rem Cosmetic makeover; we should now hopefully look marginally better.
