@@ -73,6 +73,7 @@ $god:prop($player, "displaymode", 1);
 	fleet:create_unit($hydroponicsplant);
 	fleet:create_unit($tug);
 	fleet:create_unit($novacannon);
+	fleet:create_unit($bomber);
 	{x, n} = fleet:create_unit($cargoship);
 	n.cargo = {100000.0, 100000.0, 100000.0};
 	return {"", this};
@@ -455,6 +456,7 @@ $god:prop($player, "displaymode", 1);
 	for i in ($server_options.motd)
 		$htell(c, i);
 		$htell(c, "<HR>");
+		$http_server:flush(c);
 	endfor
 	$htell(c, "</TD><TD ALIGN=left VALIGN=top>");
 	$htell(c, "<H3>Game status</H3>");
@@ -486,7 +488,9 @@ $god:prop($player, "displaymode", 1);
 	$htell(c, "<TR><TD WIDTH=10% BGCOLOR=#0000FF ALIGN=center>Rank</TD>");
 	$htell(c, "<TD WIDTH=50% BGCOLOR=#0000FF ALIGN=left>Player</TD>");
 	$htell(c, "<TD BGCOLOR=#0000FF ALIGN=center>Fleet mass</TD></TR>");
+	$http_server:flush(c);
 	list = $numutils:sort(list);
+	$http_server:flush(c);
 	for i in [0..19]
 		j = length(list)-i;
 		if (j > 0)
@@ -917,6 +921,10 @@ chparent($god, $player);
 
 rem Revision History
 rem $Log: player.moo,v $
+rem Revision 1.14  2000/09/09 22:40:08  dtrg
+rem Give new players a RAM bomber.
+rem Added a bunch of flushes in strategic places.
+rem
 rem Revision 1.13  2000/09/05 23:12:31  dtrg
 rem Top players list now counts all units, rather than just those in fleets.
 rem
