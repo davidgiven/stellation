@@ -2,14 +2,6 @@
 <!DOCTYPE web-app
     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
     "http://java.sun.com/dtd/web-app_2_3.dtd">
-    
-<!-- Servlet configuration.
-  -- $Source: /cvsroot/stellation/stellation2/war/WEB-INF/web.xml,v $
-  -- $Date: 2009/09/06 18:01:39 $
-  -- $Author: dtrg $
-  -- $Revision: 1.1 $
-  -->
-
 <web-app>
   <context-param>
 	  <param-name>dbPath</param-name>
