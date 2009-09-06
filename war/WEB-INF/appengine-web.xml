@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AppEngine global configuration.
+  -- $Source: /cvsroot/stellation/stellation2/war/WEB-INF/appengine-web.xml,v $
+  -- $Date: 2009/09/06 18:01:39 $
+  -- $Author: dtrg $
+  -- $Revision: 1.1 $
+  -->
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+	<application>stellation2</application>
+	<version>1</version>
+	
+	<system-properties>
+		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
+	</system-properties>	
+</appengine-web-app>

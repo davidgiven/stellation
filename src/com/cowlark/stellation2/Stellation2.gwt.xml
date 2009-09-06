@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 1.7.0//EN" "http://google-web-toolkit.googlecode.com/svn/tags/1.7.0/distro-source/core/src/gwt-module.dtd">
+<!-- Stellation module descriptor.
+     $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/Stellation2.gwt.xml,v $
+     $Date: 2009/09/06 17:59:16 $
+     $Author: dtrg $
+     $Revision: 1.1 $
+-->
+<module rename-to='stellation2'>
+  <inherits name='com.google.gwt.user.User'/>
+  <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+  <inherits name='gwt.canvas.gwt-canvas'/>
+  
+  <entry-point class='com.cowlark.stellation2.client.Stellation2'/>
+  <source path="client"/>
+  <source path="common"/>
+  <source path="common.model"/>
+</module>

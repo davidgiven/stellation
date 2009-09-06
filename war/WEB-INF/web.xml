@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+    
+<!-- Servlet configuration.
+  -- $Source: /cvsroot/stellation/stellation2/war/WEB-INF/web.xml,v $
+  -- $Date: 2009/09/06 18:01:39 $
+  -- $Author: dtrg $
+  -- $Revision: 1.1 $
+  -->
+
+<web-app>
+  <context-param>
+	  <param-name>dbPath</param-name>
+	  <param-value>/tmp/stellation.db</param-value>
+  </context-param>
+
+  
+  <!-- Servlets -->
+  <servlet>
+    <servlet-name>greetServlet</servlet-name>
+    <servlet-class>com.cowlark.stellation2.server.RPCServiceImpl</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>greetServlet</servlet-name>
+    <url-pattern>/stellation2/greet</url-pattern>
+  </servlet-mapping>
+  
+  <!-- Default page to serve -->
+  <welcome-file-list>
+    <welcome-file>Stellation2.html</welcome-file>
+  </welcome-file-list>
+
+</web-app>
