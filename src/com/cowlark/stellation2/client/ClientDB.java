@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:17:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client;
@@ -124,6 +124,7 @@ public class ClientDB extends Database
 	public static void processBatch(UpdateBatch result)
 	{
 		_lastUpdate = result.getTime();
+		Stellation2.setTimeDelta(_lastUpdate - System.currentTimeMillis());
 
 		/* Merge in any new log messages. */
 		

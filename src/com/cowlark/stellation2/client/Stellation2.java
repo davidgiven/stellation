@@ -1,8 +1,8 @@
 /* Client core module.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/Stellation2.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:17:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client;
@@ -27,6 +27,7 @@ public class Stellation2 implements EntryPoint
 	
 	private static long _playerId;
 	private static GameView _gameView;
+	private static long _timeDelta;
 	
 	private static Authentication _auth;
 	
@@ -34,7 +35,7 @@ public class Stellation2 implements EntryPoint
 	{
 		Database.Instance = new ClientDB();
 		
-		RootPanel.get("loadingMessage").getElement().setInnerHTML("");
+		//RootPanel.get("loadingMessage").getElement().setInnerHTML("");
 		
 		String username = Cookies.getCookie("username");
 		String password = Cookies.getCookie("password");
@@ -107,4 +108,14 @@ public class Stellation2 implements EntryPoint
 	{
 		_gameView.showStarViewer(star);
 	}
+	
+	public static long getTimeDelta()
+    {
+	    return _timeDelta;
+    }
+	
+	public static void setTimeDelta(long delta)
+    {
+	    _timeDelta = delta;
+    }
 }
