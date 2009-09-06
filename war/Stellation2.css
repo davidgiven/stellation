@@ -1,8 +1,8 @@
 /* Stellation styles.
- * Source: /cvsroot/stellation/stellation/antimatterdistillery.moo,v $
- * $Date: 2009/09/06 17:59:54 $
+ * $Source: /cvsroot/stellation/stellation2/war/Stellation2.css,v $
+ * $Date: 2009/09/06 22:16:32 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 body
@@ -23,6 +23,18 @@ IMG.BackgroundImage
 	width: 100%;
 }
 
+.ClockLabel
+{
+	font-size: xx-small;
+	color: #666;
+}
+
+.Clock
+{
+	font-size: large;
+	color: #888;
+}
+
 .FullScreen
 {
 	position: absolute;
@@ -36,7 +48,12 @@ IMG.BackgroundImage
 {
 	cursor: pointer;
 	text-decoration: underline;
-	color: blue;
+	color: #88f;
+}
+
+.Text
+{
+	color: #fff;
 }
 
 .LeftPane
@@ -81,11 +98,6 @@ IMG.BackgroundImage
 	border-spacing: 0.75em;
 }
 
-.PanelHolder * div
-{
-	color: #fff;
-}
-
 .PaddedPanel
 {
 	border: 8px solid #f00;
@@ -98,11 +110,6 @@ IMG.BackgroundImage
 	border: 1px solid #888;
 	background-image: url(transparent-panel.png);
 	behavior: url(iepngfix.htc);
-}
-
-.SimplePanel *
-{
-	color: #fff;
 }
 
 .PanelInner
@@ -127,6 +134,7 @@ IMG.BackgroundImage
 	behavior: url(iepngfix.htc);
 	color: #888;
 	font-size: small;
+	cursor: pointer;
 }
 	
 .SelectedTabButton

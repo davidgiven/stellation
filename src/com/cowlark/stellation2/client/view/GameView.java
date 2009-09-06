@@ -1,16 +1,16 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/GameView.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:16:32 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.cowlark.stellation2.client.Stellation2;
 import com.cowlark.stellation2.client.ui.FullScreenPanel;
-import com.cowlark.stellation2.common.db.DBRef;
 import com.cowlark.stellation2.common.model.CStar;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,14 +24,17 @@ public class GameView extends Composite implements ClickHandler
 {
 	public final static int BORDER = 5;
 	public final static int TABHEIGHT = 20;
+	public final static int CLOCKHEIGHT = 50;
 	public final static int LEFTWIDTH = 200;
 	public final static int RIGHTWIDTH = 200;
 
 	private FullScreenPanel _panel = new FullScreenPanel();
+	private ClockView _clockpane = new ClockView();
 	private LeftPaneView _leftpane = new LeftPaneView();
 	private HorizontalPanel _tabbar = new HorizontalPanel();
-	private Widget _rightpane = new WelcomeView();
+	private Widget _rightpane = new BlankView();
 	
+	private HelpView _helpview = new HelpView();
 	private MapView _mapview = new MapView();
 	private LogView _logview = new LogView();
 	private MiddlePaneStarView _starview;
@@ -48,12 +51,18 @@ public class GameView extends Composite implements ClickHandler
 		_tabbar.setStylePrimaryName("TabBar");
 		_rightpane.setStylePrimaryName("SimplePanel");
 		
-		_panel.add(_leftpane, BORDER*2, BORDER*2, LEFTWIDTH-BORDER, -BORDER*2);
+		_panel.add(_leftpane, BORDER*2, BORDER*2, LEFTWIDTH-BORDER, -(CLOCKHEIGHT+BORDER*4));
+		_panel.add(_clockpane, BORDER*2, -(CLOCKHEIGHT+BORDER*2), LEFTWIDTH-BORDER, -BORDER*2); 
 		_panel.add(_tabbar, LEFTWIDTH+BORDER, BORDER*2, -(RIGHTWIDTH+BORDER), TABHEIGHT + BORDER*2);
 		setRightPane(_rightpane);
 		
+		addTab("Help", _helpview);
 		addTab("Map", _mapview);
 		addTab("Intelligence", _logview);
+		if (Stellation2.getPlayer().isAdministrator())
+			addTab("Admin", new AdminView());
+		
+		selectTab(_helpview);
     }
 	
 	private void addMiddlePane(Widget w)
