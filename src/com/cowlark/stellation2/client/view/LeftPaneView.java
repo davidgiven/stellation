@@ -1,8 +1,8 @@
 /* Handles the overall left pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/LeftPaneView.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:17:53 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -13,6 +13,7 @@ import com.cowlark.stellation2.client.ChangeCallback;
 import com.cowlark.stellation2.client.ClientDB;
 import com.cowlark.stellation2.client.Stellation2;
 import com.cowlark.stellation2.client.ui.Trigger;
+import com.cowlark.stellation2.client.ui.WrappedLabel;
 import com.cowlark.stellation2.common.Identifiable;
 import com.cowlark.stellation2.common.SyncableObjectList;
 import com.cowlark.stellation2.common.SyncableObjectManager;
@@ -22,7 +23,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -69,9 +69,9 @@ public class LeftPaneView extends Composite implements ChangeCallback
 		CPlayer player = Stellation2.getPlayer();
 		
 		_panel.clear();
-		_panel.add(new Label(player.getName()));
-		_panel.add(new Label("of"));
-		_panel.add(new Label(player.getEmpire()));
+		_panel.add(new WrappedLabel(player.getName()));
+		_panel.add(new WrappedLabel("of"));
+		_panel.add(new WrappedLabel(player.getEmpire()));
 		
 		_updateTrigger.setEnabled(true);
 		_panel.add(_updateTrigger);

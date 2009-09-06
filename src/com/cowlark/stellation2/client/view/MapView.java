@@ -1,8 +1,8 @@
 /* Implements the map.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/MapView.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:17:53 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -192,7 +192,7 @@ public class MapView extends ObjectWatcherComposite<CGalaxy>
 		
 		Glyph g = _canvas.getRootGlyph();
 		g.add(0, 0, _map);
-		g.add(0, 0, _status);
+		g.add(5, 5, _status);
     }
 	
 	public void onChange(ChangeCallback cb)
@@ -296,64 +296,6 @@ public class MapView extends ObjectWatcherComposite<CGalaxy>
 	{
 		_dragging = false;
 	}
-	
-//	public void onMouseMove(int x, int y)
-//	{
-//		if (_dragging)
-//		{
-//			int deltax = x - _dragX;
-//			int deltay = y - _dragY;
-//			
-//			_scrollpanel.setHorizontalScrollPosition(
-//					_scrollpanel.getHorizontalScrollPosition() - deltax);
-//			_scrollpanel.setScrollPosition(
-//					_scrollpanel.getScrollPosition() - deltay);
-//			
-//			_dragX = x;
-//			_dragY = y;
-//		}
-//		else
-//		{
-//			if (_pixelsPerParsec != 0.0)
-//			{
-//				x -= _map.getAbsoluteLeft();
-//				y -= _map.getAbsoluteTop();
-//				
-//				_mouseX = (x / _pixelsPerParsec) - S.GALAXY_RADIUS;
-//				_mouseY = (y / _pixelsPerParsec) - S.GALAXY_RADIUS;
-//				updateStatus();
-//			}
-//		}
-//	}
-	
-//	@Override
-//	public void onBrowserEvent(Event event)
-//	{
-//		switch (DOM.eventGetType(event))
-//		{
-//			case Event.ONMOUSEDOWN:
-//				onMouseDown(event.getScreenX(), event.getScreenY());
-//				break;
-//				
-//			case Event.ONMOUSEMOVE:
-//				onMouseMove(event.getScreenX(), event.getScreenY());
-//				break;
-//				
-//			case Event.ONMOUSEUP:
-//				onMouseUp(event.getScreenX(), event.getScreenY());
-//				break;
-//				
-//			case Event.ONMOUSEWHEEL:
-//			{
-//				double factor = (event.getMouseWheelVelocityY() < 0.0)
-//					? 2.0 : 0.5;
-//				_pixelsPerParsec *= factor;
-//				onChange(this);
-//			}
-//		}
-//		
-//	    super.onBrowserEvent(event);
-//	}
 	
 	private void updateStatus()
 	{

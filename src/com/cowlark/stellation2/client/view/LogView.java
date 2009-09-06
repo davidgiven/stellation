@@ -1,8 +1,8 @@
 /* The Intelligence pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/LogView.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:17:53 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -33,6 +33,7 @@ public class LogView extends Composite implements ChangeCallback
 		_panel.setStylePrimaryName("PanelInner");
 		_panel.add(_data);
 		_data.setStylePrimaryName("LogGrid");
+		_data.addStyleName("Text");
     }
 
 	@Override

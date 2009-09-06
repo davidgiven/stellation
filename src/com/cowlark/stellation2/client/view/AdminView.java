@@ -1,8 +1,8 @@
 /* Implements the Administration panel.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/AdminView.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:17:53 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -17,16 +17,15 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.HTMLTable.Cell;
 
 public class AdminView extends Composite
 {
-	private VerticalPanel _vpanel = new VerticalPanel();
+	private FlowPanel _panel = new FlowPanel();
 	private TextBox _identry = new TextBox();
 	private Button _loadButton = new Button("Load");
 	private Button _saveButton = new Button("Save");
@@ -35,16 +34,20 @@ public class AdminView extends Composite
 	
 	public AdminView()
     {
-		initWidget(_vpanel);
+		initWidget(_scrollpanel);
+		setStylePrimaryName("SimplePanel");
+		
+		_scrollpanel.setAlwaysShowScrollBars(false);
+		_scrollpanel.add(_panel);
+		
+		_panel.setStylePrimaryName("PanelInner");
 		
 		HorizontalPanel hpanel = new HorizontalPanel();
 		hpanel.add(_identry);
 		hpanel.add(_loadButton);
 		hpanel.add(_saveButton);
-		_vpanel.setVerticalAlignment(HasVerticalAlignment.ALIGN_TOP);
-		_vpanel.add(hpanel);
-		_vpanel.add(_scrollpanel);
-		_scrollpanel.add(_data);
+		_panel.add(hpanel);
+		_panel.add(_data);
 		
 		_loadButton.addClickHandler(
 				new ClickHandler()

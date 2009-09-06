@@ -1,8 +1,8 @@
 /* A grouped grid of updatable data.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/DataTable.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/06 22:17:53 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.ui;
@@ -34,6 +34,7 @@ public class DataTable extends Composite implements ClickHandler
 	public DataTable(boolean selectable)
     {
 		initWidget(_table);
+		addStyleName("Text");
 		
 		if (selectable)
 			_table.addClickHandler(this);
