@@ -1,12 +1,14 @@
 /* Client-side tug.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CTug.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/06 22:15:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common.model;
 
+import com.cowlark.stellation2.common.data.Properties;
+import com.cowlark.stellation2.common.data.PropertyStore;
 import com.cowlark.stellation2.common.db.DBRef;
 import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
 import com.cowlark.stellation2.server.db.Property;
@@ -21,16 +23,9 @@ public class CTug extends CShip
     }
 	
 	@Override
-	public String getShortName()
+	public Properties getProperties()
 	{
-	    return "Tug";
-	}
-	
-	@Override
-	public String getDescription()
-	{
-	    return "Tugs are small, powerful craft used to tow otherwise " +
-	    		"unpowered vessels and other artifacts.";
+	    return PropertyStore.Tug;
 	}
 	
 	public CUnit getCargo() throws OutOfScopeException

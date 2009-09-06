@@ -1,8 +1,8 @@
 /* Client-side cargoship.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CCargoship.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/06 22:15:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common.model;
@@ -10,6 +10,8 @@ package com.cowlark.stellation2.common.model;
 import com.cowlark.stellation2.client.monitors.ResourcesMonitor;
 import com.cowlark.stellation2.common.HasResources;
 import com.cowlark.stellation2.common.Resources;
+import com.cowlark.stellation2.common.data.Properties;
+import com.cowlark.stellation2.common.data.PropertyStore;
 import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
 import com.cowlark.stellation2.server.db.Property;
 import com.google.gwt.user.client.ui.Button;
@@ -27,20 +29,11 @@ public class CCargoship extends CShip implements HasResources
     }
 
 	@Override
-	public String getShortName()
+	public Properties getProperties()
 	{
-	    return "Cargoship";
+	    return PropertyStore.Cargoship;
 	}
 	
-	@Override
-	public String getDescription()
-	{
-		return "Cargo ships can carry large quantities of the three main " +
-			"commodities. They can be used to transfer resources from one " +
-			"star system to another, and are also used to supply vessels in " +
-			"operation.";
-	}
-
 	@Override
 	public Widget createSummaryNotesField()
 	{

@@ -1,12 +1,14 @@
 /* Client-side fleet.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CFleet.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/06 22:15:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common.model;
 
+import com.cowlark.stellation2.common.data.Properties;
+import com.cowlark.stellation2.common.data.PropertyStore;
 import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
 import com.cowlark.stellation2.server.db.Property;
 
@@ -21,6 +23,12 @@ public class CFleet extends CObject
 	public CFleet()
     {
     }
+	
+	@Override
+	public Properties getProperties()
+	{
+	    return PropertyStore.Fleet;
+	}
 	
 	public String getName() throws OutOfScopeException
     {

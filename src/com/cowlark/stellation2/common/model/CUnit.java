@@ -1,8 +1,8 @@
 /* Client-side generic unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CUnit.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/06 22:15:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 
@@ -13,7 +13,7 @@ import com.cowlark.stellation2.server.db.Property;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-public class CUnit extends CObject
+public abstract class CUnit extends CObject
 {
 	@Property
 	private Resources _maintenanceCost = new Resources();
@@ -39,11 +39,6 @@ public class CUnit extends CObject
 	public CUnit()
     {
     }
-	
-	public String getShortName()
-	{
-		return "Unit";
-	}
 	
 	public Resources getMaintenanceCost()
 	{
