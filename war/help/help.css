@@ -1,0 +1,23 @@
+/* Stellation help text styles.
+ * $Source: /cvsroot/stellation/stellation2/war/help/help.css,v $
+ * $Date: 2009/09/06 22:15:34 $
+ * $Author: dtrg $
+ * $Revision: 1.1 $
+ */
+
+body
+{
+	margin: 0.75em;
+	padding: 0;
+	border: 0;
+	color: #fff;
+	font-family: Arial Unicode MS, Arial, sans-serif;
+	font-size: small;
+}
+
+.Link
+{
+	cursor: pointer;
+	text-decoration: underline;
+	color: #88f;
+}
