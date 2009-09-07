@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/06 22:17:12 $
+ * $Date: 2009/09/07 21:48:27 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client;
@@ -30,6 +30,7 @@ public class ClientDB extends Database
 	private static long _lastUpdate;
 	private static Map<Long, Set<ChangeCallback>> _callbacks;
 	private static Set<ChangeCallback> _logCallbacks;
+	private static Set<ChangeCallback> _anyChangeCallbacks;
 		
 	static
 	{
@@ -53,6 +54,7 @@ public class ClientDB extends Database
 		_cache = new HashMap<Long, CObject>();
 		_callbacks = new HashMap<Long, Set<ChangeCallback>>();
 		_logCallbacks = new HashSet<ChangeCallback>();
+		_anyChangeCallbacks = new HashSet<ChangeCallback>();
 	}
 	
 	private static Set<ChangeCallback> getCallbackSet(long id)
@@ -95,6 +97,16 @@ public class ClientDB extends Database
 	public static void removeLogChangeCallback(ChangeCallback cb)
 	{
 		_logCallbacks.remove(cb);
+	}
+	
+	public static void addChangeCallback(ChangeCallback cb)
+	{
+		_anyChangeCallbacks.add(cb);
+	}
+	
+	public static void removeChangeCallback(ChangeCallback cb)
+	{
+		_anyChangeCallbacks.remove(cb);
 	}
 	
 	public static AsyncCallback<UpdateBatch> getResponseHandler()
@@ -159,6 +171,10 @@ public class ClientDB extends Database
 			Set<ChangeCallback> set = _callbacks.get(object.getId());
 			fireCallbacks(set);
 		}
+		
+		/* Fire the global change callbacks. */
+		
+		fireCallbacks(_anyChangeCallbacks);
 	}
 	
 	public static String dumpVisibleDatabase()
