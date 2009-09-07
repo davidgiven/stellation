@@ -1,8 +1,8 @@
 /* Server-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SObject.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/07 21:46:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -113,6 +113,13 @@ public class SObject extends RootObject implements Iterable<SObject>
 	public void dirty()
 	{
 	    _changedTime = System.currentTimeMillis();
+	}
+	
+	public void dirtyAll()
+	{
+		dirty();
+		for (SObject o : this)
+			o.dirtyAll();
 	}
 	
 	public SObject getLocation()

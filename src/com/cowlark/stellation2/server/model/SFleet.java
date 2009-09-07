@@ -1,8 +1,8 @@
 /* Server-side fleet.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SFleet.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/07 21:46:12 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -60,15 +60,21 @@ public class SFleet extends SObject
 
 	public final SFleet setJumpshipCount(int jumpshipCount)
     {
+    	/* Bit of a hack: when fleets change visibility, all units in the star
+    	 * system may also change visibility as the player is able/unable to
+    	 * see them. In order to make the client flush the cached object and
+    	 * replace it with something with the correct scope, we mark everything
+    	 * in the system as dirty. */
+    	
+		if (((jumpshipCount == 0) && (_jumpshipCount != 0)) ||
+		    ((jumpshipCount != 0) && (_jumpshipCount == 0)))
+		{
+			SStar star = getLocation().toStar();
+			if (star != null)
+				dirtyAll();
+		}
+		
     	_jumpshipCount = jumpshipCount;
-    	dirty();
-    	
-    	/* Bit of a hack: when fleets no longer become visible, we need to
-    	 * force the client to hide those fleets. We do this by marking the
-    	 * star as dirty so that any star views remove their fleet views. */
-    	
-    	getLocation().dirty();
-    	
     	return this;
     }
 
