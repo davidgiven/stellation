@@ -1,8 +1,8 @@
 /* Server-side player.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SPlayer.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/07 21:49:14 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -14,7 +14,6 @@ import java.util.TreeMap;
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.UpdateBatch;
-import com.cowlark.stellation2.common.Utils;
 import com.cowlark.stellation2.common.db.ListOfClientObjects;
 import com.cowlark.stellation2.common.db.LogMessageStore;
 import com.cowlark.stellation2.common.exceptions.FleetAlreadyHasThisNameException;
@@ -28,11 +27,6 @@ import com.cowlark.stellation2.server.db.DataMangler;
 import com.cowlark.stellation2.server.db.MapOfServerObjects;
 import com.cowlark.stellation2.server.db.Property;
 import com.cowlark.stellation2.server.db.ServerDB;
-import com.google.appengine.api.xmpp.JID;
-import com.google.appengine.api.xmpp.Message;
-import com.google.appengine.api.xmpp.MessageBuilder;
-import com.google.appengine.api.xmpp.XMPPService;
-import com.google.appengine.api.xmpp.XMPPServiceFactory;
 
 @CClass(name = CPlayer.class)
 public class SPlayer extends SObject
@@ -62,7 +56,7 @@ public class SPlayer extends SObject
     
     private Map<Long, Integer> _visibleObjects = new TreeMap<Long, Integer>();
 
-    public SPlayer initialise(String uid, String password, String name, String empire)
+    public SPlayer initialise(String uid, String password, String empire, String name)
     {
     	super.initialise();
     	
@@ -78,7 +72,7 @@ public class SPlayer extends SObject
     	
     	try
     	{
-	    	SFleet fleet = createFleet(star, name+"'s starter fleet");
+	    	SFleet fleet = createFleet(star, _empire+"'s starter fleet");
 	    	
 	    	fleet.createJumpship()
 	    		.makeAlive();
@@ -90,8 +84,8 @@ public class SPlayer extends SObject
 	    		.setCargo(new Resources(100000.0, 100000.0, 100000.0))
 	    		.makeAlive();
 	    	
-	    	log("Intergalactic transit bubble arrival. " + _name +
-	    			" of " + _empire + " has arrived in the galaxy.");
+	    	log("Intergalactic transit bubble arrival. " + _empire +
+	    			" of " + _name + " has arrived in the galaxy.");
     	}
     	catch (StellationException e)
     	{

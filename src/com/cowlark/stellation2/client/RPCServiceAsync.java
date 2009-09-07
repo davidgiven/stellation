@@ -1,8 +1,8 @@
 /* RPC interface (async version).
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/RPCServiceAsync.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/07 21:49:14 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client;
@@ -14,7 +14,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface RPCServiceAsync
 {
-	void createUser(String uid, String password, String name, String empire,
+	void createUser(String uid, String password, String empire, String name,
 			AsyncCallback<Void> callback);
 
 	void ping(Authentication auth, long since,

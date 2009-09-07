@@ -1,8 +1,8 @@
 /* Main RPC entrypoint.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/RPCServiceImpl.java,v $
- * $Date: 2009/09/06 17:59:16 $
+ * $Date: 2009/09/07 21:49:14 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.server;
@@ -48,7 +48,7 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 	    super.destroy();
 	}
 	
-	public void createUser(String uid, String password, String name, String empire)
+	public void createUser(String uid, String password, String empire, String name)
 		throws StellationException
 	{
 		try

@@ -1,8 +1,8 @@
 /* Player registration dialogue.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/dialog/CreatePlayerDialog.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/07 21:49:14 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.dialog;
@@ -51,15 +51,15 @@ public class CreatePlayerDialog extends DialogBox
 		_password2 = new PasswordTextBox();
 		grid.setWidget(2, 1, _password2);
 		
-		grid.setText(3, 0, "Visible name:");
-		_name = new TextBox();
-		_name.setText("Bob Starnudger");
-		grid.setWidget(3, 1, _name);
-		
-		grid.setText(4, 0, "Name of empire:");
+		grid.setText(3, 0, "Name of empire:");
 		_empire = new TextBox();
 		_empire.setText("The Generic Empire");
-		grid.setWidget(4, 1, _empire);
+		grid.setWidget(3, 1, _empire);
+		
+		grid.setText(4, 0, "Visible name:");
+		_name = new TextBox();
+		_name.setText("Bob Starnudger");
+		grid.setWidget(4, 1, _name);
 		
 		_cancel = new Button("Cancel",
 				new ClickHandler()
@@ -92,8 +92,8 @@ public class CreatePlayerDialog extends DialogBox
 		String uid = _uid.getText();
 		String password = _password.getText();
 		String password2 = _password2.getText();
-		String name = _name.getText();
 		String empire = _empire.getText();
+		String name = _name.getText();
 		
 		if (!password.equals(password2))
 		{
@@ -103,7 +103,7 @@ public class CreatePlayerDialog extends DialogBox
 			
 		_cancel.setEnabled(false);
 		_create.setEnabled(false);
-		Stellation2.Service.createUser(uid, password, name, empire, this);
+		Stellation2.Service.createUser(uid, password, empire, name, this);
 	}
 	
 	public void onFailure(Throwable caught)
