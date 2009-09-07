@@ -1,8 +1,8 @@
 /* A word-wrapped label.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/WrappedLabel.java,v $
- * $Date: 2009/09/06 22:17:53 $
+ * $Date: 2009/09/07 21:48:10 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client.ui;
@@ -16,4 +16,9 @@ public class WrappedLabel extends InlineLabel
 		super(s);
 		setStylePrimaryName("Text");
     }
+	
+	public WrappedLabel()
+	{
+		this("");
+	}
 }
