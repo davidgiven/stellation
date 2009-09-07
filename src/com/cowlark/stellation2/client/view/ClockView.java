@@ -1,8 +1,8 @@
 /* Handles the right-hand pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/ClockView.java,v $
- * $Date: 2009/09/06 22:16:32 $
+ * $Date: 2009/09/07 21:47:17 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -49,7 +49,7 @@ public class ClockView extends Composite
 	@Override
 	protected void onLoad()
 	{
-		_timer.scheduleRepeating(3600);
+		_timer.scheduleRepeating(1000);
 	    super.onLoad();
 	}
 	
