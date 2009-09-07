@@ -1,8 +1,8 @@
 /* Client-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CObject.java,v $
- * $Date: 2009/09/06 22:15:12 $
+ * $Date: 2009/09/07 22:28:13 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.common.model;
@@ -12,7 +12,7 @@ import com.cowlark.stellation2.client.ChangeCallback;
 import com.cowlark.stellation2.client.ClientDB;
 import com.cowlark.stellation2.client.Stellation2;
 import com.cowlark.stellation2.client.view.AbstractView;
-import com.cowlark.stellation2.client.view.FallbackView;
+import com.cowlark.stellation2.client.view.RightPaneView;
 import com.cowlark.stellation2.common.Identifiable;
 import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.data.Properties;
@@ -176,9 +176,9 @@ public abstract class CObject implements IsSerializable,
 		assert(_id != S.NULL);
 		ClientDB.removeChangeCallback(_id, cb);
 	}
-	
-	public AbstractView<?> createRightPaneView()
+		
+	public AbstractView<? extends CObject> createRightPaneView()
 	{
-		return new FallbackView(this);
+		return new RightPaneView<CObject>(this);
 	}
 }

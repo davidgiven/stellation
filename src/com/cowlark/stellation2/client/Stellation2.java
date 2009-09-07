@@ -1,8 +1,8 @@
 /* Client core module.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/Stellation2.java,v $
- * $Date: 2009/09/07 21:49:24 $
+ * $Date: 2009/09/07 22:28:14 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.client;
@@ -20,6 +20,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class Stellation2 implements EntryPoint
 {
@@ -123,6 +124,11 @@ public class Stellation2 implements EntryPoint
 	public static void showStarViewer(CStar star)
 	{
 		_gameView.showStarViewer(star);
+	}
+	
+	public static void showRightPaneView(Widget view)
+	{
+		_gameView.showRightPaneView(view);
 	}
 	
 	public static long getTimeDelta()

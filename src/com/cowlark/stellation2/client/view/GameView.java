@@ -1,8 +1,8 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/GameView.java,v $
- * $Date: 2009/09/06 22:16:32 $
+ * $Date: 2009/09/07 22:28:13 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.cowlark.stellation2.client.Stellation2;
 import com.cowlark.stellation2.client.ui.FullScreenPanel;
+import com.cowlark.stellation2.common.model.CObject;
 import com.cowlark.stellation2.common.model.CStar;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -54,7 +55,7 @@ public class GameView extends Composite implements ClickHandler
 		_panel.add(_leftpane, BORDER*2, BORDER*2, LEFTWIDTH-BORDER, -(CLOCKHEIGHT+BORDER*4));
 		_panel.add(_clockpane, BORDER*2, -(CLOCKHEIGHT+BORDER*2), LEFTWIDTH-BORDER, -BORDER*2); 
 		_panel.add(_tabbar, LEFTWIDTH+BORDER, BORDER*2, -(RIGHTWIDTH+BORDER), TABHEIGHT + BORDER*2);
-		setRightPane(_rightpane);
+		showRightPaneView(_rightpane);
 		
 		addTab("Help", _helpview);
 		addTab("Map", _mapview);
@@ -132,15 +133,6 @@ public class GameView extends Composite implements ClickHandler
 			_selectedTabContent.setVisible(true);
 	}
 	
-	public void setRightPane(Widget pane)
-	{
-		if (_rightpane != null)
-			_panel.remove(_rightpane);
-
-		_rightpane = pane;
-		_panel.add(_rightpane, -(RIGHTWIDTH-BORDER), BORDER*2, -(BORDER*2), -BORDER*2);
-	}
-	
 	public void showStarViewer(CStar star)
 	{
 		removeTab(_starview);
@@ -148,4 +140,13 @@ public class GameView extends Composite implements ClickHandler
 		_starview = new MiddlePaneStarView(star);
 		addTab(star.getName(), _starview);
 	}
+	
+	public void showRightPaneView(Widget pane)
+	{
+		if (_rightpane != null)
+			_panel.remove(_rightpane);
+
+		_rightpane = pane;
+		_panel.add(_rightpane, -(RIGHTWIDTH-BORDER), BORDER*2, -(BORDER*2), -BORDER*2);
+	}	
 }
