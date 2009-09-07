@@ -1,8 +1,8 @@
 /* Log message storage.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/db/LogMessageStore.java,v $
- * $Date: 2009/09/06 17:59:16 $
+ * $Date: 2009/09/07 21:46:53 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common.db;
@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.Vector;
 import java.util.Map.Entry;
 import com.google.gwt.user.client.rpc.IsSerializable;
 
@@ -77,7 +76,7 @@ public class LogMessageStore implements HasDBRepresentation,
 	
 	public LogMessageStore getSubset(long t1, long t2)
 	{
-		SortedMap<Long, String> subdata = _data.subMap(t1, t2);
+		SortedMap<Long, String> subdata = _data.subMap(t2, t1);
 		return new LogMessageStore(subdata);
 	}
 	
