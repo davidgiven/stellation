@@ -1,8 +1,8 @@
 /* Client core module.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/Stellation2.java,v $
- * $Date: 2009/09/06 22:17:12 $
+ * $Date: 2009/09/07 21:49:24 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client;
@@ -68,6 +68,12 @@ public class Stellation2 implements EntryPoint
 		RootPanel.get("contentArea").add(_gameView);
 	}
 	
+	private static void clear()
+	{
+		RootPanel.get("contentArea").clear();
+		ClientDB.clear();
+	}
+
 	public static CUniverse getUniverse()
 	{
 		return (CUniverse) ClientDB.get(S.UNIVERSE);
@@ -97,6 +103,16 @@ public class Stellation2 implements EntryPoint
 		);
 		
 		ClientDB.fetchUpdates();
+	}
+
+	public static void logout()
+	{
+		_auth = null;
+		Cookies.setCookie("username", null);
+		Cookies.setCookie("password", null);
+		clear();
+
+		authenticationFailure();
 	}
 	
 	public static Authentication getAuthentication()
