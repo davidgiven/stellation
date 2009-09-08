@@ -1,8 +1,8 @@
 /* Generic utilities.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/Utils.java,v $
- * $Date: 2009/09/06 17:59:16 $
+ * $Date: 2009/09/08 23:00:01 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common;
@@ -10,6 +10,8 @@ package com.cowlark.stellation2.common;
 import java.util.LinkedList;
 import java.util.List;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Widget;
 
 public class Utils
 {
@@ -156,4 +158,23 @@ public class Utils
     	list.addLast(sb.toString());
     	return list;
     }
+	
+	public static void fillGrid(Grid grid, Object[][] objects)
+	{
+		for (int y = 0; y < objects.length; y++)
+		{
+			Object[] row = objects[y];
+			for (int x = 0; x < row.length; x++)
+			{
+				Object o = row[x];
+				
+				if (o == null)
+					continue;
+				else if (o instanceof String)
+					grid.setText(y, x, (String) o);
+				else
+					grid.setWidget(y, x, (Widget) o);
+			}
+		}
+	}
 }
