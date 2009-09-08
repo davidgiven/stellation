@@ -1,8 +1,8 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/GameView.java,v $
- * $Date: 2009/09/07 22:28:13 $
+ * $Date: 2009/09/08 23:01:28 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 import com.cowlark.stellation2.client.Stellation2;
 import com.cowlark.stellation2.client.ui.FullScreenPanel;
-import com.cowlark.stellation2.common.model.CObject;
 import com.cowlark.stellation2.common.model.CStar;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -24,10 +23,10 @@ import com.google.gwt.user.client.ui.Widget;
 public class GameView extends Composite implements ClickHandler
 {
 	public final static int BORDER = 5;
-	public final static int TABHEIGHT = 20;
+	public final static int TABHEIGHT = 25;
 	public final static int CLOCKHEIGHT = 50;
 	public final static int LEFTWIDTH = 200;
-	public final static int RIGHTWIDTH = 200;
+	public final static int RIGHTWIDTH = 250;
 
 	private FullScreenPanel _panel = new FullScreenPanel();
 	private ClockView _clockpane = new ClockView();

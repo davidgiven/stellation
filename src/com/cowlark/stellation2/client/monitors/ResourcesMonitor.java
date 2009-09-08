@@ -1,8 +1,8 @@
 /* Monitors resources in any HasResources object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/monitors/ResourcesMonitor.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/08 23:01:28 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.monitors;

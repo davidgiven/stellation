@@ -1,9 +1,14 @@
 /* Stellation styles.
  * $Source: /cvsroot/stellation/stellation2/war/Stellation2.css,v $
- * $Date: 2009/09/07 21:48:10 $
+ * $Date: 2009/09/08 23:01:28 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
+
+.gwt-Label, .gwt-Grid
+{
+	color: #fff;
+}
 
 body
 {
@@ -61,6 +66,7 @@ IMG.BackgroundImage
 	border: 1px solid #888;
 	background-image: url(transparent-panel.png);
 	behavior: url(iepngfix.htc);
+	color: #fff;
 }
 
 .PanelInner
@@ -172,7 +178,53 @@ IMG.BackgroundImage
 {
 	color: #fff;
 }
+
+/* Right-hand pane */
+
+.UnitBannerTitle
+{
+	font-size: 120%;
+}
+
+.UnitBannerObjectId
+{
+	font-size: 80%;
+	color: #888;
+}
+
+.UnitBannerDescription
+{
+	font-size: 90%;
+	font-style: italic;
+}
+
+.CargoshipResourcesGrid
+{
+	color: #fff;
+}
+
+.CargoshipResourcesGrid
+{
+	color: #fff;
+}
+
+.CargoshipResourcesGrid td, .CargoshipResourcesGrid button  
+{
+	font-size: 70%;
+	text-align: right;
+}
+
+.CargoshipResourcesGrid input
+{
+	font-family: Arial Unicode MS, Arial, sans-serif;
+  	border-width: 1px;
+	width: 5em;
+	font-size: 90%;
+	text-align: right;
+}
 	
+/* Map */
+
 .MapView
 {
 	background-color: #000;

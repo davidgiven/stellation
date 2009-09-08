@@ -1,8 +1,8 @@
 /* Monitors the name of a unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/monitors/UnitNameMonitor.java,v $
- * $Date: 2009/09/07 22:28:13 $
+ * $Date: 2009/09/08 23:01:28 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.client.monitors;
@@ -45,7 +45,7 @@ public class UnitNameMonitor extends Monitor<CUnit> implements ClickHandler
 		try
 		{
 			CUnit unit = getObject();
-			Widget view = unit.createRightPaneView();
+			Widget view = unit.createControlPanel();
 			Stellation2.showRightPaneView(view);
 		}
 		catch (OutOfScopeException e)
