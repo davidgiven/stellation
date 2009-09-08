@@ -1,8 +1,8 @@
 /* Main RPC entrypoint.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/RPCServiceImpl.java,v $
- * $Date: 2009/09/07 21:49:14 $
+ * $Date: 2009/09/08 22:59:31 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.server;
@@ -36,6 +36,7 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 	public void init(ServletConfig config) throws ServletException
 	{
 	    super.init(config);
+	    Log.log("server init");
 	    
 	    PersistenceInterface persistence = new GAEPersistenceInterface(config);
 	    Database.Instance = ServerDB.Instance = new ServerDB(persistence);
@@ -44,7 +45,9 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void destroy()
 	{
-		ServerDB.Instance.close();		
+		ServerDB.Instance.close();
+		
+		Log.log("server deinit");
 	    super.destroy();
 	}
 	
