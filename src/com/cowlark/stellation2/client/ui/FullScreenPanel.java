@@ -1,8 +1,8 @@
 /* Three-way vertical column panel.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/FullScreenPanel.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/08 19:05:40 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.ui;
@@ -66,6 +66,7 @@ public class FullScreenPanel extends Composite implements ResizeHandler
 	public void remove(Widget w)
 	{
 		_children.remove(w);
+		_panel.remove(w);
 		
 		if (_resizeHandler != null)
 			layout();
