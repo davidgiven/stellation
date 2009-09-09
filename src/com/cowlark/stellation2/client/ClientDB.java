@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/09 23:17:34 $
+ * $Date: 2009/09/09 23:18:12 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.client;
@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import com.cowlark.stellation2.common.Authentication;
 import com.cowlark.stellation2.common.Identifiable;
 import com.cowlark.stellation2.common.UpdateBatch;
 import com.cowlark.stellation2.common.db.Database;

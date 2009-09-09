@@ -1,15 +1,13 @@
 /* Client-side generic unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CUnit.java,v $
- * $Date: 2009/09/07 22:28:13 $
+ * $Date: 2009/09/09 23:18:12 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 
 package com.cowlark.stellation2.common.model;
 
-import com.cowlark.stellation2.client.view.AbstractView;
-import com.cowlark.stellation2.client.view.FallbackView;
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.server.db.Property;
 import com.google.gwt.user.client.ui.Label;
