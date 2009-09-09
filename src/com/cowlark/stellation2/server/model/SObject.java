@@ -1,8 +1,8 @@
 /* Server-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SObject.java,v $
- * $Date: 2009/09/07 21:46:12 $
+ * $Date: 2009/09/09 23:17:00 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -11,7 +11,9 @@ import java.util.Iterator;
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.db.DBRef;
+import com.cowlark.stellation2.common.exceptions.InvalidObjectException;
 import com.cowlark.stellation2.common.exceptions.ResourcesNotAvailableException;
+import com.cowlark.stellation2.common.exceptions.StellationException;
 import com.cowlark.stellation2.common.model.CObject;
 import com.cowlark.stellation2.server.db.CClass;
 import com.cowlark.stellation2.server.db.ListOfServerObjects;
@@ -235,4 +237,17 @@ public class SObject extends RootObject implements Iterable<SObject>
     	add(o);
     	return o;
     }
+    	
+	public void checkObjectVisibleTo(SPlayer player)
+		throws StellationException
+	{
+		throw new InvalidObjectException(getId());
+	}
+	
+	public void checkObjectOwnedBy(SPlayer player)
+		throws StellationException
+	{
+		if (getOwner() != player)
+			throw new InvalidObjectException(getId());
+	}
 }

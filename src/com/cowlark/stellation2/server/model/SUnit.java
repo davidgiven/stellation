@@ -1,8 +1,8 @@
 /* Server-side generc unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SUnit.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/09 23:17:00 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -11,6 +11,7 @@ import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.db.DBRef;
 import com.cowlark.stellation2.common.exceptions.ResourcesNotAvailableException;
+import com.cowlark.stellation2.common.exceptions.StellationException;
 import com.cowlark.stellation2.common.model.CUnit;
 import com.cowlark.stellation2.server.db.CClass;
 import com.cowlark.stellation2.server.db.Property;
@@ -57,6 +58,11 @@ public abstract class SUnit extends SObject
 		return getRestMass();
 	}
 	
+	public SStar getStar()
+	{
+		return getLocation().getLocation().toStar();
+	}
+
 	@Override
 	public long timerExpiry(STimer timer)
 	{
@@ -125,5 +131,13 @@ public abstract class SUnit extends SObject
 		if (fleet != null)
 			fleet.log(message);
 		return this;
+	}
+	
+	public void checkObjectVisibleTo(SPlayer player)
+			throws StellationException
+	{
+		/* This object is visible if the fleet owning it is visible. */
+		
+		getLocation().checkObjectVisibleTo(player);
 	}
 }
