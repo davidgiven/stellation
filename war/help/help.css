@@ -1,8 +1,8 @@
 /* Stellation help text styles.
  * $Source: /cvsroot/stellation/stellation2/war/help/help.css,v $
- * $Date: 2009/09/06 22:15:34 $
+ * $Date: 2009/09/09 23:15:51 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 body
@@ -11,6 +11,7 @@ body
 	padding: 0;
 	border: 0;
 	color: #fff;
+	background-color: transparent;
 	font-family: Arial Unicode MS, Arial, sans-serif;
 	font-size: small;
 }
