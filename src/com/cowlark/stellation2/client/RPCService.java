@@ -1,8 +1,8 @@
 /* RPC interface (client-side).
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/RPCService.java,v $
- * $Date: 2009/09/07 21:49:14 $
+ * $Date: 2009/09/09 23:17:34 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client;
@@ -28,5 +28,11 @@ public interface RPCService extends RemoteService
 	
 	void adminSaveObject(Authentication auth, long id,
 			Map<String, String> map)
+		throws StellationException;
+	
+	/* Cargoship */
+	
+	UpdateBatch cargoshipLoadUnload(Authentication auth, long since,
+			long id, double antimatter, double metal, double organics)
 		throws StellationException;
 }

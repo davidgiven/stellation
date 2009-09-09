@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/07 21:48:27 $
+ * $Date: 2009/09/09 23:17:34 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.client;
@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import com.cowlark.stellation2.common.Authentication;
 import com.cowlark.stellation2.common.Identifiable;
 import com.cowlark.stellation2.common.UpdateBatch;
 import com.cowlark.stellation2.common.db.Database;
@@ -198,4 +199,15 @@ public class ClientDB extends Database
     {
 	    return _logs;
     }
+	
+	/* RPC calls */
+
+	public static void cargoshipLoadUnload(
+			long id, double antimatter, double metal, double organics)
+	{
+		Stellation2.Service.cargoshipLoadUnload(
+				Stellation2.getAuthentication(), _lastUpdate,
+				id, antimatter, metal, organics,
+				getResponseHandler());		
+	}	
 }

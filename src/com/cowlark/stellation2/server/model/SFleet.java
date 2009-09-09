@@ -1,15 +1,17 @@
 /* Server-side fleet.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SFleet.java,v $
- * $Date: 2009/09/07 21:46:12 $
+ * $Date: 2009/09/09 23:17:34 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.server.model;
 
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
+import com.cowlark.stellation2.common.exceptions.InvalidObjectException;
 import com.cowlark.stellation2.common.exceptions.ResourcesNotAvailableException;
+import com.cowlark.stellation2.common.exceptions.StellationException;
 import com.cowlark.stellation2.common.model.CFleet;
 import com.cowlark.stellation2.server.db.CClass;
 import com.cowlark.stellation2.server.db.Property;
@@ -105,5 +107,26 @@ public class SFleet extends SObject
 		if (_jumpshipCount > 0)
 			getOwner().log(message);
 		return this;
+	}
+	
+	public void checkObjectVisibleTo(SPlayer player)
+		throws StellationException
+	{
+		/* If any fleet in this system is owned by the player, and that fleet
+		 * has a jumpship, the fleet is visible. */
+		
+		for (SObject o : getLocation())
+		{
+			SFleet fleet = o.toFleet();
+			if ((fleet != null) && (fleet.getOwner() == player) &&
+				(fleet.getJumpshipCount() > 0))
+			{
+				return;
+			}
+		}
+		
+		/* The object isn't visible! */
+		
+		throw new InvalidObjectException(getId());
 	}
 }

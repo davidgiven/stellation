@@ -1,8 +1,8 @@
 /* Main RPC entrypoint.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/RPCServiceImpl.java,v $
- * $Date: 2009/09/08 22:59:31 $
+ * $Date: 2009/09/09 23:17:34 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.server;
@@ -16,12 +16,14 @@ import com.cowlark.stellation2.common.Authentication;
 import com.cowlark.stellation2.common.UpdateBatch;
 import com.cowlark.stellation2.common.db.Database;
 import com.cowlark.stellation2.common.exceptions.DatabaseCorruptException;
+import com.cowlark.stellation2.common.exceptions.InvalidObjectException;
 import com.cowlark.stellation2.common.exceptions.StellationException;
 import com.cowlark.stellation2.server.db.DataMangler;
 import com.cowlark.stellation2.server.db.GAEPersistenceInterface;
 import com.cowlark.stellation2.server.db.PersistenceInterface;
 import com.cowlark.stellation2.server.db.RootObject;
 import com.cowlark.stellation2.server.db.ServerDB;
+import com.cowlark.stellation2.server.model.SCargoship;
 import com.cowlark.stellation2.server.model.SObject;
 import com.cowlark.stellation2.server.model.SPlayer;
 import com.cowlark.stellation2.server.model.SUniverse;
@@ -75,6 +77,26 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 			throw new DatabaseCorruptException(e);
 		}
 	}
+
+	private SPlayer getPlayer(Authentication auth)
+		throws StellationException
+	{
+		SUniverse universe = SUniverse.getStaticUniverse();
+		Log.log("running game");
+		universe.timePassing();
+		Log.log("end running game");
+		return universe.authenticatePlayer(auth);
+	}
+	
+	private UpdateBatch returnBatch(SPlayer player, long since)
+	{
+		UpdateBatch batch = new UpdateBatch();
+		Log.log("updating visibility");
+		player.updateVisibility();
+		Log.log("done visibility search");
+		player.addChangedItemsToBatch(batch, since);
+		return batch;
+	}
 	
 	public UpdateBatch ping(Authentication auth, long since)
 		throws StellationException
@@ -84,18 +106,8 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 			ServerDB.Instance.lock();		
 			try
 			{
-				SUniverse universe = SUniverse.getStaticUniverse();
-				Log.log("running game");
-				universe.timePassing();
-				Log.log("end running game");
-				SPlayer player = universe.authenticatePlayer(auth);
-				
-				UpdateBatch batch = new UpdateBatch();
-				Log.log("updating visibility");
-				player.updateVisibility();
-				Log.log("done visibility search");
-				player.addChangedItemsToBatch(batch, since);
-				return batch;
+				SPlayer player = getPlayer(auth);
+				return returnBatch(player, since);
 			}
 			finally
 			{
@@ -116,8 +128,7 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 			ServerDB.Instance.lock();		
 			try
 			{
-				SUniverse universe = SUniverse.getStaticUniverse();
-				SPlayer player = universe.authenticatePlayer(auth);
+				SPlayer player = getPlayer(auth);
 				player.checkAdministrator();
 	
 				RootObject o = Database.get(id);
@@ -143,8 +154,7 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 			ServerDB.Instance.lock();		
 			try
 			{
-				SUniverse universe = SUniverse.getStaticUniverse();
-				SPlayer player = universe.authenticatePlayer(auth);
+				SPlayer player = getPlayer(auth);
 				player.checkAdministrator();
 	
 				RootObject o = DataMangler.deserialise(map);
@@ -163,5 +173,40 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 		{
 			throw new DatabaseCorruptException(e);
 		}
+	}
+	
+	/* Cargoship */
+	
+	public UpdateBatch cargoshipLoadUnload(Authentication auth, long since,
+			long id, double antimatter, double metal, double organics)
+	        throws StellationException
+	{
+	    		try
+	    		{
+	    			ServerDB.Instance.lock();		
+	    			try
+	    			{
+	    				SPlayer player = getPlayer(auth);
+	    				SObject object = Database.get(id);
+	    				
+	    				if (!(object instanceof SCargoship))
+	    					throw new InvalidObjectException(id);
+	    				object.checkObjectOwnedBy(player);
+	    				object.checkObjectVisibleTo(player);
+	    				
+	    				SCargoship cargoship = object.toCargoship();
+	    				cargoship.loadUnloadCmd(antimatter, metal, organics);
+	    				
+	    				return returnBatch(player, since);
+	    			}
+	    			finally
+	    			{
+	    				ServerDB.Instance.unlock();
+	    			}
+	    		}
+	    		catch (IOException e)
+	    		{
+	    			throw new DatabaseCorruptException(e);
+	    		}
 	}
 }

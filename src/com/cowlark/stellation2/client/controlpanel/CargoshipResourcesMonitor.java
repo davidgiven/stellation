@@ -1,8 +1,8 @@
 /* Handles the right-hand pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/Attic/CargoshipResourcesMonitor.java,v $
- * $Date: 2009/09/08 23:01:28 $
+ * $Date: 2009/09/09 23:17:34 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.controlpanel;
@@ -78,6 +78,7 @@ public class CargoshipResourcesMonitor extends Monitor<CCargoship>
 			{
 				public void onClick(ClickEvent event)
 				{
+					loadUnload(1);
 				}
 			}
 		);
@@ -87,6 +88,7 @@ public class CargoshipResourcesMonitor extends Monitor<CCargoship>
 			{
 				public void onClick(ClickEvent event)
 				{
+					loadUnload(-1);
 				}
 			}
 		);
@@ -215,5 +217,14 @@ public class CargoshipResourcesMonitor extends Monitor<CCargoship>
 		_da.setText(_aa.getText());
 		_dm.setText(_am.getText());
 		_do.setText(_ao.getText());
+	}
+	
+	private void loadUnload(double delta)
+	{
+		double a = delta * Double.parseDouble(_da.getText());
+		double m = delta * Double.parseDouble(_dm.getText());
+		double o = delta * Double.parseDouble(_do.getText());
+		
+		ClientDB.cargoshipLoadUnload(getId(), a, m, o);
 	}
 }

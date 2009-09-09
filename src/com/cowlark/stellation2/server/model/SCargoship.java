@@ -1,8 +1,8 @@
 /* Server-side cargoship.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SCargoship.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/09 23:17:34 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -83,5 +83,28 @@ public class SCargoship extends SShip
 			throw new ResourcesNotAvailableException();
 		
 		setCargo(new Resources(antimatter, metal, organics));
+	}
+	
+	public void loadUnloadCmd(double antimatter, double metal, double organics)
+			throws ResourcesNotAvailableException
+	{
+		SStar star = getStar();
+
+		double shipantimatter = _cargo.getAntimatter() + antimatter;
+		double shipmetal = _cargo.getMetal() + metal;
+		double shiporganics = _cargo.getOrganics() + organics;
+
+		Resources starr = star.getResources();
+		double starantimatter = starr.getAntimatter() - antimatter;
+		double starmetal = starr.getMetal() - metal;
+		double starorganics = starr.getOrganics() - organics;
+		
+		if ((shipantimatter < 0.0) || (shipmetal < 0.0) || (shiporganics < 0.0))
+			throw new ResourcesNotAvailableException();
+		if ((starantimatter < 0.0) || (starmetal < 0.0) || (starorganics < 0.0))
+			throw new ResourcesNotAvailableException();
+		
+		setCargo(new Resources(shipantimatter, shipmetal, shiporganics));
+		star.setResources(new Resources(starantimatter, starmetal, starorganics));
 	}
 }
