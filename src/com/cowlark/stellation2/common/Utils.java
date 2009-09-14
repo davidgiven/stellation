@@ -1,16 +1,19 @@
 /* Generic utilities.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/Utils.java,v $
- * $Date: 2009/09/08 23:00:01 $
+ * $Date: 2009/09/14 22:22:04 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.common;
 
 import java.util.LinkedList;
 import java.util.List;
+import com.cowlark.stellation2.client.ui.DataGroup;
+import com.cowlark.stellation2.client.ui.DataRow;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
 public class Utils
@@ -29,6 +32,11 @@ public class Utils
 	public static double round(double factor, double i)
 	{
 		return Math.floor(factor * i) / factor;
+	}
+	
+	public static String renderMass(double d)
+	{
+		return S.MASS_FORMAT.format(d) + " tonnes";
 	}
 	
 	public static String renderTime(long t)
@@ -56,6 +64,19 @@ public class Utils
     	return sb.toString();
 	}
 
+	public static Widget renderResources(Resources r)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("A: ");
+		sb.append(r.getAntimatter());
+		sb.append(" M: ");
+		sb.append(r.getMetal());
+		sb.append(" O: ");
+		sb.append(r.getOrganics());
+
+		return new Label(sb.toString());
+	}
+	
 	public static Element findElementByClass(Element element, String className)
 	{
 		String s = element.getClassName();
@@ -175,6 +196,30 @@ public class Utils
 				else
 					grid.setWidget(y, x, (Widget) o);
 			}
+		}
+	}
+	
+	public static void fillGroup(DataGroup group, Object[][] objects)
+	{
+		for (Object[] row : objects)
+		{
+			final Widget[] widgets = new Widget[row.length];
+			for (int x = 0; x < row.length; x++)
+			{
+				Object o = row[x];
+				if (o instanceof String)
+					o = new Label((String) o);
+				widgets[x] = (Widget) o;
+			}
+			
+			group.add(new DataRow()
+				{
+					public Widget[] getData()
+					{
+						return widgets;
+					}
+				}
+			);	
 		}
 	}
 }
