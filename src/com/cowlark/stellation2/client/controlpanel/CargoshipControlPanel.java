@@ -1,14 +1,16 @@
 /* Handles the right-hand pane.
- * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/Attic/CargoshipResourcesMonitor.java,v $
- * $Date: 2009/09/09 23:17:34 $
+ * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/CargoshipControlPanel.java,v $
+ * $Date: 2009/09/14 22:22:32 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.1 $
  */
 
 package com.cowlark.stellation2.client.controlpanel;
 
+import com.cowlark.stellation2.client.ChangeCallback;
 import com.cowlark.stellation2.client.ClientDB;
-import com.cowlark.stellation2.client.monitors.Monitor;
+import com.cowlark.stellation2.client.ui.DataGroup;
+import com.cowlark.stellation2.client.view.FullWidthWidgetRow;
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.Utils;
 import com.cowlark.stellation2.common.db.DBRef;
@@ -25,11 +27,11 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.HTMLTable.CellFormatter;
 
-public class CargoshipResourcesMonitor extends Monitor<CCargoship>
+public class CargoshipControlPanel extends UnitControlPanel<CCargoship>
 {
+	private DataGroup _group;
 	private DBRef<CStar> _star = DBRef.NULL();
 	private VerticalPanel _panel = new VerticalPanel();
 	private Grid _grid = new Grid(5, 4);
@@ -103,9 +105,10 @@ public class CargoshipResourcesMonitor extends Monitor<CCargoship>
 			{null,  _right,   _zero,    _left}                      
 	};
 	
-	public CargoshipResourcesMonitor(CCargoship o)
+	
+	public CargoshipControlPanel(CCargoship ship)
     {
-		super(o);
+		super(ship);
 		
 		_grid.addStyleName("CargoshipResourcesGrid");
 		_right.setWidth("100%");
@@ -131,6 +134,9 @@ public class CargoshipResourcesMonitor extends Monitor<CCargoship>
 		_panel.setWidth("100%");
 		_panel.add(_grid);
 		_panel.add(hpanel);
+		
+		_group = addGroup();
+		_group.add(new FullWidthWidgetRow(_panel));
     }
 	
 	@Override
@@ -145,11 +151,6 @@ public class CargoshipResourcesMonitor extends Monitor<CCargoship>
 	{
 	    super.onUnload();
 	    unregisterStarChangeCallback();
-	}
-	
-	public String getLabel()
-	{
-		return "Resources";
 	}
 	
 	private void registerStarChangeCallback()
@@ -176,26 +177,33 @@ public class CargoshipResourcesMonitor extends Monitor<CCargoship>
 		ClientDB.removeChangeCallback(star, this);
 	}
 	
-	public Widget updateImpl(CCargoship hr) throws OutOfScopeException
+	@Override
+	public void onChange(ChangeCallback cb)
 	{
-		CStar star = hr.getParent().getParent().toStar();
-		if (!_star.equals(star))
-		{
-			unregisterStarChangeCallback();
-			registerStarChangeCallback();
-		}
-		
-		Resources r = hr.getResources();
-		_ca.setText(Double.toString(r.getAntimatter()));
-		_cm.setText(Double.toString(r.getMetal()));
-		_co.setText(Double.toString(r.getOrganics()));
-		
-		r = star.getResources();
-		_aa.setText(Double.toString(r.getAntimatter()));
-		_am.setText(Double.toString(r.getMetal()));
-		_ao.setText(Double.toString(r.getOrganics()));
-		
-		return _panel;
+	    super.onChange(cb);
+
+	    try
+	    {
+			CStar star = getObject().getParent().getParent().toStar();
+			if (!_star.equals(star))
+			{
+				unregisterStarChangeCallback();
+				registerStarChangeCallback();
+			}
+			
+			Resources r = getObject().getResources();
+			_ca.setText(Double.toString(r.getAntimatter()));
+			_cm.setText(Double.toString(r.getMetal()));
+			_co.setText(Double.toString(r.getOrganics()));
+			
+			r = star.getResources();
+			_aa.setText(Double.toString(r.getAntimatter()));
+			_am.setText(Double.toString(r.getMetal()));
+			_ao.setText(Double.toString(r.getOrganics()));
+	    }
+	    catch (OutOfScopeException e)
+	    {
+	    }
 	}
 	
 	private void zero()
