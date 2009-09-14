@@ -1,8 +1,8 @@
 /* Client-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CObject.java,v $
- * $Date: 2009/09/08 23:01:28 $
+ * $Date: 2009/09/14 22:15:34 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.common.model;
@@ -11,8 +11,7 @@ import java.util.Iterator;
 import com.cowlark.stellation2.client.ChangeCallback;
 import com.cowlark.stellation2.client.ClientDB;
 import com.cowlark.stellation2.client.Stellation2;
-import com.cowlark.stellation2.client.controlpanel.ControlPanel;
-import com.cowlark.stellation2.client.view.AbstractView;
+import com.cowlark.stellation2.client.view.BlankView;
 import com.cowlark.stellation2.common.Identifiable;
 import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.data.Properties;
@@ -22,6 +21,7 @@ import com.cowlark.stellation2.common.db.ListOfClientObjects;
 import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
 import com.cowlark.stellation2.server.db.Property;
 import com.google.gwt.user.client.rpc.IsSerializable;
+import com.google.gwt.user.client.ui.Widget;
 
 public abstract class CObject implements IsSerializable,
 		Iterable<CObject>, Identifiable
@@ -177,8 +177,8 @@ public abstract class CObject implements IsSerializable,
 		ClientDB.removeChangeCallback(_id, cb);
 	}
 		
-	public AbstractView<? extends CObject> createControlPanel()
+	public Widget createControlPanel()
 	{
-		return new ControlPanel<CObject>(this);
+		return new BlankView();
 	}
 }

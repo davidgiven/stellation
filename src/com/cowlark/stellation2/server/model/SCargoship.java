@@ -1,14 +1,16 @@
 /* Server-side cargoship.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SCargoship.java,v $
- * $Date: 2009/09/09 23:17:34 $
+ * $Date: 2009/09/14 22:15:34 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.server.model;
 
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
+import com.cowlark.stellation2.common.data.Properties;
+import com.cowlark.stellation2.common.data.PropertyStore;
 import com.cowlark.stellation2.common.exceptions.ResourcesNotAvailableException;
 import com.cowlark.stellation2.common.model.CCargoship;
 import com.cowlark.stellation2.server.db.CClass;
@@ -18,12 +20,6 @@ import com.cowlark.stellation2.server.db.Property;
 public class SCargoship extends SShip
 {
     private static final long serialVersionUID = -6928260816716072277L;
-    
-	private static double REST_MASS = 1000.0;
-    private static Resources BUILD_COST = new Resources(10000.0, 1000.0, 5000.0);
-    private static double BUILD_TIME = 3.0;
-    private static Resources MAINTENANCE_COST = new Resources(2.0, 1.0, 0.0);
-    private static double MAX_DAMAGE = 300.0;
     
     private static double MASS_SCALE = 300.0;
 
@@ -43,22 +39,20 @@ public class SCargoship extends SShip
         return this;
     }
     
-    @Override public double getRestMass() { return REST_MASS; }
-	@Override public Resources getBuildCost() { return BUILD_COST; }
-	@Override public double getBuildTime() { return BUILD_TIME; }
-	@Override public Resources getMaintenanceCost() { return MAINTENANCE_COST; }
-	@Override public double getMaxDamage() { return MAX_DAMAGE; }
+	public Properties getProperties()
+	{
+		return PropertyStore.Cargoship;
+	}
 	
-	@Override
-    public double getMass()
+    private void updateMass()
     {
-		double mass = super.getMass();
+		double mass = getProperties().getMass();
 		
 		mass += _cargo.getMetal() / MASS_SCALE;
 		mass += _cargo.getAntimatter() / MASS_SCALE;
 		mass += _cargo.getOrganics() / MASS_SCALE;
 		
-	    return mass;
+	    setMass(mass);
     }
 
 	public Resources getCargo()
@@ -69,6 +63,7 @@ public class SCargoship extends SShip
 	public SCargoship setCargo(Resources cargo)
     {
     	_cargo = cargo;
+    	updateMass();
     	dirty();
     	return this;
     }

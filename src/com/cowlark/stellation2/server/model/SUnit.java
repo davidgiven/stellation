@@ -1,8 +1,8 @@
 /* Server-side generc unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SUnit.java,v $
- * $Date: 2009/09/09 23:17:00 $
+ * $Date: 2009/09/14 22:15:34 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -21,6 +21,9 @@ public abstract class SUnit extends SObject
 {
     private static final long serialVersionUID = 6264037018308814748L;
 
+    @Property(scope = S.LOCAL)
+    private double _mass;
+    
 	@Property(scope = S.LOCAL)
 	private double _damage;
 	
@@ -32,6 +35,7 @@ public abstract class SUnit extends SObject
 	{
 	    super.initialise();
 	    _damage = 0.0;
+	    _mass = getProperties().getMass();
 	    return this;
 	}
 	
@@ -47,16 +51,16 @@ public abstract class SUnit extends SObject
 		return this;
 	}
 	
-	public abstract Resources getMaintenanceCost();
-	public abstract Resources getBuildCost();
-	public abstract double getBuildTime();
-	public abstract double getRestMass();
-	public abstract double getMaxDamage();
-	
 	public double getMass()
 	{
-		return getRestMass();
+		return _mass;
 	}
+	
+	public SUnit setMass(double mass)
+    {
+	    _mass = mass;
+	    return this;
+    }
 	
 	public SStar getStar()
 	{
@@ -68,7 +72,7 @@ public abstract class SUnit extends SObject
 	{
 		if (timer.equals(_maintenanceTimer))
 		{
-			Resources r = getMaintenanceCost();
+			Resources r = getProperties().getMaintenanceCost();
 			try
 			{
 				consume(r);
@@ -76,7 +80,7 @@ public abstract class SUnit extends SObject
 			}
 			catch (ResourcesNotAvailableException e)
 			{
-				log("unit starves!");
+				log(getProperties().getName() + " lost due to lack of upkeep.");
 				starve();
 				return S.CANCELTIMER;
 			}

@@ -1,14 +1,16 @@
 /* Server-side fleet.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SFleet.java,v $
- * $Date: 2009/09/09 23:17:34 $
+ * $Date: 2009/09/14 22:15:34 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.server.model;
 
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
+import com.cowlark.stellation2.common.data.Properties;
+import com.cowlark.stellation2.common.data.PropertyStore;
 import com.cowlark.stellation2.common.exceptions.InvalidObjectException;
 import com.cowlark.stellation2.common.exceptions.ResourcesNotAvailableException;
 import com.cowlark.stellation2.common.exceptions.StellationException;
@@ -43,6 +45,11 @@ public class SFleet extends SObject
     	return this;
     }
     
+	public Properties getProperties()
+	{
+		return PropertyStore.Fleet;
+	}
+	
 	public String getName()
     {
 	    return _name;

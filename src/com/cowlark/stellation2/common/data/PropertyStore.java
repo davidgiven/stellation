@@ -1,11 +1,13 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/data/PropertyStore.java,v $
- * $Date: 2009/09/06 22:15:12 $
+ * $Date: 2009/09/14 22:15:34 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common.data;
+
+import com.cowlark.stellation2.common.Resources;
 
 public class PropertyStore
 {
@@ -18,7 +20,12 @@ public class PropertyStore
 	                "Cargo ships can carry large quantities of the three " +
 	                "main commodities. They can be used to transfer resources " +
 	                "from one star system to another, and are also used to " +
-	                "supply vessels in operation.");
+	                "supply vessels in operation.")
+	        .setMass(1000.0)
+	        .setMaxDamage(300.0)
+	        .setBuildCost(new Resources(10000.0, 1000.0, 5000.0))
+	        .setBuildTime(3.0)
+	        .setMaintenanceCost(new Resources(2.0, 1.0, 0.0));
 	
 	public static Properties Fleet =
 		new Properties()
@@ -33,12 +40,22 @@ public class PropertyStore
 					"of other ships through interstellar distances. The spatial " +
 					"flaw can also be used to send instantaneous communications " +
 					"from one jumpship to another, but only ones for which the " +
-					"exact resonant frequency of the flaw is known.");
+					"exact resonant frequency of the flaw is known.")
+		    .setMass(5000.0)
+		    .setMaxDamage(1000.0)
+		    .setBuildCost(new Resources(20000.0, 1000.0, 10000.0))
+		    .setBuildTime(5.0)
+		    .setMaintenanceCost(new Resources(5.0, 2.0, 0.0));
 	
 	public static Properties Tug =
 		new Properties()
 			.setName("Tug")
 			.setDescription(
 					"Tugs are small, powerful craft used to tow otherwise " +
-			    	"unpowered vessels and other artifacts.");
+			    	"unpowered vessels and other artifacts.")
+		    .setMass(1000.0)
+		    .setMaxDamage(100.0)
+		    .setBuildCost(new Resources(8000.0, 1000.0, 3000.0))
+		    .setBuildTime(2.0)
+		    .setMaintenanceCost(new Resources(4.0, 1.0, 0.0));
 }

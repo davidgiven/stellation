@@ -1,13 +1,13 @@
 /* Client-side cargoship.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CCargoship.java,v $
- * $Date: 2009/09/08 23:01:28 $
+ * $Date: 2009/09/14 22:15:34 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.common.model;
 
-import com.cowlark.stellation2.client.controlpanel.CargoshipCP;
+import com.cowlark.stellation2.client.controlpanel.CargoshipControlPanel;
 import com.cowlark.stellation2.client.monitors.ResourcesMonitor;
 import com.cowlark.stellation2.client.view.AbstractView;
 import com.cowlark.stellation2.common.HasResources;
@@ -52,6 +52,6 @@ public class CCargoship extends CShip implements HasResources
 	
 	public AbstractView<? extends CObject> createControlPanel()
 	{
-		return new CargoshipCP(this);
+		return new CargoshipControlPanel(this);
 	}
 }
