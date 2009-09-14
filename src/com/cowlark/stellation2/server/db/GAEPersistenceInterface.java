@@ -1,8 +1,8 @@
 /* AppEngine persistent storage plugin.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/db/GAEPersistenceInterface.java,v $
- * $Date: 2009/09/06 17:59:15 $
+ * $Date: 2009/09/14 22:21:04 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.server.db;
@@ -14,6 +14,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import javax.servlet.ServletConfig;
 import com.cowlark.stellation2.server.Log;
 import com.google.appengine.api.datastore.Blob;
@@ -53,11 +55,13 @@ public class GAEPersistenceInterface extends PersistenceInterface
 		Entity entity = new Entity(KIND, DATA);
 		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(os);
+		GZIPOutputStream gzos = new GZIPOutputStream(os);
+		ObjectOutputStream oos = new ObjectOutputStream(gzos);
 		
 		oos.writeObject(db);
 		
 		oos.close();
+		gzos.close();
 		os.flush();
 		
 		Blob blob = new Blob(os.toByteArray());
@@ -83,7 +87,8 @@ public class GAEPersistenceInterface extends PersistenceInterface
 			Blob blob = (Blob) entity.getProperty("data");
 			byte[] data = blob.getBytes();
 			ByteArrayInputStream is = new ByteArrayInputStream(data);
-			ObjectInputStream ois = new ObjectInputStream(is);
+			GZIPInputStream gzis = new GZIPInputStream(is);
+			ObjectInputStream ois = new ObjectInputStream(gzis);
 			
 			Map<Long, RootObject> db = (Map<Long, RootObject>) ois.readObject();
 			ois.close();
