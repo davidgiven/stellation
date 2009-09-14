@@ -1,8 +1,8 @@
 /* Monitors the amount of damage in a unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/monitors/UnitDamageMonitor.java,v $
- * $Date: 2009/09/09 23:18:13 $
+ * $Date: 2009/09/14 22:21:31 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.client.monitors;
@@ -32,7 +32,7 @@ public class UnitDamageMonitor extends Monitor<CUnit>
 		
 		sb.append(unit.getDamage());
 		sb.append(" / ");
-		sb.append(unit.getMaxDamage());
+		sb.append(unit.getProperties().getMaxDamage());
 		
 		_label.setText(sb.toString());
 		return _label;
