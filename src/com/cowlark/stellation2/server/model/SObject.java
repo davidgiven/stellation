@@ -1,8 +1,8 @@
 /* Server-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SObject.java,v $
- * $Date: 2009/09/14 22:15:34 $
+ * $Date: 2009/09/15 23:15:49 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -144,6 +144,11 @@ public class SObject extends RootObject implements Iterable<SObject>
 	{
 		return null;
 	}
+
+	public SUnit toUnit()
+	{
+		return null;
+	}
 	
 	public SCargoship toCargoship()
 	{
@@ -157,6 +162,7 @@ public class SObject extends RootObject implements Iterable<SObject>
 	
 	public void onAdditionOf(SObject object)
 	{
+		_contents.add(object);
 	}
 	
 	public void onAdditionTo(SObject parent)
@@ -168,7 +174,6 @@ public class SObject extends RootObject implements Iterable<SObject>
 		object.removeFromParent();
 		object.onAdditionTo(this);
 		onAdditionOf(object);
-		_contents.add(object);
 		object.setParent(new DBRef<SObject>(this));
 		dirty();
 	}
@@ -184,13 +189,13 @@ public class SObject extends RootObject implements Iterable<SObject>
 	
 	public void onRemovalOf(SObject object)
 	{
+		_contents.remove(object.<SObject>getRef());
 	}
 	
 	public void remove(SObject object)
 	{
 		object.onRemovalFrom(this);
 		onRemovalOf(object);
-		_contents.remove(object.<SObject>getRef());
 		dirty();
 	}
 	
@@ -243,7 +248,16 @@ public class SObject extends RootObject implements Iterable<SObject>
     	add(o);
     	return o;
     }
-    	
+    
+    public SBasicFactory createBasicFactory()
+    {
+    	SBasicFactory o = new SBasicFactory()
+    		.initialise();
+    	o.setOwner(getOwner());
+    	add(o);
+    	return o;
+    }
+    
 	public void checkObjectVisibleTo(SPlayer player)
 		throws StellationException
 	{

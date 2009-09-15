@@ -1,8 +1,8 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/data/PropertyStore.java,v $
- * $Date: 2009/09/14 22:15:34 $
+ * $Date: 2009/09/15 23:15:49 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.common.data;
@@ -58,4 +58,19 @@ public class PropertyStore
 		    .setBuildCost(new Resources(8000.0, 1000.0, 3000.0))
 		    .setBuildTime(2.0)
 		    .setMaintenanceCost(new Resources(4.0, 1.0, 0.0));
+	
+	public static Properties BasicFactory =
+		new Properties()
+			.setName("Basic Factory")
+			.setDescription(
+					"The basic factory is a semi-automated device that, " +
+					"given the appropriate quantities of basic resources, " +
+					"can produce (one at a time) any of a considerable " +
+					"number of units.")
+			.setMass(10000.0)
+			.setMaxDamage(5000.0)
+			.setBuildCost(new Resources(30000.0, 2000.0, 20000.0))
+			.setBuildTime(10.0)
+			.setMaintenanceCost(new Resources(5.0, 1.0, 0.0));
+			
 }

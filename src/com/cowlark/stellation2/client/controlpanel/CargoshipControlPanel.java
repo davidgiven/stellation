@@ -1,8 +1,8 @@
 /* Handles the right-hand pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/CargoshipControlPanel.java,v $
- * $Date: 2009/09/14 22:22:32 $
+ * $Date: 2009/09/15 23:15:49 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.controlpanel;
@@ -111,6 +111,9 @@ public class CargoshipControlPanel extends UnitControlPanel<CCargoship>
 		super(ship);
 		
 		_grid.addStyleName("CargoshipResourcesGrid");
+		_da.setWidth("100%");
+		_do.setWidth("100%");
+		_dm.setWidth("100%");
 		_right.setWidth("100%");
 		_zero.setWidth("100%");
 		_left.setWidth("100%");
@@ -158,7 +161,7 @@ public class CargoshipControlPanel extends UnitControlPanel<CCargoship>
 		try
 		{
 			CCargoship cargoship = getObject();
-			CStar star = cargoship.getParent().getParent().toStar();
+			CStar star = cargoship.getStar();
 			_star = new DBRef<CStar>(star);
 			
 			ClientDB.addChangeCallback(star, this);
@@ -184,7 +187,7 @@ public class CargoshipControlPanel extends UnitControlPanel<CCargoship>
 
 	    try
 	    {
-			CStar star = getObject().getParent().getParent().toStar();
+			CStar star = getObject().getStar();
 			if (!_star.equals(star))
 			{
 				unregisterStarChangeCallback();

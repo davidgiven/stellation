@@ -1,8 +1,8 @@
 /* Server-side player.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SPlayer.java,v $
- * $Date: 2009/09/07 21:49:14 $
+ * $Date: 2009/09/15 23:15:49 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -78,7 +78,8 @@ public class SPlayer extends SObject
 	    		.makeAlive();
 	    	
 	    	fleet.createTug()
-	    		.makeAlive();
+	    		.makeAlive()
+	    		.createBasicFactory();
 	    	
 	    	fleet.createCargoship()
 	    		.setCargo(new Resources(100000.0, 100000.0, 100000.0))
@@ -192,6 +193,13 @@ public class SPlayer extends SObject
     	dirty();
     }
     
+    private void addWithContents(SObject object)
+    {
+		_visibleObjects.put(object.getId(), S.OWNER);
+		for (SObject o : object)
+			addWithContents(o);
+    }
+    
     public void updateVisibility()
     {
     	if (_visibleObjects == null)
@@ -228,7 +236,7 @@ public class SPlayer extends SObject
 	    		/* We can also see the contents of the fleet. */
 	    		
 	    		for (SObject oo : fleet)
-	    			_visibleObjects.put(oo.getId(), S.OWNER);
+	    			addWithContents(oo);
     		}
     	}
     	

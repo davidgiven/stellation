@@ -1,8 +1,8 @@
 /* Client-side generic unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CUnit.java,v $
- * $Date: 2009/09/14 22:15:34 $
+ * $Date: 2009/09/15 23:15:49 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 
@@ -33,6 +33,11 @@ public abstract class CUnit extends CObject
 	public double getDamage()
 	{
 		return _damage;
+	}
+	
+	public CStar getStar()
+	{
+		return getParent().toStar();
 	}
 	
 	public Widget createSummaryNotesField()

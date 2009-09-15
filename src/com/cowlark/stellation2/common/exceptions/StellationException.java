@@ -1,8 +1,8 @@
 /* Abstract exception superclass.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/exceptions/StellationException.java,v $
- * $Date: 2009/09/06 17:59:16 $
+ * $Date: 2009/09/15 23:15:49 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common.exceptions;
@@ -32,5 +32,10 @@ public abstract class StellationException extends Exception
 	public StellationException(Throwable arg0)
     {
 	    super(arg0);
-    }    
+    }
+	
+	public StellationException(long id)
+	{
+		super(Long.toString(id));
+	}
 }
