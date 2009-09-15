@@ -1,8 +1,8 @@
 /* Generic utilities.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/Utils.java,v $
- * $Date: 2009/09/14 22:22:04 $
+ * $Date: 2009/09/15 23:14:36 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.common;
@@ -32,11 +32,6 @@ public class Utils
 	public static double round(double factor, double i)
 	{
 		return Math.floor(factor * i) / factor;
-	}
-	
-	public static String renderMass(double d)
-	{
-		return S.MASS_FORMAT.format(d) + " tonnes";
 	}
 	
 	public static String renderTime(long t)

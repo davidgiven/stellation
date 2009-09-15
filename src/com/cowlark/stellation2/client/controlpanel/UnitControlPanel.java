@@ -1,16 +1,18 @@
 /* Handles the right-hand pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/UnitControlPanel.java,v $
- * $Date: 2009/09/14 22:22:32 $
+ * $Date: 2009/09/15 23:14:36 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.controlpanel;
 
-import com.cowlark.stellation2.client.ChangeCallback;
+import com.cowlark.stellation2.client.monitors.MassMonitor;
+import com.cowlark.stellation2.client.monitors.OwnerMonitor;
+import com.cowlark.stellation2.client.monitors.UnitDamageMonitor;
+import com.cowlark.stellation2.client.monitors.UpkeepMonitor;
 import com.cowlark.stellation2.client.ui.DataGroup;
-import com.cowlark.stellation2.common.Utils;
-import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
+import com.cowlark.stellation2.client.view.TabularMonitorRow;
 import com.cowlark.stellation2.common.model.CUnit;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -20,35 +22,18 @@ public class UnitControlPanel<T extends CUnit> extends AbstractControlPanel<T>
 	private Label _mass = new Label();
 	private SimplePanel _upkeep = new SimplePanel();
 	
-	private Object[][] _rows = new Object[][]
-    {
-		{"Mass:",            _mass},
-		{"Upkeep /hr:",      _upkeep}
-    };
-    
 	public UnitControlPanel(T object)
 	{
 		super(object);
 		
 		DataGroup group = addGroup();
-		Utils.fillGroup(group, _rows);
-	}
-	
-	@Override
-	public void onChange(ChangeCallback cb)
-	{
-	    super.onChange(cb);
-	    
-	    try
-	    {
-	    	CUnit unit = getObject();
-	 
-	    	_mass.setText(Utils.renderMass(unit.getMass()));
-	    	_upkeep.clear();
-	    	_upkeep.add(Utils.renderResources(unit.getProperties().getMaintenanceCost()));
-	    }
-	    catch (OutOfScopeException e)
-	    {
-	    }
+		group.add(new TabularMonitorRow(
+				new OwnerMonitor(object)));
+		group.add(new TabularMonitorRow(
+				new MassMonitor(object)));
+		group.add(new TabularMonitorRow(
+				new UpkeepMonitor(object)));
+		group.add(new TabularMonitorRow(
+				new UnitDamageMonitor(object)));
 	}
 }
