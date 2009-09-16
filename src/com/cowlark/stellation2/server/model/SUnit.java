@@ -1,8 +1,8 @@
 /* Server-side generc unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SUnit.java,v $
- * $Date: 2009/09/15 23:15:49 $
+ * $Date: 2009/09/16 23:14:05 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -85,7 +85,6 @@ public abstract class SUnit extends SObject
 			}
 			catch (ResourcesNotAvailableException e)
 			{
-				log(getProperties().getName() + " lost due to lack of upkeep.");
 				starve();
 				return S.CANCELTIMER;
 			}
@@ -96,9 +95,12 @@ public abstract class SUnit extends SObject
 	
 	public SUnit makeAlive()
 	{
-		STimer t = new STimer()
-			.initialise(S.TICK, this);
-		_maintenanceTimer = new DBRef<STimer>(t);
+		if (getProperties().getMaintenanceCost() != null)
+		{
+			STimer t = new STimer()
+				.initialise(S.TICK, this);
+			_maintenanceTimer = new DBRef<STimer>(t);
+		}
 		return this;
 	}
 	
@@ -131,6 +133,7 @@ public abstract class SUnit extends SObject
 
 	public void starve()
 	{
+		log(getProperties().getName() + " lost due to lack of upkeep.");
 		destroy();
 	}
 	
@@ -145,8 +148,13 @@ public abstract class SUnit extends SObject
 	public void checkObjectVisibleTo(SPlayer player)
 			throws StellationException
 	{
-		/* This object is visible if the fleet owning it is visible. */
+		/* This object is visible if the fleet or star owning it is visible. */
 		
 		getLocation().checkObjectVisibleTo(player);
+	}
+	
+	public boolean allowLoadingOntoTug()
+	{
+		return true;
 	}
 }
