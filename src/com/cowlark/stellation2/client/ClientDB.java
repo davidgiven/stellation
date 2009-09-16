@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/09 23:18:12 $
+ * $Date: 2009/09/16 23:14:51 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.client;
@@ -208,5 +208,23 @@ public class ClientDB extends Database
 				Stellation2.getAuthentication(), _lastUpdate,
 				id, antimatter, metal, organics,
 				getResponseHandler());		
-	}	
+	}
+	
+	public static void tugUnload(
+			long id)
+	{
+		Stellation2.Service.tugUnload(
+				Stellation2.getAuthentication(), _lastUpdate,
+				id,
+				getResponseHandler());		
+	}
+	
+	public static void tugLoad(
+			long id, long cargoid)
+	{
+		Stellation2.Service.tugLoad(
+				Stellation2.getAuthentication(), _lastUpdate,
+				id, cargoid,
+				getResponseHandler());		
+	}
 }

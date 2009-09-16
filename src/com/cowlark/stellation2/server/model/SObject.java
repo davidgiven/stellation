@@ -1,8 +1,8 @@
 /* Server-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SObject.java,v $
- * $Date: 2009/09/15 23:15:49 $
+ * $Date: 2009/09/16 23:14:51 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -151,6 +151,11 @@ public class SObject extends RootObject implements Iterable<SObject>
 	}
 	
 	public SCargoship toCargoship()
+	{
+		return null;
+	}
+	
+	public STug toTug()
 	{
 		return null;
 	}

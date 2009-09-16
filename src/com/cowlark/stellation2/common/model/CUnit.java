@@ -1,8 +1,8 @@
 /* Client-side generic unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CUnit.java,v $
- * $Date: 2009/09/15 23:15:49 $
+ * $Date: 2009/09/16 23:14:51 $
  * $Author: dtrg $
- * $Revision: 1.6 $
+ * $Revision: 1.7 $
  */
 
 
@@ -24,6 +24,11 @@ public abstract class CUnit extends CObject
 	public CUnit()
     {
     }
+	
+	public CUnit toUnit()
+	{
+		return this;
+	}
 	
 	public double getMass()
 	{

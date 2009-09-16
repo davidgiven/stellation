@@ -1,8 +1,8 @@
 /* Server-side player.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SPlayer.java,v $
- * $Date: 2009/09/15 23:15:49 $
+ * $Date: 2009/09/16 23:14:51 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -75,6 +75,9 @@ public class SPlayer extends SObject
 	    	SFleet fleet = createFleet(star, _empire+"'s starter fleet");
 	    	
 	    	fleet.createJumpship()
+	    		.makeAlive();
+	    	
+	    	fleet.createTug()
 	    		.makeAlive();
 	    	
 	    	fleet.createTug()
@@ -193,11 +196,18 @@ public class SPlayer extends SObject
     	dirty();
     }
     
-    private void addWithContents(SObject object)
+    private void addWithContents(SObject object, int scope)
     {
-		_visibleObjects.put(object.getId(), S.OWNER);
+    	int currentscope = scope;
+    	if (_visibleObjects.containsKey(object.getId()))
+    	{
+    		currentscope = _visibleObjects.get(object.getId());
+    		currentscope = Math.min(currentscope, scope);
+    	}
+		_visibleObjects.put(object.getId(), currentscope);
+		
 		for (SObject o : object)
-			addWithContents(o);
+			addWithContents(o, scope);
     }
     
     public void updateVisibility()
@@ -231,12 +241,23 @@ public class SPlayer extends SObject
 	    		/* We can see both the fleet and its star. */
 	    		
 	    		_visibleObjects.put(fleet.getId(), S.OWNER);
-	    		_visibleObjects.put(fleet.getLocation().getId(), S.LOCAL);
+	    		SObject star = fleet.getLocation();
+	    		_visibleObjects.put(star.getId(), S.LOCAL);
 	    		
-	    		/* We can also see the contents of the fleet. */
+	    		/* We can see and own the contents of the fleet. */
 	    		
 	    		for (SObject oo : fleet)
-	    			addWithContents(oo);
+	    			addWithContents(oo, S.OWNER);
+	    		
+	    		/* We can see all other fixed units at this star. */
+	    		
+	    		for (SObject oo : star)
+	    		{
+	    			if (oo.getOwner() == this)
+	    				addWithContents(oo, S.OWNER);
+	    			else
+	    				addWithContents(oo, S.LOCAL);
+	    		}
     		}
     	}
     	

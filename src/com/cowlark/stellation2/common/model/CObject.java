@@ -1,8 +1,8 @@
 /* Client-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CObject.java,v $
- * $Date: 2009/09/14 22:15:34 $
+ * $Date: 2009/09/16 23:14:51 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.common.model;
@@ -54,6 +54,21 @@ public abstract class CObject implements IsSerializable,
 	/* --- Converters ---------------------------------------------------- */
 	
 	public CPlayer toPlayer()
+	{
+		return null;
+	}
+	
+	public CUnit toUnit()
+	{
+		return null;
+	}
+	
+	public CStar toStar()
+	{
+		return null;
+	}
+	
+	public CFleet toFleet()
 	{
 		return null;
 	}
@@ -115,18 +130,6 @@ public abstract class CObject implements IsSerializable,
 	    return _contents.iterator();
 	}
 
-	/* --- Converters ---------------------------------------------------- */
-
-	public CStar toStar()
-	{
-		return null;
-	}
-	
-	public CFleet toFleet()
-	{
-		return null;
-	}
-	
 	/* --- Scope & visibility -------------------------------------------- */
 	
 	public void checkNear() throws OutOfScopeException
