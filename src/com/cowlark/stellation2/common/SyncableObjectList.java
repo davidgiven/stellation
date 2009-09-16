@@ -1,8 +1,8 @@
 /* A syncable list of objects.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/SyncableObjectList.java,v $
- * $Date: 2009/09/06 17:59:16 $
+ * $Date: 2009/09/16 23:12:25 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.common;
@@ -35,7 +35,8 @@ public class SyncableObjectList<T extends Identifiable>
 		for (long id : deletedids)
 		{
 			T t = _map.remove(id);
-			callback.destroy(t);
+			if (t != null)
+				callback.destroy(t);
 		}
 		
 		for (long id : newids)
