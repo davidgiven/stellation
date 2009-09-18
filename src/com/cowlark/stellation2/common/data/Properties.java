@@ -1,12 +1,14 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/data/Properties.java,v $
- * $Date: 2009/09/14 22:15:34 $
+ * $Date: 2009/09/18 20:42:31 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.common.data;
 
+import java.util.HashSet;
+import java.util.Set;
 import com.cowlark.stellation2.common.Resources;
 
 public class Properties
@@ -18,6 +20,7 @@ public class Properties
 	private Resources _maintenanceCost = null;
 	private Resources _buildCost = null;
 	private double _buildTime;
+	private Set<Integer> _buildable;
 	
 	public Properties()
     {
@@ -99,4 +102,16 @@ public class Properties
 		_buildTime = buildTime;
 		return this;
 	}
+	
+	public Set<Integer> getBuildable()
+    {
+	    return _buildable;
+    }
+	
+	public void setBuildable(Integer... objects)
+    {
+		_buildable = new HashSet<Integer>();
+		for (int o : objects)
+			_buildable.add(o);
+    }
 }

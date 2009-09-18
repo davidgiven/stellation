@@ -1,13 +1,15 @@
 /* Server-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SObject.java,v $
- * $Date: 2009/09/16 23:14:51 $
+ * $Date: 2009/09/18 20:42:35 $
  * $Author: dtrg $
- * $Revision: 1.6 $
+ * $Revision: 1.7 $
  */
 
 package com.cowlark.stellation2.server.model;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.data.Properties;
@@ -26,6 +28,16 @@ import com.cowlark.stellation2.server.db.RootObject;
 public class SObject extends RootObject implements Iterable<SObject>
 {
     private static final long serialVersionUID = 237820976895490834L;
+
+	private static Map<Integer, Class<? extends SObject>> _classes =
+		new HashMap<Integer, Class<? extends SObject>>();
+	static
+	{
+		_classes.put(PropertyStore.CARGOSHIP, SCargoship.class);
+		_classes.put(PropertyStore.JUMPSHIP, SJumpship.class);
+		_classes.put(PropertyStore.TUG, STug.class);
+		_classes.put(PropertyStore.BASICFACTORY, SBasicFactory.class);
+	}	
 
 	@Property
 	private long _changedTime;
@@ -227,40 +239,45 @@ public class SObject extends RootObject implements Iterable<SObject>
 	{
 	}
 	
+	public <T extends SObject> T createObject(int type)
+	{
+		try
+		{
+			T o = (T) _classes.get(type).newInstance();
+			o.initialise();
+			o.setOwner(getOwner());
+			add(o);
+			return o;
+		}
+		catch (IllegalAccessException e)
+		{
+			assert false;
+		}
+		catch (InstantiationException e)
+		{
+			assert false;
+		}
+		return null;
+	}
+	
     public STug createTug()
     {
-    	STug o = new STug()
-    		.initialise();
-    	o.setOwner(getOwner());
-    	add(o);
-    	return o;
+    	return createObject(PropertyStore.TUG);
     }
 
     public SCargoship createCargoship()
     {
-    	SCargoship o = new SCargoship()
-    		.initialise();
-    	o.setOwner(getOwner());
-    	add(o);
-    	return o;
+    	return createObject(PropertyStore.CARGOSHIP);
     }
 
     public SJumpship createJumpship()
     {
-    	SJumpship o = new SJumpship()
-    		.initialise();
-    	o.setOwner(getOwner());
-    	add(o);
-    	return o;
+    	return createObject(PropertyStore.JUMPSHIP);
     }
     
     public SBasicFactory createBasicFactory()
     {
-    	SBasicFactory o = new SBasicFactory()
-    		.initialise();
-    	o.setOwner(getOwner());
-    	add(o);
-    	return o;
+    	return createObject(PropertyStore.BASICFACTORY);
     }
     
 	public void checkObjectVisibleTo(SPlayer player)

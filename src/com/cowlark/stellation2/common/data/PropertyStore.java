@@ -1,8 +1,8 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/data/PropertyStore.java,v $
- * $Date: 2009/09/16 23:11:51 $
+ * $Date: 2009/09/18 20:42:31 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.common.data;
@@ -11,9 +11,11 @@ import com.cowlark.stellation2.common.Resources;
 
 public class PropertyStore
 {
-	public static Properties Generic = new Properties();
+	public static final int GENERIC = 0;
+	public static final Properties Generic = new Properties();
 	
-	public static Properties Cargoship =
+	public static final int CARGOSHIP = 1;
+	public static final Properties Cargoship =
 		new Properties()
 			.setName("Cargoship")
 			.setDescription(
@@ -27,11 +29,13 @@ public class PropertyStore
 	        .setBuildTime(3.0)
 	        .setMaintenanceCost(new Resources(2.0, 1.0, 0.0));
 	
-	public static Properties Fleet =
+	public static final int FLEET = 2;
+	public static final Properties Fleet =
 		new Properties()
 			.setName("Fleet");
 	
-	public static Properties Jumpship =
+	public static final int JUMPSHIP = 3;
+	public static final Properties Jumpship =
 		new Properties()
 			.setName("Jumpship")
 			.setDescription(
@@ -47,7 +51,8 @@ public class PropertyStore
 		    .setBuildTime(5.0)
 		    .setMaintenanceCost(new Resources(5.0, 2.0, 0.0));
 	
-	public static Properties Tug =
+	public static final int TUG = 4;
+	public static final Properties Tug =
 		new Properties()
 			.setName("Tug")
 			.setDescription(
@@ -59,7 +64,8 @@ public class PropertyStore
 		    .setBuildTime(2.0)
 		    .setMaintenanceCost(new Resources(4.0, 1.0, 0.0));
 	
-	public static Properties BasicFactory =
+	public static final int BASICFACTORY = 5;
+	public static final Properties BasicFactory =
 		new Properties()
 			.setName("Basic Factory")
 			.setDescription(
@@ -71,5 +77,22 @@ public class PropertyStore
 			.setMaxDamage(5000.0)
 			.setBuildCost(new Resources(30000.0, 2000.0, 20000.0))
 			.setBuildTime(10.0);
-			
+	static
+	{
+		BasicFactory.setBuildable(CARGOSHIP, JUMPSHIP, TUG, BASICFACTORY);
+	}
+		
+	private static final Properties[] _units =
+	{
+		Generic,
+		Cargoship,
+		Fleet,
+		Jumpship,
+		Tug,
+		BasicFactory
+	};
+	public static Properties getProperties(int type)
+	{
+		return _units[type];
+	}
 }
