@@ -1,8 +1,8 @@
 /* Group showing an individual fleet in the middle pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/MiddlePaneFleetGroup.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/19 12:06:09 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -30,6 +30,7 @@ public class MiddlePaneFleetGroup extends AbstractGroup<CFleet>
     {
 		super(fleet);
 		setSelectable(true);
+		setSorted(true);
     }
 
 	@Override

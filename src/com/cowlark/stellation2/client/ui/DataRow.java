@@ -1,15 +1,25 @@
 /* Represents an individual row in a DataTable.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/DataRow.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/19 12:06:09 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.ui;
 
 import com.google.gwt.user.client.ui.Widget;
 
-public interface DataRow
+public abstract class DataRow implements Comparable<DataRow>
 {
-	public Widget[] getData();
+	abstract public Widget[] getData();
+	
+	public String getComparisonKey()
+	{
+		return "@" + hashCode();
+	}
+	
+	public int compareTo(DataRow o)
+	{
+		return getComparisonKey().compareTo(o.getComparisonKey());
+	}
 }

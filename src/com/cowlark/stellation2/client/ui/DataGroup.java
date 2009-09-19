@@ -1,8 +1,8 @@
 /* Represents a group of rows in a DataTable.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/DataGroup.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/19 12:06:09 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.ui;
@@ -17,6 +17,8 @@ public class DataGroup implements Iterable<DataRow>
 	private DataTable _table = null;
 	private Widget _header = null;
 	private boolean _selectable = false;
+	private boolean _hidden = false;
+	private boolean _sorted = false;
 	private int _absoluteRow;
 	private int _selectedRow;
 	
@@ -54,6 +56,28 @@ public class DataGroup implements Iterable<DataRow>
 	    return this;
     }
 	
+	public boolean isHidden()
+    {
+	    return _hidden;
+    }
+	
+	public DataGroup setHidden(boolean hidden)
+    {
+	    _hidden = hidden;
+	    return this;
+    }
+	
+	public boolean isSorted()
+    {
+	    return _sorted;
+    }
+	
+	public DataGroup setSorted(boolean sorted)
+    {
+	    _sorted = sorted;
+	    return this;
+    }
+	
 	public Iterator<DataRow> iterator()
 	{
 	    return _rows.iterator();
@@ -71,6 +95,11 @@ public class DataGroup implements Iterable<DataRow>
 		_rows.remove(row);
 		update();
 		return this;
+	}
+	
+	public Vector<DataRow> getRows()
+	{
+		return _rows;
 	}
 	
 	public void update()

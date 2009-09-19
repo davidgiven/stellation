@@ -1,8 +1,8 @@
 /* A DataRow wrapped around a single Monitor.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/FullWidthMonitorRow.java,v $
- * $Date: 2009/09/08 23:01:28 $
+ * $Date: 2009/09/19 12:06:09 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -12,7 +12,7 @@ import com.cowlark.stellation2.client.ui.DataRow;
 import com.cowlark.stellation2.common.Identifiable;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FullWidthMonitorRow implements DataRow, Identifiable
+public class FullWidthMonitorRow extends DataRow implements Identifiable
 {
 	private Monitor<?> _monitor;
 	private Widget[] _row = new Widget[1];
@@ -31,5 +31,11 @@ public class FullWidthMonitorRow implements DataRow, Identifiable
 	public Widget[] getData()
 	{
 	    return _row;
+	}
+
+	@Override
+	public String getComparisonKey()
+	{
+	    return _monitor.getLabel();
 	}
 }

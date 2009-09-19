@@ -1,8 +1,8 @@
 /* A DataRow wrapped around a single Monitor.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/FullWidthWidgetRow.java,v $
- * $Date: 2009/09/14 22:22:32 $
+ * $Date: 2009/09/19 12:06:09 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -10,7 +10,7 @@ package com.cowlark.stellation2.client.view;
 import com.cowlark.stellation2.client.ui.DataRow;
 import com.google.gwt.user.client.ui.Widget;
 
-public class FullWidthWidgetRow implements DataRow
+public class FullWidthWidgetRow extends DataRow
 {
 	private Widget[] _row = new Widget[1];
 	

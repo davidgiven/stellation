@@ -1,12 +1,13 @@
 /* A grouped grid of updatable data.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/DataTable.java,v $
- * $Date: 2009/09/06 22:17:53 $
+ * $Date: 2009/09/19 12:06:09 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client.ui;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -130,6 +131,9 @@ public class DataTable extends Composite implements ClickHandler
 		int cols = 0;
 		for (DataGroup group : _groups)
 		{
+			if (group.isHidden())
+				continue;
+			
 			for (DataRow row : group)
 				cols = Math.max(cols, row.getData().length);
 		}
@@ -138,6 +142,11 @@ public class DataTable extends Composite implements ClickHandler
 		FlexCellFormatter f = _table.getFlexCellFormatter();
 		for (DataGroup group : _groups)
 		{
+			if (group.isHidden())
+				continue;
+			
+			/* Render the header. */
+			
 			Widget header = group.getHeader();
 			if (header != null)
 			{
@@ -149,7 +158,18 @@ public class DataTable extends Composite implements ClickHandler
 			_groupY.put(y, group);
 			group.setAbsoluteRow(y);
 			
-			for (DataRow row : group)
+			/* Sort the rows in the group, if necessary. */
+			
+			Vector<DataRow> rows = group.getRows();
+			if (group.isSorted())
+			{
+				rows = new Vector<DataRow>(rows);
+				Collections.sort(rows);
+			}
+			
+			/* Render the rows into the table. */
+			
+			for (DataRow row : rows)
 			{
 				int x = 0;
 				for (Widget w : row.getData())
