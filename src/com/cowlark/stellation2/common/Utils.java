@@ -1,8 +1,8 @@
 /* Generic utilities.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/Utils.java,v $
- * $Date: 2009/09/15 23:14:36 $
+ * $Date: 2009/09/20 21:47:39 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.common;
@@ -59,6 +59,11 @@ public class Utils
     	return sb.toString();
 	}
 
+	public static String renderDuration(double hours)
+	{
+		return S.DURATION_FORMAT.format(hours) + " hours";
+	}
+	
 	public static Widget renderResources(Resources r)
 	{
 		StringBuilder sb = new StringBuilder();

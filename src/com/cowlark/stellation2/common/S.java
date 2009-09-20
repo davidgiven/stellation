@@ -1,8 +1,8 @@
 /* Globals.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/S.java,v $
- * $Date: 2009/09/14 22:22:04 $
+ * $Date: 2009/09/20 21:47:39 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.common;
@@ -27,6 +27,7 @@ public class S
 	public final static NumberFormat COORD_FORMAT = NumberFormat.getFormat("0.0");
 	public final static NumberFormat BRIGHTNESS_FORMAT = NumberFormat.getFormat("0.0");
 	public final static NumberFormat MASS_FORMAT = NumberFormat.getFormat("0.0");
+	public final static NumberFormat DURATION_FORMAT = NumberFormat.getFormat("0.0");
 	
 	/* Timer magic. */
 	
