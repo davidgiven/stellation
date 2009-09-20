@@ -1,8 +1,8 @@
 /* Handles the right-hand pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/TugControlPanel.java,v $
- * $Date: 2009/09/16 23:14:51 $
+ * $Date: 2009/09/20 21:49:48 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client.controlpanel;
@@ -14,7 +14,6 @@ import com.cowlark.stellation2.client.ui.DataGroup;
 import com.cowlark.stellation2.client.ui.SimpleDataRow;
 import com.cowlark.stellation2.client.ui.Trigger;
 import com.cowlark.stellation2.client.view.TabularMonitorRow;
-import com.cowlark.stellation2.common.db.DBRef;
 import com.cowlark.stellation2.common.db.ListOfClientObjects;
 import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
 import com.cowlark.stellation2.common.model.CObject;
@@ -30,7 +29,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class TugControlPanel extends UnitControlPanel<CTug>
 {
-	private DBRef<CStar> _star = new DBRef<CStar>();
 	private SimplePanel _panel = new SimplePanel();
 	private ComplexPanel _load = new VerticalPanel();
 	private ListBox _loadableList = new ListBox();
@@ -79,57 +77,13 @@ public class TugControlPanel extends UnitControlPanel<CTug>
     }
 	
 	@Override
-	protected void onLoad()
-	{
-		registerStarChangeCallback();
-	    super.onLoad();
-	}
-	
-	@Override
-	protected void onUnload()
-	{
-	    super.onUnload();
-	    unregisterStarChangeCallback();
-	}
-	
-	private void registerStarChangeCallback()
-	{
-		try
-		{
-			CTug tug = getObject();
-			CStar star = tug.getStar();
-			_star = new DBRef<CStar>(star);
-			
-			ClientDB.addChangeCallback(star, this);
-		}
-		catch (OutOfScopeException e)
-		{
-		}		
-	}
-	
-	private void unregisterStarChangeCallback()
-	{
-		if (_star.isNull())
-			return;
-		
-		CStar star = _star.get();
-		ClientDB.removeChangeCallback(star, this);
-	}
-	
-	@Override
 	public void onChange(ChangeCallback cb)
 	{
 	    super.onChange(cb);
 
 	    try
 	    {
-			CStar star = getObject().getStar();
-			if (!_star.equals(star))
-			{
-				unregisterStarChangeCallback();
-				registerStarChangeCallback();
-			}
-			
+			CStar star = getStar();
 		    CTug tug = getObject();
 		    _panel.clear();
 		    if (tug.getCargo() != null)
