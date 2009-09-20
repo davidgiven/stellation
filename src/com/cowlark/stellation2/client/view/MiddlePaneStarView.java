@@ -1,8 +1,8 @@
 /* The Star pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/MiddlePaneStarView.java,v $
- * $Date: 2009/09/20 21:50:35 $
+ * $Date: 2009/09/20 22:15:16 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -74,6 +74,7 @@ public class MiddlePaneStarView extends AbstractView<CStar>
 		hpanel.add(_starImages.star().createImage());
 		hpanel.add(table);
 
+		_contentGrid.setWidth("100%");
 		_staticGroup.getHeader().setStylePrimaryName("MiddlePaneFleetName");
 		_contentGrid.addGroup(_staticGroup);
 		
