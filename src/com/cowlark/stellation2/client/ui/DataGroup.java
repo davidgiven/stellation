@@ -1,14 +1,15 @@
 /* Represents a group of rows in a DataTable.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/DataGroup.java,v $
- * $Date: 2009/09/19 12:06:09 $
+ * $Date: 2009/09/20 21:48:39 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client.ui;
 
 import java.util.Iterator;
 import java.util.Vector;
+import com.cowlark.stellation2.client.view.FullWidthWidgetRow;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DataGroup implements Iterable<DataRow>
@@ -64,6 +65,7 @@ public class DataGroup implements Iterable<DataRow>
 	public DataGroup setHidden(boolean hidden)
     {
 	    _hidden = hidden;
+	    update();
 	    return this;
     }
 	
@@ -75,6 +77,7 @@ public class DataGroup implements Iterable<DataRow>
 	public DataGroup setSorted(boolean sorted)
     {
 	    _sorted = sorted;
+	    update();
 	    return this;
     }
 	
@@ -89,10 +92,22 @@ public class DataGroup implements Iterable<DataRow>
 		update();
 		return this;
 	}
+
+	public DataGroup add(Widget widget)
+	{
+		return add(new FullWidthWidgetRow(widget));
+	}
 	
 	public DataGroup remove(DataRow row)
 	{
 		_rows.remove(row);
+		update();
+		return this;
+	}
+	
+	public DataGroup clear()
+	{
+		_rows.clear();
 		update();
 		return this;
 	}

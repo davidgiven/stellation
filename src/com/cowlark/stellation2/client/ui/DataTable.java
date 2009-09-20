@@ -1,8 +1,8 @@
 /* A grouped grid of updatable data.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ui/DataTable.java,v $
- * $Date: 2009/09/19 12:06:09 $
+ * $Date: 2009/09/20 21:48:39 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.client.ui;
@@ -135,7 +135,8 @@ public class DataTable extends Composite implements ClickHandler
 				continue;
 			
 			for (DataRow row : group)
-				cols = Math.max(cols, row.getData().length);
+				if (!row.isHidden())
+					cols = Math.max(cols, row.getData().length);
 		}
 
 		int y = 0;
@@ -171,6 +172,9 @@ public class DataTable extends Composite implements ClickHandler
 			
 			for (DataRow row : rows)
 			{
+				if (row.isHidden())
+					continue;
+				
 				int x = 0;
 				for (Widget w : row.getData())
 				{
