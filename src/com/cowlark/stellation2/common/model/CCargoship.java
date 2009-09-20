@@ -1,8 +1,8 @@
 /* Client-side cargoship.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CCargoship.java,v $
- * $Date: 2009/09/20 21:50:35 $
+ * $Date: 2009/09/20 22:14:50 $
  * $Author: dtrg $
- * $Revision: 1.6 $
+ * $Revision: 1.7 $
  */
 
 package com.cowlark.stellation2.common.model;
@@ -10,6 +10,7 @@ package com.cowlark.stellation2.common.model;
 import com.cowlark.stellation2.client.controlpanel.CargoshipControlPanel;
 import com.cowlark.stellation2.client.monitors.ResourcesMonitor;
 import com.cowlark.stellation2.client.view.AbstractView;
+import com.cowlark.stellation2.client.view.SimpleMonitorView;
 import com.cowlark.stellation2.common.HasResources;
 import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.data.Properties;
@@ -47,7 +48,7 @@ public class CCargoship extends CShip implements HasResources
 	@Override
 	public Widget createSummaryNotesField()
 	{
-		return new ResourcesMonitor(this);
+		return new SimpleMonitorView(new ResourcesMonitor(this));
 	}
 	
 	public AbstractView<? extends CObject> createControlPanel()
