@@ -1,8 +1,8 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/data/PropertyStore.java,v $
- * $Date: 2009/09/18 20:42:31 $
+ * $Date: 2009/09/20 21:47:14 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.common.data;
@@ -11,7 +11,7 @@ import com.cowlark.stellation2.common.Resources;
 
 public class PropertyStore
 {
-	public static final int GENERIC = 0;
+	public static final int NOTHING = 0;
 	public static final Properties Generic = new Properties();
 	
 	public static final int CARGOSHIP = 1;
@@ -76,7 +76,8 @@ public class PropertyStore
 			.setMass(10000.0)
 			.setMaxDamage(5000.0)
 			.setBuildCost(new Resources(30000.0, 2000.0, 20000.0))
-			.setBuildTime(10.0);
+			.setBuildTime(10.0)
+			.setStatic(true);
 	static
 	{
 		BasicFactory.setBuildable(CARGOSHIP, JUMPSHIP, TUG, BASICFACTORY);
