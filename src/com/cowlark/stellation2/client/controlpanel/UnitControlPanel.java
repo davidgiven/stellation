@@ -1,8 +1,8 @@
 /* Handles the right-hand pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/UnitControlPanel.java,v $
- * $Date: 2009/09/15 23:14:36 $
+ * $Date: 2009/09/20 21:49:11 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.client.controlpanel;
@@ -31,8 +31,9 @@ public class UnitControlPanel<T extends CUnit> extends AbstractControlPanel<T>
 				new OwnerMonitor(object)));
 		group.add(new TabularMonitorRow(
 				new MassMonitor(object)));
-		group.add(new TabularMonitorRow(
-				new UpkeepMonitor(object)));
+		if (object.getProperties().getMaintenanceCost() != null)
+			group.add(new TabularMonitorRow(
+					new UpkeepMonitor(object)));
 		group.add(new TabularMonitorRow(
 				new UnitDamageMonitor(object)));
 	}
