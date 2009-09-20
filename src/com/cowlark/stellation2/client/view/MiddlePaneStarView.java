@@ -1,8 +1,8 @@
 /* The Star pane.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/MiddlePaneStarView.java,v $
- * $Date: 2009/09/06 17:58:31 $
+ * $Date: 2009/09/20 21:50:35 $
  * $Author: dtrg $
- * $Revision: 1.1 $
+ * $Revision: 1.2 $
  */
 
 package com.cowlark.stellation2.client.view;
@@ -26,13 +26,13 @@ import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
 import com.cowlark.stellation2.common.model.CFleet;
 import com.cowlark.stellation2.common.model.CObject;
 import com.cowlark.stellation2.common.model.CStar;
+import com.cowlark.stellation2.common.model.CUnit;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 
 public class MiddlePaneStarView extends AbstractView<CStar>
-		implements SyncableObjectManager<AbstractGroup<?>>
 {
 	private ScrollPanel _scrollpanel = new ScrollPanel();
 	private FlowPanel _panel = new FlowPanel();
@@ -40,8 +40,14 @@ public class MiddlePaneStarView extends AbstractView<CStar>
 	private DataGroup _noContentGroup = new DataGroup().
 			setHeader("You cannot see into this star system unless you have " +
 					"a jumpship present.");
-	private SyncableObjectList<AbstractGroup<?>> _contents =
+	private DataGroup _staticGroup = new DataGroup().
+			setHeader("Static units").
+			setSorted(true).
+			setHidden(false);
+	private SyncableObjectList<AbstractGroup<?>> _fleets =
 		new SyncableObjectList<AbstractGroup<?>>();
+	private SyncableObjectList<StaticSummaryRow> _statics =
+		new SyncableObjectList<StaticSummaryRow>();
 	
 	private static StarImages _starImages =
 		(StarImages) GWT.create(StarImages.class);
@@ -68,6 +74,9 @@ public class MiddlePaneStarView extends AbstractView<CStar>
 		hpanel.add(_starImages.star().createImage());
 		hpanel.add(table);
 
+		_staticGroup.getHeader().setStylePrimaryName("MiddlePaneFleetName");
+		_contentGrid.addGroup(_staticGroup);
+		
 		_panel.add(hpanel);
 		_panel.add(_contentGrid);
     }
@@ -75,12 +84,19 @@ public class MiddlePaneStarView extends AbstractView<CStar>
 	@Override
 	public void onChange(ChangeCallback cb)
 	{
-		Set<Identifiable> set = new HashSet<Identifiable>();
+		Set<Identifiable> fleets = new HashSet<Identifiable>();
+		Set<Identifiable> statics = new HashSet<Identifiable>();
 		
 		try
 		{
-			CStar star = getObject();		
-			set.addAll(star.getContents());
+			CStar star = getObject();
+			for (Identifiable i : star)
+			{
+				if (i instanceof CFleet)
+					fleets.add(i);
+				else
+					statics.add(i);
+			}
 			
 			if (star.getScope() == S.GLOBAL)
 				_contentGrid.addGroup(_noContentGroup);
@@ -92,25 +108,52 @@ public class MiddlePaneStarView extends AbstractView<CStar>
 			_contentGrid.addGroup(_noContentGroup);
 		}
 
-		_contents.syncWith(set, this);
+		_fleets.syncWith(fleets, _fleets_cb);
+		_statics.syncWith(statics, _statics_cb);
+		_staticGroup.setHidden(_statics.isEmpty());
 	}
-	
-	
-	public AbstractGroup<?> create(long id)
+
+	private SyncableObjectManager<AbstractGroup<?>> _fleets_cb =
+		new SyncableObjectManager<AbstractGroup<?>>()
 	{
-		CObject obj = Database.get(id);
-		CFleet fleet = obj.toFleet();
-		if (fleet != null)
+		public AbstractGroup<?> create(long id)
 		{
-			MiddlePaneFleetGroup group = new MiddlePaneFleetGroup(fleet);
-			_contentGrid.addGroup(group);
-			return group;
+			CObject obj = Database.get(id);
+			CFleet fleet = obj.toFleet();
+			if (fleet != null)
+			{
+				MiddlePaneFleetGroup group = new MiddlePaneFleetGroup(fleet);
+				_contentGrid.addGroup(group);
+				return group;
+			}
+			return null;
 		}
-		return null;
-	}
+		
+		public void destroy(AbstractGroup<?> object)
+	    {
+			_contentGrid.removeGroup(object);
+	    }
+	};
 	
-	public void destroy(AbstractGroup<?> object)
-    {
-		_contentGrid.removeGroup(object);
-    }
+	private SyncableObjectManager<StaticSummaryRow> _statics_cb =
+		new SyncableObjectManager<StaticSummaryRow>()
+	{
+		public StaticSummaryRow create(long id)
+		{
+			CObject obj = Database.get(id);
+			CUnit unit = obj.toUnit();
+			if (obj != null)
+			{
+				StaticSummaryRow row = new StaticSummaryRow(unit);
+				_staticGroup.add(row);
+				return row;
+			}
+			return null;
+		}
+		
+		public void destroy(StaticSummaryRow row)
+	    {
+			_staticGroup.remove(row);
+	    }
+	};	
 }

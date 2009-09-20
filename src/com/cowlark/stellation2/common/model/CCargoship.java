@@ -1,8 +1,8 @@
 /* Client-side cargoship.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/model/CCargoship.java,v $
- * $Date: 2009/09/14 22:15:34 $
+ * $Date: 2009/09/20 21:50:35 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.common.model;
@@ -33,12 +33,6 @@ public class CCargoship extends CShip implements HasResources
 	    return PropertyStore.Cargoship;
 	}
 	
-	@Override
-	public Widget createSummaryNotesField()
-	{
-		return new ResourcesMonitor(this);
-	}
-	
 	public Resources getCargo() throws OutOfScopeException
     {
 		checkOwner();
@@ -48,6 +42,12 @@ public class CCargoship extends CShip implements HasResources
 	public Resources getResources() throws OutOfScopeException
 	{
 	    return getCargo();
+	}
+	
+	@Override
+	public Widget createSummaryNotesField()
+	{
+		return new ResourcesMonitor(this);
 	}
 	
 	public AbstractView<? extends CObject> createControlPanel()

@@ -1,8 +1,8 @@
 /* RPC interface (client-side).
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/RPCService.java,v $
- * $Date: 2009/09/16 23:14:51 $
+ * $Date: 2009/09/20 21:50:35 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.client;
@@ -44,5 +44,19 @@ public interface RPCService extends RemoteService
 	
 	UpdateBatch tugLoad(Authentication auth, long since,
 			long id, long cargoid)
+		throws StellationException;
+	
+	/* Factory */
+	
+	UpdateBatch factoryBuild(Authentication auth, long since,
+			long id, int type)
+		throws StellationException;
+	
+	UpdateBatch factoryAbort(Authentication auth, long since,
+			long id)
+		throws StellationException;
+	
+	UpdateBatch factoryDeploy(Authentication auth, long since,
+			long id, long fleet)
 		throws StellationException;
 }

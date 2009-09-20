@@ -1,8 +1,8 @@
 /* Main RPC entrypoint.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/RPCServiceImpl.java,v $
- * $Date: 2009/09/16 23:14:51 $
+ * $Date: 2009/09/20 21:50:35 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.server;
@@ -24,6 +24,8 @@ import com.cowlark.stellation2.server.db.PersistenceInterface;
 import com.cowlark.stellation2.server.db.RootObject;
 import com.cowlark.stellation2.server.db.ServerDB;
 import com.cowlark.stellation2.server.model.SCargoship;
+import com.cowlark.stellation2.server.model.SFactory;
+import com.cowlark.stellation2.server.model.SFleet;
 import com.cowlark.stellation2.server.model.SObject;
 import com.cowlark.stellation2.server.model.SPlayer;
 import com.cowlark.stellation2.server.model.STug;
@@ -272,6 +274,112 @@ public class RPCServiceImpl extends RemoteServiceServlet implements
 				
 				STug tug = object.toTug();
 				tug.loadCmd((SUnit) cargo);
+				
+				return returnBatch(player, since);
+			}
+			finally
+			{
+				ServerDB.Instance.unlock();
+			}
+		}
+		catch (IOException e)
+		{
+			throw new DatabaseCorruptException(e);
+		}
+	}
+	
+	public UpdateBatch factoryBuild(Authentication auth, long since,
+			long id, int type)
+	        throws StellationException
+	{
+		try
+		{
+			ServerDB.Instance.lock();		
+			try
+			{
+				SPlayer player = getPlayer(auth);
+				SObject object = Database.get(id);
+				
+				if (!(object instanceof SFactory))
+					throw new InvalidObjectException(id);
+				object.checkObjectOwnedBy(player);
+				object.checkObjectVisibleTo(player);
+				
+				SFactory factory = object.toFactory();
+				factory.buildCmd(type);
+				
+				return returnBatch(player, since);
+			}
+			finally
+			{
+				ServerDB.Instance.unlock();
+			}
+		}
+		catch (IOException e)
+		{
+			throw new DatabaseCorruptException(e);
+		}
+	}
+	
+	public UpdateBatch factoryAbort(Authentication auth, long since,
+			long id)
+	        throws StellationException
+	{
+		try
+		{
+			ServerDB.Instance.lock();		
+			try
+			{
+				SPlayer player = getPlayer(auth);
+				SObject object = Database.get(id);
+				
+				if (!(object instanceof SFactory))
+					throw new InvalidObjectException(id);
+				SFactory factory = object.toFactory();
+				factory.checkObjectOwnedBy(player);
+				factory.checkObjectVisibleTo(player);
+				
+				factory.abortCmd();
+				
+				return returnBatch(player, since);
+			}
+			finally
+			{
+				ServerDB.Instance.unlock();
+			}
+		}
+		catch (IOException e)
+		{
+			throw new DatabaseCorruptException(e);
+		}
+	}
+	
+	public UpdateBatch factoryDeploy(Authentication auth, long since,
+			long id, long fleetid)
+	        throws StellationException
+	{
+		try
+		{
+			ServerDB.Instance.lock();		
+			try
+			{
+				SPlayer player = getPlayer(auth);
+				SObject object = Database.get(id);
+				
+				if (!(object instanceof SFactory))
+					throw new InvalidObjectException(id);
+				SFactory factory = object.toFactory();
+				factory.checkObjectOwnedBy(player);
+				factory.checkObjectVisibleTo(player);
+
+				object = Database.get(fleetid);
+				if (!(object instanceof SFleet))
+					throw new InvalidObjectException(id);
+				SFleet fleet = object.toFleet();
+				fleet.checkObjectOwnedBy(player);
+				fleet.checkObjectVisibleTo(player);
+				
+				factory.deployCmd(fleet);
 				
 				return returnBatch(player, since);
 			}

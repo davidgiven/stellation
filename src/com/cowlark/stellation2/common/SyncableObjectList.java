@@ -1,8 +1,8 @@
 /* A syncable list of objects.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/SyncableObjectList.java,v $
- * $Date: 2009/09/16 23:12:25 $
+ * $Date: 2009/09/20 21:50:35 $
  * $Author: dtrg $
- * $Revision: 1.2 $
+ * $Revision: 1.3 $
  */
 
 package com.cowlark.stellation2.common;
@@ -44,5 +44,10 @@ public class SyncableObjectList<T extends Identifiable>
 			T t = callback.create(id);
 			_map.put(id, t);
 		}
+    }
+    
+    public boolean isEmpty()
+    {
+    	return _map.isEmpty();
     }
 }

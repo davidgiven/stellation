@@ -1,8 +1,8 @@
 /* Server-side fleet.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SFleet.java,v $
- * $Date: 2009/09/16 23:13:12 $
+ * $Date: 2009/09/20 21:50:35 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -11,7 +11,6 @@ import com.cowlark.stellation2.common.Resources;
 import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.data.Properties;
 import com.cowlark.stellation2.common.data.PropertyStore;
-import com.cowlark.stellation2.common.exceptions.InvalidObjectException;
 import com.cowlark.stellation2.common.exceptions.ResourcesNotAvailableException;
 import com.cowlark.stellation2.common.exceptions.StellationException;
 import com.cowlark.stellation2.common.model.CFleet;

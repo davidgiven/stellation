@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/16 23:14:51 $
+ * $Date: 2009/09/20 21:50:35 $
  * $Author: dtrg $
- * $Revision: 1.6 $
+ * $Revision: 1.7 $
  */
 
 package com.cowlark.stellation2.client;
@@ -16,6 +16,7 @@ import com.cowlark.stellation2.common.Identifiable;
 import com.cowlark.stellation2.common.UpdateBatch;
 import com.cowlark.stellation2.common.db.Database;
 import com.cowlark.stellation2.common.db.LogMessageStore;
+import com.cowlark.stellation2.common.model.CFleet;
 import com.cowlark.stellation2.common.model.CObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
@@ -225,6 +226,33 @@ public class ClientDB extends Database
 		Stellation2.Service.tugLoad(
 				Stellation2.getAuthentication(), _lastUpdate,
 				id, cargoid,
+				getResponseHandler());		
+	}
+	
+	public static void factoryBuild(
+			long id, int typeid)
+	{
+		Stellation2.Service.factoryBuild(
+				Stellation2.getAuthentication(), _lastUpdate,
+				id, typeid,
+				getResponseHandler());		
+	}
+	
+	public static void factoryAbort(
+			long id)
+	{
+		Stellation2.Service.factoryAbort(
+				Stellation2.getAuthentication(), _lastUpdate,
+				id,
+				getResponseHandler());		
+	}
+	
+	public static void factoryDeploy(
+			long id, CFleet fleet)
+	{
+		Stellation2.Service.factoryDeploy(
+				Stellation2.getAuthentication(), _lastUpdate,
+				id, fleet.getId(),
 				getResponseHandler());		
 	}
 }
