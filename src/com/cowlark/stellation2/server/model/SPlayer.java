@@ -1,8 +1,8 @@
 /* Server-side player.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SPlayer.java,v $
- * $Date: 2009/09/16 23:14:51 $
+ * $Date: 2009/09/20 21:45:48 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -74,17 +74,17 @@ public class SPlayer extends SObject
     	{
 	    	SFleet fleet = createFleet(star, _empire+"'s starter fleet");
 	    	
-	    	fleet.createJumpship()
+	    	fleet.createJumpship(this)
 	    		.makeAlive();
 	    	
-	    	fleet.createTug()
+	    	fleet.createTug(this)
 	    		.makeAlive();
 	    	
-	    	fleet.createTug()
+	    	fleet.createTug(this)
 	    		.makeAlive()
-	    		.createBasicFactory();
+	    		.createBasicFactory(this);
 	    	
-	    	fleet.createCargoship()
+	    	fleet.createCargoship(this)
 	    		.setCargo(new Resources(100000.0, 100000.0, 100000.0))
 	    		.makeAlive();
 	    	

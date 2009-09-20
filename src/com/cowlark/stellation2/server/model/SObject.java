@@ -1,8 +1,8 @@
 /* Server-side generic object.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SObject.java,v $
- * $Date: 2009/09/18 20:42:35 $
+ * $Date: 2009/09/20 21:45:48 $
  * $Author: dtrg $
- * $Revision: 1.7 $
+ * $Revision: 1.8 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -172,11 +172,28 @@ public class SObject extends RootObject implements Iterable<SObject>
 		return null;
 	}
 	
+	public SFactory toFactory()
+	{
+		return null;
+	}
+	
 	public long timerExpiry(STimer timer)
 	{
 		return S.CANCELTIMER;
 	}
 	
+	public SStar getStar()
+	{
+		SObject o = this;
+		while (!(o instanceof SStar))
+		{
+			o = o.getLocation();
+			if (o == null)
+				return null;
+		}
+		return (SStar) o;
+	}
+
 	public void onAdditionOf(SObject object)
 	{
 		_contents.add(object);
@@ -239,13 +256,13 @@ public class SObject extends RootObject implements Iterable<SObject>
 	{
 	}
 	
-	public <T extends SObject> T createObject(int type)
+	public <T extends SObject> T createObject(SPlayer owner, int type)
 	{
 		try
 		{
 			T o = (T) _classes.get(type).newInstance();
 			o.initialise();
-			o.setOwner(getOwner());
+			o.setOwner(owner);
 			add(o);
 			return o;
 		}
@@ -260,24 +277,24 @@ public class SObject extends RootObject implements Iterable<SObject>
 		return null;
 	}
 	
-    public STug createTug()
+    public STug createTug(SPlayer owner)
     {
-    	return createObject(PropertyStore.TUG);
+    	return createObject(owner, PropertyStore.TUG);
     }
 
-    public SCargoship createCargoship()
+    public SCargoship createCargoship(SPlayer owner)
     {
-    	return createObject(PropertyStore.CARGOSHIP);
+    	return createObject(owner, PropertyStore.CARGOSHIP);
     }
 
-    public SJumpship createJumpship()
+    public SJumpship createJumpship(SPlayer owner)
     {
-    	return createObject(PropertyStore.JUMPSHIP);
+    	return createObject(owner, PropertyStore.JUMPSHIP);
     }
     
-    public SBasicFactory createBasicFactory()
+    public SBasicFactory createBasicFactory(SPlayer owner)
     {
-    	return createObject(PropertyStore.BASICFACTORY);
+    	return createObject(owner, PropertyStore.BASICFACTORY);
     }
     
 	public void checkObjectVisibleTo(SPlayer player)

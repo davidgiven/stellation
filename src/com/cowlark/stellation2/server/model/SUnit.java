@@ -1,8 +1,8 @@
 /* Server-side generc unit.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/server/model/SUnit.java,v $
- * $Date: 2009/09/16 23:14:05 $
+ * $Date: 2009/09/20 21:45:48 $
  * $Author: dtrg $
- * $Revision: 1.5 $
+ * $Revision: 1.6 $
  */
 
 package com.cowlark.stellation2.server.model;
@@ -67,11 +67,6 @@ public abstract class SUnit extends SObject
 		return this;
 	}
 	
-	public SStar getStar()
-	{
-		return getLocation().getLocation().toStar();
-	}
-
 	@Override
 	public long timerExpiry(STimer timer)
 	{
