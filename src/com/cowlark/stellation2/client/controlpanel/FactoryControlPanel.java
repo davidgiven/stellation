@@ -1,6 +1,6 @@
 /* Handles the right-hand pane.
- * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/Attic/BasicFactoryControlPanel.java,v $
- * $Date: 2009/09/20 21:50:35 $
+ * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/controlpanel/FactoryControlPanel.java,v $
+ * $Date: 2009/09/20 22:14:32 $
  * $Author: dtrg $
  * $Revision: 1.1 $
  */
@@ -25,7 +25,6 @@ import com.cowlark.stellation2.common.db.DBRef;
 import com.cowlark.stellation2.common.db.Database;
 import com.cowlark.stellation2.common.db.ListOfClientIntegers;
 import com.cowlark.stellation2.common.exceptions.OutOfScopeException;
-import com.cowlark.stellation2.common.model.CBasicFactory;
 import com.cowlark.stellation2.common.model.CFactory;
 import com.cowlark.stellation2.common.model.CFleet;
 import com.cowlark.stellation2.common.model.CObject;
@@ -41,7 +40,7 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class BasicFactoryControlPanel extends UnitControlPanel<CBasicFactory>
+public class FactoryControlPanel extends UnitControlPanel<CFactory>
 		implements ChangeHandler
 {
 	private DBRef<CStar> _star = new DBRef<CStar>();
@@ -90,7 +89,7 @@ public class BasicFactoryControlPanel extends UnitControlPanel<CBasicFactory>
 			}
 		);
 	
-	public BasicFactoryControlPanel(CBasicFactory unit)
+	public FactoryControlPanel(CFactory unit)
     {
 		super(unit);
 	
