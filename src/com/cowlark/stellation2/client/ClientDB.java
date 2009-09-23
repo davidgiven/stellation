@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/23 09:44:36 $
+ * $Date: 2009/09/23 21:26:31 $
  * $Author: dtrg $
- * $Revision: 1.8 $
+ * $Revision: 1.9 $
  */
 
 package com.cowlark.stellation2.client;
@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import com.cowlark.stellation2.common.Identifiable;
+import com.cowlark.stellation2.common.S;
 import com.cowlark.stellation2.common.UpdateBatch;
 import com.cowlark.stellation2.common.db.Database;
 import com.cowlark.stellation2.common.db.LogMessageStore;
@@ -222,7 +223,7 @@ public class ClientDB extends Database
 		_updateTimerRunning = true;
 		
 		/* Every hundredth of an hour. */
-		_updateTimer.scheduleRepeating(360*1000);		
+		_updateTimer.scheduleRepeating(S.UPDATE_TIME);		
 	}
 	
 	public static void endUpdates()

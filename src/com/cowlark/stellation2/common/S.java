@@ -1,8 +1,8 @@
 /* Globals.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/common/S.java,v $
- * $Date: 2009/09/20 21:47:39 $
+ * $Date: 2009/09/23 21:26:31 $
  * $Author: dtrg $
- * $Revision: 1.3 $
+ * $Revision: 1.4 $
  */
 
 package com.cowlark.stellation2.common;
@@ -21,6 +21,7 @@ public class S
 	public final static int NUMBER_OF_STARS = 400;
 	public final static int GALAXY_RADIUS = 20;
 	public final static long TICK = 30 * 1000;
+	public final static int UPDATE_TIME = 60*1000; /* one minute */
 	
 	/* Number formats. */
 	
