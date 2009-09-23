@@ -1,14 +1,15 @@
 /* The overall game screen.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/view/GameView.java,v $
- * $Date: 2009/09/08 23:01:28 $
+ * $Date: 2009/09/23 09:44:36 $
  * $Author: dtrg $
- * $Revision: 1.4 $
+ * $Revision: 1.5 $
  */
 
 package com.cowlark.stellation2.client.view;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.cowlark.stellation2.client.ClientDB;
 import com.cowlark.stellation2.client.Stellation2;
 import com.cowlark.stellation2.client.ui.FullScreenPanel;
 import com.cowlark.stellation2.common.model.CStar;
@@ -64,6 +65,20 @@ public class GameView extends Composite implements ClickHandler
 		
 		selectTab(_helpview);
     }
+	
+	@Override
+	protected void onLoad()
+	{
+	    super.onLoad();
+		ClientDB.beginUpdates();
+	}
+	
+	@Override
+	protected void onUnload()
+	{
+		ClientDB.endUpdates();
+	    super.onUnload();
+	}
 	
 	private void addMiddlePane(Widget w)
 	{

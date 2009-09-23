@@ -1,8 +1,8 @@
 /* Client-side database management.
  * $Source: /cvsroot/stellation/stellation2/src/com/cowlark/stellation2/client/ClientDB.java,v $
- * $Date: 2009/09/20 21:50:35 $
+ * $Date: 2009/09/23 09:44:36 $
  * $Author: dtrg $
- * $Revision: 1.7 $
+ * $Revision: 1.8 $
  */
 
 package com.cowlark.stellation2.client;
@@ -18,6 +18,7 @@ import com.cowlark.stellation2.common.db.Database;
 import com.cowlark.stellation2.common.db.LogMessageStore;
 import com.cowlark.stellation2.common.model.CFleet;
 import com.cowlark.stellation2.common.model.CObject;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.SerializationException;
 import com.google.gwt.user.client.rpc.SerializationStreamFactory;
@@ -32,7 +33,18 @@ public class ClientDB extends Database
 	private static Map<Long, Set<ChangeCallback>> _callbacks;
 	private static Set<ChangeCallback> _logCallbacks;
 	private static Set<ChangeCallback> _anyChangeCallbacks;
-		
+
+	private static boolean _updateTimerRunning = false;
+	private static Timer _updateTimer = new Timer()
+	{
+		@Override
+		public void run()
+		{
+			if (_updateTimerRunning)
+				ClientDB.fetchUpdates();
+		}
+	};
+	
 	static
 	{
 		clear();
@@ -176,6 +188,10 @@ public class ClientDB extends Database
 		/* Fire the global change callbacks. */
 		
 		fireCallbacks(_anyChangeCallbacks);
+		
+		/* Reset the update timer. */
+		
+		beginUpdates();
 	}
 	
 	public static String dumpVisibleDatabase()
@@ -200,6 +216,20 @@ public class ClientDB extends Database
 	    return _logs;
     }
 	
+	
+	public static void beginUpdates()
+	{
+		_updateTimerRunning = true;
+		
+		/* Every hundredth of an hour. */
+		_updateTimer.scheduleRepeating(360*1000);		
+	}
+	
+	public static void endUpdates()
+	{
+		_updateTimerRunning = false;
+	}
+
 	/* RPC calls */
 
 	public static void cargoshipLoadUnload(
