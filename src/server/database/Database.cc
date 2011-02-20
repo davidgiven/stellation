@@ -2,6 +2,12 @@
 #include "Database.h"
 #include "DatabaseObject.h"
 
+Database& Database::GetInstance()
+{
+	static Database instance;
+	return instance;
+}
+
 Database::Database()
 {
 }
@@ -14,10 +20,8 @@ DatabaseObject& Database::Create()
 {
 	int oid = _nextoid++;
 
-	auto_ptr<DatabaseObject> o(new DatabaseObject(oid));
-	DatabaseObject* op = o.get();
-	_map[oid] = op;
-	o.release();
+	shared_ptr<DatabaseObject> o(new DatabaseObject(oid));
+	_map[oid] = o;
 
-	return *op;
+	return *o;
 }

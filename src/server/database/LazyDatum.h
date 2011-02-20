@@ -1,7 +1,11 @@
 #ifndef LAZYDATUM_H
 #define LAZYDATUM_H
 
-class LazyDatum
+#include "DatabaseObject.h"
+
+class Datum;
+
+class LazyDatum : public noncopyable
 {
 public:
 	LazyDatum(DatabaseObject& dbo, int hash):
@@ -34,6 +38,10 @@ public:
 
 	operator double ()                      { return datum(); }
 	operator const string& ()               { return datum(); }
+
+	void AddToSet(DatabaseObject& o)        { datum().AddToSet(o); }
+	void RemoveFromSet(DatabaseObject& o)   { datum().RemoveFromSet(o); }
+	bool InSet(DatabaseObject& o)           { return datum().InSet(o); }
 };
 
 #endif

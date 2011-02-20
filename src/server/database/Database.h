@@ -3,8 +3,11 @@
 
 class DatabaseObject;
 
-class Database
+class Database : public noncopyable
 {
+public:
+	static Database& GetInstance();
+
 public:
 	Database();
 	~Database();
@@ -15,8 +18,18 @@ public:
 private:
 	iscalar<int, 0> _nextoid;
 
-	typedef map<int, DatabaseObject*> DatabaseMap;
+	typedef map<int, shared_ptr<DatabaseObject> > DatabaseMap;
 	DatabaseMap _map;
 };
+
+static inline DatabaseObject& DBGet(int oid)
+{
+	return Database::GetInstance().Get(oid);
+}
+
+static inline DatabaseObject& DBCreate()
+{
+	return Database::GetInstance().Create();
+}
 
 #endif

@@ -1,5 +1,10 @@
 owner
 type
+contents
+
+# Galaxy
+
+visibleStars
 
 # Stars
 
@@ -7,6 +12,9 @@ name
 x
 y
 brightness
-resources
-asteroids
+resourcesA
+resourcesO
+resourcesM
+asteroidsC
+asteroidsM
 

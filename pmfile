@@ -57,6 +57,8 @@ server_exe = cxxprogram {
 	},
 	
 	mycxxfile "src/server/main.cc",
+	mycxxfile "src/server/utils.cc",
+	mycxxfile "src/server/worldcreation.cc",
 	mycxxfile "src/server/database/Database.cc",
 	mycxxfile "src/server/database/Datum.cc",
 	mycxxfile { "src/server/database/DatabaseObject.cc",
@@ -65,6 +67,8 @@ server_exe = cxxprogram {
 	mycxxfile { "src/server/model/SObject.cc",
 		dynamicheaders = {make_accessors_h, make_accessors_cc_h}
 	},
+	mycxxfile "src/server/model/SGalaxy.cc",
+	mycxxfile "src/server/model/SStar.cc",
 	
 	install = pm.install("bin/server")
 }

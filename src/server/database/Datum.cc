@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "DatabaseObject.h"
 #include "Datum.h"
 
 Datum::Datum():
@@ -41,3 +42,20 @@ const string& Datum::GetString() const
 	return _string;
 }
 
+void Datum::AddToSet(DatabaseObject& dbo)
+{
+	CheckType(OBJECTSET);
+	_objectset.insert(dbo);
+}
+
+void Datum::RemoveFromSet(DatabaseObject& dbo)
+{
+	CheckType(OBJECTSET);
+	_objectset.erase(dbo);
+}
+
+bool Datum::InSet(DatabaseObject& dbo)
+{
+	CheckType(OBJECTSET);
+	return (_objectset.find(dbo) != _objectset.end());
+}
