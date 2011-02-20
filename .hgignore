@@ -1,0 +1,7 @@
+
+syntax: regexp
+^\.pm-cache$
+syntax: regexp
+^bin$
+syntax: regexp
+^\.pm-exec-i686$
