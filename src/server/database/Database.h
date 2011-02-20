@@ -15,6 +15,8 @@ public:
 	DatabaseObject& Get(int oid);
 	DatabaseObject& Create();
 
+	void Save(std::ostream& stream);
+
 private:
 	iscalar<int, 0> _nextoid;
 

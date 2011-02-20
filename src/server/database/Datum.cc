@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "Database.h"
 #include "DatabaseObject.h"
 #include "Datum.h"
 
@@ -42,6 +43,18 @@ const string& Datum::GetString() const
 	return _string;
 }
 
+void Datum::SetObject(DatabaseObject& dbo)
+{
+	CheckType(OBJECT);
+	_oid = dbo;
+}
+
+DatabaseObject& Datum::GetObject() const
+{
+	CheckType(OBJECT);
+	return DBGet(_oid);
+}
+
 void Datum::AddToSet(DatabaseObject& dbo)
 {
 	CheckType(OBJECTSET);
@@ -58,4 +71,22 @@ bool Datum::InSet(DatabaseObject& dbo)
 {
 	CheckType(OBJECTSET);
 	return (_objectset.find(dbo) != _objectset.end());
+}
+
+int Datum::SetLength() const
+{
+	CheckType(OBJECTSET);
+	return _objectset.size();
+}
+
+Datum::ObjectSet::const_iterator Datum::SetBegin() const
+{
+	CheckType(OBJECTSET);
+	return _objectset.begin();
+}
+
+Datum::ObjectSet::const_iterator Datum::SetEnd() const
+{
+	CheckType(OBJECTSET);
+	return _objectset.end();
 }

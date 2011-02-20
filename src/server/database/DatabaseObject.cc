@@ -20,6 +20,12 @@ int DatabaseObject::HashPropertyName(const string& s)
 	return propertyHash(s.data(), s.size());
 }
 
+const char* DatabaseObject::PropertyNameFromHash(int hash)
+{
+	assert((hash >= MIN_HASH_VALUE) && (hash <= MAX_HASH_VALUE));
+	return propertyNameTable[hash];
+}
+
 const string& DatabaseObject::GetType()
 {
 	return Get(type_hash);
@@ -27,7 +33,7 @@ const string& DatabaseObject::GetType()
 
 Datum& DatabaseObject::Get(int key)
 {
-	DatabaseMap::const_iterator i = _map.find(key);
+	Map::const_iterator i = _map.find(key);
 	if (i == _map.end())
 	{
 		shared_ptr<Datum> o(new Datum());

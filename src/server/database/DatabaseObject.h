@@ -17,12 +17,19 @@ public:
 	{ return _oid; }
 
 	static int HashPropertyName(const string& name);
+	static const char* PropertyNameFromHash(int hash);
+
+	typedef map<int, shared_ptr<Datum> > Map;
+
+	Map::const_iterator Begin() const
+	{ return _map.begin(); }
+
+	Map::const_iterator End() const
+	{ return _map.end(); }
 
 private:
 	const scalar<int> _oid;
-
-	typedef map<int, shared_ptr<Datum> > DatabaseMap;
-	DatabaseMap _map;
+	Map _map;
 };
 
 #endif

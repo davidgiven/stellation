@@ -21,7 +21,7 @@ unique_keys = simple {
 }
 
 make_gperf_hash = simple {
-	command = "gperf -C -j1 -n -E -L ANSI-C -H propertyHash -N propertyLookup %in% > %out%",
+	command = "gperf -G -C -j1 -n -E -L ANSI-C -W propertyNameTable -H propertyHash -N propertyLookup %in% > %out%",
 	outputs = {"%U%/hash.h"},
 	
 	unique_keys

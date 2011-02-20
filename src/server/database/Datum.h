@@ -31,9 +31,14 @@ public:
 	const string& GetString() const;
 	void SetString(const string& s);
 
+	typedef set<int> ObjectSet;
+
 	void AddToSet(DatabaseObject& o);
 	void RemoveFromSet(DatabaseObject& o);
 	bool InSet(DatabaseObject& o);
+	int SetLength() const;
+	ObjectSet::const_iterator SetBegin() const;
+	ObjectSet::const_iterator SetEnd() const;
 
 	Datum& operator = (DatabaseObject& o)   { SetObject(o); return *this; }
 	Datum& operator = (double d)            { SetNumber(d); return *this; }
@@ -51,7 +56,7 @@ private:
 	int _oid;
 	double _number;
 	string _string;
-	set<int> _objectset;
+	ObjectSet _objectset;
 };
 
 #endif
