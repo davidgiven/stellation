@@ -7,7 +7,8 @@ for s in inf:lines() do
 	local hash = "_hash_"..s
 	outf:write(
 		'public:\n',
-		'LazyDatum ', cs, ';\n'
+		'LazyDatum ', cs, ';\n',
+		'Datum& GetProperty', cs, '() { return ', cs, '; }\n'
 	)
 end
 

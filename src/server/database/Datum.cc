@@ -4,16 +4,17 @@
 #include "Datum.h"
 
 Datum::Datum():
-	_type(UNSET)
+	_type(UNSET),
+	_scope(PRIVATE)
 {
 }
 
-void Datum::CheckType(int type) const
+void Datum::CheckType(Type type) const
 {
 	assert(_type == type);
 }
 
-void Datum::SetType(int type)
+void Datum::SetType(Type type)
 {
 	assert(_type == UNSET);
 	_type = type;

@@ -30,8 +30,8 @@ private:
 public:
 	operator Datum& ()                      { return datum(); }
 
-	int GetType()                           { return datum().GetType(); }
-	void SetType(int type)                  { return datum().SetType(type); }
+	Datum::Type GetType()                   { return datum().GetType(); }
+	void SetType(Datum::Type type)          { return datum().SetType(type); }
 
 	Datum& operator = (double d)            { return datum() = d; }
 	Datum& operator = (const string& s)     { return datum() = s; }

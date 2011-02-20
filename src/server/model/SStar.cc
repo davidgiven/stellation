@@ -10,10 +10,10 @@ void SStar::Initialise()
 {
 	SObject::Initialise();
 
-	X.SetType(Datum::NUMBER);
-	Y.SetType(Datum::NUMBER);
-	Brightness.SetType(Datum::NUMBER);
-	Name.SetType(Datum::STRING);
-	AsteroidsM.SetType(Datum::NUMBER);
-	AsteroidsC.SetType(Datum::NUMBER);
+	InitProperty(X,               Datum::NUMBER,        Datum::GLOBAL);
+	InitProperty(Y,               Datum::NUMBER,        Datum::GLOBAL);
+	InitProperty(Brightness,      Datum::NUMBER,        Datum::GLOBAL);
+	InitProperty(Name,            Datum::STRING,        Datum::GLOBAL);
+	InitProperty(AsteroidsM,      Datum::NUMBER,        Datum::LOCAL);
+	InitProperty(AsteroidsC,      Datum::NUMBER,        Datum::LOCAL);
 }

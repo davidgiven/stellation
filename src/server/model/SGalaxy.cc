@@ -11,7 +11,7 @@ void SGalaxy::Initialise()
 {
 	SObject::Initialise();
 
-	VisibleStars.SetType(Datum::OBJECTSET);
+	InitProperty(VisibleStars,    Datum::OBJECTSET,     Datum::GLOBAL);
 }
 
 void SGalaxy::OnAdditionOf(SObject& o)

@@ -16,7 +16,12 @@ void SObject::Initialise()
 	Type.SetType(Datum::STRING);
 	Type = GetType();
 
-	Contents.SetType(Datum::OBJECTSET);
+	InitProperty(Contents,        Datum::OBJECTSET,     Datum::LOCAL);
+}
+
+void SObject::InitProperty(Datum& datum, Datum::Type type, Datum::Scope scope)
+{
+	datum.SetType(type);
 }
 
 void SObject::Add(SObject& o)

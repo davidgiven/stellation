@@ -8,7 +8,7 @@ class Datum : public noncopyable
 public:
 	Datum();
 
-	enum
+	enum Type
 	{
 		UNSET,
 		OBJECT,
@@ -17,10 +17,23 @@ public:
 		OBJECTSET
 	};
 
-	int GetType() const
+	enum Scope
+	{
+		GLOBAL,
+		LOCAL,
+		PRIVATE
+	};
+
+	Type GetType() const
 	{ return _type; }
 
-	void SetType(int type);
+	void SetType(Type type);
+
+	Scope GetScope() const
+	{ return _scope; }
+
+	void SetScope(Scope scope)
+	{ _scope = scope; }
 
 	DatabaseObject& GetObject() const;
 	void SetObject(DatabaseObject& d);
@@ -49,10 +62,11 @@ public:
 	operator const string& () const         { return GetString(); }
 
 private:
-	void CheckType(int type) const;
+	void CheckType(Type type) const;
 
 private:
-	scalar<int> _type;
+	scalar<Type> _type;
+	scalar<Scope> _scope;
 	int _oid;
 	double _number;
 	string _string;

@@ -17,6 +17,8 @@ public:
 
 	virtual void Initialise();
 
+	void InitProperty(Datum& property, Datum::Type type, Datum::Scope scope);
+
 	void Add(SObject& o);
 	void Remove(SObject& o);
 
