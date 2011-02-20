@@ -1,0 +1,12 @@
+owner
+type
+
+# Stars
+
+name
+x
+y
+brightness
+resources
+asteroids
+
