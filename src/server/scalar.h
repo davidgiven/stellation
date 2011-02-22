@@ -10,7 +10,7 @@ public:
 
 	operator T() const { return _value; }
 
-	T operator = (T value) { _value = value; }
+	T operator = (T value) { _value = value; return _value; }
 	T operator ++ (int) { return _value++; }
 	T operator ++ () { return ++_value; }
 	T operator -- (int) { return _value--; }
