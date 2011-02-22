@@ -1,6 +1,7 @@
 #include "globals.h"
 #include "Database.h"
 #include "DatabaseObject.h"
+#include "Property.h"
 
 Database& Database::GetInstance()
 {
@@ -49,10 +50,10 @@ void Database::Save(std::ostream& stream)
 		for (DatabaseObject::Map::const_iterator i = dbo.Begin(),
 				e = dbo.End(); i != e; i++)
 		{
-			int hash = i->first;
+			Hash::Type hash = i->first;
 			Datum& datum = *(i->second);
 
-			stream << DatabaseObject::PropertyNameFromHash(hash) << std::endl;
+			stream << Hash::StringFromHash(hash) << std::endl;
 
 			switch (datum.GetType())
 			{
@@ -71,7 +72,13 @@ void Database::Save(std::ostream& stream)
 
 				case Datum::OBJECT:
 				{
-					stream << 'o' << (DatabaseObject&)datum << std::endl;
+					stream << 'o' << datum.GetObjectAsOid() << std::endl;
+					break;
+				}
+
+				case Datum::TOKEN:
+				{
+					stream << 't' << Hash::StringFromHash(datum) << std::endl;
 					break;
 				}
 

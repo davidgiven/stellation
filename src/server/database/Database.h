@@ -18,7 +18,7 @@ public:
 	void Save(std::ostream& stream);
 
 private:
-	iscalar<int, 0> _nextoid;
+	iscalar<int, 1> _nextoid;
 
 	typedef map<int, shared_ptr<DatabaseObject> > DatabaseMap;
 	DatabaseMap _map;

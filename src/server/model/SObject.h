@@ -3,21 +3,20 @@
 
 #include "LazyDatum.h"
 #include "DatabaseObject.h"
+#include "Property.h"
 
 class SObject : public noncopyable
 {
 public:
 	SObject(DatabaseObject& dbo);
 
-	virtual const char* GetType()
-	{ return "object"; }
+	virtual Hash::Type GetClass()
+	{ return Hash::SObject; }
 
 	operator DatabaseObject& () const
 	{ return _dbo; }
 
 	virtual void Initialise();
-
-	void InitProperty(Datum& property, Datum::Type type, Datum::Scope scope);
 
 	void Add(SObject& o);
 	void Remove(SObject& o);
@@ -26,10 +25,10 @@ public:
 	virtual void OnRemovalOf(SObject& o);
 
 public:
-	Datum& Get(int key)
+	Datum& Get(Hash::Type key)
 	{ return _dbo.Get(key); }
 
-#include "accessors.h"
+#include "property-accessors-h.h"
 
 private:
 	DatabaseObject& _dbo;

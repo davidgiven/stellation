@@ -8,10 +8,8 @@ class SStar : public SObject
 public:
 	SStar(DatabaseObject& dbo);
 
-	const char* GetType()
-	{ return "star"; }
-
-	virtual void Initialise();
+	Hash::Type GetClass()
+	{ return Hash::SStar; }
 };
 
 #endif

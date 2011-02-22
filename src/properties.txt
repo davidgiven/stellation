@@ -1,0 +1,24 @@
+# This file defines all the information about the properties used by the
+# system.
+
+* SObject
+
+owner              OBJECT         LOCAL
+class              TOKEN          LOCAL
+contents           OBJECTSET      LOCAL
+
+* SGalaxy SObject
+
+visibleStars       OBJECTSET      GLOBAL
+
+* SStar SObject
+
+name               STRING         GLOBAL
+x                  NUMBER         GLOBAL
+y                  NUMBER         GLOBAL
+brightness         NUMBER         GLOBAL
+resourcesA         NUMBER         LOCAL
+resourcesO         NUMBER         LOCAL
+resourcesM         NUMBER         LOCAL
+asteroidsC         NUMBER         LOCAL
+asteroidsM         NUMBER         LOCAL

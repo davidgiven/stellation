@@ -6,46 +6,41 @@ include "tools/c.pm"
 
 CEXTRAFLAGS = {
 	PARENT,
-	"-Os"
+	"-O0"
 }
 
 CLIBRARIES = {
 	"zmq"
 }
 
-unique_keys = simple {
-	command = "grep '^[a-z]' %in% | uniq > %out%",
-	outputs = {"%U%-%I%"},
+property_data = simple {
+	command = "./pm -f %in[1]% %in[2]% %out%",
+	outputs = {
+		"%U%/tokens",
+		"%U%/token-accessors-h.h",
+		"%U%/token-accessors-cc.h",
+		"%U%/property-tables.h",
+		"%U%/property-accessors-h.h",
+		"%U%/property-accessors-cc.h"
+	},
 	
-	file "src/keys.txt"
+	file "tools/make-properties-table.pm",
+	file "src/properties.txt"
 }
-
+		
 make_gperf_hash = simple {
 	command = "gperf -G -C -j1 -n -E -L ANSI-C -W propertyNameTable -H propertyHash -N propertyLookup %in% > %out%",
 	outputs = {"%U%/hash.h"},
 	
-	unique_keys
+	ith {
+		i = 1,
+		property_data
+	}
 }
-
-make_accessors_h = simple {
-	command = {"./pm -f %in[1]% %in[2]% %out%"},
-	outputs = {"%U%/accessors.h"},
-	
-	file "tools/make-accessors-h.pm",
-	unique_keys
-} 
-
-make_accessors_cc_h = simple {
-	command = {"./pm -f %in[1]% %in[2]% %out%"},
-	outputs = {"%U%/accessors-cc.h"},
-	
-	file "tools/make-accessors-cc.pm",
-	unique_keys
-} 
 
 mycxxfile = cxxfile {
 	class = "mycxxfile",
-	dynamicheaders = make_accessors_h
+	dynamicheaders = property_data
 }
 
 server_exe = cxxprogram {
@@ -57,16 +52,16 @@ server_exe = cxxprogram {
 	},
 	
 	mycxxfile "src/server/main.cc",
+	mycxxfile {
+		"src/server/properties.cc",
+		dynamicheaders = {property_data, make_gperf_hash}
+	},
 	mycxxfile "src/server/utils.cc",
 	mycxxfile "src/server/worldcreation.cc",
 	mycxxfile "src/server/database/Database.cc",
 	mycxxfile "src/server/database/Datum.cc",
-	mycxxfile { "src/server/database/DatabaseObject.cc",
-		dynamicheaders = {make_accessors_h, make_gperf_hash}
-	},
-	mycxxfile { "src/server/model/SObject.cc",
-		dynamicheaders = {make_accessors_h, make_accessors_cc_h}
-	},
+	mycxxfile "src/server/database/DatabaseObject.cc",
+	mycxxfile "src/server/model/SObject.cc",
 	mycxxfile "src/server/model/SGalaxy.cc",
 	mycxxfile "src/server/model/SStar.cc",
 	

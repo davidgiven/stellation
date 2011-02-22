@@ -9,17 +9,12 @@ public:
 	DatabaseObject(int oid);
 	~DatabaseObject();
 
-	Datum& Get(int key);
-
-	const string& GetType();
+	Datum& Get(Hash::Type key);
 
 	operator int () const
 	{ return _oid; }
 
-	static int HashPropertyName(const string& name);
-	static const char* PropertyNameFromHash(int hash);
-
-	typedef map<int, shared_ptr<Datum> > Map;
+	typedef map<Hash::Type, shared_ptr<Datum> > Map;
 
 	Map::const_iterator Begin() const
 	{ return _map.begin(); }

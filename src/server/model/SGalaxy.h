@@ -8,10 +8,9 @@ class SGalaxy : public SObject
 public:
 	SGalaxy(DatabaseObject& dbo);
 
-	const char* GetType()
-	{ return "galaxy"; }
+	Hash::Type GetClass()
+	{ return Hash::SGalaxy; }
 
-	virtual void Initialise();
 	virtual void OnAdditionOf(SObject& o);
 	virtual void OnRemovalOf(SObject& o);
 };

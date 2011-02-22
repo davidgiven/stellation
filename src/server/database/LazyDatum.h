@@ -8,7 +8,7 @@ class Datum;
 class LazyDatum : public noncopyable
 {
 public:
-	LazyDatum(DatabaseObject& dbo, int hash):
+	LazyDatum(DatabaseObject& dbo, Hash::Type hash):
 		_dbo(dbo),
 		_hash(hash),
 		_datum(NULL)
@@ -16,7 +16,7 @@ public:
 
 private:
 	DatabaseObject& _dbo;
-	scalar<int> _hash;
+	scalar<Hash::Type> _hash;
 	scalar<Datum*> _datum;
 
 private:
@@ -35,9 +35,11 @@ public:
 
 	Datum& operator = (double d)            { return datum() = d; }
 	Datum& operator = (const string& s)     { return datum() = s; }
+	Datum& operator = (Hash::Type t)        { return datum() = t; }
 
 	operator double ()                      { return datum(); }
 	operator const string& ()               { return datum(); }
+	operator Hash::Type ()                  { return datum(); }
 
 	void AddToSet(DatabaseObject& o)        { datum().AddToSet(o); }
 	void RemoveFromSet(DatabaseObject& o)   { datum().RemoveFromSet(o); }

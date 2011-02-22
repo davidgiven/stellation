@@ -5,7 +5,9 @@
 
 Datum::Datum():
 	_type(UNSET),
-	_scope(PRIVATE)
+	_oid(0),
+	_number(0),
+	_token(NULL)
 {
 }
 
@@ -54,6 +56,24 @@ DatabaseObject& Datum::GetObject() const
 {
 	CheckType(OBJECT);
 	return DBGet(_oid);
+}
+
+int Datum::GetObjectAsOid() const
+{
+	CheckType(OBJECT);
+	return _oid;
+}
+
+void Datum::SetToken(Hash::Type token)
+{
+	CheckType(TOKEN);
+	_token = token;
+}
+
+Hash::Type Datum::GetToken() const
+{
+	CheckType(TOKEN);
+	return _token;
 }
 
 void Datum::AddToSet(DatabaseObject& dbo)

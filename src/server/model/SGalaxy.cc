@@ -7,13 +7,6 @@ SGalaxy::SGalaxy(DatabaseObject& dbo):
 {
 }
 
-void SGalaxy::Initialise()
-{
-	SObject::Initialise();
-
-	InitProperty(VisibleStars,    Datum::OBJECTSET,     Datum::GLOBAL);
-}
-
 void SGalaxy::OnAdditionOf(SObject& o)
 {
 	SStar star(o);
