@@ -33,10 +33,12 @@ public:
 	Datum::Type GetType()                   { return datum().GetType(); }
 	void SetType(Datum::Type type)          { return datum().SetType(type); }
 
+	Datum& operator = (DatabaseObject& o)   { return datum() = o; }
 	Datum& operator = (double d)            { return datum() = d; }
 	Datum& operator = (const string& s)     { return datum() = s; }
 	Datum& operator = (Hash::Type t)        { return datum() = t; }
 
+	operator DatabaseObject& ()             { return datum(); }
 	operator double ()                      { return datum(); }
 	operator const string& ()               { return datum(); }
 	operator Hash::Type ()                  { return datum(); }

@@ -21,8 +21,7 @@ property_data = simple {
 		"%U%/token-accessors-h.h",
 		"%U%/token-accessors-cc.h",
 		"%U%/property-tables.h",
-		"%U%/property-accessors-h.h",
-		"%U%/property-accessors-cc.h"
+		"%U%/property-accessors-h.h"
 	},
 	
 	file "tools/make-properties-table.pm",
@@ -73,6 +72,7 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/database/Datum.cc",
 	mycxxfile "src/server/database/DatabaseObject.cc",
 	mycxxfile "src/server/model/SObject.cc",
+	mycxxfile "src/server/model/SUniverse.cc",
 	mycxxfile "src/server/model/SGalaxy.cc",
 	mycxxfile "src/server/model/SStar.cc",
 	

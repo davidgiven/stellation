@@ -3,7 +3,7 @@
 
 #include "SObject.h"
 
-class SStar : public SObject
+class SStar : public SObject, public SStarProperties
 {
 public:
 	SStar(DatabaseObject& dbo);

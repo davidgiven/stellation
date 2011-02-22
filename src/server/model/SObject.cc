@@ -5,7 +5,7 @@
 #include "Property.h"
 
 SObject::SObject(DatabaseObject& dbo):
-#include "property-accessors-cc.h"
+	SObjectProperties(dbo),
 	_dbo(dbo)
 {
 }

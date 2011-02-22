@@ -3,7 +3,8 @@
 #include "SStar.h"
 
 SGalaxy::SGalaxy(DatabaseObject& dbo):
-	SObject(dbo)
+	SObject(dbo),
+	SGalaxyProperties(dbo)
 {
 }
 

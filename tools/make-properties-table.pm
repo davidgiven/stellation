@@ -11,7 +11,6 @@ local tokenaccessorshoutf = io.open(pm.arg[5], "wb")
 local tokenaccessorsccoutf = io.open(pm.arg[6], "wb")
 local definitionsoutf = io.open(pm.arg[7], "wb")
 local propertyaccessorshoutf = io.open(pm.arg[8], "wb")
-local propertyaccessorsccoutf = io.open(pm.arg[9], "wb")
 
 local function cname(n)
 	return string_upper(string_sub(n, 1, 1))..string_sub(n, 2)
@@ -140,8 +139,8 @@ end
 do
 	for name, data in pairs(properties) do
 		definitionsoutf:write(
-			'const Property _propdata_', name, ' =\n',
-			'\t{Datum::', data.type, ', Property::', data.scope, '};\n') 
+			'const Property _propdata_', name, ' = ',
+			'{Datum::', data.type, ', Property::', data.scope, '};\n') 
 			 
 	end
 	
@@ -216,16 +215,36 @@ end
 -- Write out the property accessors headers.
 
 do
-	for name in pairs(properties) do
-		propertyaccessorshoutf:write("LazyDatum ", cname(name), ";\n")
-	end
-end
-
--- Write out the property accessors initialisers.
-
-do
-	for name in pairs(properties) do
-		propertyaccessorsccoutf:write(cname(name), "(dbo, Hash::", cname(name), "),\n")
+	for name, class in pairs(classes) do
+		propertyaccessorshoutf:write(
+			'class ', cname(name), 'Properties\n',
+			'{\n',
+			'public:\n',
+			'\t', cname(name), 'Properties(DatabaseObject& dbo):'
+		)
+			
+		local first = true
+		for _, property in ipairs(class) do
+			if not first then
+				propertyaccessorshoutf:write(",\n\t\t")
+			else
+				propertyaccessorshoutf:write("\n\t\t")
+				first = false
+			end
+			
+			propertyaccessorshoutf:write(
+				cname(property.name),
+				"(dbo, Hash::", cname(property.name), ")")
+		end
+		propertyaccessorshoutf:write(
+			'\n',
+			'\t{}\n'
+		)
+		
+		for _, property in ipairs(class) do
+			propertyaccessorshoutf:write('\tLazyDatum ', cname(property.name), ';\n')
+		end
+		propertyaccessorshoutf:write('};\n')
 	end
 end
 
@@ -234,6 +253,5 @@ tokenaccessorshoutf:close()
 tokenaccessorsccoutf:close()
 definitionsoutf:close()
 propertyaccessorshoutf:close()
-propertyaccessorsccoutf:close()
 
 os.exit()

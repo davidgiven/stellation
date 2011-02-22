@@ -3,9 +3,9 @@
 
 #include "LazyDatum.h"
 #include "DatabaseObject.h"
-#include "Property.h"
+#include "property-accessors-h.h"
 
-class SObject : public noncopyable
+class SObject : public noncopyable, public SObjectProperties
 {
 public:
 	SObject(DatabaseObject& dbo);
@@ -27,8 +27,6 @@ public:
 public:
 	Datum& Get(Hash::Type key)
 	{ return _dbo.Get(key); }
-
-#include "property-accessors-h.h"
 
 private:
 	DatabaseObject& _dbo;

@@ -3,7 +3,7 @@
 
 #include "SObject.h"
 
-class SGalaxy : public SObject
+class SGalaxy : public SObject, public SGalaxyProperties
 {
 public:
 	SGalaxy(DatabaseObject& dbo);

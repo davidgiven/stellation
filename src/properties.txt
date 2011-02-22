@@ -7,6 +7,11 @@ owner              OBJECT         LOCAL
 class              TOKEN          LOCAL
 contents           OBJECTSET      LOCAL
 
+* SUniverse SObject
+
+galaxy             OBJECT         GLOBAL
+players            OBJECTSET      PRIVATE
+
 * SGalaxy SObject
 
 visibleStars       OBJECTSET      GLOBAL

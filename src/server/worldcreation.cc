@@ -1,5 +1,6 @@
 #include "globals.h"
 #include "Database.h"
+#include "SUniverse.h"
 #include "SGalaxy.h"
 #include "SStar.h"
 #include "utils.h"
@@ -44,8 +45,13 @@ static string generate_name()
 
 void CreateWorld()
 {
+	SUniverse universe(DBCreate());
+	universe.Initialise();
+
 	SGalaxy galaxy(DBCreate());
 	galaxy.Initialise();
+
+	universe.Galaxy = galaxy;
 
 	/* Create the appropriate number of names. */
 

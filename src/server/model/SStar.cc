@@ -2,6 +2,7 @@
 #include "SStar.h"
 
 SStar::SStar(DatabaseObject& dbo):
-	SObject(dbo)
+	SObject(dbo),
+	SStarProperties(dbo)
 {
 }
