@@ -1,0 +1,7 @@
+Stellation 3 server © 2011 David Given
+This program is highly experimental and not to be trusted. Here be dragons!
+
+Syntax: server [options] dbname
+Options:
+    -h --help      Show this text.
+    -c --create    Create a new database, rather than loading an existing one.

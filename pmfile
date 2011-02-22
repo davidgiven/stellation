@@ -3,6 +3,7 @@
 -- file in this distribution for the full text.
 
 include "tools/c.pm"
+include "tools/bin2c.pm"
 
 CEXTRAFLAGS = {
 	PARENT,
@@ -43,6 +44,15 @@ mycxxfile = cxxfile {
 	dynamicheaders = property_data
 }
 
+datafile = mycxxfile {
+	class = "datafile",
+	
+    bin2cxx {
+        symbol = "%SYMBOL%",
+        file "%FILE%"
+    }
+}
+	
 server_exe = cxxprogram {
 	CINCLUDES = {
 		PARENT,
@@ -52,6 +62,7 @@ server_exe = cxxprogram {
 	},
 	
 	mycxxfile "src/server/main.cc",
+	datafile { SYMBOL="help", FILE="src/server/help.txt" },
 	mycxxfile {
 		"src/server/properties.cc",
 		dynamicheaders = {property_data, make_gperf_hash}
