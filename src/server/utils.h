@@ -9,4 +9,6 @@ template<class T, int N> T RandomOf(T (&array)[N])
   return array[Random(N)];
 }
 
+extern double CurrentTime();
+
 #endif

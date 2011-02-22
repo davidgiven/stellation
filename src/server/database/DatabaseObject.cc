@@ -1,9 +1,11 @@
 #include "globals.h"
 #include "DatabaseObject.h"
 #include "Datum.h"
+#include "utils.h"
 
 DatabaseObject::DatabaseObject(int oid):
-	_oid(oid)
+	_oid(oid),
+	_whenChanged(CurrentTime())
 {
 }
 
@@ -23,3 +25,9 @@ Datum& DatabaseObject::Get(Hash::Type key)
 	}
 	return *(i->second);
 }
+
+void DatabaseObject::Dirty()
+{
+	_whenChanged = CurrentTime();
+}
+
