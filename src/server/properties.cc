@@ -45,7 +45,6 @@ namespace
 void InitialiseClass(SObject& object)
 {
 	Hash::Type type = object.GetClass();
-	printf("initing %s\n", Hash::StringFromHash(type));
 
 	assert(classInitialisationMap.find(type) != classInitialisationMap.end());
 	const ClassInitData* cid = &(classInitialisationMap.find(type)->second);
