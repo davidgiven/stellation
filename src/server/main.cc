@@ -48,6 +48,7 @@ static int handle_parameter(const string& param, const string& next)
 	}
 	else
 		syntaxerror();
+	return 0;
 }
 
 static void handle_file(const string& filename)
