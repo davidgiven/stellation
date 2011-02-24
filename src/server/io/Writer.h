@@ -6,11 +6,9 @@ class Writer
 public:
 	virtual ~Writer() {};
 	virtual void Write(const string& s) = 0;
-
-	void Write(Hash::Type t)
-	{
-		Write(Hash::StringFromHash(t));
-	}
+	void Write(int i);
+	void Write(double d);
+	void Write(Hash::Type t);
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 class DatabaseObject;
+class Writer;
 
 class Database : public noncopyable
 {
@@ -15,7 +16,7 @@ public:
 	DatabaseObject& Get(int oid);
 	DatabaseObject& Create();
 
-	void Save(std::ostream& stream);
+	void Save(Writer& stream);
 
 private:
 	iscalar<int, 1> _nextoid;

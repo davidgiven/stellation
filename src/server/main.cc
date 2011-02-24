@@ -5,8 +5,8 @@
 #include "Transport.h"
 #include "utils.h"
 #include "mainloop.h"
+#include "fileio.h"
 #include <iostream>
-#include <fstream>
 
 static string programname;
 static string dbname;
@@ -168,11 +168,7 @@ int main(int argc, const char* argv[])
 		Log() << "creating database";
 		CreateWorld();
 		Log() << "done database creation, saving new database";
-
-		{
-			std::ofstream ofs(dbname.c_str());
-			Database::GetInstance().Save(ofs);
-		}
+		SaveDatabaseToFile(dbname);
 		Log() << "finished save";
 	}
 

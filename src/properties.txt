@@ -4,6 +4,11 @@
 # Some extra tokens:
 
 + null
++ number
++ string
++ token
++ object
++ objectSet
 
 * SObject
 

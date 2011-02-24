@@ -1,13 +1,16 @@
 #ifndef READER_H
 #define READER_H
 
+#include "Hash.h"
+
 class Reader
 {
 public:
 	virtual ~Reader() {};
-	virtual Hash::Type ReadHash() = 0;
 	virtual string ReadString() = 0;
 	virtual bool IsEOF() const = 0;
+
+	Hash::Type ReadHash();
 };
 
 #endif

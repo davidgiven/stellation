@@ -2,6 +2,7 @@
 #include "Database.h"
 #include "DatabaseObject.h"
 #include "Property.h"
+#include "Writer.h"
 
 Database& Database::GetInstance()
 {
@@ -35,17 +36,16 @@ DatabaseObject& Database::Get(int oid)
 	return *(i->second);
 }
 
-void Database::Save(std::ostream& stream)
+void Database::Save(Writer& stream)
 {
-	stream << "Stellation 3 Dump File" << std::endl
-	       << "Version X.X" << std::endl;
+	stream.Write((int)_map.size());
 
 	for (DatabaseMap::const_iterator i = _map.begin(),
 			e = _map.end(); i != e; i++)
 	{
 		DatabaseObject& dbo = *(i->second);
 
-		stream << (int)dbo << std::endl;
+		stream.Write((int)dbo);
 
 		for (DatabaseObject::Map::const_iterator i = dbo.Begin(),
 				e = dbo.End(); i != e; i++)
@@ -53,42 +53,45 @@ void Database::Save(std::ostream& stream)
 			Hash::Type hash = i->first;
 			Datum& datum = *(i->second);
 
-			stream << Hash::StringFromHash(hash) << std::endl;
+			stream.Write(hash);
 
 			switch (datum.GetType())
 			{
 				case Datum::NUMBER:
-					stream << 'n' << (double)datum << std::endl;
+					stream.Write(Hash::Number);
+					stream.Write((double)datum);
 					break;
 
 				case Datum::STRING:
 				{
-					const string& s = datum;
-					stream << 's' << s.size() << std::endl;
-					stream << s << std::endl;
-
+					stream.Write(Hash::String);
+					stream.Write((string)datum);
 					break;
 				}
 
 				case Datum::OBJECT:
 				{
-					stream << 'o' << datum.GetObjectAsOid() << std::endl;
+					stream.Write(Hash::Object);
+					stream.Write(datum.GetObjectAsOid());
 					break;
 				}
 
 				case Datum::TOKEN:
 				{
-					stream << 't' << Hash::StringFromHash(datum) << std::endl;
+					stream.Write(Hash::Token);
+					stream.Write((Hash::Type)datum);
 					break;
 				}
 
 				case Datum::OBJECTSET:
 				{
-					stream << 'O' << datum.SetLength() << std::endl;
+					stream.Write(Hash::ObjectSet);
+					stream.Write(datum.SetLength());
+
 					for (Datum::ObjectSet::const_iterator i = datum.SetBegin(),
 							e = datum.SetEnd(); i != e; i++)
 					{
-						stream << *i << std::endl;
+						stream.Write(*i);
 					}
 
 					break;
@@ -98,9 +101,5 @@ void Database::Save(std::ostream& stream)
 					assert(false);
 			}
 		}
-
-		stream << "." << std::endl;
 	}
-
-	stream << "." << std::endl;
 }
