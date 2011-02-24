@@ -36,7 +36,7 @@ public:
 		int64_t v;
 		size_t s = sizeof(v);
 		_socket.getsockopt(ZMQ_RCVMORE, &v, &s);
-		_eof = (bool)!v;
+		_eof = !v;
 	}
 
 	Hash::Type ReadHash()
