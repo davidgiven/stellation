@@ -1,24 +1,52 @@
 #include "globals.h"
 #include "Database.h"
+#include "Log.h"
 #include "worldcreation.h"
+#include "mainloop.h"
+#include "utils.h"
 #include <iostream>
 
 static string programname;
 static string dbname;
+static set<string> zmqspec;
 static bool createdb = false;
 
-class Error
+Error::Error()
 {
-public:
-	Error()
-	{ std::cerr << programname << ": "; }
+	std::cerr << programname << ": ";
+}
 
-	~Error()
-	{ std::cerr << std::endl; exit(1); }
+Error::~Error()
+{
+	std::cerr << std::endl;
+	exit(1);
+}
 
-	template <class T> Error* operator << (const T& t)
-	{ std::cerr << t; return this; }
-};
+Error& Error::operator << (const string& s)
+{
+	std::cerr << s;
+	return *this;
+}
+
+static double boottime = CurrentTime();
+Log::Log()
+{
+	char buffer[16];
+	sprintf(buffer, "%.03f", CurrentTime() - boottime);
+
+	std::cout << buffer << ": ";
+}
+
+Log::~Log()
+{
+	std::cout << std::endl;
+}
+
+Log& Log::operator << (const string& s)
+{
+	std::cout << s;
+	return *this;
+}
 
 static void syntaxerror()
 {
@@ -45,6 +73,11 @@ static int handle_parameter(const string& param, const string& next)
 	{
 		createdb = true;
 		return 0;
+	}
+	else if ((param == "-l") || (param == "--listen"))
+	{
+		zmqspec.insert(next);
+		return 1;
 	}
 	else
 		syntaxerror();
@@ -111,10 +144,15 @@ int main(int argc, const char* argv[])
 	parse_parameters(argv + 1);
 
 	if (createdb)
+	{
+		Log() << "creating database";
 		CreateWorld();
+		Log() << "done database creation";
+	}
 
-	Database& db = Database::GetInstance();
-	db.Save(std::cout);
+	if (zmqspec.empty())
+		Error() << "you must specify at least one listener specification";
 
+	Mainloop(zmqspec);
 	return 0;
 }
