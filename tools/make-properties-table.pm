@@ -7,10 +7,8 @@ local table_insert = table.insert
 
 local inf = io.open(pm.arg[3])
 local tokensoutf = io.open(pm.arg[4], "wb")
-local tokenaccessorshoutf = io.open(pm.arg[5], "wb")
-local tokenaccessorsccoutf = io.open(pm.arg[6], "wb")
-local definitionsoutf = io.open(pm.arg[7], "wb")
-local propertyaccessorshoutf = io.open(pm.arg[8], "wb")
+local definitionsoutf = io.open(pm.arg[5], "wb")
+local propertyaccessorshoutf = io.open(pm.arg[6], "wb")
 
 local function cname(n)
 	return string_upper(string_sub(n, 1, 1))..string_sub(n, 2)
@@ -34,6 +32,11 @@ do
 		
 		["^%s*#"] = function()
 			-- line with comment, do nothing
+		end,
+		
+		["^%+%s*(%w+)%s*$"] = function(token)
+			-- just add this token to the table; not a property
+			tokens[token] = true
 		end,
 		
 		["^%s*%*%s*(%w+)%s*$"] = function(classname)
@@ -110,27 +113,6 @@ end
 do
 	for token in pairs(tokens) do
 		tokensoutf:write(token, '\n')
-	end
-end
-
--- Write out the token accessors.
-
-do
-	for name in pairs(tokens) do
-		tokenaccessorshoutf:write(
-			'static const Hash::Type ', cname(name), ';\n'
-		)
-	end
-end
-
--- Write out the token definitions.
-
-do
-	for name in pairs(tokens) do
-		tokenaccessorsccoutf:write(
-			'const Hash::Type Hash::', cname(name), ' = Hash::HashFromString("',
-				name, '", ', string_len(name), ');\n'
-		)
 	end
 end
 
@@ -249,8 +231,6 @@ do
 end
 
 tokensoutf:close()
-tokenaccessorshoutf:close()
-tokenaccessorsccoutf:close()
 definitionsoutf:close()
 propertyaccessorshoutf:close()
 

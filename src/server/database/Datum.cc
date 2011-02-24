@@ -7,7 +7,7 @@ Datum::Datum():
 	_type(UNSET),
 	_oid(0),
 	_number(0),
-	_token(NULL)
+	_token(Hash::Null)
 {
 }
 

@@ -7,7 +7,6 @@
 #include <boost/range/size.hpp>
 #include <vector>
 
-#include "token-accessors-cc.h"
 #include "hash.h"
 
 Hash::Type Hash::HashFromString(const char* s, int length)

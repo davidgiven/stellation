@@ -18,8 +18,6 @@ property_data = simple {
 	command = "./pm -f %in[1]% %in[2]% %out%",
 	outputs = {
 		"%U%/tokens",
-		"%U%/token-accessors-h.h",
-		"%U%/token-accessors-cc.h",
 		"%U%/property-tables.h",
 		"%U%/property-accessors-h.h"
 	},
@@ -38,9 +36,30 @@ make_gperf_hash = simple {
 	}
 }
 
+hash_data = simple {
+	command = "%in[1]% < %in[2]% > %out%",
+	outputs = {"%U%/hash-enum.h"},
+	
+	cxxprogram {
+		cxxfile 
+		{
+			"tools/make-hash-enum.cc",
+			dynamicheaders = make_gperf_hash
+		}
+	},
+	
+	ith {
+		i = 1,
+		property_data,
+	}
+}
+
 mycxxfile = cxxfile {
 	class = "mycxxfile",
-	dynamicheaders = property_data
+	dynamicheaders = {
+		property_data,
+		hash_data
+	}
 }
 
 datafile = mycxxfile {
@@ -61,10 +80,11 @@ server_exe = cxxprogram {
 	},
 	
 	mycxxfile "src/server/main.cc",
+	mycxxfile "src/server/mainloop.cc",
 	datafile { SYMBOL="help", FILE="src/server/help.txt" },
 	mycxxfile {
 		"src/server/properties.cc",
-		dynamicheaders = {property_data, make_gperf_hash}
+		dynamicheaders = {property_data, hash_data, make_gperf_hash}
 	},
 	mycxxfile "src/server/utils.cc",
 	mycxxfile "src/server/worldcreation.cc",

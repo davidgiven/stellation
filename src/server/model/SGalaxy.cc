@@ -11,14 +11,14 @@ SGalaxy::SGalaxy(DatabaseObject& dbo):
 void SGalaxy::OnAdditionOf(SObject& o)
 {
 	SStar star(o);
-	if (star.Brightness > 0.0)
+	if ((double)star.Brightness > 0.0)
 		VisibleStars.AddToSet(star);
 }
 
 void SGalaxy::OnRemovalOf(SObject& o)
 {
 	SStar star(o);
-	if (star.Brightness > 0.0)
+	if ((double)star.Brightness > 0.0)
 		VisibleStars.RemoveFromSet(star);
 }
 

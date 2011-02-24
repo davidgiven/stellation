@@ -4,13 +4,14 @@
 class Hash : private noncopyable
 {
 public:
-	typedef struct opaque* Type;
+	enum Type
+	{
+#include "hash-enum.h"
+	};
 
 	static Type HashFromString(const char* s, int length);
 	static Type HashFromString(const string& s);
 	static const char* StringFromHash(Type hash);
-
-#include "token-accessors-h.h"
 };
 
 #endif

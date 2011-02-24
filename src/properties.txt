@@ -1,6 +1,10 @@
 # This file defines all the information about the properties used by the
 # system.
 
+# Some extra tokens:
+
++ null
+
 * SObject
 
 owner              OBJECT         LOCAL
