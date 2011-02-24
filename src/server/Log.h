@@ -1,6 +1,8 @@
 #ifndef LOG_H
 #define LOG_H
 
+#include "Hash.h"
+
 class Error
 {
 public:
@@ -26,6 +28,8 @@ public:
 		return (*this << (string)t);
 	}
 
+	Log& operator << (Hash::Type t);
+	Log& operator << (int i);
 	Log& operator << (const string& t);
 };
 

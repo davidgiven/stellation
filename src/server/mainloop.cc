@@ -1,38 +1,30 @@
 #include "globals.h"
 #include "mainloop.h"
 #include "Log.h"
-#include <zmq.hpp>
+#include "Hash.h"
+#include "Reader.h"
+#include "Writer.h"
+#include "Transport.h"
+#include <deque>
 
-void Mainloop(const set<string>& zmqspec)
+class Subtransport : public Transport
 {
-	Log() << "initialising network connections";
+public:
+	Subtransport(const set<string>& endpoints):
+		Transport(endpoints)
+	{}
 
-	zmq::context_t zmqcontext(1);
-	zmq::socket_t zmqsocket(zmqcontext, ZMQ_REP);
-
-	for (set<string>::const_iterator i = zmqspec.begin(),
-			e = zmqspec.end(); i != e; i++)
+	void Request(Reader& reader, Writer& writer)
 	{
-		const string& endpoint = *i;
+		Hash::Type command = reader.ReadHash();
+		Log() << "received message " << command;
 
-		try
-		{
-			zmqsocket.bind(endpoint.c_str());
-		}
-		catch (const zmq::error_t& e)
-		{
-			Error() << "unable to bind to endpoint '" << endpoint << "': "
-					<< e.what();
-		}
+		writer.Write("Goodbyte, world!");
 	}
+};
 
-	Log() << "running...";
-	for (;;)
-	{
-		zmq::message_t message;
-		Log() << "waiting";
-		zmqsocket.recv(&message);
-		Log() << "got message";
-		zmqsocket.send(message, 0);
-	}
+void Mainloop(const set<string>& endpoints)
+{
+	Subtransport t(endpoints);
+	t.Mainloop();
 }

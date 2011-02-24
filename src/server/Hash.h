@@ -9,6 +9,7 @@ public:
 #include "hash-enum.h"
 	};
 
+	static Type ValidatedHashFromString(const char* s, int length);
 	static Type HashFromString(const char* s, int length);
 	static Type HashFromString(const string& s);
 	static const char* StringFromHash(Type hash);

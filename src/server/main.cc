@@ -2,9 +2,11 @@
 #include "Database.h"
 #include "Log.h"
 #include "worldcreation.h"
-#include "mainloop.h"
+#include "Transport.h"
 #include "utils.h"
+#include "mainloop.h"
 #include <iostream>
+#include <fstream>
 
 static string programname;
 static string dbname;
@@ -40,6 +42,19 @@ Log::Log()
 Log::~Log()
 {
 	std::cout << std::endl;
+}
+
+Log& Log::operator << (Hash::Type i)
+{
+	std::cout << "@" << i << "=" << Hash::StringFromHash(i);
+
+	return *this;
+}
+
+Log& Log::operator << (int i)
+{
+	std::cout << i;
+	return *this;
 }
 
 Log& Log::operator << (const string& s)
@@ -143,11 +158,22 @@ int main(int argc, const char* argv[])
 	programname = argv[0];
 	parse_parameters(argv + 1);
 
+	if (dbname.empty())
+	{
+		Error() << "you must specify a database file";
+	}
+
 	if (createdb)
 	{
 		Log() << "creating database";
 		CreateWorld();
-		Log() << "done database creation";
+		Log() << "done database creation, saving new database";
+
+		{
+			std::ofstream ofs(dbname.c_str());
+			Database::GetInstance().Save(ofs);
+		}
+		Log() << "finished save";
 	}
 
 	if (zmqspec.empty())

@@ -11,7 +11,7 @@ public:
 	LazyDatum(DatabaseObject& dbo, Hash::Type hash):
 		_dbo(dbo),
 		_hash(hash),
-		_datum(NULL)
+		_datum((Datum*) NULL)
 	{}
 
 private:

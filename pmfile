@@ -76,7 +76,8 @@ server_exe = cxxprogram {
 		PARENT,
 		"src/server",
 		"src/server/database",
-		"src/server/model"
+		"src/server/model",
+		"src/server/io"
 	},
 	
 	mycxxfile "src/server/main.cc",
@@ -91,6 +92,7 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/database/Database.cc",
 	mycxxfile "src/server/database/Datum.cc",
 	mycxxfile "src/server/database/DatabaseObject.cc",
+	mycxxfile "src/server/io/Transport.cc",
 	mycxxfile "src/server/model/SObject.cc",
 	mycxxfile "src/server/model/SUniverse.cc",
 	mycxxfile "src/server/model/SGalaxy.cc",

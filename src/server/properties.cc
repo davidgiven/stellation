@@ -9,6 +9,19 @@
 
 #include "hash.h"
 
+Hash::Type Hash::ValidatedHashFromString(const char* data, int length)
+{
+	string s(data, length);
+	Hash::Type hash = HashFromString(s);
+	if (((int)hash >= MIN_HASH_VALUE) && ((int)hash <= MAX_HASH_VALUE) &&
+		(s == propertyNameTable[hash]))
+	{
+		return hash;
+	}
+
+	return Hash::Null;
+}
+
 Hash::Type Hash::HashFromString(const char* s, int length)
 {
 	return (Hash::Type) propertyHash(s, length);
