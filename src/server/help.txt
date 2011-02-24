@@ -3,5 +3,8 @@ This program is highly experimental and not to be trusted. Here be dragons!
 
 Syntax: server [options] dbname
 Options:
-    -h --help      Show this text.
-    -c --create    Create a new database, rather than loading an existing one.
+    -h --help           Show this text.
+    -c --create         Create a new database, rather than loading an
+                        existing one.
+    -l --listen SPEC    Listen for server requests on ZMQ specification SPEC
+                        (this option is arbitrarily repeatable).
