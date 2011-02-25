@@ -45,10 +45,10 @@ static string generate_name()
 
 void CreateWorld()
 {
-	SUniverse universe(DBCreate());
+	SUniverse universe(DatabaseAllocateOid());
 	universe.Initialise();
 
-	SGalaxy galaxy(DBCreate());
+	SGalaxy galaxy(DatabaseAllocateOid());
 	galaxy.Initialise();
 
 	universe.Galaxy = galaxy;
@@ -88,7 +88,7 @@ void CreateWorld()
 	NamesSet::const_iterator nameIterator = names.begin();
 	for (int i = 0; i < NUMBER_OF_STARS; i++)
 	{
-		SStar star(DBCreate());
+		SStar star(DatabaseAllocateOid());
 		star.Initialise();
 
 		const pair<double, double>& l = (locationIterator++)->second;

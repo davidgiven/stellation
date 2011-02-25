@@ -2,8 +2,8 @@
 #include "SUniverse.h"
 #include "SStar.h"
 
-SUniverse::SUniverse(DatabaseObject& dbo):
-	SObject(dbo),
-	SUniverseProperties(dbo)
+SUniverse::SUniverse(Database::Type oid):
+	SObject(oid),
+	SUniverseProperties(oid)
 {
 }

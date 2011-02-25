@@ -5,9 +5,11 @@
 include "tools/c.pm"
 include "tools/bin2c.pm"
 
+--CXXCOMPILER = "clang++"
+
 CEXTRAFLAGS = {
 	PARENT,
-	"-Os"
+	"-O0"
 }
 
 CLIBRARIES = {
@@ -89,9 +91,8 @@ server_exe = cxxprogram {
 	},
 	mycxxfile "src/server/utils.cc",
 	mycxxfile "src/server/worldcreation.cc",
-	mycxxfile "src/server/database/Database.cc",
 	mycxxfile "src/server/database/Datum.cc",
-	mycxxfile "src/server/database/DatabaseObject.cc",
+	mycxxfile "src/server/database/Database.cc",
 	mycxxfile "src/server/io/readerwriter.cc",
 	mycxxfile "src/server/io/fileio.cc",
 	mycxxfile "src/server/io/Transport.cc",

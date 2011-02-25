@@ -6,7 +6,7 @@
 class SGalaxy : public SObject, public SGalaxyProperties
 {
 public:
-	SGalaxy(DatabaseObject& dbo);
+	SGalaxy(Database::Type oid);
 
 	Hash::Type GetClass()
 	{ return Hash::SGalaxy; }

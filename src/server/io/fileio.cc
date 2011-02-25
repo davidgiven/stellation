@@ -39,5 +39,5 @@ private:
 void SaveDatabaseToFile(const string& filename)
 {
 	FileWriter writer(filename);
-	Database::GetInstance().Save(writer);
+	DatabaseSave(writer);
 }

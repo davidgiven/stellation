@@ -9,6 +9,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <list>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 

@@ -2,9 +2,9 @@
 #include "SGalaxy.h"
 #include "SStar.h"
 
-SGalaxy::SGalaxy(DatabaseObject& dbo):
-	SObject(dbo),
-	SGalaxyProperties(dbo)
+SGalaxy::SGalaxy(Database::Type oid):
+	SObject(oid),
+	SGalaxyProperties(oid)
 {
 }
 

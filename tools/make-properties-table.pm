@@ -202,7 +202,7 @@ do
 			'class ', cname(name), 'Properties\n',
 			'{\n',
 			'public:\n',
-			'\t', cname(name), 'Properties(DatabaseObject& dbo):'
+			'\t', cname(name), 'Properties(Database::Type oid):'
 		)
 			
 		local first = true
@@ -216,7 +216,7 @@ do
 			
 			propertyaccessorshoutf:write(
 				cname(property.name),
-				"(dbo, Hash::", cname(property.name), ")")
+				"(oid, Hash::", cname(property.name), ")")
 		end
 		propertyaccessorshoutf:write(
 			'\n',

@@ -1,14 +1,41 @@
 #include "globals.h"
 #include "Database.h"
-#include "DatabaseObject.h"
 #include "Datum.h"
 
 Datum::Datum():
 	_type(UNSET),
-	_oid(0),
-	_number(0),
-	_token(Hash::Null)
+	_oid(Database::Null),
+	_kid(Hash::Null)
 {
+}
+
+Datum::Datum(Database::Type oid, Hash::Type kid):
+	_type(UNSET),
+	_oid(oid),
+	_kid(kid)
+{
+}
+
+Datum::Datum(const Datum& other):
+	_type(other._type),
+	_oid(other._oid),
+	_kid(other._kid),
+	_value(other._value)
+{
+}
+
+Datum& Datum::operator = (const Datum& other)
+{
+	_type = other._type;
+	_oid = other._oid;
+	_kid = other._kid;
+	_value = other._value;
+}
+
+void Datum::SetOidKid(Database::Type oid, Hash::Type kid)
+{
+	_oid = oid;
+	_kid = kid;
 }
 
 void Datum::CheckType(Type type) const
@@ -20,94 +47,140 @@ void Datum::SetType(Type type)
 {
 	assert(_type == UNSET);
 	_type = type;
+
+	switch (type)
+	{
+		case TOKEN:
+			_value = Hash::Null;
+			break;
+
+		case OBJECT:
+			_value = Database::Null;
+			break;
+
+		case NUMBER:
+			_value = 0.0;
+			break;
+
+		case STRING:
+			_value = "";
+			break;
+
+		case OBJECTSET:
+		{
+			ObjectSet empty;
+			_value = empty;
+			break;
+		}
+
+		case UNSET:
+			assert(false);
+	}
+}
+
+void Datum::Dirty()
+{
+	DatabaseDirty(_oid, _kid);
 }
 
 void Datum::SetNumber(double d)
 {
 	CheckType(NUMBER);
-	_number = d;
+	Dirty();
+	_value = d;
 }
 
 double Datum::GetNumber() const
 {
 	CheckType(NUMBER);
-	return _number;
+	return boost::get<double>(_value);
 }
 
 void Datum::SetString(const string& s)
 {
 	CheckType(STRING);
-	_string = s;
+	Dirty();
+	_value = s;
 }
 
 const string& Datum::GetString() const
 {
 	CheckType(STRING);
-	return _string;
+	return boost::get<string>(_value);
 }
 
-void Datum::SetObject(DatabaseObject& dbo)
+void Datum::SetObject(Database::Type oid)
 {
 	CheckType(OBJECT);
-	_oid = dbo;
+	Dirty();
+	_value = oid;
 }
 
-DatabaseObject& Datum::GetObject() const
+Database::Type Datum::GetObject() const
 {
 	CheckType(OBJECT);
-	return DBGet(_oid);
-}
-
-int Datum::GetObjectAsOid() const
-{
-	CheckType(OBJECT);
-	return _oid;
+	return boost::get<Database::Type>(_value);
 }
 
 void Datum::SetToken(Hash::Type token)
 {
 	CheckType(TOKEN);
-	_token = token;
+	Dirty();
+	_value = token;
 }
 
 Hash::Type Datum::GetToken() const
 {
 	CheckType(TOKEN);
-	return _token;
+	return boost::get<Hash::Type>(_value);
 }
 
-void Datum::AddToSet(DatabaseObject& dbo)
+void Datum::AddToSet(Database::Type oid)
 {
 	CheckType(OBJECTSET);
-	_objectset.insert(dbo);
+	Dirty();
+
+	ObjectSet& os = boost::get<ObjectSet>(_value);
+	os.insert(oid);
 }
 
-void Datum::RemoveFromSet(DatabaseObject& dbo)
+void Datum::RemoveFromSet(Database::Type oid)
 {
 	CheckType(OBJECTSET);
-	_objectset.erase(dbo);
+	Dirty();
+
+	ObjectSet& os = boost::get<ObjectSet>(_value);
+	os.erase(oid);
 }
 
-bool Datum::InSet(DatabaseObject& dbo)
+bool Datum::InSet(Database::Type oid)
 {
 	CheckType(OBJECTSET);
-	return (_objectset.find(dbo) != _objectset.end());
+
+	ObjectSet& os = boost::get<ObjectSet>(_value);
+	return (os.find(oid) != os.end());
 }
 
 int Datum::SetLength() const
 {
 	CheckType(OBJECTSET);
-	return _objectset.size();
+
+	const ObjectSet& os = boost::get<ObjectSet>(_value);
+	return os.size();
 }
 
 Datum::ObjectSet::const_iterator Datum::SetBegin() const
 {
 	CheckType(OBJECTSET);
-	return _objectset.begin();
+
+	const ObjectSet& os = boost::get<ObjectSet>(_value);
+	return os.begin();
 }
 
 Datum::ObjectSet::const_iterator Datum::SetEnd() const
 {
 	CheckType(OBJECTSET);
-	return _objectset.end();
+
+	const ObjectSet& os = boost::get<ObjectSet>(_value);
+	return os.end();
 }

@@ -44,6 +44,13 @@ Log::~Log()
 	std::cout << std::endl;
 }
 
+Log& Log::operator << (Database::Type i)
+{
+	std::cout << "#" << (int)i;
+
+	return *this;
+}
+
 Log& Log::operator << (Hash::Type i)
 {
 	std::cout << "@" << i << "=" << Hash::StringFromHash(i);
@@ -167,6 +174,7 @@ int main(int argc, const char* argv[])
 	{
 		Log() << "creating database";
 		CreateWorld();
+		DatabaseCommit();
 		Log() << "done database creation, saving new database";
 		SaveDatabaseToFile(dbname);
 		Log() << "finished save";

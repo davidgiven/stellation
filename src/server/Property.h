@@ -7,7 +7,9 @@ struct Property
 	{
 		GLOBAL,
 		LOCAL,
-		PRIVATE
+		PRIVATE,
+		SERVERONLY,
+		MEMORYONLY
 	};
 
 	Datum::Type type;

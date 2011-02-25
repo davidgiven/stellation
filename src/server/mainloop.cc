@@ -7,6 +7,21 @@
 #include "Transport.h"
 #include <deque>
 
+static void CreatePlayer(Reader& reader, Writer& writer)
+{
+	map<Hash::Type, string> data;
+
+	while (!reader.IsEOF())
+	{
+		Hash::Type k = reader.ReadHash();
+		string v = reader.ReadString();
+		data[k] = v;
+	}
+
+	Log() << "Request to create player "
+			<< data[Hash::PlayerName] << " of " << data[Hash::EmpireName];
+}
+
 class Subtransport : public Transport
 {
 public:
@@ -18,6 +33,16 @@ public:
 	{
 		Hash::Type command = reader.ReadHash();
 		Log() << "received message " << command;
+
+		switch (command)
+		{
+			case Hash::CreatePlayer:
+				CreatePlayer(reader, writer);
+				break;
+
+			default:
+				Log() << "malformed message!";
+		}
 
 		writer.Write("Goodbyte, world!");
 	}

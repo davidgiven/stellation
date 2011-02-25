@@ -6,7 +6,7 @@
 class SStar : public SObject, public SStarProperties
 {
 public:
-	SStar(DatabaseObject& dbo);
+	SStar(Database::Type oid);
 
 	Hash::Type GetClass()
 	{ return Hash::SStar; }

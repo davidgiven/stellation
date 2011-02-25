@@ -6,7 +6,7 @@
 class SUniverse : public SObject, public SUniverseProperties
 {
 public:
-	SUniverse(DatabaseObject& dbo);
+	SUniverse(Database::Type oid);
 
 	Hash::Type GetClass()
 	{ return Hash::SUniverse; }

@@ -1,38 +1,25 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include "Hash.h"
 class DatabaseObject;
 class Writer;
+class Datum;
 
-class Database : public noncopyable
+namespace Database
 {
-public:
-	static Database& GetInstance();
-
-public:
-	Database();
-	~Database();
-
-	DatabaseObject& Get(int oid);
-	DatabaseObject& Create();
-
-	void Save(Writer& stream);
-
-private:
-	iscalar<int, 1> _nextoid;
-
-	typedef map<int, shared_ptr<DatabaseObject> > DatabaseMap;
-	DatabaseMap _map;
-};
-
-static inline DatabaseObject& DBGet(int oid)
-{
-	return Database::GetInstance().Get(oid);
+	typedef struct opaque* Type;
+	const Type Null = NULL;
 }
 
-static inline DatabaseObject& DBCreate()
-{
-	return Database::GetInstance().Create();
-}
+extern Datum& DatabaseGet(Database::Type oid, Hash::Type kid);
+extern void DatabaseDirty(Database::Type oid, Hash::Type kid);
+extern void DatabaseCommit();
+extern void DatabaseRollback();
+extern double DatabaseLastChangedTime(Database::Type oid);
+
+extern Database::Type DatabaseAllocateOid();
+extern void DatabaseSave(Writer& writer);
 
 #endif
+

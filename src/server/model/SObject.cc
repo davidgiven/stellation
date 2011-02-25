@@ -1,12 +1,11 @@
 #include "globals.h"
-#include "DatabaseObject.h"
 #include "Datum.h"
 #include "SObject.h"
 #include "Property.h"
 
-SObject::SObject(DatabaseObject& dbo):
-	SObjectProperties(dbo),
-	_dbo(dbo)
+SObject::SObject(Database::Type oid):
+	SObjectProperties(oid),
+	_oid(oid)
 {
 }
 

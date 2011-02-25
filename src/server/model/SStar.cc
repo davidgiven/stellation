@@ -1,8 +1,8 @@
 #include "globals.h"
 #include "SStar.h"
 
-SStar::SStar(DatabaseObject& dbo):
-	SObject(dbo),
-	SStarProperties(dbo)
+SStar::SStar(Database::Type oid):
+	SObject(oid),
+	SStarProperties(oid)
 {
 }

@@ -1,38 +1,51 @@
 # This file defines all the information about the properties used by the
 # system.
 
-# Some extra tokens:
+# Used for serialisation.
 
-+ null
-+ number
-+ string
-+ token
-+ object
-+ objectSet
++ Null
++ Number
++ String
++ Token
++ Object
++ ObjectSet
+
+# Top-level commands.
+
++ CreatePlayer
++ Authenticate
++ GameOperation 
 
 * SObject
 
-owner              OBJECT         LOCAL
-class              TOKEN          LOCAL
-contents           OBJECTSET      LOCAL
+Owner              OBJECT         LOCAL
+Class              TOKEN          LOCAL
+Contents           OBJECTSET      LOCAL
+
+* SPlayer
+
+Email              STRING         PRIVATE
+PlayerName         STRING         PRIVATE
+EmpireName         STRING         PRIVATE
+Password           STRING         SERVERONLY
 
 * SUniverse SObject
 
-galaxy             OBJECT         GLOBAL
-players            OBJECTSET      PRIVATE
+Galaxy             OBJECT         GLOBAL
+Players            OBJECTSET      PRIVATE
 
 * SGalaxy SObject
 
-visibleStars       OBJECTSET      GLOBAL
+VisibleStars       OBJECTSET      GLOBAL
 
 * SStar SObject
 
-name               STRING         GLOBAL
-x                  NUMBER         GLOBAL
-y                  NUMBER         GLOBAL
-brightness         NUMBER         GLOBAL
-resourcesA         NUMBER         LOCAL
-resourcesO         NUMBER         LOCAL
-resourcesM         NUMBER         LOCAL
-asteroidsC         NUMBER         LOCAL
-asteroidsM         NUMBER         LOCAL
+Name               STRING         GLOBAL
+X                  NUMBER         GLOBAL
+Y                  NUMBER         GLOBAL
+Brightness         NUMBER         GLOBAL
+ResourcesA         NUMBER         LOCAL
+ResourcesO         NUMBER         LOCAL
+ResourcesM         NUMBER         LOCAL
+AsteroidsC         NUMBER         LOCAL
+AsteroidsM         NUMBER         LOCAL

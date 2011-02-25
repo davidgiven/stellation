@@ -15,6 +15,11 @@ void Writer::Write(Hash::Type t)
 	Write(Hash::StringFromHash(t));
 }
 
+void Writer::Write(Database::Type t)
+{
+	Write((int) t);
+}
+
 void Writer::Write(int i)
 {
 	Write(boost::lexical_cast<string>(i));

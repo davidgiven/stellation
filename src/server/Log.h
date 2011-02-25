@@ -2,6 +2,7 @@
 #define LOG_H
 
 #include "Hash.h"
+#include "Database.h"
 
 class Error
 {
@@ -29,6 +30,7 @@ public:
 	}
 
 	Log& operator << (Hash::Type t);
+	Log& operator << (Database::Type o);
 	Log& operator << (int i);
 	Log& operator << (const string& t);
 };
