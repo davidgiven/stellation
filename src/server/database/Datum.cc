@@ -73,6 +73,13 @@ void Datum::SetType(Type type)
 			break;
 		}
 
+		case OBJECTMAP:
+		{
+			ObjectMap empty;
+			_value = empty;
+			break;
+		}
+
 		case UNSET:
 			assert(false);
 	}
@@ -183,4 +190,57 @@ Datum::ObjectSet::const_iterator Datum::SetEnd() const
 
 	const ObjectSet& os = boost::get<ObjectSet>(_value);
 	return os.end();
+}
+
+void Datum::AddToMap(const string& key, Database::Type oid)
+{
+	CheckType(OBJECTMAP);
+	Dirty();
+
+	ObjectMap& om = boost::get<ObjectMap>(_value);
+	om[key] = oid;
+}
+
+void Datum::RemoveFromMap(const string& key)
+{
+	CheckType(OBJECTMAP);
+	Dirty();
+
+	ObjectMap& om = boost::get<ObjectMap>(_value);
+	om.erase(key);
+}
+
+Database::Type Datum::FetchFromMap(const string& key)
+{
+	CheckType(OBJECTMAP);
+
+	ObjectMap& om = boost::get<ObjectMap>(_value);
+	ObjectMap::const_iterator i = om.find(key);
+	if (i == om.end())
+		return Database::Null;
+	return i->second;
+}
+
+int Datum::MapLength() const
+{
+	CheckType(OBJECTMAP);
+
+	const ObjectMap& om = boost::get<ObjectMap>(_value);
+	return om.size();
+}
+
+Datum::ObjectMap::const_iterator Datum::MapBegin() const
+{
+	CheckType(OBJECTMAP);
+
+	const ObjectMap& om = boost::get<ObjectMap>(_value);
+	return om.begin();
+}
+
+Datum::ObjectMap::const_iterator Datum::MapEnd() const
+{
+	CheckType(OBJECTMAP);
+
+	const ObjectMap& om = boost::get<ObjectMap>(_value);
+	return om.end();
 }

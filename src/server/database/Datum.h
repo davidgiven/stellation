@@ -8,6 +8,10 @@
 class Datum : public noncopyable
 {
 public:
+	typedef set<Database::Type> ObjectSet;
+	typedef map<string, Database::Type> ObjectMap;
+
+public:
 	Datum();
 	Datum(Database::Type oid, Hash::Type name);
 	Datum(const Datum& other);
@@ -21,7 +25,8 @@ public:
 		OBJECT,
 		NUMBER,
 		STRING,
-		OBJECTSET
+		OBJECTSET,
+		OBJECTMAP
 	};
 
 	Database::Type GetOid() const
@@ -51,14 +56,19 @@ public:
 	Hash::Type GetToken() const;
 	void SetToken(Hash::Type t);
 
-	typedef set<Database::Type> ObjectSet;
-
 	void AddToSet(Database::Type o);
 	void RemoveFromSet(Database::Type o);
 	bool InSet(Database::Type o);
 	int SetLength() const;
 	ObjectSet::const_iterator SetBegin() const;
 	ObjectSet::const_iterator SetEnd() const;
+
+	void AddToMap(const string& key, Database::Type o);
+	void RemoveFromMap(const string& key);
+	Database::Type FetchFromMap(const string& key);
+	int MapLength() const;
+	ObjectMap::const_iterator MapBegin() const;
+	ObjectMap::const_iterator MapEnd() const;
 
 	Datum& operator = (Database::Type o)    { SetObject(o); return *this; }
 	Datum& operator = (double d)            { SetNumber(d); return *this; }
@@ -83,7 +93,9 @@ private:
 		double,
 		string,
 		Hash::Type,
-		ObjectSet> _value;
+		ObjectSet,
+		ObjectMap
+	> _value;
 };
 
 #endif

@@ -9,6 +9,7 @@
 + Token
 + Object
 + ObjectSet
++ ObjectMap
 
 # Top-level commands.
 
@@ -32,7 +33,7 @@ Password           STRING         SERVERONLY
 * SUniverse SObject
 
 Galaxy             OBJECT         GLOBAL
-Players            OBJECTSET      PRIVATE
+Players            OBJECTMAP      SERVERONLY
 
 * SGalaxy SObject
 

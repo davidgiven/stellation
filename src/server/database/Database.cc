@@ -112,6 +112,21 @@ class WriterVisitor
 					break;
 				}
 
+				case Datum::OBJECTMAP:
+				{
+					_writer.Write(Hash::ObjectMap);
+					_writer.Write(datum.MapLength());
+
+					for (Datum::ObjectMap::const_iterator i = datum.MapBegin(),
+							e = datum.MapEnd(); i != e; i++)
+					{
+						_writer.Write(i->first);
+						_writer.Write(i->second);
+					}
+
+					break;
+				}
+
 				default:
 					assert(false);
 			}
@@ -126,55 +141,3 @@ void DatabaseSave(Writer& writer)
 	WriterVisitor visitor(writer);
 	database.visit(visitor);
 }
-
-#if 0
-Database& Database::GetInstance()
-{
-	static Database instance;
-	return instance;
-}
-
-Database::Database()
-{
-}
-
-Database::~Database()
-{
-}
-
-int Database::AllocateOid()
-{
-	return _nextoid++;
-}
-
-Datum& Database::Get(int oid, Hash::Type key)
-{
-	shared_ptr<Datum> ptr = _map[oid][key];
-	if (!ptr)
-		ptr = new Datum(oid, key);
-	return *(ptr.get());
-}
-
-void Database::Save(Writer& stream)
-{
-	stream.Write((int)_map.size());
-
-	for (DatabaseMap::const_iterator i = _map.begin(),
-			e = _map.end(); i != e; i++)
-	{
-		DatabaseObject& dbo = *(i->second);
-
-		stream.Write((int)dbo);
-
-		for (DatabaseObject::Map::const_iterator i = dbo.Begin(),
-				e = dbo.End(); i != e; i++)
-		{
-			Hash::Type hash = i->first;
-			Datum& datum = *(i->second);
-
-			stream.Write(hash);
-
-		}
-	}
-}
-#endif
