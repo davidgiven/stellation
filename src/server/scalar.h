@@ -8,9 +8,14 @@ public:
 		_value(initialvalue)
 	{}
 
+	scalar(const scalar<T>& other):
+		_value(other._value)
+	{}
+
 	operator T&() { return _value; }
 	operator const T&() const { return _value; }
 
+	T operator = (const scalar<T>& other) { return _value = other._value; }
 	T operator = (T value) { return _value = value; }
 
 protected:
