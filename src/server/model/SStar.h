@@ -10,8 +10,6 @@ class SStar : public SObject, public SStarProperties
 
 public:
 	SStar(Database::Type oid);
-
-	void CalculateVisibleObjects(ObjectSet& visible, SPlayer* player);
 };
 
 #endif

@@ -26,6 +26,18 @@ SFleet* SPlayer::CreateFleet(SStar* location, const string& name)
 	return fleet;
 }
 
+static void add_with_contents(SObject::ObjectSet& visible, SObject* o)
+{
+	visible.insert(*o);
+
+	for (SObject::ObjectSet::const_iterator i = o->Contents.SetBegin(),
+			e = o->Contents.SetEnd(); i != e; i++)
+	{
+		SObject* child = SObject::Get(*i);
+		add_with_contents(visible, child);
+	}
+}
+
 void SPlayer::CalculateVisibleObjects(ObjectSet& visible)
 {
 	/* The player and the universe itself are visible. */
@@ -61,6 +73,6 @@ void SPlayer::CalculateVisibleObjects(ObjectSet& visible)
 			e = locationsWithAJumpship.end(); i != e; i++)
 	{
 		SStar* star = SStar::Get(*i);
-		star->CalculateVisibleObjects(visible, this);
+		add_with_contents(visible, star);
 	}
 }
