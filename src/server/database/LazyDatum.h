@@ -58,6 +58,18 @@ public:
 	ObjectMap::const_iterator MapBegin()    { return datum().MapBegin(); }
 	ObjectMap::const_iterator MapEnd()      { return datum().MapEnd(); }
 
+	template <class T>
+	bool operator == (const T& other)
+	{
+		return (const T&)(*this) == other;
+	}
+
+	template <class T>
+	bool operator != (const T& other)
+	{
+		return (const T&)(*this) != other;
+	}
+
 };
 
 #endif
