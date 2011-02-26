@@ -8,6 +8,10 @@
 class LazyDatum : public noncopyable
 {
 public:
+	typedef Datum::ObjectSet ObjectSet;
+	typedef Datum::ObjectMap ObjectMap;
+
+public:
 	LazyDatum(Database::Type oid, Hash::Type kid):
 		_oid(oid),
 		_kid(kid),
@@ -46,6 +50,14 @@ public:
 	void AddToSet(Database::Type o)         { datum().AddToSet(o); }
 	void RemoveFromSet(Database::Type o)    { datum().RemoveFromSet(o); }
 	bool InSet(Database::Type o)            { return datum().InSet(o); }
+
+	void AddToMap(const string& key, Database::Type o) { datum().AddToMap(key, o); }
+	void RemoveFromMap(const string& key)   { datum().RemoveFromMap(key); }
+	Database::Type FetchFromMap(const string& key) { return datum().FetchFromMap(key); }
+	int MapLength()                         { return datum().MapLength(); }
+	ObjectMap::const_iterator MapBegin()    { return datum().MapBegin(); }
+	ObjectMap::const_iterator MapEnd()      { return datum().MapEnd(); }
+
 };
 
 #endif
