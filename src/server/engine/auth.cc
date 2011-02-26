@@ -133,7 +133,7 @@ string CreateAuthenticationCookie(Reader& reader)
 	{
 		/* Existing entry --- update the cookie if it's too old. */
 
-		CookieRecord record = *recordi;
+		record = *recordi;
 		if (record.creationTime < (CurrentTime() - MAXIMUM_COOKIE_AGE))
 		{
 			record.cookie = create_cookie();
