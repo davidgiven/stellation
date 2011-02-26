@@ -126,6 +126,6 @@ void CreatePlayer(const string& playername,
 	SFleet* fleet = player->CreateFleet(star, playername + "'s starter fleet");
 	fleet->CreateJumpship();
 
-	Log() << "Created player " << (Database::Type)player << ": " << playername
+	Log() << "Created player " << player << ": " << playername
 			<< " of " << empirename;
 }
