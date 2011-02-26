@@ -37,6 +37,7 @@ public:
 	Datum::Type GetType()                   { return datum().GetType(); }
 	void SetType(Datum::Type type)          { return datum().SetType(type); }
 
+	Datum& operator = (SObject* o)          { return datum() = o; }
 	Datum& operator = (Database::Type o)    { return datum() = o; }
 	Datum& operator = (double d)            { return datum() = d; }
 	Datum& operator = (const string& s)     { return datum() = s; }
@@ -47,12 +48,18 @@ public:
 	operator const string& ()               { return datum(); }
 	operator Hash::Type ()                  { return datum(); }
 
+	void AddToSet(SObject* o)               { datum().AddToSet(o); }
 	void AddToSet(Database::Type o)         { datum().AddToSet(o); }
+	void RemoveFromSet(SObject* o)          { datum().RemoveFromSet(o); }
 	void RemoveFromSet(Database::Type o)    { datum().RemoveFromSet(o); }
+	bool InSet(SObject* o)                  { return datum().InSet(o); }
 	bool InSet(Database::Type o)            { return datum().InSet(o); }
 	Database::Type RandomSetMember()        { return datum().RandomSetMember(); }
+	ObjectSet::const_iterator SetBegin()    { return datum().SetBegin(); }
+	ObjectSet::const_iterator SetEnd()      { return datum().SetEnd(); }
 
 	void AddToMap(const string& key, Database::Type o) { datum().AddToMap(key, o); }
+	void AddToMap(const string& key, SObject* o) { datum().AddToMap(key, o); }
 	void RemoveFromMap(const string& key)   { datum().RemoveFromMap(key); }
 	Database::Type FetchFromMap(const string& key) { return datum().FetchFromMap(key); }
 	int MapLength()                         { return datum().MapLength(); }

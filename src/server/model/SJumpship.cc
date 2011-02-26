@@ -2,7 +2,7 @@
 #include "SJumpship.h"
 
 SJumpship::SJumpship(Database::Type oid):
-	SUnit(oid),
+	SShip(oid),
 	SJumpshipProperties(oid)
 {
 }

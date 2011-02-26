@@ -143,4 +143,6 @@ outf:write('\t\tdefault: throw Hash::ObjectDoesNotExist;\n')
 outf:write('\t}\n')
 outf:write('}\n')
 
+outf:close()
+
 os.exit(0)

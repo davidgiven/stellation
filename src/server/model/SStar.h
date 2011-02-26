@@ -2,14 +2,16 @@
 #define SSTAR_H
 
 #include "SObject.h"
+class SPlayer;
 
 class SStar : public SObject, public SStarProperties
 {
+	CLASSLINK(SStar)
+
 public:
 	SStar(Database::Type oid);
 
-	Hash::Type GetClass()
-	{ return Hash::SStar; }
+	void CalculateVisibleObjects(ObjectSet& visible, SPlayer* player);
 };
 
 #endif

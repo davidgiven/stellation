@@ -2,7 +2,7 @@
 #include "SPlayer.h"
 #include "engine.h"
 
-void GameOperation(SPlayer& player, Hash::Type command)
+void GameOperation(SPlayer* player, Hash::Type command)
 {
 	switch (command)
 	{

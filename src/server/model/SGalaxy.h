@@ -5,14 +5,13 @@
 
 class SGalaxy : public SObject, public SGalaxyProperties
 {
+	CLASSLINK(SGalaxy)
+
 public:
 	SGalaxy(Database::Type oid);
 
-	Hash::Type GetClass()
-	{ return Hash::SGalaxy; }
-
-	virtual void OnAdditionOf(SObject& o);
-	virtual void OnRemovalOf(SObject& o);
+	virtual void OnAdditionOf(SObject* o);
+	virtual void OnRemovalOf(SObject* o);
 };
 
 #endif

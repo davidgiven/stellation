@@ -9,6 +9,7 @@ local inf = io.open(pm.arg[3])
 local tokensoutf = io.open(pm.arg[4], "wb")
 local definitionsoutf = io.open(pm.arg[5], "wb")
 local propertyaccessorshoutf = io.open(pm.arg[6], "wb")
+local proxytableoutf = io.open(pm.arg[7], "wb")
 
 local function cname(n)
 	return string_upper(string_sub(n, 1, 1))..string_sub(n, 2)
@@ -230,8 +231,19 @@ do
 	end
 end
 
+-- Write out the proxy constructor.
+
+do
+	for name, _ in pairs(classes) do
+		proxytableoutf:write(
+			'case Hash::', name, ': return new ', name, '(oid);\n'
+		) 
+	end
+end
+
 tokensoutf:close()
 definitionsoutf:close()
 propertyaccessorshoutf:close()
+proxytableoutf:close()
 
 os.exit()

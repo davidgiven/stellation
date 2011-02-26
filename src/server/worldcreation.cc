@@ -48,13 +48,9 @@ static string generate_name()
 
 void CreateWorld()
 {
-	SUniverse universe(DatabaseAllocateOid());
-	universe.Initialise(Database::Null);
-
-	SGalaxy galaxy(DatabaseAllocateOid());
-	galaxy.Initialise(Database::Null);
-
-	universe.Galaxy = galaxy;
+	SUniverse* universe = SUniverse::Create(Database::Null);
+	SGalaxy* galaxy = SGalaxy::Create(Database::Null);
+	universe->Galaxy = galaxy;
 
 	/* Create the appropriate number of names. */
 
@@ -91,19 +87,18 @@ void CreateWorld()
 	NamesSet::const_iterator nameIterator = names.begin();
 	for (int i = 0; i < NUMBER_OF_STARS; i++)
 	{
-		SStar star(DatabaseAllocateOid());
-		star.Initialise(Database::Null);
+		SStar* star = SStar::Create(Database::Null);
 
 		const pair<double, double>& l = (locationIterator++)->second;
 
-		star.Name = *nameIterator++;
-		star.X = l.first;
-		star.Y = l.second;
-		star.Brightness = 1.0 + Random()*9.0;
-		star.AsteroidsC = Random(10) + 10;
-		star.AsteroidsM = Random(10) + 10;
+		star->Name = *nameIterator++;
+		star->X = l.first;
+		star->Y = l.second;
+		star->Brightness = 1.0 + Random()*9.0;
+		star->AsteroidsC = Random(10) + 10;
+		star->AsteroidsM = Random(10) + 10;
 
-		galaxy.Add(star);
+		galaxy->Add(star);
 	}
 }
 
@@ -111,26 +106,25 @@ void CreatePlayer(const string& playername,
 		const string& empirename, const string& email,
 		const string& password)
 {
-	SUniverse universe(Database::Universe);
-	if (universe.Players.FetchFromMap(playername))
+	SUniverse* universe = SUniverse::Get(Database::Universe);
+	if (universe->Players.FetchFromMap(playername))
 		throw Hash::PlayerAlreadyExists;
 
-	SGalaxy galaxy(universe.Galaxy);
+	SGalaxy* galaxy = SGalaxy::Get(universe->Galaxy);
 
-	SPlayer player(DatabaseAllocateOid());
-	player.Initialise(player);
-	player.PlayerName = playername;
-	player.EmpireName = empirename;
-	player.Email = email;
-	player.Password = password;
-	universe.Players.AddToMap(playername, player);
+	SPlayer* player = SPlayer::Create(Database::Null);
+	player->Owner = player;
 
-	SStar star(galaxy.VisibleStars.RandomSetMember());
+	player->PlayerName = playername;
+	player->EmpireName = empirename;
+	player->Email = email;
+	player->Password = password;
+	universe->Players.AddToMap(playername, player);
 
-	SFleet fleet(
-			player.CreateFleet(star, playername + "'s starter fleet"));
+	SStar* star = SStar::Get(galaxy->VisibleStars.RandomSetMember());
 
-	fleet.CreateJumpship();
+	SFleet* fleet = player->CreateFleet(star, playername + "'s starter fleet");
+	fleet->CreateJumpship();
 
 	Log() << "Created player " << (Database::Type)player << ": " << playername
 			<< " of " << empirename;

@@ -1,6 +1,7 @@
 #include "globals.h"
 #include "Database.h"
 #include "Datum.h"
+#include "SObject.h"
 #include "utils.h"
 #include <boost/variant.hpp>
 #include <algorithm>
@@ -119,6 +120,11 @@ const string& Datum::GetString() const
 	return boost::get<string>(_value);
 }
 
+void Datum::SetObject(SObject* o)
+{
+	SetObject(*o);
+}
+
 void Datum::SetObject(Database::Type oid)
 {
 	CheckType(OBJECT);
@@ -145,6 +151,11 @@ Hash::Type Datum::GetToken() const
 	return boost::get<Hash::Type>(_value);
 }
 
+void Datum::AddToSet(SObject* o)
+{
+	AddToSet(*o);
+}
+
 void Datum::AddToSet(Database::Type oid)
 {
 	CheckType(OBJECTSET);
@@ -154,6 +165,11 @@ void Datum::AddToSet(Database::Type oid)
 	os.insert(oid);
 }
 
+void Datum::RemoveFromSet(SObject* o)
+{
+	RemoveFromSet(*o);
+}
+
 void Datum::RemoveFromSet(Database::Type oid)
 {
 	CheckType(OBJECTSET);
@@ -161,6 +177,11 @@ void Datum::RemoveFromSet(Database::Type oid)
 
 	ObjectSet& os = boost::get<ObjectSet>(_value);
 	os.erase(oid);
+}
+
+bool Datum::InSet(SObject* o)
+{
+	return InSet(*o);
 }
 
 bool Datum::InSet(Database::Type oid)
@@ -203,6 +224,11 @@ Datum::ObjectSet::const_iterator Datum::SetEnd() const
 
 	const ObjectSet& os = boost::get<ObjectSet>(_value);
 	return os.end();
+}
+
+void Datum::AddToMap(const string& key, SObject* o)
+{
+	AddToMap(key, *o);
 }
 
 void Datum::AddToMap(const string& key, Database::Type oid)

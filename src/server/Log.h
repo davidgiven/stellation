@@ -5,6 +5,8 @@
 #include "Database.h"
 
 class SObject;
+class Datum;
+class LazyDatum;
 
 class Error
 {
@@ -27,13 +29,8 @@ public:
 	Log();
 	~Log();
 
-	template <class T> Log& operator << (T& t)
-	{
-		const string& s = t;
-		return (*this << s);
-	}
-
 	Log& operator << (Hash::Type t);
+	Log& operator << (SObject* o);
 	Log& operator << (Database::Type o);
 	Log& operator << (int i);
 	Log& operator << (const string& t);

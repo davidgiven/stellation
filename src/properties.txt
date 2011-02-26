@@ -63,19 +63,20 @@ Fleets             OBJECTMAP      PRIVATE
 * SFleet SObject
 
 FleetName          STRING         LOCAL
+JumpshipCount      NUMBER         LOCAL
 
 * SUnit SObject
 
 Mass               NUMBER         LOCAL
 Damage             NUMBER         LOCAL
 
-* SFactory SUnit
+#* SFactory SUnit
 
 * SShip SUnit
 
 * SJumpship SShip
 
-* SCargoship SShip
++ SCargoship
 
 * SUniverse SObject
 

@@ -1,15 +1,14 @@
 #ifndef SJUMPSHIP_H
 #define SJUMPSHIP_H
 
-#include "SUnit.h"
+#include "SShip.h"
 
-class SJumpship : public SUnit, public SJumpshipProperties
+class SJumpship : public SShip, public SJumpshipProperties
 {
+	CLASSLINK(SJumpship)
+
 public:
 	SJumpship(Database::Type oid);
-
-	Hash::Type GetClass()
-	{ return Hash::SJumpship; }
 };
 
 #endif

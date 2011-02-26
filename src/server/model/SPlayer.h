@@ -3,16 +3,18 @@
 
 #include "SObject.h"
 class SStar;
+class SFleet;
 
 class SPlayer : public SObject, public SPlayerProperties
 {
+	CLASSLINK(SPlayer)
+
 public:
 	SPlayer(Database::Type oid);
 
-	Hash::Type GetClass()
-	{ return Hash::SPlayer; }
+	SFleet* CreateFleet(SStar* location, const string& name);
 
-	Database::Type CreateFleet(SStar& location, const string& name);
+	void CalculateVisibleObjects(ObjectSet& visible);
 };
 
 #endif

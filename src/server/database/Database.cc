@@ -4,6 +4,7 @@
 #include "Property.h"
 #include "Writer.h"
 #include "Log.h"
+#include "SObject.h"
 #include "utils.h"
 #include "okvstore.h"
 
@@ -51,6 +52,8 @@ void DatabaseRollback()
 	Log() << "rolling back: "
 		  << changed << " changed values";
 	database.rollback();
+
+	SObject::FlushCache();
 }
 
 double DatabaseLastChangedTime(Database::Type oid)

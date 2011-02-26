@@ -8,17 +8,17 @@ SGalaxy::SGalaxy(Database::Type oid):
 {
 }
 
-void SGalaxy::OnAdditionOf(SObject& o)
+void SGalaxy::OnAdditionOf(SObject* o)
 {
-	SStar star(o);
-	if ((double)star.Brightness > 0.0)
+	SStar* star = SStar::Get(o);
+	if ((double)star->Brightness > 0.0)
 		VisibleStars.AddToSet(star);
 }
 
-void SGalaxy::OnRemovalOf(SObject& o)
+void SGalaxy::OnRemovalOf(SObject* o)
 {
-	SStar star(o);
-	if ((double)star.Brightness > 0.0)
+	SStar* star = SStar::Get(o);
+	if ((double)star->Brightness > 0.0)
 		VisibleStars.RemoveFromSet(star);
 }
 

@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "worldcreation.h"
 #include "Transport.h"
+#include "SObject.h"
 #include "utils.h"
 #include "mainloop.h"
 #include "fileio.h"
@@ -42,6 +43,11 @@ Log::Log()
 Log::~Log()
 {
 	std::cout << std::endl;
+}
+
+Log& Log::operator << (SObject* o)
+{
+	return (*this << *o);
 }
 
 Log& Log::operator << (Database::Type i)

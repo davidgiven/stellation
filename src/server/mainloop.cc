@@ -5,7 +5,6 @@
 #include "Reader.h"
 #include "Writer.h"
 #include "Transport.h"
-#include "SUniverse.h"
 #include "SPlayer.h"
 #include "fileio.h"
 #include "worldcreation.h"
@@ -57,9 +56,9 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 	double lastupdate = reader.ReadNumber();
 
 	Hash::Type gamecommand = reader.ReadHash();
-	SPlayer player(playeroid);
+	SPlayer* player = SPlayer::Get(playeroid);
 
-	Log() << "gamecommand " << gamecommand << " from " << player.PlayerName;
+	Log() << "gamecommand " << gamecommand << " from " << (string)player->PlayerName;
 
 	try
 	{
@@ -76,6 +75,13 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 		writer.Write(error);
 		DatabaseRollback();
 	}
+
+	/* Send database updates to the client (even on error). */
+
+	set<Database::Type> visible;
+	Log() << "calculating visible objects";
+	player->CalculateVisibleObjects(visible);
+	Log() << "found " << visible.size() << " objects";
 }
 
 class Subtransport : public Transport
@@ -129,7 +135,8 @@ public:
 			writer.Write(error);
 		}
 
-		SaveDatabaseToFile("snapshot.db");
+		Log() << "finished command, waiting...";
+		//SaveDatabaseToFile("snapshot.db");
 	}
 };
 

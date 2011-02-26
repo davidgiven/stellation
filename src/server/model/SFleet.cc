@@ -8,10 +8,21 @@ SFleet::SFleet(Database::Type oid):
 {
 }
 
-Database::Type SFleet::CreateJumpship()
+void SFleet::OnAdditionOf(SObject& o)
 {
-	SJumpship jumpship(DatabaseAllocateOid());
-	jumpship.Initialise(Owner);
+	if (o.GetClass() == Hash::SJumpship)
+		JumpshipCount = (double)JumpshipCount + 1;
+}
+
+void SFleet::OnRemovalOf(SObject& o)
+{
+	if (o.GetClass() == Hash::SJumpship)
+		JumpshipCount = (double)JumpshipCount - 1;
+}
+
+SJumpship* SFleet::CreateJumpship()
+{
+	SJumpship* jumpship = SJumpship::Create(Owner);
 
 	Add(jumpship);
 

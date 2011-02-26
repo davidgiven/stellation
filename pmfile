@@ -10,7 +10,7 @@ CXXCOMPILER = "g++-4.5"
 
 CEXTRAFLAGS = {
 	PARENT,
-	"-Os"
+	"-O0"
 }
 
 CLIBRARIES = {
@@ -22,7 +22,8 @@ property_data = simple {
 	outputs = {
 		"%U%/tokens",
 		"%U%/property-tables.h",
-		"%U%/property-accessors-h.h"
+		"%U%/property-accessors-h.h",
+		"%U%/proxy-table.h"
 	},
 	
 	file "tools/make-properties-table.pm",
@@ -121,6 +122,7 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/model/SStar.cc",
 	mycxxfile "src/server/model/SFleet.cc",
 	mycxxfile "src/server/model/SUnit.cc",
+	mycxxfile "src/server/model/SShip.cc",
 	mycxxfile "src/server/model/SJumpship.cc",
 	
 	install = pm.install("bin/server")

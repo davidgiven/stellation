@@ -1,8 +1,58 @@
 #include "globals.h"
 #include "Datum.h"
 #include "SObject.h"
+#include "SShip.h"
+#include "SPlayer.h"
+#include "SStar.h"
+#include "SGalaxy.h"
+#include "SUniverse.h"
+#include "SJumpship.h"
+#include "SFleet.h"
 #include "Property.h"
 #include "statics.h"
+
+static map<Database::Type, shared_ptr<SObject> > proxyCache;
+
+static SObject* create_proxy(Database::Type oid, Hash::Type classtoken)
+{
+	switch (classtoken)
+	{
+#include "proxy-table.h"
+		default:
+			throw Hash::ObjectDoesNotExist;
+	}
+}
+
+Hash::Type SObject::GetClass(Database::Type oid)
+{
+	return DatabaseGet(oid, Hash::Class);
+}
+
+SObject* SObject::Get(Database::Type oid)
+{
+	shared_ptr<SObject>& o = proxyCache[oid];
+	if (o)
+		return o.get();
+
+	o.reset(create_proxy(oid, GetClass(oid)));
+	return o.get();
+}
+
+SObject* SObject::Create(Hash::Type classtoken, Database::Type owner)
+{
+	Database::Type oid = DatabaseAllocateOid();
+	shared_ptr<SObject>& o = proxyCache[oid];
+	o.reset(create_proxy(oid, classtoken));
+
+	o->Initialise(owner);
+
+	return o.get();
+}
+
+void SObject::FlushCache()
+{
+	proxyCache.clear();
+}
 
 SObject::SObject(Database::Type oid):
 	SObjectProperties(oid),
@@ -16,29 +66,31 @@ void SObject::Initialise(Database::Type owner)
 	Owner = owner;
 }
 
-void SObject::Add(SObject& o)
+void SObject::Add(SObject* o)
 {
 	Datum& contents = Contents;
 	assert(!contents.InSet(o));
 
 	contents.AddToSet(o);
+	o->Location = this;
 	OnAdditionOf(o);
 }
 
-void SObject::Remove(SObject& o)
+void SObject::Remove(SObject* o)
 {
 	Datum& contents = Contents;
 	assert(contents.InSet(o));
 
 	OnRemovalOf(o);
 	contents.RemoveFromSet(o);
+	o->Location = Database::Null;
 }
 
-void SObject::OnAdditionOf(SObject& o)
+void SObject::OnAdditionOf(SObject* o)
 {
 }
 
-void SObject::OnRemovalOf(SObject& o)
+void SObject::OnRemovalOf(SObject* o)
 {
 }
 

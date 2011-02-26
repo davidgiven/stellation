@@ -5,11 +5,10 @@
 
 class SUniverse : public SObject, public SUniverseProperties
 {
+	CLASSLINK(SUniverse)
+
 public:
 	SUniverse(Database::Type oid);
-
-	Hash::Type GetClass()
-	{ return Hash::SUniverse; }
 };
 
 #endif
