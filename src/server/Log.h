@@ -32,7 +32,7 @@ public:
 	Log& operator << (Hash::Type t);
 	Log& operator << (SObject* o);
 	Log& operator << (Database::Type o);
-	Log& operator << (int i);
+	Log& operator << (double d);
 	Log& operator << (const string& t);
 };
 

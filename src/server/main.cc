@@ -64,9 +64,12 @@ Log& Log::operator << (Hash::Type i)
 	return *this;
 }
 
-Log& Log::operator << (int i)
+Log& Log::operator << (double d)
 {
-	std::cout << i;
+	char buffer[32];
+	sprintf(buffer, "%.10g", d);
+
+	std::cout << buffer;
 	return *this;
 }
 
