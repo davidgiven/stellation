@@ -139,7 +139,7 @@ do
 	definitionsoutf:write(
 		'};\n',
 		'const PropertyDataMap propertyDataMap(\n',
-		'\t_propdata, _propdata+boost::size(_propdata));\n'
+		'\t_propdata, _propdata+(sizeof(_propdata)/sizeof(*_propdata)));\n'
 	)
 end
 
@@ -170,7 +170,7 @@ do
 			definitionsoutf:write('\t\tNULL,\n')
 		end
 		definitionsoutf:write(
-			'\t\tboost::size(_proplist_', name, '),\n',
+			'\t\tsizeof(_proplist_', name, ') / sizeof(*_proplist_', name, '),\n',
 			'\t\t_proplist_', name, '\n'
 		)
 		
@@ -202,7 +202,7 @@ do
 			'class ', cname(name), 'Properties\n',
 			'{\n',
 			'public:\n',
-			'\t', cname(name), 'Properties(Database::Type oid):'
+			'\t', cname(name), 'Properties(Database::Type oid)'
 		)
 			
 		local first = true
@@ -210,7 +210,7 @@ do
 			if not first then
 				propertyaccessorshoutf:write(",\n\t\t")
 			else
-				propertyaccessorshoutf:write("\n\t\t")
+				propertyaccessorshoutf:write(":\n\t\t")
 				first = false
 			end
 			
