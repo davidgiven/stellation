@@ -3,7 +3,7 @@
 #include <boost/random.hpp>
 #include <sys/time.h>
 
-static boost::rand48 prng;
+static boost::rand48 prng(CurrentTime() * 1000.0);
 static boost::uniform_01<boost::rand48> fprng(prng);
 
 int Random(int range)
