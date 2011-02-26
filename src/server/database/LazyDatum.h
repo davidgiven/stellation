@@ -50,6 +50,7 @@ public:
 	void AddToSet(Database::Type o)         { datum().AddToSet(o); }
 	void RemoveFromSet(Database::Type o)    { datum().RemoveFromSet(o); }
 	bool InSet(Database::Type o)            { return datum().InSet(o); }
+	Database::Type RandomSetMember()        { return datum().RandomSetMember(); }
 
 	void AddToMap(const string& key, Database::Type o) { datum().AddToMap(key, o); }
 	void RemoveFromMap(const string& key)   { datum().RemoveFromMap(key); }

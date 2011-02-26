@@ -60,6 +60,7 @@ public:
 	void RemoveFromSet(Database::Type o);
 	bool InSet(Database::Type o);
 	int SetLength() const;
+	Database::Type RandomSetMember() const;
 	ObjectSet::const_iterator SetBegin() const;
 	ObjectSet::const_iterator SetEnd() const;
 

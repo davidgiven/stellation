@@ -1,7 +1,9 @@
 #include "globals.h"
 #include "Database.h"
 #include "Datum.h"
+#include "utils.h"
 #include <boost/variant.hpp>
+#include <algorithm>
 
 Datum::Datum():
 	_type(UNSET),
@@ -175,6 +177,16 @@ int Datum::SetLength() const
 
 	const ObjectSet& os = boost::get<ObjectSet>(_value);
 	return os.size();
+}
+
+Database::Type Datum::RandomSetMember() const
+{
+	CheckType(OBJECTSET);
+
+	const ObjectSet& os = boost::get<ObjectSet>(_value);
+	ObjectSet::const_iterator i = os.begin();
+	std::advance(i, Random(os.size()));
+	return *i;
 }
 
 Datum::ObjectSet::const_iterator Datum::SetBegin() const
