@@ -128,6 +128,8 @@ public:
 			writer.Write(tag);
 			writer.Write(error);
 		}
+
+		SaveDatabaseToFile("snapshot.db");
 	}
 };
 

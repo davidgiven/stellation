@@ -4,6 +4,7 @@
 #include "SGalaxy.h"
 #include "SStar.h"
 #include "SPlayer.h"
+#include "SFleet.h"
 #include "Log.h"
 #include "utils.h"
 #include <math.h>
@@ -114,6 +115,8 @@ void CreatePlayer(const string& playername,
 	if (universe.Players.FetchFromMap(playername))
 		throw Hash::PlayerAlreadyExists;
 
+	SGalaxy galaxy(universe.Galaxy);
+
 	SPlayer player(DatabaseAllocateOid());
 	player.Initialise(player);
 	player.PlayerName = playername;
@@ -121,6 +124,13 @@ void CreatePlayer(const string& playername,
 	player.Email = email;
 	player.Password = password;
 	universe.Players.AddToMap(playername, player);
+
+	SStar star(galaxy.VisibleStars.RandomSetMember());
+
+	SFleet fleet(
+			player.CreateFleet(star, playername + "'s starter fleet"));
+
+	fleet.CreateJumpship();
 
 	Log() << "Created player " << (Database::Type)player << ": " << playername
 			<< " of " << empirename;

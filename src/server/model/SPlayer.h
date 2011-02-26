@@ -2,6 +2,7 @@
 #define SPLAYER_H
 
 #include "SObject.h"
+class SStar;
 
 class SPlayer : public SObject, public SPlayerProperties
 {
@@ -10,6 +11,8 @@ public:
 
 	Hash::Type GetClass()
 	{ return Hash::SPlayer; }
+
+	Database::Type CreateFleet(SStar& location, const string& name);
 };
 
 #endif

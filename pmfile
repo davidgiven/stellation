@@ -5,6 +5,7 @@
 include "tools/c.pm"
 include "tools/bin2c.pm"
 
+CXXCOMPILER = "g++-4.5"
 --CXXCOMPILER = "clang++"
 
 CEXTRAFLAGS = {
@@ -104,6 +105,9 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/model/SPlayer.cc",
 	mycxxfile "src/server/model/SGalaxy.cc",
 	mycxxfile "src/server/model/SStar.cc",
+	mycxxfile "src/server/model/SFleet.cc",
+	mycxxfile "src/server/model/SUnit.cc",
+	mycxxfile "src/server/model/SJumpship.cc",
 	
 	install = pm.install("bin/server")
 }

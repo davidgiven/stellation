@@ -11,11 +11,25 @@
 + ObjectSet
 + ObjectMap
 
+# Object properties.
+
++ Name
++ Description
++ Mass
++ MaxDamage
++ BuildCostA
++ BuildCostO
++ BuildCostM
++ BuildTime
++ MaintenanceCostA
++ MaintenanceCostO
++ MaintenanceCostM
+
 # Top-level commands.
 
 + CreatePlayer
 + Authenticate
-+ GameOperation 
++ GameOperation
 
 # Game commands.
 
@@ -27,12 +41,14 @@
 + PlayerAlreadyExists
 + AuthenticationFailure
 + MalformedCommand
++ FleetAlreadyHasThisName
 
 * SObject
 
 Owner              OBJECT         LOCAL
 Class              TOKEN          LOCAL
 Contents           OBJECTSET      LOCAL
+Location           OBJECT         LOCAL
 
 * SPlayer SObject
 
@@ -40,6 +56,22 @@ Email              STRING         PRIVATE
 PlayerName         STRING         PRIVATE
 EmpireName         STRING         PRIVATE
 Password           STRING         SERVERONLY
+Fleets             OBJECTMAP      PRIVATE
+
+* SFleet SObject
+
+FleetName          STRING         LOCAL
+
+* SUnit SObject
+
+Mass               NUMBER         LOCAL
+Damage             NUMBER         LOCAL
+
+* SFactory SUnit
+
+* SShip SUnit
+
+* SJumpship SShip
 
 * SUniverse SObject
 
