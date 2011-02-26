@@ -6,6 +6,8 @@
 static boost::rand48 prng(CurrentTime() * 1000.0);
 static boost::uniform_01<boost::rand48> fprng(prng);
 
+static double canonicalTime = 1;
+
 int Random(int range)
 {
 	return prng() % range;
@@ -25,3 +27,14 @@ double CurrentTime()
 	t += (double)tv.tv_usec / 1e6;
 	return t;
 }
+
+void UpdateCanonicalTime()
+{
+	canonicalTime++;
+}
+
+double CurrentCanonicalTime()
+{
+	return canonicalTime;
+}
+

@@ -34,11 +34,6 @@ void Writer::Write(Database::Type t)
 	Write((int) t);
 }
 
-void Writer::Write(int i)
-{
-	Write(boost::lexical_cast<string>(i));
-}
-
 void Writer::Write(double d)
 {
 	Write(boost::lexical_cast<string>(d));

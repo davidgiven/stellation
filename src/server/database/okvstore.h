@@ -67,6 +67,26 @@ public:
 		}
 	}
 
+	/* Visit all values for a given object. */
+
+	template <class VISITOR> void visit(VISITOR& visitor, OBJECTTYPE& oid)
+	{
+		const Level2Map& l2 = _data[oid];
+
+		for (typename Level2Map::const_iterator j = l2.begin(),
+				e = l2.end(); j != e; j++)
+		{
+			const KEYTYPE& kid = j->first;
+			const VALUETYPE& value = j->second;
+
+			visitor(oid, kid, value);
+		}
+	}
+
+	/* Indicate that a value is about to become dirty. Important: call this
+	 * *before* you change it!
+	 */
+
 	void dirty(const OBJECTTYPE& oid, const KEYTYPE& kid)
 	{
 		const pair_type p(oid, kid);

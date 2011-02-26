@@ -39,10 +39,14 @@ public:
 
 	void SetOidKid(Database::Type oid, Hash::Type kid);
 
-	Type GetType() const
-	{ return _type; }
-
+	Type GetType() const { return _type; }
 	void SetType(Type type);
+
+	double LastChangeTime() const
+	{ return _lastChanged; }
+
+	bool ChangedSince(double t) const
+	{ return _lastChanged > t; }
 
 	void Dirty();
 
@@ -65,6 +69,7 @@ public:
 	void RemoveFromSet(SObject* o);
 	bool InSet(Database::Type o);
 	bool InSet(SObject* o);
+	void ClearSet();
 	int SetLength() const;
 	Database::Type RandomSetMember() const;
 	ObjectSet::const_iterator SetBegin() const;
@@ -89,6 +94,8 @@ public:
 	operator const string& () const         { return GetString(); }
 	operator Hash::Type () const            { return GetToken(); }
 
+	void Write(Writer& writer) const;
+
 private:
 	void CheckType(Type type) const;
 
@@ -96,6 +103,7 @@ private:
 	scalar<Type> _type;
 	scalar<Database::Type> _oid;
 	scalar<Hash::Type> _kid;
+	scalar<double> _lastChanged;
 
 	boost::variant<
 		Database::Type,

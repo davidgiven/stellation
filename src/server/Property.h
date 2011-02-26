@@ -16,6 +16,8 @@ struct Property
 	Type scope;
 };
 
+extern const Property& GetPropertyInfo(Hash::Type name);
+
 class SObject;
 extern void InitialiseClass(SObject& object);
 

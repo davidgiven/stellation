@@ -54,6 +54,7 @@ public:
 	void RemoveFromSet(Database::Type o)    { datum().RemoveFromSet(o); }
 	bool InSet(SObject* o)                  { return datum().InSet(o); }
 	bool InSet(Database::Type o)            { return datum().InSet(o); }
+	void ClearSet()                         { datum().ClearSet(); }
 	Database::Type RandomSetMember()        { return datum().RandomSetMember(); }
 	ObjectSet::const_iterator SetBegin()    { return datum().SetBegin(); }
 	ObjectSet::const_iterator SetEnd()      { return datum().SetEnd(); }

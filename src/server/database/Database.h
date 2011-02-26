@@ -5,6 +5,7 @@
 class DatabaseObject;
 class Writer;
 class Datum;
+class ObjectSet;
 
 namespace Database
 {
@@ -17,10 +18,13 @@ extern Datum& DatabaseGet(Database::Type oid, Hash::Type kid);
 extern void DatabaseDirty(Database::Type oid, Hash::Type kid);
 extern void DatabaseCommit();
 extern void DatabaseRollback();
-extern double DatabaseLastChangedTime(Database::Type oid);
 
 extern Database::Type DatabaseAllocateOid();
 extern void DatabaseSave(Writer& writer);
+
+extern void DatabaseWriteChangedDatums(Writer& writer,
+		Database::Type oid, bool owner,
+		double lastUpdate);
 
 #endif
 

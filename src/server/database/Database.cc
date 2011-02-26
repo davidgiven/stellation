@@ -9,7 +9,6 @@
 #include "okvstore.h"
 
 static okvstore<Database::Type, Hash::Type, Datum> database;
-static map<Database::Type, double> lastChanged;
 
 Database::Type DatabaseAllocateOid()
 {
@@ -30,7 +29,6 @@ Datum& DatabaseGet(Database::Type oid, Hash::Type kid)
 
 void DatabaseDirty(Database::Type oid, Hash::Type kid)
 {
-	lastChanged[oid] = CurrentTime();
 	database.dirty(oid, kid);
 }
 
@@ -56,11 +54,6 @@ void DatabaseRollback()
 	SObject::FlushCache();
 }
 
-double DatabaseLastChangedTime(Database::Type oid)
-{
-	return lastChanged[oid];
-}
-
 class WriterVisitor
 {
 	public:
@@ -70,69 +63,7 @@ class WriterVisitor
 
 		void operator () (Database::Type oid, Hash::Type kid, const Datum& datum)
 		{
-			_writer.Write(oid);
-			_writer.Write(kid);
-
-			switch (datum.GetType())
-			{
-				case Datum::NUMBER:
-					_writer.Write(Hash::Number);
-					_writer.Write((double)datum);
-					break;
-
-				case Datum::STRING:
-				{
-					_writer.Write(Hash::String);
-					_writer.Write((string)datum);
-					break;
-				}
-
-				case Datum::OBJECT:
-				{
-					_writer.Write(Hash::Object);
-					_writer.Write(datum.GetObject());
-					break;
-				}
-
-				case Datum::TOKEN:
-				{
-					_writer.Write(Hash::Token);
-					_writer.Write((Hash::Type)datum);
-					break;
-				}
-
-				case Datum::OBJECTSET:
-				{
-					_writer.Write(Hash::ObjectSet);
-					_writer.Write(datum.SetLength());
-
-					for (Datum::ObjectSet::const_iterator i = datum.SetBegin(),
-							e = datum.SetEnd(); i != e; i++)
-					{
-						_writer.Write(*i);
-					}
-
-					break;
-				}
-
-				case Datum::OBJECTMAP:
-				{
-					_writer.Write(Hash::ObjectMap);
-					_writer.Write(datum.MapLength());
-
-					for (Datum::ObjectMap::const_iterator i = datum.MapBegin(),
-							e = datum.MapEnd(); i != e; i++)
-					{
-						_writer.Write(i->first);
-						_writer.Write(i->second);
-					}
-
-					break;
-				}
-
-				default:
-					assert(false);
-			}
+			datum.Write(_writer);
 		}
 
 	private:
@@ -144,3 +75,42 @@ void DatabaseSave(Writer& writer)
 	WriterVisitor visitor(writer);
 	database.visit(visitor);
 }
+
+class ConditionalWriterVisitor
+{
+	public:
+		ConditionalWriterVisitor(Writer& writer, bool owner, double lastUpdate):
+			_writer(writer),
+			_owner(owner),
+			_lastUpdate(lastUpdate)
+		{ }
+
+		void operator () (Database::Type oid, Hash::Type kid, const Datum& datum)
+		{
+			if (datum.ChangedSince(_lastUpdate))
+			{
+				const Property& propertyInfo = GetPropertyInfo(kid);
+
+				if ((propertyInfo.scope == Property::GLOBAL) ||
+					(propertyInfo.scope == Property::LOCAL) ||
+					((propertyInfo.scope == Property::PRIVATE) && _owner))
+				{
+					datum.Write(_writer);
+				}
+			}
+		}
+
+	private:
+		Writer& _writer;
+		bool _owner;
+		double _lastUpdate;
+};
+
+void DatabaseWriteChangedDatums(Writer& writer,
+		Database::Type oid, bool owner,
+		double lastUpdate)
+{
+	ConditionalWriterVisitor visitor(writer, owner, lastUpdate);
+	database.visit(visitor, oid);
+}
+

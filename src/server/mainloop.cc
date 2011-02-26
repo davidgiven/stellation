@@ -10,6 +10,7 @@
 #include "worldcreation.h"
 #include "auth.h"
 #include "engine.h"
+#include "utils.h"
 #include <deque>
 
 static void create_player(const string& tag, Reader& reader, Writer& writer)
@@ -58,11 +59,35 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 	Hash::Type gamecommand = reader.ReadHash();
 	SPlayer* player = SPlayer::Get(playeroid);
 
-	Log() << "gamecommand " << gamecommand << " from " << (string)player->PlayerName;
+	Log() << "gamecommand " << gamecommand << " from " << (string)player->PlayerName
+			<< " last update time " << lastupdate;
 
 	try
 	{
 		GameOperation(player, gamecommand);
+
+		/* The operation succeeded. Recalculate the player's visible objects
+		 * list.
+		 */
+
+		Datum::ObjectSet newVisible;
+		Log() << "calculating visible objects";
+		player->CalculateVisibleObjects(newVisible);
+		Log() << "found " << newVisible.size() << " objects";
+
+		/* This is stupidly heavyweight, but it's the cleanest way to do it. */
+
+		Datum::ObjectSet oldVisible(player->VisibleObjects.SetBegin(),
+				player->VisibleObjects.SetEnd());
+		if (oldVisible != newVisible)
+		{
+			Log() << "visible object set changed!";
+
+			player->VisibleObjects.ClearSet();
+			for (Datum::ObjectSet::const_iterator i = newVisible.begin(),
+					e = newVisible.end(); i != e; i++)
+				player->VisibleObjects.AddToSet(*i);
+		}
 
 		writer.Write(tag);
 		writer.Write(Hash::OK);
@@ -78,10 +103,14 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 
 	/* Send database updates to the client (even on error). */
 
-	set<Database::Type> visible;
-	Log() << "calculating visible objects";
-	player->CalculateVisibleObjects(visible);
-	Log() << "found " << visible.size() << " objects";
+	writer.Write(CurrentCanonicalTime());
+
+	for (Datum::ObjectSet::const_iterator i = player->VisibleObjects.SetBegin(),
+			e = player->VisibleObjects.SetEnd(); i != e; i++)
+	{
+		Database::Type owner = DatabaseGet(*i, Hash::Owner);
+		DatabaseWriteChangedDatums(writer, *i, (owner == playeroid), lastupdate);
+	}
 }
 
 class Subtransport : public Transport
@@ -93,6 +122,8 @@ public:
 
 	void Request(Reader& reader, Writer& writer)
 	{
+		UpdateCanonicalTime();
+
 		string tag = reader.ReadString();
 
 		try
@@ -136,7 +167,7 @@ public:
 		}
 
 		Log() << "finished command, waiting...";
-		//SaveDatabaseToFile("snapshot.db");
+//		SaveDatabaseToFile("snapshot.db");
 	}
 };
 

@@ -59,6 +59,13 @@ namespace
 	#include "property-tables.h"
 }
 
+const Property& GetPropertyInfo(Hash::Type name)
+{
+	PropertyDataMap::const_iterator i = propertyDataMap.find(name);
+	assert(i != propertyDataMap.end());
+	return i->second;
+}
+
 void InitialiseClass(SObject& object)
 {
 	Hash::Type type = object.GetClass();

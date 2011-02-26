@@ -2,21 +2,25 @@
 #include "Database.h"
 #include "Datum.h"
 #include "SObject.h"
+#include "Writer.h"
 #include "utils.h"
+#include "mainloop.h"
 #include <boost/variant.hpp>
 #include <algorithm>
 
 Datum::Datum():
 	_type(UNSET),
 	_oid(Database::Null),
-	_kid(Hash::Null)
+	_kid(Hash::Null),
+	_lastChanged(CurrentCanonicalTime())
 {
 }
 
 Datum::Datum(Database::Type oid, Hash::Type kid):
 	_type(UNSET),
 	_oid(oid),
-	_kid(kid)
+	_kid(kid),
+	_lastChanged(CurrentCanonicalTime())
 {
 }
 
@@ -24,7 +28,8 @@ Datum::Datum(const Datum& other):
 	_type(other._type),
 	_oid(other._oid),
 	_kid(other._kid),
-	_value(other._value)
+	_value(other._value),
+	_lastChanged(other._lastChanged)
 {
 }
 
@@ -34,6 +39,9 @@ Datum& Datum::operator = (const Datum& other)
 	_oid = other._oid;
 	_kid = other._kid;
 	_value = other._value;
+	_lastChanged = other._lastChanged;
+
+	return *this;
 }
 
 void Datum::SetOidKid(Database::Type oid, Hash::Type kid)
@@ -92,6 +100,7 @@ void Datum::SetType(Type type)
 void Datum::Dirty()
 {
 	DatabaseDirty(_oid, _kid);
+	_lastChanged = CurrentCanonicalTime();
 }
 
 void Datum::SetNumber(double d)
@@ -192,6 +201,15 @@ bool Datum::InSet(Database::Type oid)
 	return (os.find(oid) != os.end());
 }
 
+void Datum::ClearSet()
+{
+	CheckType(OBJECTSET);
+	Dirty();
+
+	ObjectSet& os = boost::get<ObjectSet>(_value);
+	os.clear();
+}
+
 int Datum::SetLength() const
 {
 	CheckType(OBJECTSET);
@@ -282,4 +300,75 @@ Datum::ObjectMap::const_iterator Datum::MapEnd() const
 
 	const ObjectMap& om = boost::get<ObjectMap>(_value);
 	return om.end();
+}
+
+void Datum::Write(Writer& writer) const
+{
+	writer.Write(_oid);
+	writer.Write(_kid);
+
+	switch ((Datum::Type) _type)
+	{
+		case Datum::NUMBER:
+			writer.Write(Hash::Number);
+			writer.Write(GetNumber());
+			break;
+
+		case Datum::STRING:
+		{
+			writer.Write(Hash::String);
+			writer.Write(GetString());
+			break;
+		}
+
+		case Datum::OBJECT:
+		{
+			writer.Write(Hash::Object);
+			writer.Write(GetObject());
+			break;
+		}
+
+		case Datum::TOKEN:
+		{
+			writer.Write(Hash::Token);
+			writer.Write(GetToken());
+			break;
+		}
+
+		case Datum::OBJECTSET:
+		{
+			const ObjectSet& os = boost::get<ObjectSet>(_value);
+
+			writer.Write(Hash::ObjectSet);
+			writer.Write(os.size());
+
+			for (Datum::ObjectSet::const_iterator i = os.begin(),
+					e = os.end(); i != e; i++)
+			{
+				writer.Write(*i);
+			}
+
+			break;
+		}
+
+		case Datum::OBJECTMAP:
+		{
+			const ObjectMap& om = boost::get<ObjectMap>(_value);
+
+			writer.Write(Hash::ObjectMap);
+			writer.Write(om.size());
+
+			for (Datum::ObjectMap::const_iterator i = om.begin(),
+					e = om.end(); i != e; i++)
+			{
+				writer.Write(i->first);
+				writer.Write(i->second);
+			}
+
+			break;
+		}
+
+		default:
+			assert(false);
+	}
 }

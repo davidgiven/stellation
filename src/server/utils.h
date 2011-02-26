@@ -10,5 +10,7 @@ template<class T, int N> T RandomOf(T (&array)[N])
 }
 
 extern double CurrentTime();
+extern void UpdateCanonicalTime();
+extern double CurrentCanonicalTime();
 
 #endif

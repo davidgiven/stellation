@@ -10,6 +10,9 @@ void GameOperation(SPlayer* player, Hash::Type command)
 			/* Do nothing. */
 			break;
 
+		case Hash::ShutdownServer:
+			exit(0);
+
 		default:
 			throw Hash::MalformedCommand;
 	}
