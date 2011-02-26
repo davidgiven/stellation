@@ -12,9 +12,10 @@ public:
 	Error();
 	~Error();
 
-	template <class T> Error& operator << (const T& t)
+	template <class T> Error& operator << (T& t)
 	{
-		return (*this << (string)t);
+		const string& s = t;
+		return (*this << s);
 	}
 
 	Error& operator << (const string& t);
@@ -26,9 +27,10 @@ public:
 	Log();
 	~Log();
 
-	template <class T> Log& operator << (const T& t)
+	template <class T> Log& operator << (T& t)
 	{
-		return (*this << (string)t);
+		const string& s = t;
+		return (*this << s);
 	}
 
 	Log& operator << (Hash::Type t);
