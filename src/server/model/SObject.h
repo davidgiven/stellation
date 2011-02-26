@@ -15,7 +15,7 @@ public:
 	operator Database::Type () const
 	{ return _oid; }
 
-	virtual void Initialise();
+	virtual void Initialise(Database::Type owner);
 
 	void Add(SObject& o);
 	void Remove(SObject& o);

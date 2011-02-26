@@ -48,10 +48,10 @@ static string generate_name()
 void CreateWorld()
 {
 	SUniverse universe(DatabaseAllocateOid());
-	universe.Initialise();
+	universe.Initialise(Database::Null);
 
 	SGalaxy galaxy(DatabaseAllocateOid());
-	galaxy.Initialise();
+	galaxy.Initialise(Database::Null);
 
 	universe.Galaxy = galaxy;
 
@@ -91,7 +91,7 @@ void CreateWorld()
 	for (int i = 0; i < NUMBER_OF_STARS; i++)
 	{
 		SStar star(DatabaseAllocateOid());
-		star.Initialise();
+		star.Initialise(Database::Null);
 
 		const pair<double, double>& l = (locationIterator++)->second;
 
@@ -115,7 +115,7 @@ void CreatePlayer(const string& playername,
 		throw Hash::PlayerAlreadyExists;
 
 	SPlayer player(DatabaseAllocateOid());
-	player.Initialise();
+	player.Initialise(player);
 	player.PlayerName = playername;
 	player.EmpireName = empirename;
 	player.Email = email;

@@ -9,9 +9,10 @@ SObject::SObject(Database::Type oid):
 {
 }
 
-void SObject::Initialise()
+void SObject::Initialise(Database::Type owner)
 {
 	InitialiseClass(*this);
+	Owner = owner;
 }
 
 void SObject::Add(SObject& o)
