@@ -20,7 +20,7 @@ double Reader::ReadNumber()
 	}
 	catch (boost::bad_lexical_cast e)
 	{
-		return 0;
+		throw Hash::MalformedCommand;
 	}
 }
 

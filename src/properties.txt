@@ -25,7 +25,6 @@
 
 + OK
 + PlayerAlreadyExists
-+ PlayerDoesNotExist
 + AuthenticationFailure
 + MalformedCommand
 

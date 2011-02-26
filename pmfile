@@ -79,7 +79,8 @@ server_exe = cxxprogram {
 		"src/server",
 		"src/server/database",
 		"src/server/model",
-		"src/server/io"
+		"src/server/io",
+		"src/server/engine"
 	},
 	
 	mycxxfile "src/server/main.cc",
@@ -96,6 +97,7 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/io/readerwriter.cc",
 	mycxxfile "src/server/io/fileio.cc",
 	mycxxfile "src/server/io/Transport.cc",
+	mycxxfile "src/server/engine/auth.cc",
 	mycxxfile "src/server/model/SObject.cc",
 	mycxxfile "src/server/model/SUniverse.cc",
 	mycxxfile "src/server/model/SPlayer.cc",

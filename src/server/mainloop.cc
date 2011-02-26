@@ -9,6 +9,7 @@
 #include "SPlayer.h"
 #include "fileio.h"
 #include "worldcreation.h"
+#include "auth.h"
 #include <deque>
 
 static void CreatePlayer(Reader& reader)
@@ -38,20 +39,6 @@ static void CreatePlayer(Reader& reader)
 	CreatePlayer(playername, empirename, email, password);
 }
 
-static string Authenticate(Reader& reader)
-{
-	string playername = reader.ReadString();
-	if (!reader.IsEOF())
-		throw Hash::MalformedCommand;
-
-	SUniverse universe(Database::Universe);
-	Database::Type playeroid = universe.Players.FetchFromMap(playername);
-
-	Log() << "authenticating " << playername << " (who is " << playeroid << ")";
-
-	return "fnord";
-}
-
 class Subtransport : public Transport
 {
 public:
@@ -61,13 +48,14 @@ public:
 
 	void Request(Reader& reader, Writer& writer)
 	{
-		int tag = reader.ReadNumber();
-		Hash::Type command = reader.ReadHash();
-		Log() << "received message tag " << tag << " command: " << command;
+		string tag = reader.ReadString();
 
-		Hash::Type resultcode;
 		try
 		{
+			Hash::Type command = reader.ReadHash();
+			Log() << "received message tag " << tag << " command: " << command;
+
+			Hash::Type resultcode;
 			switch (command)
 			{
 				case Hash::CreatePlayer:
@@ -78,7 +66,7 @@ public:
 
 				case Hash::Authenticate:
 				{
-					string s = Authenticate(reader);
+					string s = CreateAuthenticationCookie(reader);
 					writer.Write(tag);
 					writer.Write(Hash::OK);
 					writer.Write(s);
