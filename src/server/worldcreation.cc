@@ -3,6 +3,8 @@
 #include "SUniverse.h"
 #include "SGalaxy.h"
 #include "SStar.h"
+#include "SPlayer.h"
+#include "Log.h"
 #include "utils.h"
 #include <math.h>
 #include <utility>
@@ -102,4 +104,24 @@ void CreateWorld()
 
 		galaxy.Add(star);
 	}
+}
+
+void CreatePlayer(const string& playername,
+		const string& empirename, const string& email,
+		const string& password)
+{
+	SUniverse universe(Database::Universe);
+	if (universe.Players.FetchFromMap(playername))
+		throw Hash::PlayerAlreadyExists;
+
+	SPlayer player(DatabaseAllocateOid());
+	player.Initialise();
+	player.PlayerName = playername;
+	player.EmpireName = empirename;
+	player.Email = email;
+	player.Password = password;
+	universe.Players.AddToMap(playername, player);
+
+	Log() << "Created player " << (Database::Type)player << ": " << playername
+			<< " of " << empirename;
 }

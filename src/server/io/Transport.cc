@@ -29,7 +29,11 @@ public:
 
 	void Read()
 	{
-		assert(!_eof);
+		if (_eof)
+		{
+			_message.rebuild();
+			return;
+		}
 
 		_socket.recv(&_message);
 

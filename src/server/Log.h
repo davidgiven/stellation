@@ -4,6 +4,8 @@
 #include "Hash.h"
 #include "Database.h"
 
+class SObject;
+
 class Error
 {
 public:

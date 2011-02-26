@@ -10,6 +10,7 @@ namespace Database
 {
 	typedef struct opaque* Type;
 	const Type Null = NULL;
+	const Type Universe = (Type) 1;
 }
 
 extern Datum& DatabaseGet(Database::Type oid, Hash::Type kid);

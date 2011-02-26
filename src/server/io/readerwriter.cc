@@ -7,7 +7,21 @@
 Hash::Type Reader::ReadHash()
 {
 	string s = ReadString();
-	return Hash::HashFromString(s);
+	return Hash::ValidatedHashFromString(s);
+}
+
+double Reader::ReadNumber()
+{
+	string s = ReadString();
+
+	try
+	{
+		return boost::lexical_cast<double>(s);
+	}
+	catch (boost::bad_lexical_cast e)
+	{
+		return 0;
+	}
 }
 
 void Writer::Write(Hash::Type t)

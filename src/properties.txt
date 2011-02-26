@@ -17,13 +17,25 @@
 + Authenticate
 + GameOperation 
 
+# Game commands.
+
++ Ping
+
+# Error codes.
+
++ OK
++ PlayerAlreadyExists
++ PlayerDoesNotExist
++ AuthenticationFailure
++ MalformedCommand
+
 * SObject
 
 Owner              OBJECT         LOCAL
 Class              TOKEN          LOCAL
 Contents           OBJECTSET      LOCAL
 
-* SPlayer
+* SPlayer SObject
 
 Email              STRING         PRIVATE
 PlayerName         STRING         PRIVATE

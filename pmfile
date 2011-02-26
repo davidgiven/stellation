@@ -29,7 +29,7 @@ property_data = simple {
 }
 		
 make_gperf_hash = simple {
-	command = "gperf -G -C -j1 -n -E -L ANSI-C -W propertyNameTable -H propertyHash -N propertyLookup %in% > %out%",
+	command = "gperf -m100 -G -C -n -E -L ANSI-C -W propertyNameTable -H propertyHash -N propertyLookup %in% > %out%",
 	outputs = {"%U%/hash.h"},
 	
 	ith {
@@ -98,6 +98,7 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/io/Transport.cc",
 	mycxxfile "src/server/model/SObject.cc",
 	mycxxfile "src/server/model/SUniverse.cc",
+	mycxxfile "src/server/model/SPlayer.cc",
 	mycxxfile "src/server/model/SGalaxy.cc",
 	mycxxfile "src/server/model/SStar.cc",
 	

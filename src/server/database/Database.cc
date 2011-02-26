@@ -12,7 +12,7 @@ static map<Database::Type, double> lastChanged;
 
 Database::Type DatabaseAllocateOid()
 {
-	static unsigned int i = 1;
+	static unsigned int i = (int) Database::Universe;
 	return (Database::Type) i++;
 }
 

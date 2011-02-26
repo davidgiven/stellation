@@ -22,6 +22,11 @@ Hash::Type Hash::ValidatedHashFromString(const char* data, int length)
 	return Hash::Null;
 }
 
+Hash::Type Hash::ValidatedHashFromString(const string& s)
+{
+	return ValidatedHashFromString(s.data(), s.size());
+}
+
 Hash::Type Hash::HashFromString(const char* s, int length)
 {
 	return (Hash::Type) propertyHash(s, length);
