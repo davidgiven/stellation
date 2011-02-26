@@ -1,0 +1,170 @@
+#!/usr/bin/lua
+require "zmq"
+
+local zmqcontext = zmq.init(1)
+local zmqsocket = zmqcontext:socket(zmq.REQ)
+
+-----------------------------------------------------------------------------
+--                                 DATABASE                                --
+-----------------------------------------------------------------------------
+
+local database = {}
+
+local function objref(oid)
+	oid = tonumber(oid)
+	local o = database[oid]
+	if not o then
+		o = {}
+		database[oid] = o
+	end
+	return o
+end
+	
+local type_handlers =
+{
+	Number = function(reader)
+		return tonumber(reader())
+	end,
+	
+	Object = function(reader)
+		return objref(reader())
+	end,
+	
+	Token = function(reader)
+		return reader()
+	end,
+	
+	String = function(reader)
+		return reader()
+	end,
+	
+	ObjectSet = function(reader)
+		local count = tonumber(reader())
+		local data = {}
+		
+		for i = 1, count do
+			local o = objref(reader())
+			data[#data+1] = o
+		end
+		
+		return data
+	end,
+	
+	ObjectMap = function(reader)
+		local count = tonumber(reader())
+		local data = {}
+		
+		for i = 1, count do
+			local key = reader()
+			local value = objref(reader())
+			data[key] = value
+		end
+		
+		return data
+	end
+}
+
+local function update_database(reader)
+	local count = 0
+	while true do
+		local oid = reader()
+		if not oid then
+			break
+		end
+		
+		local o = database[oid]
+		if not o then
+			o = {}
+			database[oid] = o
+		end
+		
+		local kid = reader()
+		local type = reader()
+		local handler = type_handlers[type]
+		if not handler then
+			error("unknown type in wire protocol '"..type.."'")
+		end
+		
+		o[kid] = handler(reader)
+		
+		count = count + 1
+	end
+	if (count > 0) then
+		print("(received delta of size "..count..")")
+	end
+end
+
+-----------------------------------------------------------------------------
+--                              ZMQ TRANSPORT                              --
+-----------------------------------------------------------------------------
+
+local tag = 1
+local function sendrecv(...)
+	local t = {tag, ...}
+	for i = 1, (#t-1) do
+		zmqsocket:send(t[i], zmq.SNDMORE)
+	end
+	zmqsocket:send(t[#t], zmq.NOMORE)
+	
+	t = {}
+	while true do
+		t[#t+1] = zmqsocket:recv()
+		if (zmqsocket:getopt(zmq.RCVMORE) == 0) then
+			break
+		end
+	end
+	
+	assert(tonumber(t[1]) == tag)
+	tag = tag + 1
+	table.remove(t, 1)
+	
+	return t
+end
+
+local canonicaltime = 0
+local authstring
+local function gameoperation(...)
+	t = sendrecv("GameOperation", authstring, canonicaltime, ...)
+	
+	canonicaltime = tonumber(t[2])
+	local result = t[1]
+	
+	local i = 3
+	local function reader()
+		local value = t[i]
+		i = i + 1
+		return value;
+	end
+	
+	update_database(reader)
+	
+	return t[1]
+end
+
+zmqsocket:connect("ipc:///tmp/g")
+local r = sendrecv(
+	"CreatePlayer",
+	"Email", "dg@cowlark.com",
+	"PlayerName", "Hjalfi",
+	"EmpireName", "The First Ones",
+	"Password", "fnord"
+	)
+
+r = sendrecv(
+	"Authenticate",
+	"Hjalfi",
+	"fnord"
+	)
+assert(r[1] == "OK")
+authstring = r[2]
+ 
+r = gameoperation(
+	"Ping"
+	)
+	
+r = gameoperation(
+	"Ping"
+	)
+	
+zmqsocket:close()
+zmqcontext:term()
