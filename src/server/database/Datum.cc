@@ -1,6 +1,7 @@
 #include "globals.h"
 #include "Database.h"
 #include "Datum.h"
+#include <boost/variant.hpp>
 
 Datum::Datum():
 	_type(UNSET),

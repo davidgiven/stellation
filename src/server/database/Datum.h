@@ -3,7 +3,7 @@
 
 #include "Hash.h"
 #include "Database.h"
-#include <boost/variant.hpp>
+#include <boost/variant/variant.hpp>
 
 class Datum : public noncopyable
 {
