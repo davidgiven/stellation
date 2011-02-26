@@ -10,9 +10,10 @@
 #include "fileio.h"
 #include "worldcreation.h"
 #include "auth.h"
+#include "engine.h"
 #include <deque>
 
-static void CreatePlayer(Reader& reader)
+static void create_player(const string& tag, Reader& reader, Writer& writer)
 {
 	string playername;
 	string empirename;
@@ -37,6 +38,44 @@ static void CreatePlayer(Reader& reader)
 	}
 
 	CreatePlayer(playername, empirename, email, password);
+
+	writer.Write(tag);
+	writer.Write(Hash::OK);
+	DatabaseCommit();
+}
+
+static void game_operation(const string& tag, Reader& reader, Writer& writer)
+{
+	string cookie = reader.ReadString();
+	Database::Type playeroid = CheckAuthenticationCookie(cookie);
+	if (!playeroid)
+	{
+		Log() << "received invalid auth cookie: " << playeroid;
+		throw Hash::AuthenticationFailure;
+	}
+
+	double lastupdate = reader.ReadNumber();
+
+	Hash::Type gamecommand = reader.ReadHash();
+	SPlayer player(playeroid);
+
+	Log() << "gamecommand " << gamecommand << " from " << player.PlayerName;
+
+	try
+	{
+		GameOperation(player, gamecommand);
+
+		writer.Write(tag);
+		writer.Write(Hash::OK);
+		DatabaseCommit();
+	}
+	catch (Hash::Type error)
+	{
+		Log() << "gameoperation threw " << tag;
+		writer.Write(tag);
+		writer.Write(error);
+		DatabaseRollback();
+	}
 }
 
 class Subtransport : public Transport
@@ -59,9 +98,7 @@ public:
 			switch (command)
 			{
 				case Hash::CreatePlayer:
-					CreatePlayer(reader);
-					writer.Write(tag);
-					writer.Write(Hash::OK);
+					create_player(tag, reader, writer);
 					break;
 
 				case Hash::Authenticate:
@@ -73,11 +110,15 @@ public:
 					break;
 				}
 
+				case Hash::GameOperation:
+				{
+					game_operation(tag, reader, writer);
+					break;
+				}
+
 				default:
 					throw Hash::MalformedCommand;
 			}
-
-			DatabaseCommit();
 		}
 		catch (Hash::Type error)
 		{

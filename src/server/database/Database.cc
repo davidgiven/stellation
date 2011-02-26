@@ -38,8 +38,8 @@ void DatabaseCommit()
 	int changed;
 	database.diagnostics(changed);
 
-	Log() << "committing: "
-		  << changed << " changed values";
+//	Log() << "committing: "
+//		  << changed << " changed values";
 	database.commit();
 }
 
