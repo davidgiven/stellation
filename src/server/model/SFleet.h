@@ -11,8 +11,8 @@ class SFleet : public SObject, public SFleetProperties
 public:
 	SFleet(Database::Type oid);
 
-	void OnAdditionOf(SObject& o);
-	void OnRemovalOf(SObject& o);
+	void OnAdditionOf(SObject* o);
+	void OnRemovalOf(SObject* o);
 
 	SJumpship* CreateJumpship();
 };
