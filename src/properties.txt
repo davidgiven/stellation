@@ -11,7 +11,7 @@
 + ObjectSet
 + ObjectMap
 
-# Object properties.
+# Object statics.
 
 + Name
 + Description
@@ -29,6 +29,7 @@
 
 + CreatePlayer
 + Authenticate
++ GetStatic
 + GameOperation
 
 # Game commands.
@@ -42,6 +43,7 @@
 + AuthenticationFailure
 + MalformedCommand
 + FleetAlreadyHasThisName
++ ObjectDoesNotExist
 
 * SObject
 
@@ -72,6 +74,8 @@ Damage             NUMBER         LOCAL
 * SShip SUnit
 
 * SJumpship SShip
+
+* SCargoship SShip
 
 * SUniverse SObject
 

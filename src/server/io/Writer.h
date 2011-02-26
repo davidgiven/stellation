@@ -1,6 +1,9 @@
 #ifndef WRITER_H
 #define WRITER_H
 
+#include "Database.h"
+#include "Hash.h"
+
 class Writer
 {
 public:

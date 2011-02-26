@@ -23,6 +23,9 @@ public:
 	virtual void OnAdditionOf(SObject& o);
 	virtual void OnRemovalOf(SObject& o);
 
+	double GetNumberStatic(Hash::Type kid);
+	string GetStringStatic(Hash::Type kid);
+
 public:
 	Datum& Get(Hash::Type key)
 	{ return DatabaseGet(_oid, key); }

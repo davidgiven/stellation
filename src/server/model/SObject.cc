@@ -2,6 +2,7 @@
 #include "Datum.h"
 #include "SObject.h"
 #include "Property.h"
+#include "statics.h"
 
 SObject::SObject(Database::Type oid):
 	SObjectProperties(oid),
@@ -39,4 +40,14 @@ void SObject::OnAdditionOf(SObject& o)
 
 void SObject::OnRemovalOf(SObject& o)
 {
+}
+
+double SObject::GetNumberStatic(Hash::Type kid)
+{
+	return ::GetNumberStatic(GetClass(), kid);
+}
+
+string SObject::GetStringStatic(Hash::Type kid)
+{
+	return ::GetStringStatic(GetClass(), kid);
 }

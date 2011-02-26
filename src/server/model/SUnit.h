@@ -10,6 +10,8 @@ public:
 
 	Hash::Type GetClass()
 	{ return Hash::SUnit; }
+
+	void Initialise(Database::Type owner);
 };
 
 #endif
