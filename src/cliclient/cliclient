@@ -1,20 +1,42 @@
 #!/usr/bin/lua
+local string_gmatch = string.gmatch
+
 require "zmq"
 
 local zmqcontext = zmq.init(1)
 local zmqsocket = zmqcontext:socket(zmq.REQ)
 
 -----------------------------------------------------------------------------
+--                                   MISC                                  --
+-----------------------------------------------------------------------------
+
+local function Error(...)
+	io.stderr:write("Error: ")
+	io.stderr:write(...)
+	io.stderr:write("\n")
+	os.exit()
+end
+
+local function Argify(s)
+	local t = {}
+	for w in string_gmatch(s, "([^%s]+)") do
+		t[#t+1] = w
+	end
+	return t
+end
+
+-----------------------------------------------------------------------------
 --                                 DATABASE                                --
 -----------------------------------------------------------------------------
 
 local database = {}
+local playeroid
 
 local function objref(oid)
 	oid = tonumber(oid)
 	local o = database[oid]
 	if not o then
-		o = {}
+		o = {_oid = oid}
 		database[oid] = o
 	end
 	return o
@@ -44,7 +66,7 @@ local type_handlers =
 		
 		for i = 1, count do
 			local o = objref(reader())
-			data[#data+1] = o
+			data[o] = true
 		end
 		
 		return data
@@ -67,16 +89,12 @@ local type_handlers =
 local function update_database(reader)
 	local count = 0
 	while true do
-		local oid = reader()
+		local oid = tonumber(reader())
 		if not oid then
 			break
 		end
 		
-		local o = database[oid]
-		if not o then
-			o = {}
-			database[oid] = o
-		end
+		local o = objref(oid)
 		
 		local kid = reader()
 		local type = reader()
@@ -90,7 +108,7 @@ local function update_database(reader)
 		count = count + 1
 	end
 	if (count > 0) then
-		print("(received delta of size "..count..")")
+		print("[received delta of size "..count.."]")
 	end
 end
 
@@ -99,8 +117,10 @@ end
 -----------------------------------------------------------------------------
 
 local tag = 1
-local function sendrecv(...)
+local function RawCommand(...)
 	local t = {tag, ...}
+	io.stdout:write("[out: ", #t)
+	io.stdout:flush()
 	for i = 1, (#t-1) do
 		zmqsocket:send(t[i], zmq.SNDMORE)
 	end
@@ -114,6 +134,9 @@ local function sendrecv(...)
 		end
 	end
 	
+	io.stdout:write(" in: ", #t, "]\n")
+	io.stdout:flush()
+	
 	assert(tonumber(t[1]) == tag)
 	tag = tag + 1
 	table.remove(t, 1)
@@ -123,8 +146,8 @@ end
 
 local canonicaltime = 0
 local authstring
-local function gameoperation(...)
-	t = sendrecv("GameOperation", authstring, canonicaltime, ...)
+local function GameCommand(...)
+	t = RawCommand("GameOperation", authstring, canonicaltime, ...)
 	
 	canonicaltime = tonumber(t[2])
 	local result = t[1]
@@ -141,30 +164,144 @@ local function gameoperation(...)
 	return t[1]
 end
 
-zmqsocket:connect("ipc:///tmp/g")
-local r = sendrecv(
-	"CreatePlayer",
-	"Email", "dg@cowlark.com",
-	"PlayerName", "Hjalfi",
-	"EmpireName", "The First Ones",
-	"Password", "fnord"
-	)
+-----------------------------------------------------------------------------
+--                                COMMANDS                                 --
+-----------------------------------------------------------------------------
 
-r = sendrecv(
-	"Authenticate",
-	"Hjalfi",
-	"fnord"
-	)
-assert(r[1] == "OK")
+local function command_x(oid)
+	oid = tonumber(oid)
+	print("Object #"..oid)
+	
+	local o = database[oid]
+	if not o then
+		print("  No data on object!")
+		return
+	end
+	
+	if o.Name then
+		print("  "..o.Class..": "..o.Name)
+	else
+		print("  "..o.Class)
+	end
+	
+	local keys = {}
+	for k, _ in pairs(o) do
+		if (k ~= "_oid") then
+			keys[#keys+1] = k
+		end
+	end
+	
+	for _, k in ipairs(keys) do
+		local v = o[k]
+		local s = v
+		
+		if (type(v) == "table") then
+			local t = v._oid
+			if t then
+				s = "#"..t
+			else
+				local ss = {}
+				for kk, vv in pairs(v) do
+					if (vv == true) then
+						ss[#ss+1] = '#'..kk._oid
+					else
+						ss[#ss+1] = '"'..kk..'"=#'..vv._oid
+					end
+					if (#ss == 10) then
+						ss[#ss+1] = "..."
+						break
+					end
+				end
+				s = "["..table.concat(ss, " ").."]"
+			end
+		end
+		
+		print("    "..k..": "..s)
+	end
+end
+
+local function command_ls()
+	local player = database[playeroid]
+	print("Player #"..playeroid..": "..player.PlayerName.." of "..player.EmpireName)
+	
+	for name, fleet in pairs(player.Fleets) do
+		if (name ~= "_oid") then
+			print("  Fleet #"..(fleet._oid)..": "..name)
+			
+			local location = fleet.Location
+			print("    Location: #"..location._oid.." ("..location.Name..")")
+			
+			for unit in pairs(fleet.Contents) do
+				if (unit ~= "_oid") then
+					print("      "..unit.Class.." #"..unit._oid)
+				end
+			end
+		end
+	end
+end
+
+-----------------------------------------------------------------------------
+--                              COMMAND LINE                               --
+-----------------------------------------------------------------------------
+
+local server = arg[1]
+local username = arg[2]
+local password = arg[3]
+local r
+
+if not password then
+	Error("you must specify a server name, username and password")
+end
+
+print("Connecting...")
+zmqsocket:connect(server)
+
+-- Attempt to authenticate the player.
+
+print("Authenticating...")
+r = RawCommand("Authenticate", username, password)
+if (r[1] ~= "OK") then
+	print("Failed. Attempting to create test player...")
+	
+	r = RawCommand("CreatePlayer",
+		"PlayerName", username,
+		"Password", password,
+		"Email", "test@invalid.com",
+		"EmpireName", "The Testing Empire")
+	if (r[1] ~= "OK") then
+		print("Unable to create test player: "..r[1])
+		os.exit()
+	end
+	
+	print("Re-authenticating...")
+	r = RawCommand("Authenticate", username, password)
+	if (r[1] ~= "OK") then
+		print("Unable to authenticate new player, giving up.")
+		os.exit()
+	end
+end
+
 authstring = r[2]
- 
-r = gameoperation(
-	"Ping"
-	)
+playeroid = tonumber(r[3])
+print("Success. Doing initial database sync...")
+
+GameCommand("Ping")
+
+print()
+command_ls()
+
+while true do
+	io.stdout:write("> ")
+	io.stdout:flush()
+	local command = io.stdin:read("*l")
+	command = Argify(command)
 	
-r = gameoperation(
-	"Ping"
-	)
-	
-zmqsocket:close()
-zmqcontext:term()
+	if (command[1] == "x") then
+		command_x(unpack(command, 2))
+	elseif (command[1] == "ls") then
+		command_ls(unpack(command, 2))
+	else
+		r = GameCommand(unpack(command))
+		print("Result from server: "..r)
+	end
+end
