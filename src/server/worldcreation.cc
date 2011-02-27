@@ -98,7 +98,8 @@ void CreateWorld()
 		star->AsteroidsC = Random(10) + 10;
 		star->AsteroidsM = Random(10) + 10;
 
-		galaxy->Add(star);
+		galaxy->AllLocations.AddToSet(star);
+		galaxy->VisibleStars.AddToSet(star);
 	}
 }
 

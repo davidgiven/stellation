@@ -52,6 +52,28 @@ Owner              OBJECT         LOCAL
 Class              TOKEN          LOCAL
 Contents           OBJECTSET      LOCAL
 Location           OBJECT         LOCAL
+Name               STRING         LOCAL
+
+* SUniverse SObject
+
+Galaxy             OBJECT         GLOBAL
+Players            OBJECTMAP      SERVERONLY
+
+* SGalaxy SObject
+
+AllLocations       OBJECTSET      SERVERONLY
+VisibleStars       OBJECTSET      GLOBAL
+
+* SStar SObject
+
+X                  NUMBER         GLOBAL
+Y                  NUMBER         GLOBAL
+Brightness         NUMBER         GLOBAL
+ResourcesA         NUMBER         LOCAL
+ResourcesO         NUMBER         LOCAL
+ResourcesM         NUMBER         LOCAL
+AsteroidsC         NUMBER         LOCAL
+AsteroidsM         NUMBER         LOCAL
 
 * SPlayer SObject
 
@@ -64,7 +86,6 @@ VisibleObjects     OBJECTSET      PRIVATE
 
 * SFleet SObject
 
-FleetName          STRING         LOCAL
 JumpshipCount      NUMBER         LOCAL
 
 * SUnit SObject
@@ -80,23 +101,3 @@ Damage             NUMBER         LOCAL
 
 + SCargoship
 
-* SUniverse SObject
-
-Galaxy             OBJECT         GLOBAL
-Players            OBJECTMAP      SERVERONLY
-
-* SGalaxy SObject
-
-VisibleStars       OBJECTSET      GLOBAL
-
-* SStar SObject
-
-Name               STRING         GLOBAL
-X                  NUMBER         GLOBAL
-Y                  NUMBER         GLOBAL
-Brightness         NUMBER         GLOBAL
-ResourcesA         NUMBER         LOCAL
-ResourcesO         NUMBER         LOCAL
-ResourcesM         NUMBER         LOCAL
-AsteroidsC         NUMBER         LOCAL
-AsteroidsM         NUMBER         LOCAL

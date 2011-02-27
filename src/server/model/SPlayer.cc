@@ -18,7 +18,7 @@ SFleet* SPlayer::CreateFleet(SStar* location, const string& name)
 
 	SFleet* fleet = SFleet::Create(*this);
 
-	fleet->FleetName = name;
+	fleet->Name = name;
 	location->Add(fleet);
 
 	Fleets.AddToMap(name, fleet);

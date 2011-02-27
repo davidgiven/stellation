@@ -7,18 +7,3 @@ SGalaxy::SGalaxy(Database::Type oid):
 	SGalaxyProperties(oid)
 {
 }
-
-void SGalaxy::OnAdditionOf(SObject* o)
-{
-	SStar* star = SStar::Get(o);
-	if ((double)star->Brightness > 0.0)
-		VisibleStars.AddToSet(star);
-}
-
-void SGalaxy::OnRemovalOf(SObject* o)
-{
-	SStar* star = SStar::Get(o);
-	if ((double)star->Brightness > 0.0)
-		VisibleStars.RemoveFromSet(star);
-}
-

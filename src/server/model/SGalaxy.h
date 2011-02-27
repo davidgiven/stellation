@@ -9,9 +9,6 @@ class SGalaxy : public SObject, public SGalaxyProperties
 
 public:
 	SGalaxy(Database::Type oid);
-
-	virtual void OnAdditionOf(SObject* o);
-	virtual void OnRemovalOf(SObject* o);
 };
 
 #endif
