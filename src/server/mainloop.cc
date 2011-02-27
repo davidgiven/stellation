@@ -144,6 +144,9 @@ public:
 					writer.Write(tag);
 					writer.Write(Hash::OK);
 					writer.Write(s);
+
+					Database::Type playeroid = CheckAuthenticationCookie(s);
+					writer.Write(playeroid);
 					break;
 				}
 
