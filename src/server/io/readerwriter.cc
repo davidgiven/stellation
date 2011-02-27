@@ -24,6 +24,20 @@ double Reader::ReadNumber()
 	}
 }
 
+Database::Type Reader::ReadOid()
+{
+	string s = ReadString();
+
+	try
+	{
+		return (Database::Type) boost::lexical_cast<int>(s);
+	}
+	catch (boost::bad_lexical_cast e)
+	{
+		throw Hash::MalformedCommand;
+	}
+}
+
 void Writer::Write(Hash::Type t)
 {
 	Write(Hash::StringFromHash(t));

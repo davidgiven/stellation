@@ -12,6 +12,15 @@ class SPlayer : public SObject, public SPlayerProperties
 public:
 	SPlayer(Database::Type oid);
 
+	template <class S>
+	S* AccessRW(Database::Type oid)
+	{
+		AccessRW(oid);
+		return S::Get(oid);
+	}
+
+	void AccessRW(Database::Type oid);
+
 	SFleet* CreateFleet(SStar* location, const string& name);
 
 	void CalculateVisibleObjects(ObjectSet& visible);

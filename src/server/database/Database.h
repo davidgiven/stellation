@@ -15,6 +15,7 @@ namespace Database
 }
 
 extern Datum& DatabaseGet(Database::Type oid, Hash::Type kid);
+extern bool DatabaseExists(Database::Type oid, Hash::Type kid);
 extern void DatabaseDirty(Database::Type oid, Hash::Type kid);
 extern void DatabaseCommit();
 extern void DatabaseRollback();

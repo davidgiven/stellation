@@ -103,7 +103,8 @@ local function update_database(reader)
 			error("unknown type in wire protocol '"..type.."'")
 		end
 		
-		o[kid] = handler(reader)
+		local value = handler(reader)
+		o[kid] = value
 		
 		count = count + 1
 	end
@@ -222,19 +223,17 @@ end
 
 local function command_ls()
 	local player = database[playeroid]
-	print("Player #"..playeroid..": "..player.PlayerName.." of "..player.EmpireName)
+	print("Player #"..playeroid..": "..player.Name.." of "..player.EmpireName)
 	
-	for name, fleet in pairs(player.Fleets) do
-		if (name ~= "_oid") then
-			print("  Fleet #"..(fleet._oid)..": "..name)
-			
-			local location = fleet.Location
-			print("    Location: #"..location._oid.." ("..location.Name..")")
-			
-			for unit in pairs(fleet.Contents) do
-				if (unit ~= "_oid") then
-					print("      "..unit.Class.." #"..unit._oid)
-				end
+	for fleet in pairs(player.Fleets) do
+		print("  Fleet #"..fleet._oid..": "..fleet.Name)
+		
+		local location = fleet.Location
+		print("    Location: #"..location._oid.." ("..location.Name..")")
+		
+		for unit in pairs(fleet.Contents) do
+			if (unit ~= "_oid") then
+				print("      "..unit.Class.." #"..unit._oid)
 			end
 		end
 	end
@@ -264,7 +263,7 @@ if (r[1] ~= "OK") then
 	print("Failed. Attempting to create test player...")
 	
 	r = RawCommand("CreatePlayer",
-		"PlayerName", username,
+		"Name", username,
 		"Password", password,
 		"Email", "test@invalid.com",
 		"EmpireName", "The Testing Empire")

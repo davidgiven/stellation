@@ -2,6 +2,7 @@
 #define READER_H
 
 #include "Hash.h"
+#include "Database.h"
 
 class Reader
 {
@@ -12,6 +13,7 @@ public:
 
 	double ReadNumber();
 	Hash::Type ReadHash();
+	Database::Type ReadOid();
 };
 
 #endif

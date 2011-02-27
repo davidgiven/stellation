@@ -15,7 +15,7 @@
 
 static void create_player(const string& tag, Reader& reader, Writer& writer)
 {
-	string playername;
+	string name;
 	string empirename;
 	string email;
 	string password;
@@ -27,7 +27,7 @@ static void create_player(const string& tag, Reader& reader, Writer& writer)
 
 		switch (key)
 		{
-			case Hash::PlayerName:     playername = value; break;
+			case Hash::Name:           name = value; break;
 			case Hash::EmpireName:     empirename = value; break;
 			case Hash::Email:          email = value; break;
 			case Hash::Password:       password = value; break;
@@ -37,7 +37,7 @@ static void create_player(const string& tag, Reader& reader, Writer& writer)
 		}
 	}
 
-	CreatePlayer(playername, empirename, email, password);
+	CreatePlayer(name, empirename, email, password);
 
 	writer.Write(tag);
 	writer.Write(Hash::OK);
@@ -59,12 +59,12 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 	Hash::Type gamecommand = reader.ReadHash();
 	SPlayer* player = SPlayer::Get(playeroid);
 
-	Log() << "gamecommand " << gamecommand << " from " << (string)player->PlayerName
+	Log() << "gamecommand " << gamecommand << " from " << (string)player->Name
 			<< " last update time " << lastupdate;
 
 	try
 	{
-		GameOperation(player, gamecommand);
+		GameOperation(reader, player, gamecommand);
 
 		/* The operation succeeded. Recalculate the player's visible objects
 		 * list.

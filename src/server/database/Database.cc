@@ -27,6 +27,11 @@ Datum& DatabaseGet(Database::Type oid, Hash::Type kid)
 	return datum;
 }
 
+bool DatabaseExists(Database::Type oid, Hash::Type kid)
+{
+	return database.getptr(oid, kid) != NULL;
+}
+
 void DatabaseDirty(Database::Type oid, Hash::Type kid)
 {
 	database.dirty(oid, kid);

@@ -36,6 +36,7 @@
 
 + Ping
 + ShutdownServer
++ Rename
 
 # Error codes.
 
@@ -45,6 +46,7 @@
 + MalformedCommand
 + FleetAlreadyHasThisName
 + ObjectDoesNotExist
++ PrivilegeViolation
 
 * SObject
 
@@ -78,10 +80,9 @@ AsteroidsM         NUMBER         LOCAL
 * SPlayer SObject
 
 Email              STRING         PRIVATE
-PlayerName         STRING         PRIVATE
 EmpireName         STRING         PRIVATE
 Password           STRING         SERVERONLY
-Fleets             OBJECTMAP      PRIVATE
+Fleets             OBJECTSET      PRIVATE
 VisibleObjects     OBJECTSET      PRIVATE
 
 * SFleet SObject
