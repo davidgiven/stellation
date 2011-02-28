@@ -41,11 +41,18 @@ int main(int argc, const char* argv[])
 
 	try
 	{
-		cgicc::const_form_iterator iterator = cgi["request"];
-		if (iterator == cgi.getElements().end())
+		const cgicc::CgiEnvironment& env = cgi.getEnvironment();
+		string requesttype = env.getRequestMethod();
+
+		string sdata;
+		if (requesttype == "GET")
+			sdata = env.getQueryString();
+		else if (requesttype == "POST")
+			sdata = env.getPostData();
+		else
 			throw MalformedRequest;
 
-		std::istringstream data(iterator->getValue());
+		std::istringstream data(sdata);
 
 		zmq::context_t zmqcontext(1);
 		zmq::socket_t zmqsocket(zmqcontext, ZMQ_REQ);
@@ -70,7 +77,7 @@ int main(int argc, const char* argv[])
 		/* Read request back from server. */
 
 		std::stringstream response;
-		response << "{";
+		response << "[";
 		for (;;)
 		{
 			zmq::message_t message;
@@ -88,7 +95,7 @@ int main(int argc, const char* argv[])
 			else
 				break;
 		}
-		response << "}";
+		response << "]";
 
 		std::cout << cgicc::HTTPStatusHeader(200, "OK")
 				<< response.str() << std::endl;
@@ -99,7 +106,7 @@ int main(int argc, const char* argv[])
 	}
 	catch (zmq::error_t& e)
 	{
-		std::cout << cgicc::HTTPStatusHeader(500, e.what()) << std::endl;
+		std::cout << cgicc::HTTPStatusHeader(500, e.what());
 	}
 
 	return 0;

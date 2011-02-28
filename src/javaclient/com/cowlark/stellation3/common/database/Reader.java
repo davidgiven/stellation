@@ -1,31 +1,9 @@
 package com.cowlark.stellation3.common.database;
 
-public class Reader
+public abstract class Reader
 {
-	private String[] _strings;
-	private int _position;
-		
-	public Reader(String[] strings, int position)
-	{
-		_strings = strings;
-		_position = position;
-	}
-	
-	public Reader(String[] strings)
-	{
-		this(strings, 0);
-	}
-	
-	public boolean isEOF()
-	{
-		return (_position == _strings.length);
-	}
-	
-	public String readString()
-	{
-		assert(!isEOF());
-		return _strings[_position++];
-	}
+	public abstract boolean isEOF();
+	public abstract String readString();
 	
 	public int readInt()
 	{
