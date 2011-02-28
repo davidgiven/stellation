@@ -13,9 +13,9 @@
   <!-- Other module inherits                                      -->
 
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='com.cowlark.stellation3.client.Stellation3'/>
+  <entry-point class='com.cowlark.stellation3.gwt.Stellation3'/>
 
   <!-- Specify the paths for translatable code                    -->
-  <source path='client'/>
-
+  <source path='gwt'/>
+  <source path='common'/>
 </module>

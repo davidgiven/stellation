@@ -5,3 +5,7 @@ syntax: regexp
 ^bin$
 syntax: regexp
 ^\.pm-exec-i686$
+syntax: regexp
+^src/javaclient/com/cowlark/stellation3/common/database/Hash\.java$
+syntax: regexp
+^src/javaclient/com/cowlark/stellation3/common/database/SBase\.java$
