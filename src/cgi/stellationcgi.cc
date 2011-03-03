@@ -4,8 +4,6 @@
 #include <iostream>
 #include <iomanip>
 #include <sstream>
-#include <cgicc/Cgicc.h>
-#include <cgicc/HTTPStatusHeader.h>
 #include <zmq.hpp>
 
 using std::string;
@@ -35,24 +33,32 @@ static string quote(const string& sin)
 	return sout.str();
 }
 
+string safegetenv(const string& name)
+{
+	const char* result = getenv(name.c_str());
+	if (!result)
+		throw MalformedRequest;
+	return result;
+}
+
 int main(int argc, const char* argv[])
 {
-	cgicc::Cgicc cgi;
-
 	try
 	{
-		const cgicc::CgiEnvironment& env = cgi.getEnvironment();
-		string requesttype = env.getRequestMethod();
+		std::stringstream response;
 
-		string sdata;
-		if (requesttype == "GET")
-			sdata = env.getQueryString();
-		else if (requesttype == "POST")
-			sdata = env.getPostData();
-		else
-			throw MalformedRequest;
+		response << "Content-Type: text/plain\r\n"
+					 "Access-Control-Allow-Origin: *\r\n"
+					 "\r\n";
 
-		std::istringstream data(sdata);
+		int contentlength = atoi(safegetenv("CONTENT_LENGTH").c_str());
+		if (!contentlength)
+			throw "No contentlength";
+
+		if (safegetenv("REQUEST_METHOD") != "POST")
+			throw "Invalid request method";
+
+		std::istream& data = std::cin;
 
 		zmq::context_t zmqcontext(1);
 		zmq::socket_t zmqsocket(zmqcontext, ZMQ_REQ);
@@ -76,7 +82,6 @@ int main(int argc, const char* argv[])
 
 		/* Read request back from server. */
 
-		std::stringstream response;
 		response << "[";
 		for (;;)
 		{
@@ -96,17 +101,21 @@ int main(int argc, const char* argv[])
 				break;
 		}
 		response << "]";
+		response << "\r\n";
 
-		std::cout << cgicc::HTTPStatusHeader(200, "OK")
-				<< response.str() << std::endl;
+		/* Done. Dump the result to stdout. */
+
+		std::cout << response.str();
 	}
 	catch (const char* s)
 	{
-		std::cout << cgicc::HTTPStatusHeader(406, s) << std::endl;
+		std::cout << "Status: 406 " << s <<
+				"\r\n\r\n" << s;
 	}
 	catch (zmq::error_t& e)
 	{
-		std::cout << cgicc::HTTPStatusHeader(500, e.what());
+		std::cout << "Status: 500 " << e.what() <<
+				"\r\n\r\n" << e.what();
 	}
 
 	return 0;
