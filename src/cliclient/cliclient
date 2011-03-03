@@ -244,12 +244,12 @@ end
 -----------------------------------------------------------------------------
 
 local server = arg[1]
-local username = arg[2]
+local email = arg[2]
 local password = arg[3]
 local r
 
 if not password then
-	Error("you must specify a server name, username and password")
+	Error("you must specify a server name, email address and password")
 end
 
 print("Connecting...")
@@ -258,14 +258,14 @@ zmqsocket:connect(server)
 -- Attempt to authenticate the player.
 
 print("Authenticating...")
-r = RawCommand("Authenticate", username, password)
+r = RawCommand("Authenticate", email, password)
 if (r[1] ~= "OK") then
 	print("Failed. Attempting to create test player...")
 	
 	r = RawCommand("CreatePlayer",
-		"Name", username,
+		"Name", "Testing Testingson",
 		"Password", password,
-		"Email", "test@invalid.com",
+		"Email", email,
 		"EmpireName", "The Testing Empire")
 	if (r[1] ~= "OK") then
 		print("Unable to create test player: "..r[1])
@@ -273,7 +273,7 @@ if (r[1] ~= "OK") then
 	end
 	
 	print("Re-authenticating...")
-	r = RawCommand("Authenticate", username, password)
+	r = RawCommand("Authenticate", email, password)
 	if (r[1] ~= "OK") then
 		print("Unable to authenticate new player, giving up.")
 		os.exit()

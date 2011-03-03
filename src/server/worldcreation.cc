@@ -119,7 +119,7 @@ void CreatePlayer(const string& name, const string& empirename,
 	player->EmpireName = empirename;
 	player->Email = email;
 	player->Password = password;
-	universe->Players.AddToMap(name, player);
+	universe->Players.AddToMap(email, player);
 
 	SStar* star = SStar::Get(galaxy->VisibleStars.RandomSetMember());
 
@@ -127,5 +127,5 @@ void CreatePlayer(const string& name, const string& empirename,
 	fleet->CreateJumpship();
 
 	Log() << "Created player " << player << ": " << name
-			<< " of " << empirename;
+			<< " of " << empirename << ", aka " << email;
 }

@@ -91,25 +91,25 @@ static string create_cookie()
 
 string CreateAuthenticationCookie(Reader& reader)
 {
-	string playername = reader.ReadString();
+	string email = reader.ReadString();
 	string password = reader.ReadString();
 	if (!reader.IsEOF())
 		throw Hash::MalformedCommand;
 
 	SUniverse universe(Database::Universe);
-	Database::Type playeroid = universe.Players.FetchFromMap(playername);
+	Database::Type playeroid = universe.Players.FetchFromMap(email);
 
-	Log() << "authenticating " << playername << " (who is " << playeroid << ")";
+	Log() << "authenticating " << email << " (who is " << playeroid << ")";
 	if (playeroid == Database::Null)
 	{
-		Log() << "attempt to authenticate unknown player " << playername;
+		Log() << "attempt to authenticate unknown player " << email;
 		throw Hash::AuthenticationFailure;
 	}
 
 	SPlayer player(playeroid);
 	if (player.Password != password)
 	{
-		Log() << "incorrect login from " << playername;
+		Log() << "incorrect login from " << email;
 		throw Hash::AuthenticationFailure;
 	}
 
