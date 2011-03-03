@@ -1,6 +1,6 @@
 package com.cowlark.stellation3.gwt;
 
-import com.cowlark.stellation3.common.database.AbstractTransport;
+import com.cowlark.stellation3.common.database.Transport;
 import com.cowlark.stellation3.common.database.Reader;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.http.client.Request;
@@ -9,11 +9,11 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 
-public class Transport extends AbstractTransport implements RequestCallback
+public class TransportImpl extends Transport implements RequestCallback
 {
 	private String _url;
 	
-	public Transport(String url)
+	public TransportImpl(String url)
 	{
 		_url = url;
 	}

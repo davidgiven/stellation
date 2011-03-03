@@ -43,20 +43,20 @@ public class Database
 		}
 	}
 	
-	private static HashMap<Integer, SObject> _data =
+	private HashMap<Integer, SObject> _data =
 		new HashMap<Integer, SObject>();
 	
-	public static SObject get(int oid)
+	public SObject get(int oid)
 	{
 		return _data.get(oid);
 	}
 	
-	public static SObject get(OBJECT o)
+	public SObject get(OBJECT o)
 	{
-		return Database.get(o.getOid());
+		return get(o.getOid());
 	}
 	
-	public static void loadBatch(Reader reader)
+	public void loadBatch(Reader reader)
 	{
 		HashMap<Integer, UnknownObject> pending =
 			new HashMap<Integer, UnknownObject>();

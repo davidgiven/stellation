@@ -137,8 +137,7 @@ cgi_exe = cxxprogram {
 	},
 	
 	CLIBRARIES = {
-		"zmq",
-		"cgicc"
+		"zmq"
 	},
 
 	mycxxfile "src/cgi/stellationcgi.cc",

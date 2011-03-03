@@ -10,6 +10,13 @@ public class SObject extends SBase
 		switch (type)
 		{
 			case SObject:    return new SObject(oid);
+			case SUniverse:  return new SUniverse(oid);
+			case SGalaxy:    return new SGalaxy(oid);
+			case SStar:      return new SStar(oid);
+			case SPlayer:    return new SPlayer(oid);
+			case SFleet:     return new SFleet(oid);
+			case SUnit:      return new SUnit(oid);
+			case SJumpship:  return new SJumpship(oid);
 			default:         assert(false);
 		}
 		

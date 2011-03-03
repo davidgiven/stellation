@@ -3,7 +3,7 @@ package com.cowlark.stellation3.common.database;
 import java.util.HashMap;
 import com.google.gwt.user.client.Window;
 
-public abstract class AbstractTransport
+public abstract class Transport
 {
 	private HashMap<Integer, MessageListener> _listeners =
 		new HashMap<Integer, MessageListener>();

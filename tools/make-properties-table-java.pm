@@ -111,8 +111,8 @@ end
 
 do
 	sbaseoutf:write(
-		'package com.cowlark.stellation3.client.database;\n',
-		'import com.cowlark.stellation3.client.database.values.*;\n',
+		'package com.cowlark.stellation3.common.database;\n',
+		'import com.cowlark.stellation3.common.database.values.*;\n',
 		'import java.util.HashMap;\n',
 		'public class SBase\n',
 		'{\n')
@@ -149,7 +149,7 @@ end
 
 do
 	hashoutf:write(
-		'package com.cowlark.stellation3.client.database;\n',
+		'package com.cowlark.stellation3.common.database;\n',
 		'public enum Hash\n',
 		'{\n')
 		

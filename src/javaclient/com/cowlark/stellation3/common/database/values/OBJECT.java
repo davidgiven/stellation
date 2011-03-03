@@ -1,7 +1,7 @@
 package com.cowlark.stellation3.common.database.values;
 
-import com.cowlark.stellation3.common.database.Database;
 import com.cowlark.stellation3.common.database.Reader;
+import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.model.SObject;
 
 public class OBJECT extends DATUM
@@ -10,7 +10,7 @@ public class OBJECT extends DATUM
 	
 	public SObject get()
 	{
-		return Database.get(_value);
+		return Game.Instance.Database.get(_value);
 	}
 	
 	public int getOid()
