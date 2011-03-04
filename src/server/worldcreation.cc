@@ -6,15 +6,13 @@
 #include "SPlayer.h"
 #include "SFleet.h"
 #include "Log.h"
+#include "statics.h"
 #include "utils.h"
 #include <math.h>
 #include <utility>
 #include <boost/range/size.hpp>
 
 using std::pair;
-
-const int NUMBER_OF_STARS = 400;
-const double GALAXY_RADIUS = 20;
 
 static string generate_name()
 {
@@ -48,6 +46,9 @@ static string generate_name()
 
 void CreateWorld()
 {
+	int number_of_stars = GetNumberStatic(Hash::SGalaxy, Hash::Count);
+	double galactic_radius = GetNumberStatic(Hash::SGalaxy, Hash::Radius);
+
 	SUniverse* universe = SUniverse::Create(Database::Null);
 	SGalaxy* galaxy = SGalaxy::Create(Database::Null);
 	universe->Galaxy = galaxy;
@@ -56,7 +57,7 @@ void CreateWorld()
 
 	typedef set<string> NamesSet;
 	NamesSet names;
-	while (names.size() < NUMBER_OF_STARS)
+	while (names.size() < number_of_stars)
 	{
 		string name = generate_name();
 		names.insert(name);
@@ -66,16 +67,16 @@ void CreateWorld()
 
 	typedef map<int, pair<double, double> > LocationsMap;
 	LocationsMap locations;
-	while (locations.size() < NUMBER_OF_STARS)
+	while (locations.size() < number_of_stars)
 	{
-		double r = Random() * GALAXY_RADIUS;
+		double r = Random() * galactic_radius;
 		double t = Random() * 2.0 * M_PI;
 
 		double x = round(r * sin(t) * 10.0) / 10.0;
 		double y = round(r * cos(t) * 10.0) / 10.0;
 
-		int hash = ((int)x + GALAXY_RADIUS) * (GALAXY_RADIUS*2) +
-                ((int)y + GALAXY_RADIUS);
+		int hash = ((int)x + galactic_radius) * (galactic_radius*2) +
+                ((int)y + galactic_radius);
 
 		if (locations.find(hash) == locations.end())
 			locations[hash] = pair<double, double>(x, y);
@@ -85,7 +86,7 @@ void CreateWorld()
 
 	LocationsMap::const_iterator locationIterator = locations.begin();
 	NamesSet::const_iterator nameIterator = names.begin();
-	for (int i = 0; i < NUMBER_OF_STARS; i++)
+	for (int i = 0; i < number_of_stars; i++)
 	{
 		SStar* star = SStar::Create(Database::Null);
 

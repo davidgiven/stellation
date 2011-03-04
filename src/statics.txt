@@ -1,3 +1,7 @@
+* SGalaxy
+Count 50
+Radius 5
+
 * SCargoship
 Name Cargoship
 Description
