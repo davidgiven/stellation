@@ -11,6 +11,7 @@
 #include "auth.h"
 #include "engine.h"
 #include "utils.h"
+#include "statics.h"
 #include <deque>
 
 static void create_player(const string& tag, Reader& reader, Writer& writer)
@@ -147,6 +148,14 @@ public:
 
 					Database::Type playeroid = CheckAuthenticationCookie(s);
 					writer.Write(playeroid);
+					break;
+				}
+
+				case Hash::GetStatic:
+				{
+					writer.Write(tag);
+					writer.Write(Hash::OK);
+					WriteAllStatics(writer);
 					break;
 				}
 

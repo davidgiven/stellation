@@ -30,6 +30,7 @@ end
 -----------------------------------------------------------------------------
 
 local database = {}
+local static = {}
 local playeroid
 
 local function objref(oid)
@@ -282,6 +283,16 @@ end
 
 authstring = r[2]
 playeroid = tonumber(r[3])
+
+print("Success. Downloading static data...")
+r = RawCommand("GetStatic")
+for i = 2, #r, 3 do
+	local cid = r[i]
+	local kid = r[i+1]
+	local value = r[i+2]
+	static[cid.."."..kid] = value
+end
+
 print("Success. Doing initial database sync...")
 
 GameCommand("Ping")

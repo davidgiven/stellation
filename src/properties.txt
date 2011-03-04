@@ -48,6 +48,11 @@
 + ObjectDoesNotExist
 + PrivilegeViolation
 
+# Miscellaneous.
+
++ Count
++ Radius
+
 * SObject
 
 Owner              OBJECT         LOCAL
