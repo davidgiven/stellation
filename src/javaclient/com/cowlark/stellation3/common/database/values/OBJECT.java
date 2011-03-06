@@ -8,9 +8,9 @@ public class OBJECT extends DATUM
 {
 	private int _value;
 	
-	public SObject get()
+	public <T extends SObject> T get()
 	{
-		return Game.Instance.Database.get(_value);
+		return (T) Game.Instance.Database.get(_value);
 	}
 	
 	public int getOid()

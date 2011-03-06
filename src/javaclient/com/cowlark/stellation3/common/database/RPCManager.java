@@ -1,5 +1,6 @@
 package com.cowlark.stellation3.common.database;
 
+import com.cowlark.stellation3.common.game.CompletionListener;
 import com.cowlark.stellation3.common.game.Game;
 
 public class RPCManager
@@ -13,7 +14,8 @@ public class RPCManager
 	    _transport = transport;
     }
 	
-	public void authenticate(String email, String password)
+	public void authenticate(String email, String password,
+			final AuthenticationListener listener)
 	{
 		assert(_authkey == null);
 		
@@ -29,12 +31,12 @@ public class RPCManager
 							{
 								_authkey = reader.readString();
 								int playeroid = reader.readInt();
-								Game.Instance.loggedIn(playeroid);
+								listener.onAuthenticationSucceeded(playeroid);
 								break;
 							}
 							
 							case AuthenticationFailure:
-								Game.Instance.authenticationFailed();
+								listener.onAuthenticationFailed();
 								break;
 								
 							default:
@@ -46,7 +48,7 @@ public class RPCManager
 				"Authenticate", email, password);
 	}
 	
-	public void doInitialSync()
+	public void doInitialSync(final CompletionListener listener)
 	{
 		_serverTime = 0.0;
 		_transport.sendMessage(
@@ -63,7 +65,7 @@ public class RPCManager
 				
 						_serverTime = reader.readDouble();
 						Game.Instance.Database.loadBatch(reader);
-						Game.Instance.initialSyncComplete();
+						listener.onCompletion();
 					}
 				},
 				"GameOperation", _authkey, String.valueOf(_serverTime),

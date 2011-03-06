@@ -1,7 +1,7 @@
 package com.cowlark.stellation3.gwt;
 
-import com.cowlark.stellation3.common.database.Transport;
 import com.cowlark.stellation3.common.database.Reader;
+import com.cowlark.stellation3.common.database.Transport;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;

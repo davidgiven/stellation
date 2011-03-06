@@ -1,45 +1,44 @@
 package com.cowlark.stellation3.gwt.ui;
 
 import com.cowlark.stellation3.common.game.StarMap;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RequiresResize;
-import com.hydro4ge.raphaelgwt.client.PathBuilder;
-import com.hydro4ge.raphaelgwt.client.Raphael;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.graphics.client.Color;
+import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
-public class StarMapImpl extends Raphael implements StarMap, RequiresResize
+public class StarMapImpl extends Composite implements StarMap,
+	RequiresResize
 {
-	public StarMapImpl(int width, int height)
+	private GWTCanvas _canvas;
+	private double _centerx;
+	private double _centery;
+	
+	public StarMapImpl()
     {
-		super(width, height);
+		_canvas = new GWTCanvas();
+		initWidget(_canvas);
     }
 	
 	@Override
 	public void onResize()
 	{
-	    int w = getOffsetWidth();
-	    int h = getOffsetHeight();
-		setSize(w, h);
+		Widget parent = getParent();
+		int w = parent.getOffsetWidth();
+		int h = parent.getOffsetHeight();
+		_canvas.setPixelSize(w, h);
+		_canvas.setCoordSize(w, h);
 		redraw();
-	}
-	
-	@Override
-	protected void onLoad()
-	{
-	    super.onLoad();
-	    
-	    redraw();
 	}
 	
 	private void redraw()
 	{
-	    int w = getOffsetWidth();
-	    int h = getOffsetHeight();
-	    
-		clear();
-	    PathBuilder pb = new PathBuilder();
-	    pb.M(0, 0)
-	        .m(0, 0)
-	        .l(w, h)
-	        .z();
-	    Path p = new Path(pb);
+		_canvas.setBackgroundColor(Color.BLUE);
+		_canvas.clear();
+		_canvas.setStrokeStyle(Color.WHITE);
+		_canvas.beginPath();
+		_canvas.moveTo(0, 0);
+		_canvas.lineTo(getOffsetWidth(), getOffsetHeight());
+		_canvas.stroke();
 	}
 }

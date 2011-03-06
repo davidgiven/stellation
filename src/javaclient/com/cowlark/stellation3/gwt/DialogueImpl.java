@@ -1,21 +1,20 @@
 package com.cowlark.stellation3.gwt;
 
 import com.cowlark.stellation3.common.controllers.ControllerGroup;
-import com.cowlark.stellation3.common.controllers.Dialogue;
-import com.cowlark.stellation3.common.controllers.DialogueHandler;
+import com.cowlark.stellation3.common.controllers.Pane;
+import com.cowlark.stellation3.common.controllers.PaneHandler;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.Label;
 
-public class DialogueImpl extends DialogBox implements Dialogue
+public class DialogueImpl extends DialogBox implements Pane
 {
 	private final ControllerGroup _cg;
-	private final DialogueHandler _dh;
+	private final PaneHandler _ph;
 	
-	public DialogueImpl(ControllerGroup cg, DialogueHandler dh)
+	public DialogueImpl(ControllerGroup cg, PaneHandler ph)
     {
 		_cg = cg;
-		_dh = dh;
+		_ph = ph;
 		
 		setTitle(cg.getName());
 		
@@ -29,18 +28,18 @@ public class DialogueImpl extends DialogBox implements Dialogue
     }
 	
 	@Override
-	public void cancelDialogue()
+	public void cancelPane()
 	{
 		hide();
-		if (_dh != null)
-			_dh.onDialogueCancelled(this);
+		if (_ph != null)
+			_ph.onPaneCancelled(this);
 	}
 	
 	@Override
-	public void closeDialogue()
+	public void closePane()
 	{
 		hide();
-		if (_dh != null)
-			_dh.onDialogueClosed(this);
+		if (_ph != null)
+			_ph.onPaneClosed(this);
 	}
 }

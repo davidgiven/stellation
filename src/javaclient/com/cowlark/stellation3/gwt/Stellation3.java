@@ -2,10 +2,7 @@
 package com.cowlark.stellation3.gwt;
 
 import com.cowlark.stellation3.common.game.Game;
-import com.cowlark.stellation3.gwt.ui.StarMapImpl;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class Stellation3 implements EntryPoint
 {
