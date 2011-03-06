@@ -1,10 +1,13 @@
 package com.cowlark.stellation3.common.database.values;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import com.cowlark.stellation3.common.database.Reader;
+import com.cowlark.stellation3.common.game.Game;
+import com.cowlark.stellation3.common.model.SObject;
 
-public class OBJECTSET extends DATUM
+public class OBJECTSET extends DATUM implements Iterable<SObject>
 {
 	private HashSet<Integer> _value = new HashSet<Integer>();
 	
@@ -31,5 +34,31 @@ public class OBJECTSET extends DATUM
 		OBJECTSET s = (OBJECTSET) d;
 		_value.clear();
 		_value.addAll(s._value);
-	}	
+	}
+	
+	@Override
+	public Iterator<SObject> iterator()
+	{
+		final Iterator<Integer> i = _value.iterator(); 
+		return new Iterator<SObject>()
+		{
+			@Override
+			public boolean hasNext()
+			{
+			    return i.hasNext();
+			}
+			
+			@Override
+			public SObject next()
+			{
+			    return Game.Instance.Database.get(i.next());
+			}
+			
+			@Override
+			public void remove()
+			{
+				throw new UnsupportedOperationException();
+			}
+		};
+	}
 }

@@ -3,9 +3,12 @@ package com.cowlark.stellation3.common.game;
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.ControllerGroup;
+import com.cowlark.stellation3.common.controllers.ControllerGroupCollection;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
+import com.cowlark.stellation3.common.controllers.StarMapStarController;
+import com.cowlark.stellation3.common.controllers.StarMapStarHandler;
 import com.cowlark.stellation3.common.controllers.TextFieldController;
 import com.cowlark.stellation3.common.controllers.TextFieldHandler;
 import com.cowlark.stellation3.common.database.Database;
@@ -51,13 +54,23 @@ public abstract class Game
 		Galaxy = Universe.Galaxy.<SGalaxy>get();
 		Player = (SPlayer) Database.get(playeroid);
 		
+		StarMap = new StarMap();
+		StarMap.show();
 //		StarMap = createStarMap();
 	}
 	
 	public abstract Transport createTransport();
 	
-	public abstract Pane showPane(ControllerGroup cg,
+	public abstract Pane showPane(ControllerGroupCollection cg,
 			PaneAspect aspect, PaneHandler cgh);
+	
+	public Pane showPane(ControllerGroup cg,
+			PaneAspect aspect, PaneHandler cgh)
+	{
+		ControllerGroupCollection cgc = new ControllerGroupCollection();
+		cgc.addMonitorCollection(cg);
+		return showPane(cgc, aspect, cgh);
+	}
 	
 	public abstract TextFieldController createTextFieldController(
 			TextFieldHandler tfh, String label);
@@ -65,4 +78,7 @@ public abstract class Game
 			TextFieldHandler tfh, String label);
 	public abstract ButtonsController createButtonsController(
 			ButtonsHandler bh, String... buttons);	
+
+	public abstract StarMapStarController createStarMapStarController(
+			StarMapStarHandler smsh, StarMapStarController.StarData stardata);
 }

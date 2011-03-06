@@ -3,19 +3,25 @@ package com.cowlark.stellation3.gwt;
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.ControllerGroup;
+import com.cowlark.stellation3.common.controllers.ControllerGroupCollection;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
+import com.cowlark.stellation3.common.controllers.StarMapStarController;
+import com.cowlark.stellation3.common.controllers.StarMapStarHandler;
 import com.cowlark.stellation3.common.controllers.TextFieldController;
 import com.cowlark.stellation3.common.controllers.TextFieldHandler;
 import com.cowlark.stellation3.common.database.Transport;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.ui.Screen;
+import com.cowlark.stellation3.gwt.ui.StarMapImpl;
+import com.cowlark.stellation3.gwt.ui.StarMapStarControllerImpl;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class GameImpl extends Game
 {
 	private Screen _screen;
+	private StarMapImpl _starmap;
 	
 	public GameImpl()
     {
@@ -24,17 +30,25 @@ public class GameImpl extends Game
     }
 	
 	@Override
-	public Pane showPane(ControllerGroup cg, PaneAspect aspect, PaneHandler ph)
+	public Pane showPane(ControllerGroupCollection cgc, PaneAspect aspect, PaneHandler ph)
 	{
 		switch (aspect)
 		{
 			case LOGIN:
 			{
-				DialogueImpl d = new DialogueImpl(cg, ph);
+				DialogueImpl d = new DialogueImpl(cgc.getSingleton(), ph);
 				d.show();
 				return d;
 			}
 				
+			case STARMAP:
+			{
+				assert(_starmap == null);
+				_starmap = new StarMapImpl(cgc.getSingleton(), ph);
+				_screen.setStarmap(_starmap);
+				return _starmap;
+			}
+			
 			default:
 				assert false;
 		}
@@ -72,8 +86,15 @@ public class GameImpl extends Game
 	
 	@Override
 	public ButtonsController createButtonsController(
-	        ButtonsHandler bh, String[] strings)
+	        ButtonsHandler bh, String... strings)
 	{
 	    return new ButtonsControllerImpl(bh, strings);
+	}
+	
+	@Override
+	public StarMapStarController createStarMapStarController(
+	        StarMapStarHandler smsh, StarMapStarController.StarData sd)
+	{
+	    return new StarMapStarControllerImpl(smsh, sd);
 	}
 }

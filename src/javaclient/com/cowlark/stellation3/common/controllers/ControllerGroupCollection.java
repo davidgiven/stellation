@@ -17,6 +17,12 @@ public class ControllerGroupCollection implements Iterable<ControllerGroup>
 		_groups.add(mc);
 	}
 	
+	public ControllerGroup getSingleton()
+	{
+		assert(_groups.size() == 1);
+		return _groups.get(0);
+	}
+	
 	@Override
 	public Iterator<ControllerGroup> iterator()
 	{
