@@ -3,11 +3,13 @@ package com.cowlark.stellation3.gwt.ui.drawingarea;
 import java.util.LinkedList;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Widget;
 
 public class DrawingArea extends Widget implements HasShapes
 {
 	private static final String SVG_NS = "http://www.w3.org/2000/svg";
+	private static final String XLINK_NS = "http://www.w3.org/1999/xlink";
 	
 	static native Element createElementNS(String ns, String tag) /*-{
 	    return $doc.createElementNS(ns, tag);
@@ -77,5 +79,16 @@ public class DrawingArea extends Widget implements HasShapes
 	{
 		Element e = createElementNS(SVG_NS, "path");
 		return new Path(e);
+	}
+	
+	public Image createImage(double w, double h, ImageResource img)
+	{
+		Element e = createElementNS(SVG_NS, "image");
+		e.setAttribute("width", String.valueOf(w));
+		e.setAttribute("height", String.valueOf(h));
+		e.setAttribute("x", String.valueOf(-w/2.0));
+		e.setAttribute("y", String.valueOf(-h/2.0));
+		setAttributeNS(XLINK_NS, e, "href", img.getURL());
+		return new Image(e);
 	}
 }

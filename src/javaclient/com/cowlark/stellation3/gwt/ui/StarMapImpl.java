@@ -12,7 +12,7 @@ import com.cowlark.stellation3.gwt.ui.drawingarea.Circle;
 import com.cowlark.stellation3.gwt.ui.drawingarea.DrawingArea;
 import com.cowlark.stellation3.gwt.ui.drawingarea.Group;
 import com.cowlark.stellation3.gwt.ui.drawingarea.HasShapes;
-import com.cowlark.stellation3.gwt.ui.drawingarea.Line;
+import com.cowlark.stellation3.gwt.ui.drawingarea.Image;
 import com.cowlark.stellation3.gwt.ui.drawingarea.Path;
 import com.google.gwt.event.dom.client.MouseDownEvent;
 import com.google.gwt.event.dom.client.MouseDownHandler;
@@ -77,6 +77,10 @@ public class StarMapImpl extends Composite implements
 		_centerx = 0.0;
 		_centery = 0.0;
 		
+		Image img = _da.createImage(_galactic_radius*2.0, _galactic_radius*2.0,
+				StarMapResources.Instance.background());
+		_map.addShape(img);
+		
 		_minorGraticuleLayer = _da.createGroup();
 		_map.addShape(_minorGraticuleLayer);
 		
@@ -89,7 +93,7 @@ public class StarMapImpl extends Composite implements
 		_starNameLayer = _da.createGroup();
 		_map.addShape(_starNameLayer);
 		
-		drawMinorGraticuleLayer(_minorGraticuleLayer);
+//		drawMinorGraticuleLayer(_minorGraticuleLayer);
 		drawMajorGraticuleLayer(_majorGraticuleLayer);
 		drawStarIcons(_starIconLayer);
 		
@@ -213,6 +217,7 @@ public class StarMapImpl extends Composite implements
 		_dragdeltay = event.getClientY() - _dragstarty;
 		
 		_map.setTranslation(_centerx+_dragdeltax, _centery+_dragdeltay);
+		event.preventDefault();
 	}
 	
 	@Override
