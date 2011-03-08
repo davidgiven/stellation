@@ -10,4 +10,7 @@ public interface StarMapResources extends ClientBundle
 	
 	@Source("starmap-background.jpg")
 	public ImageResource background();
+	
+	@Source("sphere.png")
+	public ImageResource star();
 }
