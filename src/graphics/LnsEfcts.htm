@@ -1,0 +1,811 @@
+<HTML><HEAD><TITLE>Lens Effects Include File</TITLE></HEAD>
+
+<FONT FACE="Arial, Helvetica, Switzerland"><BODY BGCOLOR=#FFFFFF>
+
+<TABLE WIDTH=100% BORDER=0 CELLPADDING=10><TR><TD BGCOLOR=#C0C0C0 ALIGN=CENTER>
+<FONT SIZE=+2><B>LENS EFFECTS INCLUDE FILE </B></FONT><FONT SIZE=+1><I>for Persistence of Vision 3.x</I></FONT>
+</TD></TR></TABLE>
+
+<I>
+<P>Created by Chris Colefax, 18 July 1997
+<BR>Updated 9 August 1998: updated for POV-Ray 3.1,
+added <A HREF="#spots_contract_to_centre">spots_contract_to_centre</A> option,
+fixed Domain Error caused by some compilers
+</I>
+
+<P><HR>
+
+<P><B><I><A HREF="#Installation">INSTALLATION</A></B></I>
+<P><B><I><A HREF="#Quick Start">QUICK START</A></B></I>
+<P><B><I><A HREF="#Camera Options">CAMERA OPTIONS</A></B></I>
+<P><B><I><A HREF="#Options">LENS EFFECTS OPTIONS</A></B></I>
+        <UL><A HREF="#effect_type">effect_type</A>
+        <BR><A HREF="#effect_location">effect_location</A>
+        <BR><A HREF="#effect_colour">effect_colour</A>
+        <BR><A HREF="#source_colour">source_colour</A>
+        <BR><A HREF="#effect_scale">effect_scale</A>
+        <BR><A HREF="#effect_rotate">effect_rotate</A>
+        <BR><A HREF="#effect_brightness">effect_brightness</A>
+        <BR><A HREF="#effect_intensity">effect_intensity</A>
+        <BR><A HREF="#effect_always_on_top">effect_always_on_top</A>
+        </UL>
+
+<P><B><I><A HREF="#Animation Options">LENS EFFECTS ANIMATION OPTIONS</A></B></I>
+        <UL><A HREF="#effect_shrink">effect_shrink</A>
+        <BR><A HREF="#effect_falloff">effect_falloff</A>
+        <BR><A HREF="#effect_falloff_power">effect_falloff_power</A>
+        <BR><A HREF="#effect_spin">effect_spin</A>
+        <BR><A HREF="#effect_jitter">effect_jitter</A>
+        <BR><A HREF="#effect_flicker">effect_flicker</A>
+        <BR><A HREF="#rays_flicker">rays_flicker</A>
+        <BR><A HREF="#spots_contract_to_centre">spots_contract_to_centre</A>
+        <BR><A HREF="#effect_anim_seed">effect_anim_seed</A>
+        </UL>
+
+<P><B><I><A HREF="#Custom Effects">DESIGNING YOUR OWN LENS EFFECTS</A></B></I>
+        <UL><B><A HREF="#Files">UNDERSTANDING THE LENS EFFECTS INCLUDE FILE</A></B>
+        <BR><B><A HREF="#Component Options">LENS EFFECTS COMPONENT OPTIONS</A></B>
+                <UL><A HREF="#Glow Options">Glow Options</A>
+                <BR><A HREF="#Ray Options">Ray Options</A>
+                <BR><A HREF="#Streak Options">Streak Options</A>
+                <BR><A HREF="#Spot Options">Spot Options</A>
+                </UL>
+
+        <BR><B><A HREF="#Random">USING THE RANDOM EFFECT TYPE</A></B>
+        <BR><B><A HREF="#Modify Options">MODIFYING A PREDEFINED LENS EFFECT</A></B>
+                <UL><A HREF="#options_only">options_only</A>
+                <BR><A HREF="#debug_options">debug_options</A>
+                </UL>
+
+        <BR><B><A HREF="#Custom Effect Files">USING CUSTOM EFFECT FILES</A></B>
+        </UL>
+
+<P><B><I><A HREF="#Troubleshooting">TROUBLESHOOTING</A></B></I>
+        <UL><B><A HREF="#Troubleshooting Options">TROUBLESHOOTING OPTIONS</A></B>
+                <UL><A HREF="#lens_scale">lens_scale</A>
+                <BR><A HREF="#layer_separation">layer_separation</A>
+                </UL>
+
+        <BR><B><A HREF="#Troubleshooting FAQ">TROUBLESHOOTING FAQ</A></B>
+        </UL>
+
+<P><B><I><A HREF="#Legal">COPYRIGHT AND LEGAL INFORMATION</A></B></I>
+<P><B><I><A HREF="#Contact">CONTACTING THE AUTHOR</A></B></I>
+
+
+<P>
+<BR>
+<A NAME="Installation"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>INSTALLATION</B></I></FONT>
+</TD></TR></TABLE>
+The Lens Effects Include File actually consists of two files, <I>LnsEfcts.inc</I>
+and <I>Lens.inc</I>, which should both be copied to one of the directories
+(folders) in your POV-Ray library path.  Normally this is the <I>INCLUDE</I>
+sub-directory of the directory where you installed POV-Ray, so if you
+installed POV-Ray in <I>C:\POVRAY</I> you should copy the files to
+<I>C:\POVRAY\INCLUDE</I>.  On a Windows 95 system, this is probably something like:
+
+<P><I>C:\Program Files\POV-Ray for Windows\Include</I>
+
+<P>On UNIX and similar systems, where filenames are case-sensitive, you may
+have to rename the include files so the filenames are all capitals.
+This will enable you to render the sample files without modification.
+
+
+<P>
+<BR>
+<A NAME="Quick Start"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>QUICK START</B></I></FONT>
+</TD></TR></TABLE>
+The Lens Effects Include File allows you to add a whole range of different
+lens effects (including lens flares, glows, sparkles, etc.) to any POV-Ray
+scene.  To add a simple lens flare to a scene, add the following lines
+to your POV file:
+
+<P><CODE>#declare camera_location = &lt 6, 20, -30&gt ;
+<BR>#declare camera_look_at = &lt 0, 3, 3&gt ;
+<BR>#declare effect_location = &lt -3, 4, 3&gt ;
+<BR>#include "Lens.inc"</CODE>
+
+<P>changing the values shown above to match the camera in your scene (the
+<A HREF="#effect_location">effect_location</A> specifies the location of the light_source or object
+that you want to add a lens effect to).  When you render the scene, you
+should now see the default "Rainbow" lens effect added to it.  In
+addition to this one lens effect, you can choose from 18 other predefined
+lens effects, or create your own completely custom effects.  You can also
+use a range of options to fine-tune the lens effect to suit your scene.
+To use any of these options just add the following line to your scene file,
+<B>before</B> including <I>Lens.inc</I>:
+
+<P><CODE>#declare </CODE> <I>[variable-name]</I><CODE> = </CODE><I>[value]</I>
+
+<P>substituting the desired variable name and value where appropriate.
+Note that <I>Lens.inc</I> (or <I>LnsEfcts.inc</I>) should <B>never</B> be included at the start
+of a scene (like <I>colors.inc</I> or <I>textures.inc</I>).  They should only be
+included after declaring the desired lens effect and camera options.  To
+create more than one lens effect in a scene, you should declare the first
+set of options and include <I>Lens.inc</I>.  Then declare the next set of
+options and include <I>Lens.inc</I> again, but note that you don't have to
+redeclare the camera options, or any other options that remain the same for
+both lens effects, eg. if you were creating two "Sparkle" effects in
+different locations, you would only have to redeclare the <A HREF="#effect_location">effect_location</A>
+the second time, rather than all the other options.
+
+<P>Note that the Lens Effects Include File supports both British and
+American English, eg: <I>effect_colour</I> and <I>effect_color</I> are interchangeable,
+as are <I>spots_to_centre</I> and <I>spots_to_center</I>, etc.
+
+<P>
+<BR>
+<A NAME="Camera Options"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>CAMERA OPTIONS</B></I></FONT>
+</TD></TR></TABLE>
+To add a lens effect to your scene, you must properly declare the camera
+options (which should always match those found in the camera {} statement).
+Depending on the camera options you have used, you will have to declare
+some or all of the following options:
+
+<P><CODE>camera_location, camera_look_at, camera_sky
+   camera_direction, camera_angle</CODE>
+
+<P>Correctly declaring these options will ensure that the lens effects are
+created properly.  Note that if you transform (ie. rotate, translate) the
+camera, you should do the same to the variables, eg. if you had:
+
+<P><CODE>camera {location -z * 10 look_at y * 2
+<BR>rotate x * 45
+<BR>translate &lt -5, 10, 2&gt
+<BR>rotate y * clock * 360}</CODE>
+
+<P>you should perform the same operations on the <I>camera_location</I> and
+<I>camera_look_at</I> options, eg:
+
+<P><CODE>#declare camera_location = -z * 10;
+<BR>#declare camera_location = vrotate(camera_location, x * 45);
+<BR>#declare camera_location = camera_location + &lt -5, 10, 2&gt ;
+<BR>#declare camera_location = vrotate(camera_location, y * clock * 360);
+
+<P>#declare camera_look_at = -z * 10;
+<BR>#declare camera_look_at = vrotate(camera_look_at, x * 45);
+<BR>#declare camera_look_at = camera_look_at + &lt -5, 10, 2&gt ;
+<BR>#declare camera_look_at = vrotate(camera_look_at, y * clock * 360);</CODE>
+
+<P>Note that the Lens Effects Include File will always create the camera
+for you, using the values you specify for the above options (so there
+is actually no need to have a separate camera {} statement in the POV
+file).
+
+
+<P>
+<BR>
+<A NAME="Options"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>LENS EFFECTS OPTIONS</B></I></FONT>
+</TD></TR></TABLE>
+This section explains the different effects that can be created using
+<I>Lens.inc</I>, and the options you can use to fine-tune a lens effect.
+
+<P><A NAME="effect_type"></A>
+<B>effect_type</B>
+<HR>
+Use this option to choose a different lens effect from the default
+"Rainbow" lens flare.  To use a different effect type, just add the line
+(<B>before</B> including <I>Lens.inc</I>):
+
+<P><CODE>#declare effect_type = "Sun"</CODE>
+
+<P>substituting the name of the desired effect.  The available effect types
+are <I>Camera, Camera2, Candle, Diamond, Headlight, Headlight2, Rainbow,
+Rainbow2, SoftGlow, Sparkle, Sparkle2, Spotlight, Spotlight2, Star, Star2,
+Sun, Sun2, Sun3</I>, and <I>Undersea</I>.  You can see a sample of all of these
+effect types by rendering the <I>LE_SAMP*.POV</I> scenes.  In addition, there is
+the <A HREF="#Random">Random</A> lens effect.  Note that this option is
+case-insensitive, ie. <CODE>effect_type = "HEADLIGHT"</CODE> is the same as
+<CODE>effect_type = "headlight"</CODE>.
+
+<P><A NAME="effect_location"></A>
+<B>effect_location</B>
+<HR>
+This option specifies the location of the object that you want to add
+the lens effect to.  With light_sources this should be the same as the
+location vector in the light_source {} statement, and with other objects
+it is usually the centre of the object.  Note that if you use rotate and
+translate to move the light_source or object, you should follow the
+<A HREF="#Camera Options">directions above</A> to do the same to the <I>effect_location</I> option.
+
+<P><A NAME="effect_colour"></A>
+<B>effect_colour</B>
+<HR>
+Use this option to change the overall colour of the lens effect.  You can
+use predefined colours (eg. <CODE>#declare effect_colour = Red</CODE>) or colour vectors
+(eg. <CODE>#declare effect_colour = &lt 1.3, .3, .2&gt</CODE>).  When using vectors, note that
+the components are relative to each other, so you can use decimal
+percentages, integer percentages, or other values, eg. &lt 1, .2, .2&gt is the
+same as &lt 100, 20, 20&gt or &lt 5, 1, 1&gt.  Also, this option will affect different
+lens effects in different ways, eg. using:
+
+<P><CODE>#declare effect_colour = &lt 1, .5, .5&gt</CODE>
+
+<P>will make a yellowish effect like "Sun3" become orange, while a bluish
+effect like "Spotlight2" will become purple.
+
+<P><A NAME="source_colour"></A>
+<B>source_colour</B>
+<HR>
+Normally all the lens effects have a white centre.  You can use this option
+to change this to a different colour.  Unlike the <A HREF="#effect_colour">effect_colour</A> option,
+the vector components of this option are not relative.  This means that
+you can use larger numbers to create a brighter centre, eg:
+
+<P><CODE>#declare source_colour = &lt 2, 2, 1&gt</CODE>
+
+<P>will give a much brighter yellow centre than:
+
+<P><CODE>#declare source_colour = &lt 1, 1, .2&gt</CODE>
+
+<P><A NAME="effect_scale"></A>
+<B>effect_scale</B>
+<HR>
+Use this option to change the size of the lens effect.  You can use a
+single number, or a vector, eg:
+
+<P><CODE>#declare effect_scale = 2</CODE>
+
+<P>will make the lens effect twice as large, while:
+
+<P><CODE>#declare effect_scale = &lt .3, .1, 1&gt</CODE>
+
+<P>will make the lens effect 30% as wide and 10% as high (the z-component is
+not used).
+
+<P><A NAME="effect_rotate"></A>
+<B>effect_rotate</B>
+<HR>
+Use this option to rotate the lens effect around its own centre (the
+effect location will not change).  You can also use the <A HREF="#effect_spin">effect_spin</A> option
+to change the rotation during an animation.
+
+<P><A NAME="effect_brightness"></A>
+<B>effect_brightness</B>
+<HR>
+All the various lens effects are generally designed to look best on a dark
+background.  Therefore, if your scene does not have a dark background the
+lens effect may not be visible enough.  You can use this option to
+increase (or decrease) the brightness of the lens effect for a particular
+scene.  Good values range from 1 (the default) to 2 (for an effect twice as
+bright).  Any number can be used, and you can even use negative numbers to
+create a black hole type of effect.
+
+<P><A NAME="effect_intensity"></A>
+<B>effect_intensity</B>
+<HR>
+Use this option to make the lens effect more (or less) visible.  Setting
+this option to 0 will make the lens effect disappear, while numbers less
+than 1 will make the lens effect fainter than usual.  Numbers larger than
+one will make the lens effect less transparent, and therefore more visible
+(without increasing the brightness of the effect).  You can also use
+negative numbers, which have the strange effect of making the lens effect
+invisible except when there are other objects behind it.
+
+<P><A NAME="effect_always_on_top"></A>
+<B>effect_always_on_top</B>
+<HR>
+Normally the lens effects always appear on top of all the other objects in
+the scene.  You can set this option to false to make the lens effect
+disappear behind other objects that are in front of it.  This makes the
+lens effect an actual object in the scene, and so it will be reflected by
+other mirrored objects, and it will be affected by fogs, media,
+refraction, etc.  This can also be used to make the lens effect compatible
+with certain camera options (eg. focal blurring, orthographic projection),
+which may not otherwise work properly with the Lens Effects Include
+File.
+
+
+<P>
+<BR>
+<A NAME="Animation Options"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>LENS EFFECTS ANIMATION OPTIONS</B></I></FONT>
+</TD></TR></TABLE>
+This section lists the various options that can be used to animate the
+lens effects in a scene.
+
+<P><A NAME="effect_shrink"></A>
+<B>effect_shrink</B>
+<HR>
+Use this option to make the lens effect decrease in size as the
+effect_location moves further from the camera.  Note that you will
+generally have to increase the <A HREF="#effect_scale">effect_scale</A> to quite a large number,
+depending on the size of the object you are adding the glow to (eg. if you
+want to add a glow to a sphere with a radius of 1, you will probably need
+to use an <I>effect_scale</I> of 6 or larger).
+
+<P><A NAME="effect_falloff"></A>
+<B>effect_falloff</B>
+<HR>
+Normally the lens effect is brightest when it is located at the centre of
+the screen/image.  As the lens effect moves away from the image centre it
+begins to fade, until at some point it disappears altogether.  You can use
+this option to set the angle at which the lens effect disappears.  It
+is similar to the falloff option of a spotlight, eg. if you imagine the
+camera as a cone (with its tip at the <I>camera_location</I>, and its base centred
+on the <I>camera_look_at</I> point), this option specifies the angle made by
+the centre line of the cone and its sides.  The lens effect disappears
+when it moves beyond the sides of the cone.  The default value is 60
+degrees, but you can use any number between 0 and 90 degrees.
+
+<P><A NAME="effect_falloff_power"></A>
+<B>effect_falloff_power</B>
+<HR>
+Use this option to change the rate at which the lens effect fades as it
+moves away from the centre of the image.  The default is 1, which gives
+a linear falloff (eg. when the lens effect is halfway between the image
+centre and the angle specified by the effect_falloff option, it is created
+at half the normal intensity).  Numbers larger than 1 will the make the
+falloff rate slower (ie. the effect only begins to fade closer to the
+effect_falloff angle), while numbers less than 1 will make the lens
+effect fade quicker as it moves away from the image centre.
+
+<P><A NAME="effect_spin"></A>
+<B>effect_spin</B>
+<HR>
+Use this option to automatically change the <A HREF="#effect_rotate">effect_rotate</A> value as the
+POV-Ray clock changes.  The number used specifies the number of rotations
+per clock unit, eg. <CODE>#declare effect_spin = 3</CODE> will make the lens effect
+spin 3 times between clock = 0 and clock = 1.  Positive numbers specify
+an anti-clockwise rotation, while negative numbers specify a clockwise
+rotation.
+
+<P><A NAME="effect_jitter"></A>
+<B>effect_jitter</B>
+<HR>
+Use this option to randomly move the lens effect by a certain amount for
+each frame of the animation.  Setting this option to 0 will make the lens
+effect stationary; setting this option to 1 will move the lens effect by
+up to 10% of the image width in any direction.  You can use any number
+to increase or decrease the amount of jittering, and you can use a vector
+to move the effect more in one direction than another (the x-component
+controls the horizontal movement, the y-component controls the vertical
+movement).
+
+<P><A NAME="effect_flicker"></A>
+<B>effect_flicker</B>
+<HR>
+Use this option to randomly alter the size, brightness, and intensity of
+the lens effect for each frame of the animation.  Setting this option to
+0 specifies a constant lens effect, while setting this option to 1 will
+flicker the lens effect by up to 100% of it's normal size, brightness,
+and intensity.  You can use numbers smaller than 1 to reduce the flicker,
+or larger numbers to increase the amount of flickering.
+
+<P><A NAME="rays_flicker"></A>
+<B>rays_flicker</B>
+<HR>
+Most lens effects include some sort of rays, which start at the centre of
+the lens effect and move outwards.  Setting this option to true will
+randomly change the direction and size of these rays for each frame of
+the animation, adding to the flickering effect of certain lens effects
+(this is especially useful with the Candle and Sun effect types).
+
+<P><A NAME="spots_contract_to_centre"></A>
+<B>spots_contract_to_centre</B>
+<HR>
+This option controls the behaviour of the lens effect spots as they approach (and reach) the centre of the image.
+If this option is false (the default), the spots expand and contract as they near the centre of the image, while always keeping around the same number of spots visible.
+This usually looks best for still scenes, but when rendered in an animation the lens effect may not behave quite the way you want, especially if it reaches the direct centre of the image (where the angle of the spots will probably be incorrect).
+You can set this option to true to make the spots fully contract when they reach the centre of the image (so all spots are located at the same place), avoiding any problems in animations.
+
+<P><A NAME="effect_anim_seed"></A>
+<B>effect_anim_seed</B>
+<HR>
+The <A HREF="#effect_jitter">effect_jitter</A> and <A HREF="#effect_flicker">effect_flicker</A> options can be used to add a certain
+amount of randomness to the lens effect.  You can use this option to change
+the random number seed used to calculate this randomness (the default is 0).
+
+
+<P>
+<BR>
+<A NAME="Custom Effects"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>DESIGNING YOUR OWN LENS EFFECTS</B></I></FONT>
+</TD></TR></TABLE>
+In addition to using the many predefined lens effects included with
+<I>Lens.inc</I> (as well as using all of the above options to fine-tune these
+predefined effects) it is possible to use the Lens Effects Include File
+to create your own custom lens effects.  This section details the various
+methods you can use to do this.
+
+
+<P><HR><A NAME="Files"></A>
+<B>UNDERSTANDING THE LENS EFFECTS INCLUDE FILE</B>
+<HR>
+Before starting to create a custom lens effect, you should understand (at
+least partly) how the Lens Effects Include File works.  The Lens Effects
+Include File actually consists of two files, <I>Lens.inc</I> and <I>LnsEfcts.inc</I>;
+<I>LnsEfcts.inc</I> contains the POV code to actually create the lens effects,
+while <I>Lens.inc</I> simply declares the necessary options needed to create the
+various predefined lens effects.  <I>LnsEfcts.inc</I> is based on a component
+system; each lens effect is made up of a number of different features.
+<P>These features are:
+
+<UL>the glow - a circle or ring of colour that surrounds the <A HREF="#effect_location">effect_location</A>
+<BR>the rays - thin lines that extend from the centre of the glow
+<BR>the streaks - thicker lines that pass through the centre of the glow
+<BR>the spots - circles or other shapes that extend in a line either side of the centre of the glow
+</UL>
+
+<P><I>LnsEfcts.inc</I> includes 8 different glow types, 8 different ray types,
+8 different streak types, and 8 different spot types.  This gives a total
+of more than <I>5800 different combinations</I> when using at least 1 of each type.
+In addition, each component includes a separate set of options that can
+be used to alter the characteristics of that individual component (the
+various options in the previous section alter every component that makes
+up a particular lens effect).  Finally, you can create custom effect files
+that use any of POV-Ray's extensive texturing features, to create completely
+original lens effects that can be used on their own or combined with any of
+the existing lens effects components.
+
+
+<P><HR><A NAME="Component Options"></A>
+<B>LENS EFFECTS COMPONENT OPTIONS</B>
+<HR>
+This section details the various component options that can be used when
+creating a custom lens effect.  To create a custom effect, you simply
+declare all the following options that you want to use, and then include
+<I>LnsEfcts.inc</I>, eg:
+
+<P><CODE>#declare glow_type = 3;
+<BR>#declare rays_type = 2;
+<BR>#declare rays_intensity = 2;
+<BR>#declare streak_type = 3;
+<BR>#declare streak_seed = 1232;
+<BR>#include "LnsEfcts.inc"</CODE>
+
+<P>Any options you don't declare will be assigned default values.
+
+<P><HR><A NAME="Glow Options"></A>
+<B>GLOW OPTIONS</B>
+<HR>
+<B>glow_type:</B> a number between 1 and 8 that specifies which glow type to use
+  (render the <I>Glows.pov</I> scene to see all the different glow types).  Using 0
+  or another number outside of the 1 to 8 range will create a lens effect
+  without a glow
+
+<P><B>glow_colour</B>: changes the colour of the glow.  See the explanation of
+  <A HREF="#source_colour">source_colour</A> to understand how this option works.
+
+<P><B>glow_scale</B>: changes the size of the glow, relative to <A HREF="#effect_scale">effect_scale</A>
+
+<P><B>glow_rotate</B>: rotates the glow, relative to <A HREF="#effect_rotate">effect_rotate</A>
+
+<P><B>glow_intensity</B>: changes the intensity of the glow, relative to <A HREF="#effect_intensity">effect_intensity</A>
+
+<P><HR><A NAME="Ray Options"></A>
+<B>RAY OPTIONS</B>
+<HR>
+<B>rays_type</B>: a number between 1 and 8 that specifies which rays type to use
+  (render the <I>Rays.pov</I> scene to see all the different ray types).  Using 0
+  or another number outside of the 1 to 8 range will create a lens effect
+  without any rays
+
+<P><B>rays_colour</B>: changes the colour of the rays.  See the explanation of
+  <A HREF="#source_colour">source_colour</A> to understand how this option works.
+
+<P><B>rays_scale</B>: changes the size of the rays, relative to <A HREF="#effect_scale">effect_scale</A>
+
+<P><B>rays_rotate</B>: rotates the rays, relative to <A HREF="#effect_rotate">effect_rotate</A>
+
+<P><B>rays_intensity</B>: changes the intensity of the rays, relative to <A HREF="#effect_intensity">effect_intensity</A>
+
+<P><B>rays_seed</B>: changes the random seed used to create the rays (default is 0)
+
+<P><B>rays_frequency</B>: changes the number of rays created (numbers larger than 1
+  will create more rays, numbers less than 1 will create fewer rays)
+
+<P><HR><A NAME="Streak Options"></A>
+<B>STREAK OPTIONS</B>
+<HR>
+<B>streak_type</B>: a number between 1 and 8 that specifies which streak type to use
+  (render the <I>Streaks.pov</I> scene to see all the different streak types).
+  Using 0 or another number outside of the 1 to 8 range will create a lens
+  effect without any streaks
+
+<P><B>streak_colour</B>: changes the colour of the streaks.  See the explanation of
+  <A HREF="#source_colour">source_colour</A> to understand how this option works.
+
+<P><B>streak_scale</B>: changes the size of the streaks, relative to <A HREF="#effect_scale">effect_scale</A>
+
+<P><B>streak_rotate</B>: rotates the streaks, relative to <A HREF="#effect_rotate">effect_rotate</A>
+
+<P><B>streak_intensity</B>: changes the intensity of the streaks, relative to <A HREF="#effect_intensity">effect_intensity</A>
+
+<P><B>streak_seed</B>: changes the random seed used to create the streaks (default is 0)
+
+<P><B>streak_to_centre</B>: if true, the streaks will always rotate so they pass
+  through the centre of the image.
+
+<P><HR><A NAME="Spot Options"></A>
+<B>SPOT OPTIONS</B>
+<HR>
+<B>spots_type</B>: a number between 1 and 8 that specifies which spot type to use
+  (render the <I>Spots.pov</I> scene to see all the different spot types).
+  Using 0 or another number outside of the 1 to 8 range will create a lens
+  effect without any spots
+
+<P><B>spots_colour</B>: changes the colour of the spots.  See the explanation of
+  <A HREF="#source_colour">source_colour</A> to understand how this option works.
+
+<P><B>spots_scale</B>: changes the size of the spots, relative to <A HREF="#effect_scale">effect_scale</A>
+
+<P><B>spots_rotate</B>: rotates the spots, relative to <A HREF="#effect_rotate">effect_rotate</A>
+
+<P><B>spots_intensity</B>: changes the intensity of the spots, relative to <A HREF="#effect_intensity">effect_intensity</A>
+
+<P><B>spots_seed</B>: changes the random seed used to create the spots (default is 0)
+
+<P><B>spots_frequency</B>: changes the number of spots created (numbers larger than 1
+  will create more spots, numbers less than 1 will create fewer spots)
+
+<P><B>spots_spacing</B>: changes the space between the spots (numbers larger than 1
+  will increase the space between each spot, numbers less than 1 will bring
+  the spots closer together)
+
+<P><B>spots_to_centre</B>: if true, the spots will always rotate so that they pass
+  through the centre of the image.  If false, the spots will be horizontal
+  (although you can use <I>spots_rotate</I> to change this).
+
+
+<P><HR><A NAME="Random"></A>
+<B>USING THE RANDOM EFFECT TYPE</B>
+<HR>
+To get an indication of how the various lens effects component options
+work you can use the "Random" effect type, eg:
+
+<P><CODE>#declare effect_seed = 12398;
+<BR>#declare effect_type = "Random"
+<BR>#include "Lens.inc"</CODE>
+
+<P>The Lens Effects Include File will assign random values to the various
+component options listed in the previous section, depending on the random
+seed specified by the <I>effect_seed</I> option.  Each different number you use
+will create a new and different lens effect (but using the same number again
+will allow you to reproduce a particular effect).  You can use any number
+allowed by POV-Ray, which means that you can create literally millions
+of random lens effects without even having to use any of the component
+options.  For more information, see the <I>Rand.ini</I> file (which will allow
+you to automatically render as many different lens effects as you want).
+
+
+<P><HR><A NAME="Modify Options"></A>
+<B>MODIFYING A PREDEFINED LENS EFFECT</B>
+<HR>
+Sometimes you may find that you want to use a predefined lens effect, but
+wish to alter only certain features of that effect type.  Also, you may
+discover a particular Random effect that you like, but want to know the
+options that were used to create that effect.  There are two ways of
+doing this:
+
+<P><A NAME="options_only"></A>
+<B>options_only</B>
+<HR>
+Setting this option to true <B>before</B> including <I>Lens.inc</I> will not actually
+create any lens effect - it will simply set the necessary options for that
+effect.  You can then change any of the desired component options, and
+include <I>LnsEfcts.inc</I> to create the altered lens effect.  For example, you
+may want to use the "Spotlight" effect_type, but use 6 streaks instead of
+4, and add some spots:
+
+<P><CODE>#declare effect_type = "Spotlight"
+<BR>#declare options_only = true; #include "Lens.inc"
+
+<P>#declare streak_type = 6;
+<BR>#declare spots_type = 7;
+<BR>#include "LnsEfcts.inc"</CODE>
+
+<P>Or, you may have found a random effect type you like, but want to change
+the effect_colour and glow features, eg:
+
+<P><CODE>#declare effect_type = "Random" #declare effect_seed = -8732;
+<BR>#declare options_only = true; #include "Lens.inc"
+
+<P>#declare effect_colour = &lt 10, 5, 2&gt ;
+<BR>#declare glow_type = 6; #declare glow_scale = &lt 1.5, 1, 1&gt ;
+<BR>#include "LnsEfcts.inc"</CODE>
+
+<P>The <I>options_only</I> variable can also be useful when you want to create
+multiple copies of the same effect type; that way you only include <I>Lens.inc</I>
+once at the beginning of the file, and then declare <I>LnsEfcts.inc</I> each time
+you want to create a lens effect (this is faster than including <I>Lens.inc</I>
+multiple times), eg:
+
+<P><CODE>#declare effect_type = "Sparkle"
+<BR>#declare options_only = true; #include "Lens.inc"
+
+<P>#declare effect_location = &lt -5, 10, -2&gt ; #include "LnsEfcts.inc"
+<BR>#declare effect_location = &lt 15, 1, -5&gt ; #include "LnsEfcts.inc"
+<BR>#declare effect_location = &lt 0, -10, 3&gt ; #include "LnsEfcts.inc"</CODE>
+
+<P><A NAME="debug_options"></A>
+<B>debug_options</B>
+<HR>
+Setting this option to true will cause the Lens Effects Include File to
+print a copy of all the lens effects component options to POV-Ray's
+debug stream.  You can then use the +GD command-line switch, or the
+Debug_File INI file setting, to direct the debug stream to a file.  This
+file can then be altered as desired, and included directly into your
+scene before including <I>LnsEfcts.inc</I>.  This is especially useful when
+you want to know the exact options used to create a particular Random
+effect (see the <I>Rand.pov</I> and <I>Rand.ini</I> files for an example of how this
+option can be used).
+
+
+<P><HR><A NAME="Custom Effect Files"></A>
+<B>USING CUSTOM EFFECT FILES</B>
+<HR>
+If you find that none of the existing lens effects components (or their
+options) are able to give you the exact effect you want, you may wish to
+consider creating a custom effect file.  This will let you use any and all
+of POV-Ray's texturing commands/patterns to create all sorts of different
+effects.  The three custom effect files included with the Lens Effects
+Include File (<I>Fireball.lfx, Spiral.lfx</I>, and <I>Custom.lfx</I>) show just a few
+of the possibilities.  Using a custom effect file is as simple as declaring
+the <I>custom_effect_file</I> option with the name of the file you want to use, eg:
+
+<P><CODE>#declare custom_effect_file = "Fireball.lfx"</CODE>
+
+<P>You can then use this file alone, or combine it with other existing lens
+effects components, before including <I>LnsEfcts.inc</I> (see the <I>CustLFX.pov</I> file
+for some examples of this).  You can also use multiple custom effect files
+by including <I>LnsEfcts.inc</I> multiple times, eg:
+
+<P><CODE>#declare custom_effect_file = "MyEffect1.lfx"
+<BR>#include "LnsEfcts.inc"
+
+<P>#declare custom_effect_file = "MyEffect2.lfx"
+<BR>#include "LnsEfcts.inc"</CODE>
+
+<P>For instructions on how to actually create your own custom effect file
+see the <I>Custom.lfx</I> file (which you can copy and alter to create your own
+files).
+
+
+<P>
+<BR>
+<A NAME="Troubleshooting"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>TROUBLESHOOTING</B></I></FONT>
+</TD></TR></TABLE>
+This section contains some common problems you might encounter while using
+the Lens Effects Include File, and instructions on how to fix these
+problems.
+
+<P><HR><A NAME="Troubleshooting Options"></A>
+<B>TROUBLESHOOTING OPTIONS</B>
+<HR>
+The Lens Effects Include File uses layers of semi-transparent discs to
+create the various features of the lens effects.  If <A HREF="#effect_always_on_top">effect_always_on_top</A>
+is true, these discs are scaled very small and moved very close to the
+camera.  If you are using larger numbers (ie. in the millions or larger)
+to position the camera and/or effect_location, the default numbers used
+when positioning the layers of discs may not work.  Some symptoms of this
+include invisible lens effects, and opaque lens effects.  If you encounter
+these problems, try using the following options.
+
+<P><A NAME="lens_scale"></A>
+<B>lens_scale</B>
+<HR>
+Use this to increase the size of the imaginary lens used when creating the
+lens effects.  If this number is too small relative to the <I>camera_location</I>
+the lens effects will become completely invisible.  Try increasing this to
+100, or further if this does not solve the problem.
+
+<P><A NAME="layer_separation"></A>
+<B>layer_separation</B>
+<HR>
+Use this option to increase the distance between each layer of discs used
+to create the lens effects.  If this number is too small relative to the
+<I>camera_location</I> the lens effect may become opaque, or you may get a strange
+speckled effect.  Try increasing this number to 10, or further if this does
+not solve the problem.
+
+<P><HR><A NAME="Troubleshooting FAQ"></A>
+<B>TROUBLESHOOTING FAQ</B>
+<HR>
+
+<P><B>Q) I added a lens effect to my scene but I can't see it?</B>
+<BR>A: There are various reasons why the lens effect may not be visible.  First
+   check that you have properly declared the camera options and
+   <A HREF="#effect_location">effect_location</A> according to the instructions above (especially if
+   you have transformed the camera or <I>effect_location</I>).  The effect may
+   be invisible because it is outside of the camera's view, or because it is
+   beyond the effect_falloff distance.  Check for any lens effects warnings
+   and make sure the <I>effect_location</I> is in view of the camera.  Try increasing
+   the <A HREF="#effect_scale">effect_scale</A> and <A HREF="#effect_intensity">effect_intensity</A> to see if this makes the lens effect
+   visible.  Try increasing the <A HREF="#lens_scale">lens_scale</A> and/or <A HREF="#layer_separation">layer_separation</A> options.
+   Finally, make sure you have included <I>Lens.inc</I> or <I>LnsEfcts.inc</I> <B>after</B>
+   declaring all the correct options (any options declared after including
+   the files will have no effect).
+
+<P><HR>
+<B>Q) I added a lens effect to my scene, and now I see black areas in the lens
+   effect and/or on mirrors and glass in my scene?</B>
+<BR>A: You need to increase the max_trace_level, using the following line:
+
+<P><CODE>global_settings {max_trace_level 30}</CODE>
+
+<P>Add this line <B>after</B> including <I>Lens.inc</I> or <I>LnsEfcts.inc</I>, and increase
+   the number until the black areas disappear.
+
+<P><HR>
+<B>Q) I changed my camera {} statement, but the camera didn't move?</B>
+<BR>A: You must also make sure that you change the camera options, as described
+   above.
+
+<P><HR>
+<B>Q) Some parts of the lens effects overlap others, and I can't see through
+   them?</B>
+<BR>A: Try increasing the <A HREF="#lens_scale">lens_scale</A> and <A HREF="#layer_separation">layer_separation</A> options, as described
+   above.
+
+<P><HR>
+<B>Q) I am using focal blurring, and I can't see the lens effect?</B>
+<BR>A: If you wish to use focal blurring you should set <A HREF="#effect_always_on_top">effect_always_on_top</A>
+   to false, and make sure that the <A HREF="#effect_location">effect_location</A> is close to the
+   focal_point vector.
+
+<P><HR>
+<B>Q) I am using a different camera projection, and the lens effect doesn't
+   look right?</B>
+<BR>A: Try setting <A HREF="#effect_always_on_top">effect_always_on_top</A> to false and see if this fixes the
+   problem.  Also, you can use the <A HREF="#Spot Options">spots_spacing</A> option to make the spots
+   spread across the entire image if you are using a wide camera angle.
+
+
+<P>
+<BR>
+<A NAME="Legal"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>COPYRIGHT AND LEGAL INFORMATION</B></I></FONT>
+</TD></TR></TABLE>
+The <B>Lens Effects Include File</B>, including <I>LnsEfcts.inc</I>, <I>Lens.inc</I>, all documentation, and
+associated sample *.POV and *.LFX files are <B>Copyright 1997, 1998</B> by <B>Chris Colefax</B>.  Full
+permission is granted to the user to modify any or all of the files for
+his/her own use.  If modified versions are to be distributed the user
+should make clear the modifications that have been made by him/herself.
+
+<P>The <B>Lens Effects Include File</B> may be bundled with or without other
+software on CD-ROM collections, Bulletin Board systems and other file
+archives, providing that all associated files, including documentation and
+samples, are included.  I would also request that persons intending to
+distribute the <B>Lens Effects Include File</B> in this manner or otherwise
+would first <A HREF="#Contact">contact me</A> to ensure that
+they are in possession of the latest available version.
+
+<P>Further, no restrictions of any sort are placed on the usage of the include
+files themselves (<I>LnsEfcts.inc</I> and <I>Lens.inc</I>), and scene files or images created using the include
+files remain entirely the property of the user or users who have created
+them.  I claim no liability or responsibility for damages or loss resulting
+from usage of the include files, or any part of the include file package.
+
+
+<P>
+<BR>
+<A NAME="Contact"></A><TABLE WIDTH=100% BORDER=0 CELLPADDING=7><TR><TD BGCOLOR=#C0C0C0>
+<FONT SIZE=+1><B><I>CONTACTING THE AUTHOR</B></I></FONT>
+</TD></TR></TABLE>
+If you wish to contact me with bug reports, bug fixes, criticisms, 
+comments, suggested improvements, questions, etc. you can reach me by 
+email at:
+
+<P><A HREF="mailto:ccolefax@geocities.com">ccolefax@geocities.com</A>
+
+<P>or by regular mail at:
+
+<UL>Chris Colefax
+<BR>PO Box 110
+<BR>Kuranda, Queensland
+<BR>Australia  4872
+
+</UL>
+<HR>
+
+<DIV ALIGN=RIGHT><FONT SIZE=-1><I>
+POV-Ray<FONT SIZE=-2><SUP>TM</SUP></FONT> and Persistence of Vision<FONT SIZE=-2><SUP>TM</SUP></FONT> are registered trademarks of the POV-Ray Team<FONT SIZE=-2><SUP>TM</SUP></FONT>
+</I></FONT></DIV>
+
+</BODY></HTML>

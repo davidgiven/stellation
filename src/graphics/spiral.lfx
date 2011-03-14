@@ -1,0 +1,14 @@
+// LENS EFFECTS: SPIRAL CUSTOM EFFECT FILE
+// ***************************************
+// See the LnsEfcts.txt and Custom.lfx files for more information.
+
+   object {_LE_baseobj pigment {onion pigment_map {
+         [.4 spiral1 9 color_map {
+            [0 rgb 1.2 * source_colour transmit pow(.7, _LE_intensity)]
+            [1 rgb _LE_colour transmit 1]}
+            triangle_wave scale .2 turbulence .3 lambda 4 octaves 3]
+         [1 rgb _LE_colour transmit 1]}
+         scallop_wave scale 2}
+      scale .3 * _LE_scale rotate z * _LE_rotate
+      translate _LE_translate scale _LE_lensscale #declare _LE_lensscale = _LE_lensscale + _LE_layersep;
+   }

@@ -1,0 +1,66 @@
+-- © 2011 David Given.
+-- Stellation 3 is licensed under the MIT open source license. See the COPYING
+-- file in this distribution for the full text.
+
+povray = simple {
+	class = "povray",
+	command = {
+		"cd %out[1]:dirname% && povray %CWD%/%in[1]% +O%CWD%/%out[1]% %povopts% -GS -D +A +L%CWD%/%librarypath% +W%width% +H%height%",
+	},
+	outputs = {"%U%/%I%.png"},
+	librarypath = "src/graphics",
+	povopts = EMPTY
+}
+
+star = povray {
+	class = "star",
+	file "src/graphics/star.pov",
+	width = "64",
+	height = "64",
+	povopts = {
+		"+UA",
+		"+K%temperature%"
+	},
+	install = {
+		"ln -f %CWD%/%out[1]% %CWD%/war/%filename%"
+	}
+}
+	
+graphics = group {
+	star {
+		temperature = "4000",
+		filename = "star1.png"
+	},
+	star {
+		temperature = "4500",
+		filename = "star2.png"
+	},
+	star {
+		temperature = "5000",
+		filename = "star3.png"
+	},
+	star {
+		temperature = "6000",
+		filename = "star4.png"
+	},
+	star {
+		temperature = "7000",
+		filename = "star5.png"
+	},
+	star {
+		temperature = "8000",
+		filename = "star6.png"
+	},
+	star {
+		temperature = "9000",
+		filename = "star7.png"
+	},
+	star {
+		temperature = "10000",
+		filename = "star8.png"
+	},
+	star {
+		temperature = "11000",
+		filename = "star9.png"
+	}
+}
