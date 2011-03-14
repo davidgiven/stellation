@@ -59,7 +59,11 @@ public abstract class Game
 //		StarMap = createStarMap();
 	}
 	
+	public abstract void loadUIData(CompletionListener listener);
+	
 	public abstract Transport createTransport();
+	
+	public abstract void showProgress(String message);
 	
 	public abstract Pane showPane(ControllerGroupCollection cg,
 			PaneAspect aspect, PaneHandler cgh);

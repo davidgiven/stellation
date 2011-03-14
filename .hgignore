@@ -9,3 +9,15 @@ syntax: regexp
 ^src/javaclient/com/cowlark/stellation3/common/database/Hash\.java$
 syntax: regexp
 ^src/javaclient/com/cowlark/stellation3/common/database/SBase\.java$
+
+syntax: regexp
+^war/WEB-INF/lib$
+syntax: regexp
+^war/WEB-INF/classes$
+syntax: regexp
+^war/stellation3$
+
+syntax: regexp
+
+syntax: regexp
+^war/star.\.png$

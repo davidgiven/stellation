@@ -12,15 +12,19 @@ import com.cowlark.stellation3.common.controllers.StarMapStarHandler;
 import com.cowlark.stellation3.common.controllers.TextFieldController;
 import com.cowlark.stellation3.common.controllers.TextFieldHandler;
 import com.cowlark.stellation3.common.database.Transport;
+import com.cowlark.stellation3.common.game.CompletionListener;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.ui.Screen;
 import com.cowlark.stellation3.gwt.ui.StarMapImpl;
 import com.cowlark.stellation3.gwt.ui.StarMapStarControllerImpl;
+import com.cowlark.stellation3.gwt.ui.UIResources;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class GameImpl extends Game
 {
 	private Screen _screen;
+	private DialogBox _progress;
 	private StarMapImpl _starmap;
 	
 	public GameImpl()
@@ -28,6 +32,30 @@ public class GameImpl extends Game
 		_screen = new Screen();
 		RootLayoutPanel.get().add(_screen);
     }
+	
+	@Override
+	public void loadUIData(CompletionListener listener)
+	{
+		UIResources.waitForLoad(listener);
+	}
+	
+	@Override
+	public void showProgress(String message)
+	{
+		if (_progress != null)
+		{
+			_progress.hide();
+			_progress = null;
+		}
+		
+		if (message != null)
+		{
+			_progress = new DialogBox();
+			_progress.setText(message);
+			_progress.center();
+			_progress.show();
+		}
+	}
 	
 	@Override
 	public Pane showPane(ControllerGroupCollection cgc, PaneAspect aspect, PaneHandler ph)

@@ -69,6 +69,8 @@ public class LoginSequencer
 	
 	private void userCredentialsEntered(String email, String password)
 	{
+		Game.Instance.showProgress("Authenticating");
+		
 		Game.Instance.RPCManager.authenticate(email, password,
 				new AuthenticationListener()
 				{
@@ -90,6 +92,7 @@ public class LoginSequencer
 	
 	private void authenticationCompleted()
 	{
+		Game.Instance.showProgress("Downloading static data");
 		Game.Instance.Static.downloadData(
 				new CompletionListener()
 				{
@@ -104,6 +107,7 @@ public class LoginSequencer
 	
 	private void staticDataDownloaded()
 	{
+		Game.Instance.showProgress("Syncing game database");
 		Game.Instance.RPCManager.doInitialSync(
 				new CompletionListener()
 				{
@@ -118,6 +122,22 @@ public class LoginSequencer
 				
 	private void completedInitialSync()
 	{
+		Game.Instance.showProgress("Loading image data");
+		Game.Instance.loadUIData(
+				new CompletionListener()
+				{
+					@Override
+					public void onCompletion()
+					{
+						completedLogin();
+					}
+				}
+		);
+	}
+	
+	private void completedLogin()
+	{
+		Game.Instance.showProgress(null);
 		Game.Instance.loginCompleted(_playeroid);
 	}
 }

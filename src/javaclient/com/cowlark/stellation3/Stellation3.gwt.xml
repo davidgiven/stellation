@@ -2,6 +2,7 @@
 <module rename-to='stellation3'>
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+  <inherits name='com.google.gwt.widgetideas.GWTCanvas'/>
   
   <entry-point class='com.cowlark.stellation3.gwt.Stellation3'/>
 
