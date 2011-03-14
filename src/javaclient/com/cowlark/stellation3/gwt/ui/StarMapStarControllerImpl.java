@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Image;
 public class StarMapStarControllerImpl extends Image implements StarMapStarController
 {
 	private StarMapStarController.StarData _starData;
-	private ImageResource _image;
 	private double _scale = 1.0;
 	
 	public StarMapStarControllerImpl(StarMapStarHandler smsh,
@@ -26,24 +25,45 @@ public class StarMapStarControllerImpl extends Image implements StarMapStarContr
 	public void setStarData(StarData sd)
 	{
 		_starData = sd;
-		_image = StarMapResources.Instance.star();
-		setUrl(_image.getURL());
+		setStarImage(sd.brightness);
+	}
+	
+	private void setStarImage(double b)
+	{
+		if (b < 2.0)
+			setUrl("star1.png");
+		else if (b < 3.0)
+			setUrl("star2.png");
+		else if (b < 4.0)
+			setUrl("star3.png");
+		else if (b < 5.0)
+			setUrl("star4.png");
+		else if (b < 6.0)
+			setUrl("star5.png");
+		else if (b < 7.0)
+			setUrl("star6.png");
+		else if (b < 8.0)
+			setUrl("star7.png");
+		else if (b < 9.0)
+			setUrl("star8.png");
+		else
+			setUrl("star9.png");
 	}
 	
 	public void setScale(double scale)
 	{
 		_scale = scale;
-		setPixelSize((int)(_image.getWidth() * _scale),
-				(int)(_image.getHeight() * _scale));
+		setPixelSize((int)(64 * _scale),
+				(int)(64 * _scale));
 	}
 	
 	public double getOffsetX()
 	{
-		return _image.getWidth() * _scale * 0.5;
+		return getWidth() * 0.5;
 	}
 	
 	public double getOffsetY()
 	{
-		return _image.getHeight() * _scale * 0.5;
+		return getHeight() * 0.5;
 	}
 }

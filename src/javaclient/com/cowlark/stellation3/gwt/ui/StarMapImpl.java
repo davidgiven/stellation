@@ -59,6 +59,9 @@ public class StarMapImpl extends Composite implements
 		addDomHandler(this, MouseUpEvent.getType());
 		addDomHandler(this, MouseOutEvent.getType());
 		
+		_background = new Image(StarMapResources.Instance.background().getURL());
+		_contents.add(_background);
+		
 		_starImpls = new Vector<StarMapStarControllerImpl>();
 		for (Controller c : cg)
 		{
@@ -72,9 +75,6 @@ public class StarMapImpl extends Composite implements
 		_scale = 10.0;
 		_centerx = 0.0;
 		_centery = 0.0;
-		
-		_background = new Image(StarMapResources.Instance.background().getURL());
-		_contents.add(_background);
 		
 		placeItems();
     }
