@@ -4,10 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.LayoutPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
 public class Screen extends Composite implements RequiresResize, ProvidesResize
 {
@@ -23,7 +24,10 @@ public class Screen extends Composite implements RequiresResize, ProvidesResize
 	}
 	
 	@UiField
-	LayoutPanel starmapContainer;
+	ResizingCanvas BackgroundCanvas;
+	
+	@UiField
+	Label BackgroundBottomLeftLabel;
 	
 	public Screen(String firstName)
 	{
@@ -34,12 +38,5 @@ public class Screen extends Composite implements RequiresResize, ProvidesResize
 	public void onResize()
 	{
 		((RequiresResize) getWidget()).onResize();
-	}
-	
-	public void setStarmap(StarMapImpl sm)
-	{
-		starmapContainer.clear();
-		starmapContainer.add(sm);
-		starmapContainer.forceLayout();
 	}
 }

@@ -23,14 +23,17 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class GameImpl extends Game
 {
-	private Screen _screen;
+	public static GameImpl Instance;
+	
+	public Screen Screen;
 	private DialogBox _progress;
 	private StarMapImpl _starmap;
 	
 	public GameImpl()
     {
-		_screen = new Screen();
-		RootLayoutPanel.get().add(_screen);
+		Instance = this;
+		Screen = new Screen();
+		RootLayoutPanel.get().add(Screen);
     }
 	
 	@Override
@@ -73,7 +76,6 @@ public class GameImpl extends Game
 			{
 				assert(_starmap == null);
 				_starmap = new StarMapImpl(cgc.getSingleton(), ph);
-				_screen.setStarmap(_starmap);
 				return _starmap;
 			}
 			
@@ -95,7 +97,7 @@ public class GameImpl extends Game
 	@Override
 	public Transport createTransport()
 	{
-		return new TransportImpl("http://localhost/~dg/cgi-bin/stellation.cgi");
+		return new TransportImpl("http://hilfy/~dg/cgi-bin/stellation.cgi");
 	}
 	
 	@Override

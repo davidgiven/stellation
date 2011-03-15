@@ -2,14 +2,52 @@
 <ui:UiBinder
 	xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:com.cowlark.stellation3.gwt.ui"
 	>
 	<ui:style>
+		.grey {
+			background-color: black;
+		}
 	</ui:style>
 	<g:LayoutPanel>
 		<g:layer left='0' right='0' top='0' bottom='0'>
-			<g:LayoutPanel
-				ui:field="starmapContainer"
+			<my:ResizingCanvas
+				ui:field="BackgroundCanvas"
 				/>
 		</g:layer>
+		
+		<g:layer left='17em' bottom='0em' right="50%" height="2em">
+			<g:Label
+				ui:field="BackgroundBottomLeftLabel"
+				styleName="starmapLabel"
+				/>
+		</g:layer>
+		
+		<g:layer right='17em' bottom='0em' left="50%" height="2em">
+			<g:Label
+				ui:field="BackgroundBottomRightLabel"
+				styleName="starmapLabel"
+				/>
+		</g:layer>
+		
+		<!--
+		<g:layer left='1em' top='1em' bottom='1em' width='15em'>
+			<g:LayoutPanel
+				ui:field="LeftContainer"
+				/>
+		</g:layer>
+		
+		<g:layer right='1em' top='1em' bottom='1em' width='15em'>
+			<g:LayoutPanel
+				ui:field="RightContainer"
+				/>
+		</g:layer>
+		
+		<g:layer left='17em' right='17em' top='1em' bottom='1em'>
+			<g:LayoutPanel
+				ui:field="MiddleContainer"
+				/>
+		</g:layer>
+		-->
 	</g:LayoutPanel>
 </ui:UiBinder> 

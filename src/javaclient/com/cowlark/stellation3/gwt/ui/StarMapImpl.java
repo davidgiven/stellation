@@ -8,6 +8,7 @@ import com.cowlark.stellation3.common.controllers.PaneHandler;
 import com.cowlark.stellation3.common.controllers.StarMapStarController;
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.game.Game;
+import com.cowlark.stellation3.gwt.GameImpl;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.ImageElement;
@@ -21,25 +22,21 @@ import com.google.gwt.event.dom.client.MouseUpEvent;
 import com.google.gwt.event.dom.client.MouseUpHandler;
 import com.google.gwt.event.dom.client.MouseWheelEvent;
 import com.google.gwt.event.dom.client.MouseWheelHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.i18n.client.NumberFormat;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RequiresResize;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.graphics.client.Color;
-import com.google.gwt.widgetideas.graphics.client.GWTCanvas;
 
-public class StarMapImpl extends Composite implements 
-	Pane, RequiresResize, MouseDownHandler, MouseUpHandler, MouseOutHandler,
+public class StarMapImpl implements 
+	Pane, ResizeHandler, MouseDownHandler, MouseUpHandler, MouseOutHandler,
 	MouseMoveHandler, MouseWheelHandler, ScheduledCommand
 {
 	private ControllerGroup _cg;
 	private PaneHandler _ph;
 	private Vector<StarMapStarControllerImpl> _starImpls;
-	private AbsolutePanel _panel;
-	private Label _label;
-	private GWTCanvas _canvas;
+	private ResizingCanvas _canvas;
+	private Label _positionLabel;
 	private double _galactic_radius;
 	private double _scale;
 	private double _centerx;
@@ -52,6 +49,7 @@ public class StarMapImpl extends Composite implements
 	private double _dragdeltax;
 	private double _dragdeltay;
 	private boolean _redrawPending;
+	private Point _pointingAt;
 	
 	private static NumberFormat _coordFormat = NumberFormat.getFormat("0.0");
 	
@@ -60,18 +58,15 @@ public class StarMapImpl extends Composite implements
 		_cg = cg;
 		_ph = ph;
 		
-		_panel = new AbsolutePanel();
-		_canvas = new GWTCanvas();
-		_panel.add(_canvas, 0, 0);
-		_label = new Label();
-		_panel.add(_label, 0, 0);
-		initWidget(_panel);
+		_canvas = GameImpl.Instance.Screen.BackgroundCanvas;
+		_positionLabel = GameImpl.Instance.Screen.BackgroundBottomLeftLabel;
 		
-		addDomHandler(this, MouseWheelEvent.getType());
-		addDomHandler(this, MouseDownEvent.getType());
-		addDomHandler(this, MouseUpEvent.getType());
-		addDomHandler(this, MouseOutEvent.getType());
-		addDomHandler(this, MouseMoveEvent.getType());
+		_canvas.addHandler(this, MouseWheelEvent.getType());
+		_canvas.addHandler(this, MouseDownEvent.getType());
+		_canvas.addHandler(this, MouseUpEvent.getType());
+		_canvas.addHandler(this, MouseOutEvent.getType());
+		_canvas.addHandler(this, MouseMoveEvent.getType());
+		_canvas.addResizeHandler(this);
 		
 		_starImpls = new Vector<StarMapStarControllerImpl>();
 		for (Controller c : cg)
@@ -79,22 +74,16 @@ public class StarMapImpl extends Composite implements
 		
 		_galactic_radius = Game.Instance.Static.getDouble(Hash.SGalaxy, Hash.Radius);
 		
-		_scale = 10.0;
+		_scale = 200.0;
 		_centerx = 0.0;
 		_centery = 0.0;
 		
-		_label.setStylePrimaryName("starmapLabel");
-		redraw();
+		_canvas.onResize();
     }
 	
 	@Override
-	public void onResize()
+	public void onResize(ResizeEvent event)
 	{
-		Widget parent = getParent();
-		int w = parent.getOffsetWidth();
-		int h = parent.getOffsetHeight();
-		_panel.setPixelSize(w, h);
-		_canvas.resize(w, h);
 		redraw();
 	}
 	
@@ -160,6 +149,25 @@ public class StarMapImpl extends Composite implements
 		}
 		
 		_canvas.restoreContext();
+		updateLabels();
+	}
+	
+	private void updateLabels()
+	{
+		StringBuilder sb = new StringBuilder();
+		if (_pointingAt != null)
+		{
+			sb.append("Map x=");
+			sb.append(_coordFormat.format(_pointingAt.x));
+			sb.append(" y=");
+			sb.append(_coordFormat.format(_pointingAt.y));
+			sb.append(" ");
+			sb.append("scale=");
+			sb.append((int) _scale);
+			sb.append(" pixels/parsec");
+		}
+		
+		_positionLabel.setText(sb.toString());
 	}
 	
 	private Point screenToCoord(double sx, double sy)
@@ -201,8 +209,6 @@ public class StarMapImpl extends Composite implements
 	{
 		double mw = _canvas.getCoordWidth() / 2;
 		double mh = _canvas.getCoordHeight() / 2;
-		double deltax = event.getClientX() - mw;
-		double deltay = event.getClientY() - mh;
 		
 		/* After scaling, we want this point to be at the same place on the
 		 * screen. */
@@ -257,14 +263,8 @@ public class StarMapImpl extends Composite implements
 			deferredRedraw();
 		}
 		
-		StringBuilder sb = new StringBuilder();
-		Point p = screenToCoord(screenx, screeny);
-		sb.append("Map x=");
-		sb.append(_coordFormat.format(p.x));
-		sb.append(" y=");
-		sb.append(_coordFormat.format(p.y));
-		
-		_label.setText(sb.toString());
+		_pointingAt = screenToCoord(screenx, screeny);
+		updateLabels();
 	}
 	
 	@Override
