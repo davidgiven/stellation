@@ -5,32 +5,32 @@ import com.google.gwt.user.client.ui.Widget;
 
 public class ControllerImpl implements Controller
 {
+	private Object[] _data;
 	private String _left;
 	private Widget _right;
 	
-	public ControllerImpl()
+	public ControllerImpl(int cells)
     {
+		_data = new Object[cells];
     }
 	
-	public void setLeft(String left)
+	public void setCell(int cell, Object o)
 	{
-		assert(_left == null);
-		_left = left;
+		assert(cell < _data.length);
+		assert(cell >= 0);
+		assert(_data[cell] == null);
+		_data[cell] = o;
 	}
 	
-	public String getLeft()
+	public int getCells()
 	{
-		return _left;
+		return _data.length;
 	}
 	
-	public void setRight(Widget right)
+	public Object getCell(int cell)
 	{
-		assert(_right == null);
-		_right = right;
-	}
-	
-	public Widget getRight()
-	{
-		return _right;
+		if (cell >= _data.length)
+			return null;
+		return _data[cell];
 	}
 }

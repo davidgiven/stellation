@@ -11,10 +11,11 @@ public class LabelControllerImpl extends ControllerImpl
 	
 	public LabelControllerImpl(String label)
     {
-		setLeft(label);
+		super(2);
+		setCell(0, label);
 		
 		_label = new Label();
-		setRight(_label);
+		setCell(1, _label);
     }
 	
 	@Override

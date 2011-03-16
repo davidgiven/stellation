@@ -21,20 +21,40 @@ public class ControllerRenderer
 	
 	public void update(List<Controller> controllers)
 	{
-		_container.clear();
+		_container.clear(true);
 		int y = 0;
+		
+		int maxcols = 0;
+		for (Controller c : controllers)
+		{
+			ControllerImpl ci = (ControllerImpl) c;
+			maxcols = Math.max(maxcols, ci.getCells());
+		}
 		
 		for (Controller c : controllers)
 		{
 			ControllerImpl ci = (ControllerImpl) c;
 		
-			String left = ci.getLeft();
-			if (left != null)
-				_container.setText(y, 0, left);
+			int width = ci.getCells();
+			for (int i = 0; i < width; i++)
+			{
+				Object o = ci.getCell(i);
+				if (o instanceof String)
+					_container.setText(y, i, (String)o);
+				else if (o instanceof Widget)
+					_container.setWidget(y, i, (Widget)o);
+				else if (o != null)
+					assert(false);
+				
+				_container.getFlexCellFormatter().
+					setColSpan(y, i, 1);
+			}
 			
-			Widget right = ci.getRight();
-			if (right != null)
-				_container.setWidget(y, 1, right);
+			if (width < maxcols)
+			{
+				_container.getFlexCellFormatter().
+					setColSpan(y, width-1, 1 + maxcols - width);
+			}
 			
 			y++;
 		}

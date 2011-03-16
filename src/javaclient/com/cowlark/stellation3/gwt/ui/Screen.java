@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ProvidesResize;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
@@ -41,10 +42,13 @@ public class Screen extends Composite implements RequiresResize, ProvidesResize
 	}
 	
 	@UiField
-	ResizingCanvas BackgroundCanvas;
+	public ResizingCanvas BackgroundCanvas;
 	
 	@UiField
-	Label BackgroundBottomLeftLabel;
+	public Label BackgroundBottomLeftLabel;
+	
+	@UiField
+	public LayoutPanel LeftContainer;
 	
 	public Screen(String firstName)
 	{

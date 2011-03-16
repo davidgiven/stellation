@@ -4,6 +4,8 @@ import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.LabelController;
+import com.cowlark.stellation3.common.controllers.LocationController;
+import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -18,9 +20,11 @@ import com.cowlark.stellation3.gwt.ui.ButtonsControllerImpl;
 import com.cowlark.stellation3.gwt.ui.DialogueImpl;
 import com.cowlark.stellation3.gwt.ui.GroupTitleControllerImpl;
 import com.cowlark.stellation3.gwt.ui.LabelControllerImpl;
+import com.cowlark.stellation3.gwt.ui.LocationControllerImpl;
 import com.cowlark.stellation3.gwt.ui.Screen;
 import com.cowlark.stellation3.gwt.ui.StarMapImpl;
 import com.cowlark.stellation3.gwt.ui.StarMapStarControllerImpl;
+import com.cowlark.stellation3.gwt.ui.StaticPane;
 import com.cowlark.stellation3.gwt.ui.TextFieldControllerImpl;
 import com.cowlark.stellation3.gwt.ui.UIResources;
 import com.google.gwt.user.client.ui.DialogBox;
@@ -84,6 +88,13 @@ public class GameImpl extends Game
 				return _starmap;
 			}
 			
+			case TITLE:
+			{
+				StaticPane pane = new StaticPane(ph);
+				Screen.LeftContainer.add(pane);
+				return pane;
+			}
+			
 			default:
 				assert false;
 		}
@@ -143,5 +154,11 @@ public class GameImpl extends Game
 	        StarMapStarHandler smsh, StarMapStarController.StarData sd)
 	{
 	    return new StarMapStarControllerImpl(smsh, sd);
+	}
+	
+	public LocationController createLocationController(LocationHandler lh,
+			String label)
+	{
+		return new LocationControllerImpl(lh, label);
 	}
 }

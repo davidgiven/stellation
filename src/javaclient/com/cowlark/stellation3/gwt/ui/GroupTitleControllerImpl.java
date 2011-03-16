@@ -8,12 +8,13 @@ public class GroupTitleControllerImpl extends ControllerImpl
 {
 	public GroupTitleControllerImpl(String title)
     {
-		setLeft(title);
+		super(1);
+		setCell(0, title);
     }
 	
 	@Override
 	public String getTitle()
 	{
-	    return getLeft();
+	    return (String) getCell(0);
 	}
 }

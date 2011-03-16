@@ -16,6 +16,8 @@ public class ButtonsControllerImpl extends ControllerImpl
 	
 	public ButtonsControllerImpl(ButtonsHandler bh, String[] strings)
     {
+		super(2);
+		
 		_bh = bh;
 		_buttons = new Button[strings.length];
 		
@@ -42,6 +44,6 @@ public class ButtonsControllerImpl extends ControllerImpl
 			hp.add(b);
 		}
 	
-		setRight(hp);
+		setCell(1, hp);
     }
 }

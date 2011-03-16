@@ -14,14 +14,15 @@ public class TextFieldControllerImpl extends ControllerImpl
 	
 	public TextFieldControllerImpl(TextFieldHandler tfh, String label, boolean password)
     {
+		super(2);
 		_tfh = tfh;
-		setLeft(label);
+		setCell(0, label);
 	
 		if (password)
 			_textBox = new PasswordTextBox();
 		else
 			_textBox = new TextBox();
-		setRight(_textBox);
+		setCell(1, _textBox);
     }
 	
 	@Override

@@ -31,7 +31,6 @@ public class StarMap
 				Game.Instance.createStarMapStarController(null, sd);
 			_stars.add(smsc);
 		}
-		
 	}
 	
 	public void show()

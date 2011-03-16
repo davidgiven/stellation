@@ -7,6 +7,8 @@ import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.Controller;
 import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.LabelController;
+import com.cowlark.stellation3.common.controllers.LocationController;
+import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -17,9 +19,11 @@ import com.cowlark.stellation3.common.controllers.TextFieldHandler;
 import com.cowlark.stellation3.common.database.Database;
 import com.cowlark.stellation3.common.database.RPCManager;
 import com.cowlark.stellation3.common.database.Transport;
+import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SGalaxy;
 import com.cowlark.stellation3.common.model.SPlayer;
 import com.cowlark.stellation3.common.model.SUniverse;
+import com.cowlark.stellation3.common.monitors.LocationMonitor;
 import com.cowlark.stellation3.common.monitors.MonitorGroup;
 import com.cowlark.stellation3.common.monitors.MonitorGroupCollection;
 import com.cowlark.stellation3.common.monitors.ObjectIdMonitor;
@@ -64,11 +68,13 @@ public abstract class Game
 		StarMap.show();
 //		StarMap = createStarMap();
 		
+		SFleet fleet = (SFleet) Player.Fleets.iterator().next();
 		MonitorGroupCollection mgc = new MonitorGroupCollection();
 		MonitorGroup mg = mgc.createMonitorGroup("Miscellaneous");
-		mg.addMonitor(new ObjectIdMonitor(Player));
+		mg.addMonitor(new ObjectIdMonitor(fleet));
+		mg.addMonitor(new LocationMonitor(fleet));
 		
-		Pane leftPane = showPane(mgc, PaneAspect.LOGIN);
+		Pane leftPane = showPane(mgc, PaneAspect.TITLE);
 	}
 	
 	public abstract void loadUIData(CompletionListener listener);
@@ -112,6 +118,8 @@ public abstract class Game
 			TextFieldHandler tfh, String label);
 	public abstract ButtonsController createButtonsController(
 			ButtonsHandler bh, String... buttons);	
+	public abstract LocationController createLocationController(
+			LocationHandler lh, String label);
 
 	public abstract StarMapStarController createStarMapStarController(
 			StarMapStarHandler smsh, StarMapStarController.StarData stardata);
