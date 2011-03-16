@@ -19,35 +19,36 @@
 		<g:layer left='17em' bottom='0em' right="50%" height="2em">
 			<g:Label
 				ui:field="BackgroundBottomLeftLabel"
-				styleName="starmapLabel"
+				addStyleNames="starmapLabel noevents"
 				/>
 		</g:layer>
 		
 		<g:layer right='17em' bottom='0em' left="50%" height="2em">
 			<g:Label
 				ui:field="BackgroundBottomRightLabel"
-				styleName="starmapLabel"
+				addStyleNames="starmapLabel noevents"
 				/>
 		</g:layer>
 		
-		<!--
 		<g:layer left='1em' top='1em' bottom='1em' width='15em'>
 			<g:LayoutPanel
 				ui:field="LeftContainer"
+				addStyleNames="noevents"
 				/>
 		</g:layer>
 		
 		<g:layer right='1em' top='1em' bottom='1em' width='15em'>
 			<g:LayoutPanel
 				ui:field="RightContainer"
+				addStyleNames="noevents"
 				/>
 		</g:layer>
 		
 		<g:layer left='17em' right='17em' top='1em' bottom='1em'>
 			<g:LayoutPanel
 				ui:field="MiddleContainer"
+				addStyleNames="noevents"
 				/>
 		</g:layer>
-		-->
 	</g:LayoutPanel>
 </ui:UiBinder> 
