@@ -1,9 +1,12 @@
 package com.cowlark.stellation3.common.game;
 
+import java.util.Arrays;
+import java.util.List;
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
-import com.cowlark.stellation3.common.controllers.ControllerGroup;
-import com.cowlark.stellation3.common.controllers.ControllerGroupCollection;
+import com.cowlark.stellation3.common.controllers.Controller;
+import com.cowlark.stellation3.common.controllers.GroupTitleController;
+import com.cowlark.stellation3.common.controllers.LabelController;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -17,6 +20,9 @@ import com.cowlark.stellation3.common.database.Transport;
 import com.cowlark.stellation3.common.model.SGalaxy;
 import com.cowlark.stellation3.common.model.SPlayer;
 import com.cowlark.stellation3.common.model.SUniverse;
+import com.cowlark.stellation3.common.monitors.MonitorGroup;
+import com.cowlark.stellation3.common.monitors.MonitorGroupCollection;
+import com.cowlark.stellation3.common.monitors.ObjectIdMonitor;
 import com.google.gwt.user.client.Window;
 
 public abstract class Game
@@ -57,6 +63,12 @@ public abstract class Game
 		StarMap = new StarMap();
 		StarMap.show();
 //		StarMap = createStarMap();
+		
+		MonitorGroupCollection mgc = new MonitorGroupCollection();
+		MonitorGroup mg = mgc.createMonitorGroup("Miscellaneous");
+		mg.addMonitor(new ObjectIdMonitor(Player));
+		
+		Pane leftPane = showPane(mgc, PaneAspect.LOGIN);
 	}
 	
 	public abstract void loadUIData(CompletionListener listener);
@@ -65,17 +77,35 @@ public abstract class Game
 	
 	public abstract void showProgress(String message);
 	
-	public abstract Pane showPane(ControllerGroupCollection cg,
-			PaneAspect aspect, PaneHandler cgh);
-	
-	public Pane showPane(ControllerGroup cg,
-			PaneAspect aspect, PaneHandler cgh)
+	public Pane showPane(MonitorGroupCollection cg,	PaneAspect aspect)
 	{
-		ControllerGroupCollection cgc = new ControllerGroupCollection();
-		cgc.addMonitorCollection(cg);
-		return showPane(cgc, aspect, cgh);
+		Pane pane = showPane(aspect, cg);
+		cg.attach(pane);
+		return pane;
 	}
 	
+	public Pane showPane(List<Controller> controllers,
+			PaneAspect aspect, PaneHandler cgh)
+	{
+		Pane pane = showPane(aspect, cgh);
+		pane.updateControllers(controllers);
+		return pane;
+	}
+	
+	public Pane showPane(Controller[] controllers,
+			PaneAspect aspect, PaneHandler cgh)
+	{
+		Pane pane = showPane(aspect, cgh);
+		pane.updateControllers(Arrays.asList(controllers));
+		return pane;
+	}
+	
+	public abstract Pane showPane(PaneAspect aspect, PaneHandler cgh);
+	
+	public abstract GroupTitleController createGroupTitleController(
+			String title);
+	public abstract LabelController createLabelController(
+			String label);
 	public abstract TextFieldController createTextFieldController(
 			TextFieldHandler tfh, String label);
 	public abstract TextFieldController createPasswordTextFieldController(

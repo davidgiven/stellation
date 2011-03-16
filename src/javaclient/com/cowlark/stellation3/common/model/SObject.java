@@ -2,9 +2,13 @@ package com.cowlark.stellation3.common.model;
 
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.database.SBase;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 
 public class SObject extends SBase
 {
+	private HandlerManager _handlerManager;
+	
 	public static SObject create(int oid, Hash type)
 	{
 		switch (type)
@@ -23,14 +27,22 @@ public class SObject extends SBase
 		return null;
 	}
 	
-	private int _oid;
+	public int Oid;
 	
 	public SObject(int oid)
 	{
-		_oid = oid;
+		Oid = oid;
+		_handlerManager = new HandlerManager(this);
+	}
+	
+	public HandlerRegistration addObjectChangedHandler(ObjectChangedHandler handler)
+	{
+		return _handlerManager.addHandler(ObjectChangedEvent.TYPE, handler);
 	}
 	
 	public void objectChanged()
 	{
+		ObjectChangedEvent event = new ObjectChangedEvent(this);
+		_handlerManager.fireEvent(event);
 	}
 }

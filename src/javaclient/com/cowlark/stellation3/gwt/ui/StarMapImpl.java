@@ -1,8 +1,8 @@
 package com.cowlark.stellation3.gwt.ui;
 
+import java.util.List;
 import java.util.Vector;
 import com.cowlark.stellation3.common.controllers.Controller;
-import com.cowlark.stellation3.common.controllers.ControllerGroup;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
 import com.cowlark.stellation3.common.controllers.StarMapStarController;
@@ -32,7 +32,6 @@ public class StarMapImpl implements
 	Pane, ResizeHandler, MouseDownHandler, MouseUpHandler, MouseOutHandler,
 	MouseMoveHandler, MouseWheelHandler, ScheduledCommand
 {
-	private ControllerGroup _cg;
 	private PaneHandler _ph;
 	private Vector<StarMapStarControllerImpl> _starImpls;
 	private ResizingCanvas _canvas;
@@ -53,9 +52,8 @@ public class StarMapImpl implements
 	
 	private static NumberFormat _coordFormat = NumberFormat.getFormat("0.0");
 	
-	public StarMapImpl(ControllerGroup cg, PaneHandler ph)
+	public StarMapImpl(PaneHandler ph)
     {
-		_cg = cg;
 		_ph = ph;
 		
 		_canvas = GameImpl.Instance.Screen.BackgroundCanvas;
@@ -69,8 +67,6 @@ public class StarMapImpl implements
 		_canvas.addResizeHandler(this);
 		
 		_starImpls = new Vector<StarMapStarControllerImpl>();
-		for (Controller c : cg)
-			_starImpls.add((StarMapStarControllerImpl) c);
 		
 		_galactic_radius = Game.Instance.Static.getDouble(Hash.SGalaxy, Hash.Radius);
 		
@@ -80,6 +76,16 @@ public class StarMapImpl implements
 		
 		_canvas.onResize();
     }
+	
+	@Override
+	public void updateControllers(List<Controller> controllers)
+	{
+		_starImpls.clear();
+		for (Controller c : controllers)
+			_starImpls.add((StarMapStarControllerImpl) c);
+		
+		deferredRedraw();
+	}
 	
 	@Override
 	public void onResize(ResizeEvent event)

@@ -1,8 +1,9 @@
 package com.cowlark.stellation3.common.game;
 
+import java.util.Vector;
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
-import com.cowlark.stellation3.common.controllers.ControllerGroup;
+import com.cowlark.stellation3.common.controllers.Controller;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.TextFieldController;
@@ -19,17 +20,12 @@ public class LoginSequencer
 	
 	public void begin()
 	{
-		ControllerGroup cg = new ControllerGroup("Login");
-		
 		final TextFieldController emailController =
 			Game.Instance.createTextFieldController(
 					null, "Email address");
 		final TextFieldController passwordController =
 			Game.Instance.createPasswordTextFieldController(
 					null, "Password");
-		
-		cg.addController(emailController);
-		cg.addController(passwordController);
 		
 		final ButtonsHandler bch =
 			new ButtonsHandler()
@@ -58,9 +54,15 @@ public class LoginSequencer
 			Game.Instance.createButtonsController(
 					bch, "Register", "Login");
 		
-		cg.addController(buttons);
+		Controller[] controllers = new Controller[]
+		{
+			Game.Instance.createGroupTitleController("Login"),
+			emailController,
+			passwordController,
+			buttons
+		};
 		
-		_loginPane = Game.Instance.showPane(cg, PaneAspect.LOGIN, null);
+		_loginPane = Game.Instance.showPane(controllers, PaneAspect.LOGIN, null);
 		
 		emailController.setStringValue("dg@cowlark.com");
 		passwordController.setStringValue("fnord");

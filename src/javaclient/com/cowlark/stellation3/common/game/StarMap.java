@@ -1,6 +1,7 @@
 package com.cowlark.stellation3.common.game;
 
-import com.cowlark.stellation3.common.controllers.ControllerGroup;
+import java.util.Vector;
+import com.cowlark.stellation3.common.controllers.Controller;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.StarMapStarController;
@@ -10,11 +11,11 @@ import com.cowlark.stellation3.common.model.SStar;
 public class StarMap
 {
 	private Pane _starmapPane;
-	private ControllerGroup _stars;
+	private Vector<Controller> _stars;
 	
 	public StarMap()
 	{
-		_stars = new ControllerGroup("Star map");
+		_stars = new Vector<Controller>();
 		
 		for (SObject o : Game.Instance.Galaxy.VisibleStars)
 		{
@@ -28,8 +29,6 @@ public class StarMap
 			
 			StarMapStarController smsc =
 				Game.Instance.createStarMapStarController(null, sd);
-		
-			_stars.addController(smsc);
 		}
 		
 	}

@@ -1,31 +1,40 @@
 package com.cowlark.stellation3.gwt;
 
+import java.util.List;
 import com.cowlark.stellation3.common.controllers.Controller;
-import com.cowlark.stellation3.common.controllers.ControllerGroup;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 
 public class ControllerRenderer
 {
-	public static FlexTable createRendererContainer()
+	private FlexTable _container;
+	
+	public ControllerRenderer()
+    {
+		_container = new FlexTable();
+    }
+	
+	public FlexTable getContainer()
 	{
-		return new FlexTable();
+		return _container;
 	}
 	
-	public static void renderGroup(FlexTable ft, ControllerGroup cg)
+	public void update(List<Controller> controllers)
 	{
-		int y = ft.getRowCount();
-		for (Controller abstractController : cg)
+		_container.clear();
+		int y = 0;
+		
+		for (Controller c : controllers)
 		{
-			ControllerImpl ci = (ControllerImpl) abstractController;
-			
+			ControllerImpl ci = (ControllerImpl) c;
+		
 			String left = ci.getLeft();
 			if (left != null)
-				ft.setText(y, 0, left);
+				_container.setText(y, 0, left);
 			
 			Widget right = ci.getRight();
 			if (right != null)
-				ft.setWidget(y, 1, right);
+				_container.setWidget(y, 1, right);
 			
 			y++;
 		}

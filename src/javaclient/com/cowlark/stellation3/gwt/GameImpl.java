@@ -2,8 +2,8 @@ package com.cowlark.stellation3.gwt;
 
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
-import com.cowlark.stellation3.common.controllers.ControllerGroup;
-import com.cowlark.stellation3.common.controllers.ControllerGroupCollection;
+import com.cowlark.stellation3.common.controllers.GroupTitleController;
+import com.cowlark.stellation3.common.controllers.LabelController;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -61,13 +61,13 @@ public class GameImpl extends Game
 	}
 	
 	@Override
-	public Pane showPane(ControllerGroupCollection cgc, PaneAspect aspect, PaneHandler ph)
+	public Pane showPane(PaneAspect aspect, PaneHandler ph)
 	{
 		switch (aspect)
 		{
 			case LOGIN:
 			{
-				DialogueImpl d = new DialogueImpl(cgc.getSingleton(), ph);
+				DialogueImpl d = new DialogueImpl(ph);
 				d.show();
 				return d;
 			}
@@ -75,7 +75,7 @@ public class GameImpl extends Game
 			case STARMAP:
 			{
 				assert(_starmap == null);
-				_starmap = new StarMapImpl(cgc.getSingleton(), ph);
+				_starmap = new StarMapImpl(ph);
 				return _starmap;
 			}
 			
@@ -98,6 +98,18 @@ public class GameImpl extends Game
 	public Transport createTransport()
 	{
 		return new TransportImpl("http://hilfy/~dg/cgi-bin/stellation.cgi");
+	}
+	
+	@Override
+	public GroupTitleController createGroupTitleController(String title)
+	{
+	    return new GroupTitleControllerImpl(title);
+	}
+	
+	@Override
+	public LabelController createLabelController(String label)
+	{
+	    return new LabelControllerImpl(label);
 	}
 	
 	@Override

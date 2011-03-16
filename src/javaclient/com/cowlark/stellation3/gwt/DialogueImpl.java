@@ -1,31 +1,45 @@
 package com.cowlark.stellation3.gwt;
 
-import com.cowlark.stellation3.common.controllers.ControllerGroup;
+import java.util.List;
+import com.cowlark.stellation3.common.controllers.Controller;
+import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlexTable;
 
 public class DialogueImpl extends DialogBox implements Pane
 {
-	private final ControllerGroup _cg;
+	private final ControllerRenderer _renderer;
 	private final PaneHandler _ph;
 	
-	public DialogueImpl(ControllerGroup cg, PaneHandler ph)
+	public DialogueImpl(PaneHandler ph)
     {
-		_cg = cg;
+		_renderer = new ControllerRenderer();
 		_ph = ph;
 		
-		setTitle(cg.getName());
-		
-		FlexTable ft = ControllerRenderer.createRendererContainer();
-		add(ft);
-		
-		ControllerRenderer.renderGroup(ft, cg);
+		add(_renderer.getContainer());
 		
 		center();
 		show();
     }
+	
+	@Override
+	public void updateControllers(List<Controller> controllers)
+	{
+		if (!controllers.isEmpty())
+		{
+			Controller c = controllers.get(0);
+			if (c instanceof GroupTitleController)
+			{
+				GroupTitleController gtc = (GroupTitleController) c;
+				setText(gtc.getTitle());
+				controllers = controllers.subList(1, controllers.size());
+			}
+		}
+		
+		_renderer.update(controllers);
+		center();
+	}
 	
 	@Override
 	public void cancelPane()
