@@ -1,7 +1,8 @@
-package com.cowlark.stellation3.gwt;
+package com.cowlark.stellation3.gwt.ui;
 
 import com.cowlark.stellation3.common.controllers.TextFieldController;
 import com.cowlark.stellation3.common.controllers.TextFieldHandler;
+import com.cowlark.stellation3.gwt.ControllerImpl;
 import com.google.gwt.user.client.ui.PasswordTextBox;
 import com.google.gwt.user.client.ui.TextBox;
 
