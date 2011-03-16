@@ -29,6 +29,7 @@ public class StarMap
 			
 			StarMapStarController smsc =
 				Game.Instance.createStarMapStarController(null, sd);
+			_stars.add(smsc);
 		}
 		
 	}
