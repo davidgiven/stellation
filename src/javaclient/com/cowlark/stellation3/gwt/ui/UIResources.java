@@ -17,16 +17,16 @@ public class UIResources
 	
 	private static String[] _urls =
 	{
-		"../galaxy.jpg",
-		"../star1.png",
-		"../star2.png",
-		"../star3.png",
-		"../star4.png",
-		"../star5.png",
-		"../star6.png",
-		"../star7.png",
-		"../star8.png",
-		"../star9.png"
+		"galaxy.jpg",
+		"star1.png",
+		"star2.png",
+		"star3.png",
+		"star4.png",
+		"star5.png",
+		"star6.png",
+		"star7.png",
+		"star8.png",
+		"star9.png"
 	};
 	
 	static
