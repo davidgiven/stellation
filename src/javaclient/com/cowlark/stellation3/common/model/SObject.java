@@ -5,7 +5,7 @@ import com.cowlark.stellation3.common.database.SBase;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public class SObject extends SBase
+public class SObject extends SBase implements Comparable<SObject>
 {
 	private HandlerManager _handlerManager;
 	
@@ -44,5 +44,11 @@ public class SObject extends SBase
 	{
 		ObjectChangedEvent event = new ObjectChangedEvent(this);
 		_handlerManager.fireEvent(event);
+	}
+	
+	@Override
+	public int compareTo(SObject o)
+	{
+		return new Integer(Oid).compareTo(o.Oid);
 	}
 }

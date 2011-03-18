@@ -1,15 +1,15 @@
 package com.cowlark.stellation3.common.database.values;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 import com.cowlark.stellation3.common.database.Reader;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.model.SObject;
 
 public class OBJECTSET extends DATUM implements Iterable<SObject>
 {
-	private HashSet<Integer> _value = new HashSet<Integer>();
+	private TreeSet<Integer> _value = new TreeSet<Integer>();
 	
 	Set<Integer> get()
 	{
