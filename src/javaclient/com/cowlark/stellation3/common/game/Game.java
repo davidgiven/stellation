@@ -1,7 +1,6 @@
 package com.cowlark.stellation3.common.game;
 
 import java.util.Arrays;
-import java.util.List;
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.Controller;
@@ -9,6 +8,8 @@ import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.LabelController;
 import com.cowlark.stellation3.common.controllers.LocationController;
 import com.cowlark.stellation3.common.controllers.LocationHandler;
+import com.cowlark.stellation3.common.controllers.MarkupController;
+import com.cowlark.stellation3.common.controllers.MarkupHandler;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -19,14 +20,12 @@ import com.cowlark.stellation3.common.controllers.TextFieldHandler;
 import com.cowlark.stellation3.common.database.Database;
 import com.cowlark.stellation3.common.database.RPCManager;
 import com.cowlark.stellation3.common.database.Transport;
-import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SGalaxy;
 import com.cowlark.stellation3.common.model.SPlayer;
 import com.cowlark.stellation3.common.model.SUniverse;
-import com.cowlark.stellation3.common.monitors.LocationMonitor;
 import com.cowlark.stellation3.common.monitors.MonitorGroup;
-import com.cowlark.stellation3.common.monitors.MonitorGroupCollection;
-import com.cowlark.stellation3.common.monitors.ObjectIdMonitor;
+import com.cowlark.stellation3.common.monitors.PaneMonitorAdaptor;
+import com.cowlark.stellation3.common.monitors.PlayerSummaryMonitor;
 import com.google.gwt.user.client.Window;
 
 public abstract class Game
@@ -68,13 +67,10 @@ public abstract class Game
 		StarMap.show();
 //		StarMap = createStarMap();
 		
-		SFleet fleet = (SFleet) Player.Fleets.iterator().next();
-		MonitorGroupCollection mgc = new MonitorGroupCollection();
-		MonitorGroup mg = mgc.createMonitorGroup("Miscellaneous");
-		mg.addMonitor(new ObjectIdMonitor(fleet));
-		mg.addMonitor(new LocationMonitor(fleet));
+		MonitorGroup mg = new MonitorGroup("Miscellaneous");
+		mg.addMonitor(new PlayerSummaryMonitor(Player));
 		
-		Pane leftPane = showPane(mgc, PaneAspect.TITLE);
+		Pane leftPane = new PaneMonitorAdaptor(mg, PaneAspect.TITLE, null);
 	}
 	
 	public abstract void loadUIData(CompletionListener listener);
@@ -82,21 +78,6 @@ public abstract class Game
 	public abstract Transport createTransport();
 	
 	public abstract void showProgress(String message);
-	
-	public Pane showPane(MonitorGroupCollection cg,	PaneAspect aspect)
-	{
-		Pane pane = showPane(aspect, cg);
-		cg.attach(pane);
-		return pane;
-	}
-	
-	public Pane showPane(List<Controller> controllers,
-			PaneAspect aspect, PaneHandler cgh)
-	{
-		Pane pane = showPane(aspect, cgh);
-		pane.updateControllers(controllers);
-		return pane;
-	}
 	
 	public Pane showPane(Controller[] controllers,
 			PaneAspect aspect, PaneHandler cgh)
@@ -110,6 +91,8 @@ public abstract class Game
 	
 	public abstract GroupTitleController createGroupTitleController(
 			String title);
+	public abstract MarkupController createMarkupController(
+			MarkupHandler mh, String markup);
 	public abstract LabelController createLabelController(
 			String label);
 	public abstract TextFieldController createTextFieldController(

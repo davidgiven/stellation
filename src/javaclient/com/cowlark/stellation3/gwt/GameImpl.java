@@ -6,6 +6,8 @@ import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.LabelController;
 import com.cowlark.stellation3.common.controllers.LocationController;
 import com.cowlark.stellation3.common.controllers.LocationHandler;
+import com.cowlark.stellation3.common.controllers.MarkupController;
+import com.cowlark.stellation3.common.controllers.MarkupHandler;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -21,6 +23,7 @@ import com.cowlark.stellation3.gwt.ui.DialogueImpl;
 import com.cowlark.stellation3.gwt.ui.GroupTitleControllerImpl;
 import com.cowlark.stellation3.gwt.ui.LabelControllerImpl;
 import com.cowlark.stellation3.gwt.ui.LocationControllerImpl;
+import com.cowlark.stellation3.gwt.ui.MarkupControllerImpl;
 import com.cowlark.stellation3.gwt.ui.Screen;
 import com.cowlark.stellation3.gwt.ui.StarMapImpl;
 import com.cowlark.stellation3.gwt.ui.StarMapStarControllerImpl;
@@ -126,6 +129,13 @@ public class GameImpl extends Game
 	public LabelController createLabelController(String label)
 	{
 	    return new LabelControllerImpl(label);
+	}
+	
+	@Override
+	public MarkupController createMarkupController(MarkupHandler mh,
+	        String markup)
+	{
+	    return new MarkupControllerImpl(mh, markup);
 	}
 	
 	@Override
