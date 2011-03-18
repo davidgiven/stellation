@@ -5,16 +5,14 @@ import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.model.SObject;
 import com.cowlark.stellation3.common.model.SStar;
 import com.cowlark.stellation3.gwt.ControllerImpl;
+import com.cowlark.stellation3.gwt.S;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.Anchor;
 
 public class LocationControllerImpl extends ControllerImpl
 	implements LocationController, ClickHandler
 {
-	private static NumberFormat COORD_FORMAT = NumberFormat.getFormat("0.0");
-	
 	private final LocationHandler _lh;
 	private final Anchor _label;
 	private SObject _location;
@@ -50,9 +48,9 @@ public class LocationControllerImpl extends ControllerImpl
 			sb.append(_location.Name.get());
 		
 			sb.append(" [");
-			sb.append(COORD_FORMAT.format(star.X.get()));
+			sb.append(S.COORD_FORMAT.format(star.X.get()));
 			sb.append(", ");
-			sb.append(COORD_FORMAT.format(star.Y.get()));
+			sb.append(S.COORD_FORMAT.format(star.Y.get()));
 			sb.append("]");
 		}
 		

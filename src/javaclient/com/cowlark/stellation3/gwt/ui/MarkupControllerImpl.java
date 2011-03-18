@@ -10,6 +10,7 @@ import com.cowlark.stellation3.common.markup.MarkupParser;
 import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SStar;
 import com.cowlark.stellation3.gwt.ControllerImpl;
+import com.cowlark.stellation3.gwt.S;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Window;
@@ -124,6 +125,12 @@ public class MarkupControllerImpl extends ControllerImpl
 			_rendering.append(");'>");
 		}
 		emitPlainText(name);
+		emitPlainText(" [");
+		emitPlainText(S.COORD_FORMAT.format(x));
+		emitPlainText(", ");
+		emitPlainText(S.COORD_FORMAT.format(y));
+		emitPlainText("]");
+		
 		if (star != null)
 		{
 			_rendering.append("</a>");

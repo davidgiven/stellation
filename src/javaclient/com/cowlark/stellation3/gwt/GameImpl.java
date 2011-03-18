@@ -115,7 +115,7 @@ public class GameImpl extends Game
 	@Override
 	public Transport createTransport()
 	{
-		return new TransportImpl("http://hilfy/~dg/cgi-bin/stellation.cgi");
+		return new TransportImpl(S.CGIURL);
 	}
 	
 	@Override
