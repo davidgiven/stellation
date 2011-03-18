@@ -1,5 +1,6 @@
 package com.cowlark.stellation3.common.monitors;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -7,23 +8,81 @@ import com.cowlark.stellation3.common.controllers.Controller;
 import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.game.Game;
 
-public class MonitorGroup implements Iterable<Monitor<?>>
+public class MonitorGroup implements Iterable<Monitor<?>>, HasMonitors
 {
+	private class Key
+	{
+		int oid;
+		Class<?> type;
+		
+		public Key(Monitor<?> m)
+		{
+			oid = m.getMonitoredObject().Oid;
+			type = m.getClass();
+		}
+		
+		@Override
+		public int hashCode()
+		{
+		    return type.hashCode() | (oid << 16);
+		}
+	};
+	
 	private final Vector<Monitor<?>> _monitors;
+	private final HashMap<Key, Monitor<?>> _oldMonitors;
 	private final String _name;
+	private HasMonitors _parent;
 	private GroupTitleController _nameController;
 	
 	public MonitorGroup(String name)
     {
 	    _monitors = new Vector<Monitor<?>>();
+	    _oldMonitors = new HashMap<Key, Monitor<?>>();
 	    _name = name;
-	    if (!_name.isEmpty())
+	    if (_name != null)
 		    _nameController = Game.Instance.createGroupTitleController(_name);
     }
 	
-	public void addMonitor(Monitor<?> c)
+	public MonitorGroup()
 	{
-		_monitors.add(c);
+		this(null);
+	}
+	
+	public void beginUpdate()
+	{
+		for (Monitor<?> m : _monitors)
+		{
+			Key k = new Key(m);
+			_oldMonitors.put(k, m);
+		}
+		
+		_monitors.clear();
+	}
+	
+	public void addMonitor(Monitor<?> m)
+	{
+		Key k = new Key(m);
+		Monitor<?> existing = _oldMonitors.get(k);
+		if (existing != null)
+		{
+			m = existing;
+			_oldMonitors.remove(k);
+		}
+		else if (_parent != null)
+			m.attach(_parent);
+			
+		_monitors.add(m);
+	}
+	
+	public void endUpdate()
+	{
+		if (_parent != null)
+		{
+			for (Monitor<?> m : _oldMonitors.values())
+				m.detach();
+		}
+			
+		_oldMonitors.clear();
 	}
 	
 	public String getName()
@@ -44,6 +103,7 @@ public class MonitorGroup implements Iterable<Monitor<?>>
 		return controllers;
 	}
 	
+	@Override
 	public void emitControllers(List<Controller> controllers)
 	{
 		if (_nameController != null)
@@ -53,15 +113,26 @@ public class MonitorGroup implements Iterable<Monitor<?>>
 			m.emitControllers(controllers);
 	}
 	
-	public void attach()
+	@Override
+	public void attach(HasMonitors parent)
 	{
+		_parent = parent;
 		for (Monitor<?> monitor : _monitors)
-			monitor.attach();
+			monitor.attach(parent);
 	}
 	
+	@Override
 	public void detach()
 	{
 		for (Monitor<?> monitor : _monitors)
 			monitor.detach();
+		_parent = null;
+	}
+	
+	@Override
+	public void updateAllMonitors()
+	{
+		if (_parent != null)
+			_parent.updateAllMonitors();
 	}
 }

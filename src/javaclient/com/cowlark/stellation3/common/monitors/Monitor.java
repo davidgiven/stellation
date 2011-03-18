@@ -6,9 +6,11 @@ import com.cowlark.stellation3.common.model.ObjectChangedHandler;
 import com.cowlark.stellation3.common.model.SObject;
 import com.google.gwt.event.shared.HandlerRegistration;
 
-public abstract class Monitor<T extends SObject> implements ObjectChangedHandler
+public abstract class Monitor<T extends SObject>
+		implements ObjectChangedHandler, HasMonitors
 {
 	private T _object;
+	private HasMonitors _parent;
 	private HandlerRegistration _changeListener;
 	
 	public Monitor(T object)
@@ -16,15 +18,27 @@ public abstract class Monitor<T extends SObject> implements ObjectChangedHandler
 		_object = object;
     }
 	
-	public void attach()
+	public T getMonitoredObject()
 	{
+		return _object;
+	}
+	
+	@Override
+	public void attach(HasMonitors parent)
+	{
+		_parent = parent;
 		_changeListener = _object.addObjectChangedHandler(this);
 		update(_object);
 	}
 	
+	@Override
 	public void detach()
 	{
-		_changeListener.removeHandler();
+		if (_parent != null)
+		{
+			_changeListener.removeHandler();
+			_parent = null;
+		}
 	}
 	
 	@Override
@@ -33,6 +47,15 @@ public abstract class Monitor<T extends SObject> implements ObjectChangedHandler
 		update(_object);
 	}
 	
+	@Override
+	public void updateAllMonitors()
+	{
+		if (_parent != null)
+			_parent.updateAllMonitors();
+	}
+	
 	protected abstract void update(T object);
+	
+	@Override
 	public abstract void emitControllers(List<Controller> list);
 }
