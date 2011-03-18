@@ -11,16 +11,23 @@ public abstract class CompositeMonitor<T extends SObject> extends Monitor<T>
 	public CompositeMonitor(T object)
     {
 		super(object);
-		_group = new MonitorGroup();
     }
 	
+	private void checkgroup()
+	{
+		if (_group == null)
+			_group = new MonitorGroup();
+	}
+		
 	protected void beginUpdate()
 	{
+		checkgroup();
 		_group.beginUpdate();
 	}
 	
 	protected void addMonitor(Monitor<?> m)
 	{
+		checkgroup();
 		_group.addMonitor(m);
 	}
 	
@@ -34,6 +41,7 @@ public abstract class CompositeMonitor<T extends SObject> extends Monitor<T>
 	@Override
 	public void emitControllers(List<Controller> list)
 	{
+		checkgroup();
 		_group.emitControllers(list);
 	}
 	
@@ -41,12 +49,14 @@ public abstract class CompositeMonitor<T extends SObject> extends Monitor<T>
 	public void attach(HasMonitors parent)
 	{
 	    super.attach(parent);
+		checkgroup();
 	    _group.attach(parent);
 	}
 	
 	@Override
 	public void detach()
 	{
+		checkgroup();
 		_group.detach();
 	    super.detach();
 	}

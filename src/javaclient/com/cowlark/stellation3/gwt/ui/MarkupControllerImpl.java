@@ -1,20 +1,38 @@
 package com.cowlark.stellation3.gwt.ui;
 
+import org.timepedia.exporter.client.Export;
+import org.timepedia.exporter.client.ExportPackage;
+import org.timepedia.exporter.client.Exportable;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
-import com.cowlark.stellation3.common.markup.HasMarkup;
+import com.cowlark.stellation3.common.markup.MarkupFactory;
 import com.cowlark.stellation3.common.markup.MarkupParser;
+import com.cowlark.stellation3.common.model.SFleet;
+import com.cowlark.stellation3.common.model.SStar;
 import com.cowlark.stellation3.gwt.ControllerImpl;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.Text;
-import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 
 public class MarkupControllerImpl extends ControllerImpl
-	implements MarkupController, HasMarkup
+	implements MarkupController, MarkupFactory
 {
+	private static void showObject(int oid)
+	{
+		Window.alert("showing details");
+	}
+	
+	private static native void publish() /*-{
+		$wnd.showObject = @com.cowlark.stellation3.gwt.ui.MarkupControllerImpl::showObject(I);
+	}-*/;
+	
+	static
+	{
+		publish();
+	}
+	
 	private final Label _label;
 	private final HTML _html;
 	private final MarkupHandler _mh;
@@ -56,6 +74,12 @@ public class MarkupControllerImpl extends ControllerImpl
 	}
 	
 	@Override
+	public void indent(int spaces)
+	{
+		_html.getElement().getStyle().setPaddingLeft(spaces, Unit.EM);
+	}
+	
+	@Override
 	public void emitPlainText(String text)
 	{
 		for (int i=0; i < text.length(); i++)
@@ -86,6 +110,32 @@ public class MarkupControllerImpl extends ControllerImpl
 	{
 		_rendering.append("<b>");
 		emitPlainText(text);
+		_rendering.append("</b>");
+	}
+	
+	@Override
+	public void emitStar(SStar star, String name, double x, double y)
+	{
+		_rendering.append("<b>");
+		if (star != null)
+		{
+			_rendering.append("<a href='javascript:;' onclick='showObject(");
+			_rendering.append(star.Oid);
+			_rendering.append(");'>");
+		}
+		emitPlainText(name);
+		if (star != null)
+		{
+			_rendering.append("</a>");
+		}
+		_rendering.append("</b>");
+	}
+	
+	@Override
+	public void emitFleet(SFleet fleet, String name)
+	{
+		_rendering.append("<b>");
+		emitPlainText(name);
 		_rendering.append("</b>");
 	}
 }

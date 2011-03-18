@@ -21,7 +21,6 @@ import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.ui.ButtonsControllerImpl;
 import com.cowlark.stellation3.gwt.ui.DialogueImpl;
 import com.cowlark.stellation3.gwt.ui.GroupTitleControllerImpl;
-import com.cowlark.stellation3.gwt.ui.LabelControllerImpl;
 import com.cowlark.stellation3.gwt.ui.LocationControllerImpl;
 import com.cowlark.stellation3.gwt.ui.MarkupControllerImpl;
 import com.cowlark.stellation3.gwt.ui.Screen;
@@ -128,14 +127,14 @@ public class GameImpl extends Game
 	@Override
 	public LabelController createLabelController(String label)
 	{
-	    return new LabelControllerImpl(label);
+	    return new MarkupControllerImpl(null, label);
 	}
 	
 	@Override
 	public MarkupController createMarkupController(MarkupHandler mh,
-	        String markup)
+	        String label)
 	{
-	    return new MarkupControllerImpl(mh, markup);
+	    return new MarkupControllerImpl(mh, label);
 	}
 	
 	@Override

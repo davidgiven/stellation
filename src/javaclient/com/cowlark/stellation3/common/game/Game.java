@@ -25,7 +25,7 @@ import com.cowlark.stellation3.common.model.SPlayer;
 import com.cowlark.stellation3.common.model.SUniverse;
 import com.cowlark.stellation3.common.monitors.MonitorGroup;
 import com.cowlark.stellation3.common.monitors.PaneMonitorAdaptor;
-import com.cowlark.stellation3.common.monitors.PlayerSummaryMonitor;
+import com.cowlark.stellation3.common.monitors.summarypane.PlayerSummaryMonitor;
 import com.google.gwt.user.client.Window;
 
 public abstract class Game
