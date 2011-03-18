@@ -1,6 +1,5 @@
 package com.cowlark.stellation3.common.game;
 
-import java.util.Vector;
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.Controller;

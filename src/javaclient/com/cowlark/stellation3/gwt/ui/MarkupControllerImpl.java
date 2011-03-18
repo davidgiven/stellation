@@ -1,8 +1,5 @@
 package com.cowlark.stellation3.gwt.ui;
 
-import org.timepedia.exporter.client.Export;
-import org.timepedia.exporter.client.ExportPackage;
-import org.timepedia.exporter.client.Exportable;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
 import com.cowlark.stellation3.common.markup.MarkupFactory;
@@ -11,7 +8,6 @@ import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SStar;
 import com.cowlark.stellation3.gwt.ControllerImpl;
 import com.cowlark.stellation3.gwt.S;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;

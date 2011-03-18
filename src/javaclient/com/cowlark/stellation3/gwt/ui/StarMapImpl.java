@@ -9,6 +9,8 @@ import com.cowlark.stellation3.common.controllers.StarMapStarController;
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.GameImpl;
+import com.google.gwt.canvas.dom.client.Context2d;
+import com.google.gwt.canvas.dom.client.FillStrokeStyle;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.ImageElement;
@@ -26,7 +28,6 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.widgetideas.graphics.client.Color;
 
 public class StarMapImpl implements 
 	Pane, ResizeHandler, MouseDownHandler, MouseUpHandler, MouseOutHandler,
@@ -119,27 +120,31 @@ public class StarMapImpl implements
 	
 	private void redraw()
 	{
-		double mw = _canvas.getCoordWidth() / 2;
-		double mh = _canvas.getCoordHeight() / 2;
+		Context2d c = _canvas.getContext2d();
+		double w = _canvas.getOffsetWidth();
+		double h = _canvas.getOffsetHeight();
+		double mw = w / 2;
+		double mh = h / 2;
 		
 		double pixel = 1.0/_scale;
 		
-		_canvas.setBackgroundColor(Color.BLACK);
-		_canvas.clear();
-		_canvas.saveContext();
-		_canvas.translate(mw, mh);
-		_canvas.scale(_scale, _scale);
-		_canvas.translate(_centerx, _centery);
-		_canvas.setLineWidth(1.0*pixel);
+		c.save();
+		c.setFillStyle("black");
+		c.fillRect(0, 0, w, h);
+		c.setFillStyle("none");
+		c.translate(mw, mh);
+		c.scale(_scale, _scale);
+		c.translate(_centerx, _centery);
+		c.setLineWidth(1.0*pixel);
 		
 		double galaxysize = _galactic_radius * 1.5;
 		double galaxysize2 = galaxysize * 2.0;
 		
-		_canvas.drawImage(UIResources.Background,
+		c.drawImage(UIResources.Background,
 				-galaxysize, -galaxysize,
 				galaxysize2, galaxysize2);
 		
-		_canvas.setStrokeStyle(Color.WHITE);
+		c.setStrokeStyle("white");
 		double starsize = 0.0025 * _scale;
 		double starsize2 = 2.0 * starsize;
 		for (StarMapStarControllerImpl impl : _starImpls)
@@ -149,12 +154,12 @@ public class StarMapImpl implements
 			double x = sd.x;
 			double y = sd.y;
 			
-			_canvas.drawImage(getStarForBrightness(sd.brightness),
+			c.drawImage(getStarForBrightness(sd.brightness),
 					x-starsize, y-starsize,
 					starsize2, starsize2);
 		}
 		
-		_canvas.restoreContext();
+		c.restore();
 		updateLabels();
 	}
 	
@@ -178,8 +183,8 @@ public class StarMapImpl implements
 	
 	private Point screenToCoord(double sx, double sy)
 	{
-		double mw = _canvas.getCoordWidth() / 2;
-		double mh = _canvas.getCoordHeight() / 2;
+		double mw = _canvas.getOffsetWidth() / 2;
+		double mh = _canvas.getOffsetHeight() / 2;
 		
 		sx -= mw;
 		sy -= mh;
@@ -195,8 +200,8 @@ public class StarMapImpl implements
 	
 	private Point coordToScreen(double cx, double cy)
 	{
-		double mw = _canvas.getCoordWidth() / 2;
-		double mh = _canvas.getCoordHeight() / 2;
+		double mw = _canvas.getOffsetWidth() / 2;
+		double mh = _canvas.getOffsetHeight() / 2;
 		
 		cx += _centerx;
 		cy += _centery;
@@ -213,8 +218,8 @@ public class StarMapImpl implements
 	@Override
 	public void onMouseWheel(MouseWheelEvent event)
 	{
-		double mw = _canvas.getCoordWidth() / 2;
-		double mh = _canvas.getCoordHeight() / 2;
+		double mw = _canvas.getOffsetWidth() / 2;
+		double mh = _canvas.getOffsetHeight() / 2;
 		
 		/* After scaling, we want this point to be at the same place on the
 		 * screen. */

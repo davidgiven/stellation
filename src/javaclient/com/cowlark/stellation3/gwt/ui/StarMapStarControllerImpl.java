@@ -2,7 +2,6 @@ package com.cowlark.stellation3.gwt.ui;
 
 import com.cowlark.stellation3.common.controllers.StarMapStarController;
 import com.cowlark.stellation3.common.controllers.StarMapStarHandler;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
 public class StarMapStarControllerImpl extends Image implements StarMapStarController
