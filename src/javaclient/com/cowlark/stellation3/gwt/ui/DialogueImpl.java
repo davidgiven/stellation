@@ -12,13 +12,16 @@ public class DialogueImpl extends DialogBox implements Pane
 {
 	private final ControllerRenderer _renderer;
 	private final PaneHandler _ph;
+	private final String _title;
 	
-	public DialogueImpl(PaneHandler ph)
+	public DialogueImpl(PaneHandler ph, String title)
     {
 		_renderer = new ControllerRenderer();
 		_ph = ph;
+		_title = title;
 		
 		add(_renderer.getContainer());
+		setText(_title);
 		
 		center();
 		show();
@@ -27,17 +30,6 @@ public class DialogueImpl extends DialogBox implements Pane
 	@Override
 	public void updateControllers(List<Controller> controllers)
 	{
-		if (!controllers.isEmpty())
-		{
-			Controller c = controllers.get(0);
-			if (c instanceof GroupTitleController)
-			{
-				GroupTitleController gtc = (GroupTitleController) c;
-				setText(gtc.getTitle());
-				controllers = controllers.subList(1, controllers.size());
-			}
-		}
-		
 		_renderer.update(controllers);
 		center();
 	}

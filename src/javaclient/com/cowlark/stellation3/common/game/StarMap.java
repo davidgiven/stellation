@@ -35,7 +35,7 @@ public class StarMap
 	
 	public void show()
 	{
-		_starmapPane = Game.Instance.showPane(PaneAspect.STARMAP, null);
+		_starmapPane = Game.Instance.showPane(PaneAspect.STARMAP, null, null);
 		_starmapPane.updateControllers(_stars);
 	}
 }

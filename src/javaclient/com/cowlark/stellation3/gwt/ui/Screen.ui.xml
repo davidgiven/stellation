@@ -43,12 +43,17 @@
 				addStyleNames="noevents"
 				/>
 		</g:layer>
-		
+
 		<g:layer left='17em' right='17em' top='1em' bottom='1em'>
 			<g:LayoutPanel
-				ui:field="MiddleContainer"
 				addStyleNames="noevents"
-				/>
+				>
+				<g:layer>
+					<g:LayoutPanel
+						ui:field="MiddleContainer"
+						/>
+				</g:layer>
+			</g:LayoutPanel>
 		</g:layer>
 	</g:LayoutPanel>
 </ui:UiBinder> 

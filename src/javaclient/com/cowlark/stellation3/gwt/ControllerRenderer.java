@@ -3,9 +3,10 @@ package com.cowlark.stellation3.gwt;
 import java.util.List;
 import com.cowlark.stellation3.common.controllers.Controller;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 
-public class ControllerRenderer
+public class ControllerRenderer implements IsWidget
 {
 	private FlexTable _container;
 	
@@ -17,6 +18,12 @@ public class ControllerRenderer
 	public FlexTable getContainer()
 	{
 		return _container;
+	}
+	
+	@Override
+	public Widget asWidget()
+	{
+	    return getContainer();
 	}
 	
 	public void update(List<Controller> controllers)

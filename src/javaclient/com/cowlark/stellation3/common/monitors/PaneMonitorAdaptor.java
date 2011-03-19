@@ -18,9 +18,9 @@ public class PaneMonitorAdaptor implements Pane, PaneHandler, HasMonitors
 	private boolean _updating;
 	
 	public PaneMonitorAdaptor(HasMonitors monitor, PaneAspect aspect,
-			PaneHandler ph)
+			PaneHandler ph, String title)
     {
-		_pane = Game.Instance.showPane(aspect, this);
+		_pane = Game.Instance.showPane(aspect, this, title);
 		_ph = ph;
 		_monitor = monitor;
 		_updating = false;

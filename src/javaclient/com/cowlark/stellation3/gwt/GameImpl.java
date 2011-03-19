@@ -1,5 +1,6 @@
 package com.cowlark.stellation3.gwt;
 
+import java.util.HashMap;
 import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.GroupTitleController;
@@ -27,9 +28,12 @@ import com.cowlark.stellation3.gwt.ui.Screen;
 import com.cowlark.stellation3.gwt.ui.StarMapImpl;
 import com.cowlark.stellation3.gwt.ui.StarMapStarControllerImpl;
 import com.cowlark.stellation3.gwt.ui.StaticPane;
+import com.cowlark.stellation3.gwt.ui.TabbedPane;
+import com.cowlark.stellation3.gwt.ui.TabbedPaneContainer;
 import com.cowlark.stellation3.gwt.ui.TextFieldControllerImpl;
 import com.cowlark.stellation3.gwt.ui.UIResources;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class GameImpl extends Game
@@ -37,6 +41,7 @@ public class GameImpl extends Game
 	public static GameImpl Instance;
 	
 	public Screen Screen;
+	private HashMap<PaneAspect, Pane> _panes;
 	private DialogBox _progress;
 	private StarMapImpl _starmap;
 	
@@ -44,6 +49,7 @@ public class GameImpl extends Game
     {
 		Instance = this;
 		Screen = new Screen();
+		_panes = new HashMap<PaneAspect, Pane>();
 		RootLayoutPanel.get().add(Screen);
     }
 	
@@ -71,29 +77,60 @@ public class GameImpl extends Game
 		}
 	}
 	
+	private void replacePane(PaneAspect aspect, Pane pane)
+	{
+		Pane oldpane = _panes.get(aspect);
+		if (oldpane != null)
+			oldpane.closePane();
+		
+		_panes.put(aspect, pane);
+	}
+	
+	private void placePaneInTab(TabbedPane pane, LayoutPanel container)
+	{
+		TabbedPaneContainer c;
+		if (container.getWidgetCount() == 0)
+		{
+			c = new TabbedPaneContainer();
+			container.add(c);
+		}
+		else
+			c = (TabbedPaneContainer) container.getWidget(0);
+		c.add(pane);
+	}
+	
 	@Override
-	public Pane showPane(PaneAspect aspect, PaneHandler ph)
+	public Pane showPane(PaneAspect aspect, PaneHandler ph, String title)
 	{
 		switch (aspect)
 		{
 			case LOGIN:
 			{
-				DialogueImpl d = new DialogueImpl(ph);
+				DialogueImpl d = new DialogueImpl(ph, title);
 				d.show();
 				return d;
 			}
 				
 			case STARMAP:
 			{
-				assert(_starmap == null);
 				_starmap = new StarMapImpl(ph);
+				replacePane(aspect, _starmap);
 				return _starmap;
 			}
 			
 			case TITLE:
 			{
-				StaticPane pane = new StaticPane(ph);
-				Screen.LeftContainer.add(pane);
+				TabbedPane pane = new TabbedPane(aspect, ph, title);
+				replacePane(aspect, pane);
+				placePaneInTab(pane, Screen.LeftContainer);
+				return pane;
+			}
+			
+			case LOCATION:
+			{
+				TabbedPane pane = new TabbedPane(aspect, ph, title);
+				replacePane(aspect, pane);
+				placePaneInTab(pane, Screen.MiddleContainer);
 				return pane;
 			}
 			

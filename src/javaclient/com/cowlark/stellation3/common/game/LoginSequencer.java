@@ -55,13 +55,13 @@ public class LoginSequencer
 		
 		Controller[] controllers = new Controller[]
 		{
-			Game.Instance.createGroupTitleController("Login"),
 			emailController,
 			passwordController,
 			buttons
 		};
 		
-		_loginPane = Game.Instance.showPane(controllers, PaneAspect.LOGIN, null);
+		_loginPane = Game.Instance.showPane(controllers, PaneAspect.LOGIN, null,
+				"Login");
 		
 		emailController.setStringValue("dg@cowlark.com");
 		passwordController.setStringValue("fnord");

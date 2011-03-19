@@ -2,14 +2,15 @@ package com.cowlark.stellation3.gwt.ui;
 
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
+import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.markup.MarkupFactory;
 import com.cowlark.stellation3.common.markup.MarkupParser;
 import com.cowlark.stellation3.common.model.SFleet;
+import com.cowlark.stellation3.common.model.SObject;
 import com.cowlark.stellation3.common.model.SStar;
 import com.cowlark.stellation3.gwt.ControllerImpl;
 import com.cowlark.stellation3.gwt.S;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 
@@ -18,7 +19,13 @@ public class MarkupControllerImpl extends ControllerImpl
 {
 	private static void showObject(int oid)
 	{
-		Window.alert("showing details");
+		SObject o = Game.Instance.Database.get(oid);
+		switch (o.Class.get())
+		{
+			case SStar:
+				Game.Instance.showStarDetails((SStar) o);
+				break;
+		}
 	}
 	
 	private static native void publish() /*-{

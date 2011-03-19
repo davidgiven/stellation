@@ -22,6 +22,7 @@ import com.cowlark.stellation3.common.database.RPCManager;
 import com.cowlark.stellation3.common.database.Transport;
 import com.cowlark.stellation3.common.model.SGalaxy;
 import com.cowlark.stellation3.common.model.SPlayer;
+import com.cowlark.stellation3.common.model.SStar;
 import com.cowlark.stellation3.common.model.SUniverse;
 import com.cowlark.stellation3.common.monitors.MonitorGroup;
 import com.cowlark.stellation3.common.monitors.PaneMonitorAdaptor;
@@ -67,10 +68,18 @@ public abstract class Game
 		StarMap.show();
 //		StarMap = createStarMap();
 		
-		MonitorGroup mg = new MonitorGroup("Miscellaneous");
+		MonitorGroup mg = new MonitorGroup();
 		mg.addMonitor(new PlayerSummaryMonitor(Player));
 		
-		Pane leftPane = new PaneMonitorAdaptor(mg, PaneAspect.TITLE, null);
+		Pane leftPane = new PaneMonitorAdaptor(mg, PaneAspect.TITLE, null,
+				"Summary");
+	}
+	
+	public void showStarDetails(SStar star)
+	{
+		MonitorGroup mg = new MonitorGroup();
+		Pane starPane = new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null,
+				star.Name.get());
 	}
 	
 	public abstract void loadUIData(CompletionListener listener);
@@ -80,14 +89,15 @@ public abstract class Game
 	public abstract void showProgress(String message);
 	
 	public Pane showPane(Controller[] controllers,
-			PaneAspect aspect, PaneHandler cgh)
+			PaneAspect aspect, PaneHandler cgh, String title)
 	{
-		Pane pane = showPane(aspect, cgh);
+		Pane pane = showPane(aspect, cgh, title);
 		pane.updateControllers(Arrays.asList(controllers));
 		return pane;
 	}
 	
-	public abstract Pane showPane(PaneAspect aspect, PaneHandler cgh);
+	public abstract Pane showPane(PaneAspect aspect, PaneHandler cgh,
+			String title);
 	
 	public abstract GroupTitleController createGroupTitleController(
 			String title);
