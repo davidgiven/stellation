@@ -20,4 +20,4 @@ syntax: regexp
 syntax: regexp
 
 syntax: regexp
-^war/star.\.png$
+^src/javaclient/com/cowlark/stellation3/gwt/ui/star.\.png$

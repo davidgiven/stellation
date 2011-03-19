@@ -4,6 +4,7 @@ import com.cowlark.stellation3.common.game.CompletionListener;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
 
@@ -15,23 +16,23 @@ public class UIResources
 	private static int _loaded;
 	private static CompletionListener _listener;
 	
-	private static String[] _urls =
+	private static ImageResource[] _resources =
 	{
-		"galaxy.jpg",
-		"star1.png",
-		"star2.png",
-		"star3.png",
-		"star4.png",
-		"star5.png",
-		"star6.png",
-		"star7.png",
-		"star8.png",
-		"star9.png"
+		UIImages.Instance.galaxy(),
+		UIImages.Instance.star1(),
+		UIImages.Instance.star2(),
+		UIImages.Instance.star3(),
+		UIImages.Instance.star4(),
+		UIImages.Instance.star5(),
+		UIImages.Instance.star6(),
+		UIImages.Instance.star7(),
+		UIImages.Instance.star8(),
+		UIImages.Instance.star9()
 	};
 	
 	static
 	{
-		final Image[] images = new Image[_urls.length];
+		final Image[] images = new Image[_resources.length];
 		
 		_loaded = 0;
 		LoadHandler handler = new LoadHandler()
@@ -41,7 +42,7 @@ public class UIResources
 			{
 				_loaded++;
 				
-				if (_loaded == _urls.length)
+				if (_loaded == _resources.length)
 				{
 					Background = ImageElement.as(images[0].getElement());
 					
@@ -58,11 +59,11 @@ public class UIResources
 			}
 		};
 		
-		for (int i=0; i<_urls.length; i++)
+		for (int i=0; i<_resources.length; i++)
 		{
 			Image image = new Image();
 			image.addLoadHandler(handler);
-			image.setUrl(_urls[i]);
+			image.setUrl(_resources[i].getURL());
 			image.setVisible(false);
 			RootPanel.get().add(image);
 			images[i] = image;
@@ -71,7 +72,7 @@ public class UIResources
 	
 	public static void waitForLoad(CompletionListener listener)
 	{
-		if (_loaded == _urls.length)
+		if (_loaded == _resources.length)
 			listener.onCompletion();
 		_listener = listener;
 	}

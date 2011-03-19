@@ -22,7 +22,7 @@ star = povray {
 		"+K%temperature%"
 	},
 	install = {
-		"ln -f %CWD%/%out[1]% %CWD%/war/%filename%"
+		"ln -f %CWD%/%out[1]% %CWD%/src/javaclient/com/cowlark/stellation3/gwt/ui/%filename%"
 	}
 }
 	

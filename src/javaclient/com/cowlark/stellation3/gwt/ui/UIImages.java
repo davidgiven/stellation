@@ -8,12 +8,19 @@ public interface UIImages extends ClientBundle
 {
 	static UIImages Instance = GWT.create(UIImages.class);
 	
-	@Source("close.png")
 	ImageResource close();
-	
-	@Source("download.png")
 	ImageResource maximise();
-	
-	@Source("download-reversed.png")
 	ImageResource minimise();
+	
+	ImageResource galaxy();
+	
+	ImageResource star1();
+	ImageResource star2();
+	ImageResource star3();
+	ImageResource star4();
+	ImageResource star5();
+	ImageResource star6();
+	ImageResource star7();
+	ImageResource star8();
+	ImageResource star9();
 }
