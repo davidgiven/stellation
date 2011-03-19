@@ -31,7 +31,7 @@ import com.cowlark.stellation3.gwt.ui.StaticPane;
 import com.cowlark.stellation3.gwt.ui.TabbedPane;
 import com.cowlark.stellation3.gwt.ui.TabbedPaneContainer;
 import com.cowlark.stellation3.gwt.ui.TextFieldControllerImpl;
-import com.cowlark.stellation3.gwt.ui.UIResources;
+import com.cowlark.stellation3.gwt.ui.CanvasResources;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -56,7 +56,7 @@ public class GameImpl extends Game
 	@Override
 	public void loadUIData(CompletionListener listener)
 	{
-		UIResources.waitForLoad(listener);
+		CanvasResources.waitForLoad(listener);
 	}
 	
 	@Override

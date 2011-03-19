@@ -19,7 +19,7 @@ public class TabbedPaneContainer extends TabLayoutPanel
     {
 		super(2, Unit.EM);
 		
-		_toggleImage = new Image(UIImages.Instance.minimise());
+		_toggleImage = new Image(UIResources.Instance.minimise());
 		_tabs = new PriorityQueue<TabbedPane>();
 		
 		add(new Label(), _toggleImage);
@@ -63,13 +63,13 @@ public class TabbedPaneContainer extends TabLayoutPanel
 			{
 				setHeight("100%");
 				_minimised = false;
-				_toggleImage.setResource(UIImages.Instance.minimise());
+				_toggleImage.setResource(UIResources.Instance.minimise());
 			}
 			else
 			{
 				setHeight("2em");
 				_minimised = true;
-				_toggleImage.setResource(UIImages.Instance.maximise());
+				_toggleImage.setResource(UIResources.Instance.maximise());
 			}
 			event.cancel();
 		}

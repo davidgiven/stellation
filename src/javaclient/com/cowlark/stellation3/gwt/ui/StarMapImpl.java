@@ -99,7 +99,7 @@ public class StarMapImpl implements
 		int i = (int)brightness - 1;
 		i = Math.max(i, 0);
 		i = Math.min(i, 9);
-		return UIResources.Star[i];
+		return CanvasResources.Star[i];
 	}
 	
 	private void deferredRedraw()
@@ -140,7 +140,7 @@ public class StarMapImpl implements
 		double galaxysize = _galactic_radius * 1.5;
 		double galaxysize2 = galaxysize * 2.0;
 		
-		c.drawImage(UIResources.Background,
+		c.drawImage(CanvasResources.Background,
 				-galaxysize, -galaxysize,
 				galaxysize2, galaxysize2);
 		
