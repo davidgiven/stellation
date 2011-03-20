@@ -11,18 +11,18 @@ SFleet::SFleet(Database::Type oid):
 void SFleet::OnAdditionOf(SObject* o)
 {
 	if (o->GetClass() == Hash::SJumpship)
-		JumpshipCount = (double)JumpshipCount + 1;
+		*JumpshipCount = *JumpshipCount + 1;
 }
 
 void SFleet::OnRemovalOf(SObject* o)
 {
 	if (o->GetClass() == Hash::SJumpship)
-		JumpshipCount = (double)JumpshipCount - 1;
+		*JumpshipCount = *JumpshipCount - 1;
 }
 
 SJumpship* SFleet::CreateJumpship()
 {
-	SJumpship* jumpship = SJumpship::Create(Owner);
+	SJumpship* jumpship = SJumpship::Create(*Owner);
 
 	Add(jumpship);
 

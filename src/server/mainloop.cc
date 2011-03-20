@@ -5,8 +5,8 @@
 #include "Reader.h"
 #include "Writer.h"
 #include "Transport.h"
+#include "Property.h"
 #include "SPlayer.h"
-#include "fileio.h"
 #include "worldcreation.h"
 #include "auth.h"
 #include "engine.h"
@@ -60,7 +60,7 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 	Hash::Type gamecommand = reader.ReadHash();
 	SPlayer* player = SPlayer::Get(playeroid);
 
-	Log() << "gamecommand " << gamecommand << " from " << (string)player->Name
+	Log() << "gamecommand " << gamecommand << " from " << *player->Name
 			<< " last update time " << lastupdate;
 
 	try
@@ -78,16 +78,16 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 
 		/* This is stupidly heavyweight, but it's the cleanest way to do it. */
 
-		Datum::ObjectSet oldVisible(player->VisibleObjects.SetBegin(),
-				player->VisibleObjects.SetEnd());
+		Datum::ObjectSet oldVisible(player->VisibleObjects->SetBegin(),
+				player->VisibleObjects->SetEnd());
 		if (oldVisible != newVisible)
 		{
 			Log() << "visible object set changed!";
 
-			player->VisibleObjects.ClearSet();
+			player->VisibleObjects->ClearSet();
 			for (Datum::ObjectSet::const_iterator i = newVisible.begin(),
 					e = newVisible.end(); i != e; i++)
-				player->VisibleObjects.AddToSet(*i);
+				player->VisibleObjects->AddToSet(*i);
 		}
 
 		writer.Write(tag);
@@ -106,10 +106,11 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 
 	writer.Write(CurrentCanonicalTime());
 
-	for (Datum::ObjectSet::const_iterator i = player->VisibleObjects.SetBegin(),
-			e = player->VisibleObjects.SetEnd(); i != e; i++)
+	for (Datum::ObjectSet::const_iterator i = player->VisibleObjects->SetBegin(),
+			e = player->VisibleObjects->SetEnd(); i != e; i++)
 	{
-		Database::Type owner = DatabaseGet(*i, Hash::Owner);
+		shared_ptr<Datum> genericowner(DatabaseGet(*i, Hash::Owner));
+		ObjectDatum& owner = *(ObjectDatum*) genericowner.get();
 		DatabaseWriteChangedDatums(writer, *i, (owner == playeroid), lastupdate);
 	}
 }
@@ -155,6 +156,7 @@ public:
 				{
 					writer.Write(tag);
 					writer.Write(Hash::OK);
+					WritePropertyInfo(writer);
 					WriteAllStatics(writer);
 					break;
 				}

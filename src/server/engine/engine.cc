@@ -37,7 +37,7 @@ void GameOperation(Reader& reader, SPlayer* player, Hash::Type command)
 			string newname = read(reader);
 			endread(reader);
 
-			o->Name = newname;
+			*o->Name = newname;
 
 			break;
 		}

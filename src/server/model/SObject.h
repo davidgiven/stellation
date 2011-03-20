@@ -10,6 +10,9 @@
 		static C* Get(SObject* o) \
 		{ return boost::polymorphic_downcast<C*>(o); } \
 		\
+		static C* Get(LazyDatum<ObjectDatum>& o) \
+		{ return boost::polymorphic_downcast<C*>(SObject::Get(*o)); } \
+		\
 		static C* Get(Database::Type oid) \
 		{ return boost::polymorphic_downcast<C*>(SObject::Get(oid)); } \
 		\
@@ -32,6 +35,7 @@ public:
 
 public:
 	SObject(Database::Type oid);
+	virtual ~SObject();
 
 	virtual Hash::Type GetClass() const
 	{ return Hash::SObject; }
@@ -51,7 +55,7 @@ public:
 	string GetStringStatic(Hash::Type kid);
 
 public:
-	Datum& Get(Hash::Type key)
+	boost::shared_ptr<Datum>& Get(Hash::Type key)
 	{ return DatabaseGet(_oid, key); }
 
 private:

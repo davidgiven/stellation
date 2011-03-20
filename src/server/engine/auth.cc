@@ -34,6 +34,7 @@ struct CookieRecord : public noncopyable
 		player = other.player;
 		cookie = other.cookie;
 		creationTime = other.creationTime;
+		return *this;
 	}
 };
 
@@ -96,8 +97,8 @@ string CreateAuthenticationCookie(Reader& reader)
 	if (!reader.IsEOF())
 		throw Hash::MalformedCommand;
 
-	SUniverse universe(Database::Universe);
-	Database::Type playeroid = universe.Players.FetchFromMap(email);
+	SUniverse* universe = SUniverse::Get(Database::Universe);
+	Database::Type playeroid = universe->Players->FetchFromMap(email);
 
 	Log() << "authenticating " << email << " (who is " << playeroid << ")";
 	if (playeroid == Database::Null)
@@ -106,8 +107,8 @@ string CreateAuthenticationCookie(Reader& reader)
 		throw Hash::AuthenticationFailure;
 	}
 
-	SPlayer player(playeroid);
-	if (player.Password != password)
+	SPlayer* player = SPlayer::Get(playeroid);
+	if (*player->Password != password)
 	{
 		Log() << "incorrect login from " << email;
 		throw Hash::AuthenticationFailure;

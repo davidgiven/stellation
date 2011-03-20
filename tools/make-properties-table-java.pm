@@ -119,13 +119,13 @@ do
 		
 	for name, data in pairs(properties) do
 		sbaseoutf:write(
-			'\tpublic ', data.type, ' ', name, ' = new ', data.type, '();\n'
+			'\tpublic ', data.type, 'Datum ', name, ';\n'
 		)
 	end
 		
 	sbaseoutf:write(
 		'\n',
-		'\tpublic DATUM getDatumByName(Hash h)\n',
+		'\tpublic Datum getDatumByName(Hash h)\n',
 		'\t{\n',
 		'\t\tswitch (h)\n',
 		'\t\t{\n'
@@ -134,6 +134,40 @@ do
 	for name, data in pairs(properties) do
 		sbaseoutf:write(
 			'\t\t\tcase ', name, ': return ', name, ';\n'
+		)
+	end
+	
+	sbaseoutf:write(
+		'\t\t\tdefault: return null;\n',
+		'\t\t}\n',
+		'\t}\n',
+		'\n',
+		'\tpublic void setDatumByName(Hash h, Datum datum)\n',
+		'\t{\n',
+		'\t\tswitch (h)\n',
+		'\t\t{\n'
+	)
+	
+	for name, data in pairs(properties) do
+		sbaseoutf:write(
+			'\t\t\tcase ', name, ': ', name, ' = (', data.type, 'Datum) datum; break;\n'
+		)
+	end
+	
+	sbaseoutf:write(
+		'\t\t\tdefault: assert(false);\n',
+		'\t\t}\n',
+		'\t}\n',
+		'\n',
+		'\tpublic static Hash getDatumTypeByName(Hash h)\n',
+		'\t{\n',
+		'\t\tswitch (h)\n',
+		'\t\t{\n'
+	)
+	
+	for name, data in pairs(properties) do
+		sbaseoutf:write(
+			'\t\t\tcase ', name, ': return Hash.', data.type, ';\n'
 		)
 	end
 	

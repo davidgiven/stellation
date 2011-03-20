@@ -3,7 +3,7 @@ package com.cowlark.stellation3.common.database.values;
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.database.Reader;
 
-public class TOKEN extends DATUM
+public class TokenDatum extends Datum
 {
 	private Hash _value;
 	
@@ -19,9 +19,9 @@ public class TOKEN extends DATUM
 	}
 	
 	@Override
-	public void set(DATUM d)
+	public void set(Datum d)
 	{
-		TOKEN t = (TOKEN) d;
+		TokenDatum t = (TokenDatum) d;
 		_value = t._value;
 	}
 }

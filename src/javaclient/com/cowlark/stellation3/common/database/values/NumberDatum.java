@@ -2,7 +2,7 @@ package com.cowlark.stellation3.common.database.values;
 
 import com.cowlark.stellation3.common.database.Reader;
 
-public class NUMBER extends DATUM
+public class NumberDatum extends Datum
 {
 	private double _value;
 	
@@ -18,9 +18,9 @@ public class NUMBER extends DATUM
 	}
 	
 	@Override
-	public void set(DATUM d)
+	public void set(Datum d)
 	{
-		NUMBER n = (NUMBER) d;
+		NumberDatum n = (NumberDatum) d;
 		_value = n._value;
 	}
 }

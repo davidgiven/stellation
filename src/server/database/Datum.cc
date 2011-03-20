@@ -1,307 +1,263 @@
 #include "globals.h"
 #include "Database.h"
 #include "Datum.h"
+#include "Property.h"
 #include "SObject.h"
+#include "Reader.h"
 #include "Writer.h"
 #include "utils.h"
 #include "mainloop.h"
 #include <boost/variant.hpp>
 #include <algorithm>
 
-Datum::Datum():
-	_type(UNSET),
-	_oid(Database::Null),
-	_kid(Hash::Null),
-	_lastChanged(CurrentCanonicalTime())
+Datum* Datum::Create(Database::Type oid, Hash::Type kid)
 {
+	const Property& propertyInfo = GetPropertyInfo(kid);
+	switch (propertyInfo.type)
+	{
+		case Datum::ObjectDatumType:        return new ObjectDatum(oid, kid);
+		case Datum::TokenDatumType:         return new TokenDatum(oid, kid);
+		case Datum::NumberDatumType:        return new NumberDatum(oid, kid);
+		case Datum::StringDatumType:        return new StringDatum(oid, kid);
+		case Datum::ObjectSetDatumType:     return new ObjectSetDatum(oid, kid);
+		case Datum::ObjectMapDatumType:     return new ObjectMapDatum(oid, kid);
+
+		default:
+			assert(false);
+	}
 }
 
 Datum::Datum(Database::Type oid, Hash::Type kid):
-	_type(UNSET),
 	_oid(oid),
 	_kid(kid),
 	_lastChanged(CurrentCanonicalTime())
 {
 }
 
-Datum::Datum(const Datum& other):
-	_type(other._type),
-	_oid(other._oid),
-	_kid(other._kid),
-	_value(other._value),
-	_lastChanged(other._lastChanged)
-{
-}
-
-Datum& Datum::operator = (const Datum& other)
-{
-	_type = other._type;
-	_oid = other._oid;
-	_kid = other._kid;
-	_value = other._value;
-	_lastChanged = other._lastChanged;
-
-	return *this;
-}
-
-void Datum::SetOidKid(Database::Type oid, Hash::Type kid)
-{
-	_oid = oid;
-	_kid = kid;
-}
-
-void Datum::CheckType(Type type) const
-{
-	assert(_type == type);
-}
-
-void Datum::SetType(Type type)
-{
-	assert(_type == UNSET);
-	_type = type;
-
-	switch (type)
-	{
-		case TOKEN:
-			_value = Hash::Null;
-			break;
-
-		case OBJECT:
-			_value = Database::Null;
-			break;
-
-		case NUMBER:
-			_value = 0.0;
-			break;
-
-		case STRING:
-			_value = "";
-			break;
-
-		case OBJECTSET:
-		{
-			ObjectSet empty;
-			_value = empty;
-			break;
-		}
-
-		case OBJECTMAP:
-		{
-			ObjectMap empty;
-			_value = empty;
-			break;
-		}
-
-		case UNSET:
-			assert(false);
-	}
-}
-
 void Datum::Dirty()
 {
-	DatabaseDirty(_oid, _kid);
+	DatabaseDirty(this);
 	_lastChanged = CurrentCanonicalTime();
 }
 
-void Datum::SetNumber(double d)
+void NumberDatum::SetNumber(double d)
 {
-	CheckType(NUMBER);
-	Dirty();
 	_value = d;
-}
-
-double Datum::GetNumber() const
-{
-	CheckType(NUMBER);
-	return boost::get<double>(_value);
-}
-
-void Datum::SetString(const string& s)
-{
-	CheckType(STRING);
 	Dirty();
-	_value = s;
 }
 
-const string& Datum::GetString() const
+void NumberDatum::Write(Writer& writer) const
 {
-	CheckType(STRING);
-	return boost::get<string>(_value);
+	writer.Write(_value);
 }
 
-void Datum::SetObject(SObject* o)
+void NumberDatum::Read(Reader& reader)
+{
+	_value = reader.ReadNumber();
+}
+
+void StringDatum::SetString(const string& s)
+{
+	_value = s;
+	Dirty();
+}
+
+void StringDatum::Write(Writer& writer) const
+{
+	writer.Write(_value);
+}
+
+void StringDatum::Read(Reader& reader)
+{
+	_value = reader.ReadString();
+}
+
+void ObjectDatum::SetObject(SObject* o)
 {
 	SetObject(*o);
 }
 
-void Datum::SetObject(Database::Type oid)
+void ObjectDatum::SetObject(Database::Type oid)
 {
-	CheckType(OBJECT);
-	Dirty();
 	_value = oid;
-}
-
-Database::Type Datum::GetObject() const
-{
-	CheckType(OBJECT);
-	return boost::get<Database::Type>(_value);
-}
-
-void Datum::SetToken(Hash::Type token)
-{
-	CheckType(TOKEN);
 	Dirty();
-	_value = token;
 }
 
-Hash::Type Datum::GetToken() const
+void ObjectDatum::Write(Writer& writer) const
 {
-	CheckType(TOKEN);
-	return boost::get<Hash::Type>(_value);
+	writer.Write(_value);
 }
 
-void Datum::AddToSet(SObject* o)
+void ObjectDatum::Read(Reader& reader)
+{
+	_value = reader.ReadOid();
+}
+
+void TokenDatum::SetToken(Hash::Type token)
+{
+	_value = token;
+	Dirty();
+}
+
+void TokenDatum::Write(Writer& writer) const
+{
+	writer.Write(_value);
+}
+
+void TokenDatum::Read(Reader& reader)
+{
+	_value = reader.ReadHash();
+}
+
+void ObjectSetDatum::AddToSet(SObject* o)
 {
 	AddToSet(*o);
 }
 
-void Datum::AddToSet(Database::Type oid)
+void ObjectSetDatum::AddToSet(Database::Type oid)
 {
-	CheckType(OBJECTSET);
+	_value.insert(oid);
 	Dirty();
-
-	ObjectSet& os = boost::get<ObjectSet>(_value);
-	os.insert(oid);
 }
 
-void Datum::RemoveFromSet(SObject* o)
+void ObjectSetDatum::RemoveFromSet(SObject* o)
 {
 	RemoveFromSet(*o);
 }
 
-void Datum::RemoveFromSet(Database::Type oid)
+void ObjectSetDatum::RemoveFromSet(Database::Type oid)
 {
-	CheckType(OBJECTSET);
+	_value.erase(oid);
 	Dirty();
-
-	ObjectSet& os = boost::get<ObjectSet>(_value);
-	os.erase(oid);
 }
 
-bool Datum::InSet(SObject* o)
+bool ObjectSetDatum::InSet(SObject* o)
 {
 	return InSet(*o);
 }
 
-bool Datum::InSet(Database::Type oid)
+bool ObjectSetDatum::InSet(Database::Type oid)
 {
-	CheckType(OBJECTSET);
-
-	ObjectSet& os = boost::get<ObjectSet>(_value);
-	return (os.find(oid) != os.end());
+	return (_value.find(oid) != _value.end());
 }
 
-void Datum::ClearSet()
+void ObjectSetDatum::ClearSet()
 {
-	CheckType(OBJECTSET);
+	_value.clear();
 	Dirty();
-
-	ObjectSet& os = boost::get<ObjectSet>(_value);
-	os.clear();
 }
 
-int Datum::SetLength() const
+int ObjectSetDatum::SetLength() const
 {
-	CheckType(OBJECTSET);
-
-	const ObjectSet& os = boost::get<ObjectSet>(_value);
-	return os.size();
+	return _value.size();
 }
 
-Database::Type Datum::RandomSetMember() const
+Database::Type ObjectSetDatum::RandomSetMember() const
 {
-	CheckType(OBJECTSET);
-
-	const ObjectSet& os = boost::get<ObjectSet>(_value);
-	ObjectSet::const_iterator i = os.begin();
-	std::advance(i, Random(os.size()));
+	ObjectSet::const_iterator i = _value.begin();
+	std::advance(i, Random(_value.size()));
 	return *i;
 }
 
-Datum::ObjectSet::const_iterator Datum::SetBegin() const
+Datum::ObjectSet::const_iterator ObjectSetDatum::SetBegin() const
 {
-	CheckType(OBJECTSET);
-
-	const ObjectSet& os = boost::get<ObjectSet>(_value);
-	return os.begin();
+	return _value.begin();
 }
 
-Datum::ObjectSet::const_iterator Datum::SetEnd() const
+Datum::ObjectSet::const_iterator ObjectSetDatum::SetEnd() const
 {
-	CheckType(OBJECTSET);
-
-	const ObjectSet& os = boost::get<ObjectSet>(_value);
-	return os.end();
+	return _value.end();
 }
 
-void Datum::AddToMap(const string& key, SObject* o)
+void ObjectSetDatum::Write(Writer& writer) const
+{
+	writer.Write(_value.size());
+
+	for (Datum::ObjectSet::const_iterator i = _value.begin(),
+			e = _value.end(); i != e; i++)
+	{
+		writer.Write(*i);
+	}
+}
+
+void ObjectSetDatum::Read(Reader& reader)
+{
+	_value.clear();
+	int count = reader.ReadNumber();
+
+	for (int i=0; i<count; i++)
+	{
+		Database::Type oid = reader.ReadOid();
+		_value.insert(oid);
+	}
+}
+
+void ObjectMapDatum::AddToMap(const string& key, SObject* o)
 {
 	AddToMap(key, *o);
 }
 
-void Datum::AddToMap(const string& key, Database::Type oid)
+void ObjectMapDatum::AddToMap(const string& key, Database::Type oid)
 {
-	CheckType(OBJECTMAP);
+	_value[key] = oid;
 	Dirty();
-
-	ObjectMap& om = boost::get<ObjectMap>(_value);
-	om[key] = oid;
 }
 
-void Datum::RemoveFromMap(const string& key)
+void ObjectMapDatum::RemoveFromMap(const string& key)
 {
-	CheckType(OBJECTMAP);
+	_value.erase(key);
 	Dirty();
-
-	ObjectMap& om = boost::get<ObjectMap>(_value);
-	om.erase(key);
 }
 
-Database::Type Datum::FetchFromMap(const string& key)
+Database::Type ObjectMapDatum::FetchFromMap(const string& key)
 {
-	CheckType(OBJECTMAP);
-
-	ObjectMap& om = boost::get<ObjectMap>(_value);
-	ObjectMap::const_iterator i = om.find(key);
-	if (i == om.end())
+	ObjectMap::const_iterator i = _value.find(key);
+	if (i == _value.end())
 		return Database::Null;
 	return i->second;
 }
 
-int Datum::MapLength() const
+int ObjectMapDatum::MapLength() const
 {
-	CheckType(OBJECTMAP);
-
-	const ObjectMap& om = boost::get<ObjectMap>(_value);
-	return om.size();
+	return _value.size();
 }
 
-Datum::ObjectMap::const_iterator Datum::MapBegin() const
+Datum::ObjectMap::const_iterator ObjectMapDatum::MapBegin() const
 {
-	CheckType(OBJECTMAP);
-
-	const ObjectMap& om = boost::get<ObjectMap>(_value);
-	return om.begin();
+	return _value.begin();
 }
 
-Datum::ObjectMap::const_iterator Datum::MapEnd() const
+Datum::ObjectMap::const_iterator ObjectMapDatum::MapEnd() const
 {
-	CheckType(OBJECTMAP);
-
-	const ObjectMap& om = boost::get<ObjectMap>(_value);
-	return om.end();
+	return _value.end();
 }
 
+void ObjectMapDatum::Write(Writer& writer) const
+{
+	writer.Write(_value.size());
+
+	for (Datum::ObjectMap::const_iterator i = _value.begin(),
+			e = _value.end(); i != e; i++)
+	{
+		writer.Write(i->first);
+		writer.Write(i->second);
+	}
+}
+
+void ObjectMapDatum::Read(Reader& reader)
+{
+	int size = reader.ReadNumber();
+
+	_value.clear();
+	for (int i = 0; i < size; i++)
+	{
+		string key = reader.ReadString();
+		Database::Type oid = reader.ReadOid();
+		_value[key] = oid;
+	}
+}
+
+#if 0
 void Datum::Write(Writer& writer) const
 {
 	writer.Write(_oid);
@@ -372,3 +328,4 @@ void Datum::Write(Writer& writer) const
 			assert(false);
 	}
 }
+#endif

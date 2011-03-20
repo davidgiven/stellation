@@ -4,6 +4,7 @@
 #include "SObject.h"
 #include "Hash.h"
 #include "Property.h"
+#include "Writer.h"
 #include <boost/range/size.hpp>
 #include <vector>
 
@@ -45,16 +46,33 @@ const char* Hash::StringFromHash(Hash::Type hash)
 	return propertyNameTable[i];
 }
 
+Hash::Type Hash::GetFirstHash()
+{
+	int i = MIN_HASH_VALUE;
+	while (!propertyNameTable[i])
+		i++;
+	return (Hash::Type) i;
+}
+
+bool Hash::GetNextHash(Hash::Type& hash)
+{
+	int i = (int) hash;
+
+	if (i <= MAX_HASH_VALUE)
+	{
+		do
+		{
+			i++;
+		}
+		while ((i < MAX_HASH_VALUE) && !*propertyNameTable[i]);
+	}
+
+	hash = (Hash::Type) i;
+	return (i <= MAX_HASH_VALUE);
+}
+
 namespace
 {
-	struct ClassInitData
-	{
-		const ClassInitData* superclass;
-		int numproperties;
-		const Hash::Type* properties;
-	};
-
-	typedef map<Hash::Type, const ClassInitData&> ClassInitialisationMap;
 	typedef map<Hash::Type, const Property&> PropertyDataMap;
 	#include "property-tables.h"
 }
@@ -66,25 +84,22 @@ const Property& GetPropertyInfo(Hash::Type name)
 	return i->second;
 }
 
+void WritePropertyInfo(Writer& writer)
+{
+	for (PropertyDataMap::const_iterator i = propertyDataMap.begin(),
+			e = propertyDataMap.end(); i != e; i++)
+	{
+		Hash::Type kid = i->first;
+		const Property& pinfo = i->second;
+
+		writer.Write(kid);
+		writer.Write(Hash::Class);
+		writer.Write((Hash::Type) pinfo.type);
+	}
+}
+
 void InitialiseClass(SObject& object)
 {
 	Hash::Type type = object.GetClass();
-
-	assert(classInitialisationMap.find(type) != classInitialisationMap.end());
-	const ClassInitData* cid = &(classInitialisationMap.find(type)->second);
-	while (cid)
-	{
-		for (int i = 0; i < cid->numproperties; i++)
-		{
-			Hash::Type hash = cid->properties[i];
-			const Property& data = propertyDataMap.find(hash)->second;
-
-			Datum& datum = object.Get(hash);
-			datum.SetType(data.type);
-		}
-
-		cid = cid->superclass;
-	}
-
-	object.Class = type;
+	*object.Class = type;
 }

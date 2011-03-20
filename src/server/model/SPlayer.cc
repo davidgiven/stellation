@@ -14,20 +14,20 @@ SPlayer::SPlayer(Database::Type oid):
 
 SFleet* SPlayer::CreateFleet(SStar* location, const string& name)
 {
-	for (Datum::ObjectSet::const_iterator i = Fleets.SetBegin(),
-			e = Fleets.SetEnd(); i != e; i++)
+	for (Datum::ObjectSet::const_iterator i = Fleets->SetBegin(),
+			e = Fleets->SetEnd(); i != e; i++)
 	{
 		SFleet* fleet = SFleet::Get(*i);
-		if (fleet->Name == name)
+		if (*fleet->Name == name)
 			throw Hash::FleetAlreadyHasThisName;
 	}
 
 	SFleet* fleet = SFleet::Create(*this);
 
-	fleet->Name = name;
+	*fleet->Name = name;
 	location->Add(fleet);
 
-	Fleets.AddToSet(fleet);
+	Fleets->AddToSet(fleet);
 
 	return fleet;
 }
@@ -36,8 +36,8 @@ static void add_with_contents(SObject::ObjectSet& visible, SObject* o)
 {
 	visible.insert(*o);
 
-	for (SObject::ObjectSet::const_iterator i = o->Contents.SetBegin(),
-			e = o->Contents.SetEnd(); i != e; i++)
+	for (SObject::ObjectSet::const_iterator i = o->Contents->SetBegin(),
+			e = o->Contents->SetEnd(); i != e; i++)
 	{
 		SObject* child = SObject::Get(*i);
 		add_with_contents(visible, child);
@@ -58,8 +58,8 @@ void SPlayer::CalculateVisibleObjects(ObjectSet& visible)
 	SGalaxy* galaxy = SGalaxy::Get(universe->Galaxy);
 	visible.insert(*galaxy);
 
-	for (Datum::ObjectSet::const_iterator i = galaxy->VisibleStars.SetBegin(),
-			e = galaxy->VisibleStars.SetEnd(); i != e; i++)
+	for (Datum::ObjectSet::const_iterator i = galaxy->VisibleStars->SetBegin(),
+			e = galaxy->VisibleStars->SetEnd(); i != e; i++)
 	{
 		visible.insert(*i);
 	}
@@ -67,12 +67,12 @@ void SPlayer::CalculateVisibleObjects(ObjectSet& visible)
 	/* We can see every fleet which has a jumpship. */
 
 	ObjectSet locationsWithAJumpship;
-	for (Datum::ObjectSet::const_iterator i = Fleets.SetBegin(),
-			e = Fleets.SetEnd(); i != e; i++)
+	for (Datum::ObjectSet::const_iterator i = Fleets->SetBegin(),
+			e = Fleets->SetEnd(); i != e; i++)
 	{
 		SFleet* fleet = SFleet::Get(*i);
-		if ((double)fleet->JumpshipCount > 0.0)
-			locationsWithAJumpship.insert(fleet->Location);
+		if (*fleet->JumpshipCount > 0.0)
+			locationsWithAJumpship.insert(*fleet->Location);
 	}
 
 	for (ObjectSet::const_iterator i = locationsWithAJumpship.begin(),
@@ -98,16 +98,16 @@ void SPlayer::AccessRW(Database::Type oid)
 	while (oid)
 	{
 		SObject* o = SObject::Get(oid);
-		switch (o->Class)
+		switch (*o->Class)
 		{
 			case Hash::SFleet:
 				/* If this fleet belongs to the player *and* it has a
 				 * jumpship, the object is accessible. */
 
-				if ((Database::Type)o->Owner == (Database::Type)*this)
+				if (*o->Owner == (Database::Type)*this)
 				{
 					SFleet* fleet = SFleet::Get(o);
-					if ((double)fleet->JumpshipCount > 0)
+					if (*fleet->JumpshipCount > 0)
 						return;
 				}
 				break;
@@ -119,22 +119,25 @@ void SPlayer::AccessRW(Database::Type oid)
 				 * accessible.
 				 */
 
-				for (ObjectSet::const_iterator i = o->Contents.SetBegin(),
-						e = o->Contents.SetEnd(); i != e; i++)
+				for (ObjectSet::const_iterator i = o->Contents->SetBegin(),
+						e = o->Contents->SetEnd(); i != e; i++)
 				{
 					if (SObject::GetClass(*i) == Hash::SFleet)
 					{
 						SFleet* fleet = SFleet::Get(*i);
-						if ((fleet->Owner == *this) && ((double)fleet->JumpshipCount > 0))
+						if ((*fleet->Owner == *this) && (*fleet->JumpshipCount > 0))
 							return;
 					}
 				}
 
 				break;
 			}
+
+			default:
+				break;
 		}
 
-		oid = o->Location;
+		oid = *o->Location;
 	}
 
 	/* Nope. Note accessible. */

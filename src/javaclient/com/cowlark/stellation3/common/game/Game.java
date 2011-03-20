@@ -66,7 +66,6 @@ public abstract class Game
 		
 		StarMap = new StarMap();
 		StarMap.show();
-//		StarMap = createStarMap();
 		
 		MonitorGroup mg = new MonitorGroup();
 		mg.addMonitor(new PlayerSummaryMonitor(Player));

@@ -6,7 +6,7 @@
 
 class SObject;
 class Datum;
-class LazyDatum;
+template <class T> class LazyDatum;
 
 class Error
 {

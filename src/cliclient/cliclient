@@ -98,7 +98,7 @@ local function update_database(reader)
 		local o = objref(oid)
 		
 		local kid = reader()
-		local type = reader()
+		local type = static[kid..".Class"]
 		local handler = type_handlers[type]
 		if not handler then
 			error("unknown type in wire protocol '"..type.."'")
@@ -169,7 +169,7 @@ end
 -----------------------------------------------------------------------------
 --                                COMMANDS                                 --
 -----------------------------------------------------------------------------
-
+	
 local function command_x(oid)
 	oid = tonumber(oid)
 	print("Object #"..oid)

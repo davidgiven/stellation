@@ -7,7 +7,7 @@ import com.cowlark.stellation3.common.database.Reader;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.model.SObject;
 
-public class OBJECTSET extends DATUM implements Iterable<SObject>
+public class ObjectSetDatum extends Datum implements Iterable<SObject>
 {
 	private TreeSet<Integer> _value = new TreeSet<Integer>();
 	
@@ -29,9 +29,9 @@ public class OBJECTSET extends DATUM implements Iterable<SObject>
 	}
 	
 	@Override
-	public void set(DATUM d)
+	public void set(Datum d)
 	{
-		OBJECTSET s = (OBJECTSET) d;
+		ObjectSetDatum s = (ObjectSetDatum) d;
 		_value.clear();
 		_value.addAll(s._value);
 	}

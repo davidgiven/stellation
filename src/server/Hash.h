@@ -14,6 +14,9 @@ public:
 	static Type HashFromString(const char* s, int length);
 	static Type HashFromString(const string& s);
 	static const char* StringFromHash(Type hash);
+
+	static Type GetFirstHash();
+	static bool GetNextHash(Type& hash);
 };
 
 #endif

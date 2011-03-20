@@ -2,15 +2,15 @@ package com.cowlark.stellation3.common.database;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import com.cowlark.stellation3.common.database.values.DATUM;
-import com.cowlark.stellation3.common.database.values.OBJECT;
-import com.cowlark.stellation3.common.database.values.TOKEN;
+import com.cowlark.stellation3.common.database.values.Datum;
+import com.cowlark.stellation3.common.database.values.ObjectDatum;
+import com.cowlark.stellation3.common.database.values.TokenDatum;
 import com.cowlark.stellation3.common.model.SObject;
 
 public class Database
 {
 	@SuppressWarnings("serial")
-    private static class UnknownObject extends HashMap<Hash, DATUM>
+    private static class UnknownObject extends HashMap<Hash, Datum>
 	{
 	}
 	
@@ -51,7 +51,7 @@ public class Database
 		return _data.get(oid);
 	}
 	
-	public SObject get(OBJECT o)
+	public SObject get(ObjectDatum o)
 	{
 		return get(o.getOid());
 	}
@@ -70,18 +70,22 @@ public class Database
 			SObject object = _data.get(oid);
 			if (object != null)
 			{
-				reader.readHash(); // discard type
-				object.getDatumByName(kid).set(reader);
+				Datum datum = object.getDatumByName(kid);
+				if (datum == null)
+				{
+					datum = Datum.create(SObject.getDatumTypeByName(kid));
+					object.setDatumByName(kid, datum);
+				}
+				datum.set(reader);
 				changedObjects.add(object);
 			}
 			else if (kid == Hash.Class)
 			{
-				reader.readHash(); // discard type
-				TOKEN classtoken = new TOKEN();
+				TokenDatum classtoken = new TokenDatum();
 				classtoken.set(reader);
 				
 				object = SObject.create(oid, classtoken.get());
-				object.Class.set(classtoken);
+				object.setDatumByName(Hash.Class, classtoken);
 				_data.put(oid, object);
 				
 				UnknownObject uo = pending.get(oid);
@@ -89,8 +93,8 @@ public class Database
 				{
 					for (Hash k : uo.keySet())
 					{
-						DATUM v = uo.get(k);
-						object.getDatumByName(k).set(v);
+						Datum v = uo.get(k);
+						object.setDatumByName(k, v);
 					}
 					
 					pending.remove(oid);
@@ -107,7 +111,7 @@ public class Database
 					pending.put(oid, uo);
 				}
 				
-				DATUM datum = DATUM.create(reader.readHash());
+				Datum datum = Datum.create(SBase.getDatumTypeByName(kid));
 				datum.set(reader);
 				
 				uo.put(kid, datum);

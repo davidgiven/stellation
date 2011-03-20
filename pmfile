@@ -96,7 +96,8 @@ server_exe = cxxprogram {
 	},
 	
 	CLIBRARIES = {
-		"zmq"
+		"zmq",
+		"sqlite3"
 	},
 
 	mycxxfile "src/server/main.cc",
@@ -113,9 +114,10 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/utils.cc",
 	mycxxfile "src/server/worldcreation.cc",
 	mycxxfile "src/server/database/Datum.cc",
+	mycxxfile "src/server/database/LazyDatum.cc",
 	mycxxfile "src/server/database/Database.cc",
+	datafile { SYMBOL="dbinit", FILE="src/server/database/dbinit.sql" },
 	mycxxfile "src/server/io/readerwriter.cc",
-	mycxxfile "src/server/io/fileio.cc",
 	mycxxfile "src/server/io/Transport.cc",
 	mycxxfile "src/server/engine/auth.cc",
 	mycxxfile "src/server/engine/engine.cc",

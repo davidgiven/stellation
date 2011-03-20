@@ -4,7 +4,7 @@ import com.cowlark.stellation3.common.database.Reader;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.model.SObject;
 
-public class OBJECT extends DATUM
+public class ObjectDatum extends Datum
 {
 	private int _value;
 	
@@ -25,9 +25,9 @@ public class OBJECT extends DATUM
 	}
 	
 	@Override
-	public void set(DATUM d)
+	public void set(Datum d)
 	{
-		OBJECT o = (OBJECT) d;
+		ObjectDatum o = (ObjectDatum) d;
 		_value = o._value;
 	}
 }

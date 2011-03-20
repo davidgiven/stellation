@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.cowlark.stellation3.common.database.Reader;
 
-public class OBJECTMAP extends DATUM
+public class ObjectMapDatum extends Datum
 {
 	private HashMap<String, Integer> _value = new HashMap<String, Integer>();
 	
@@ -27,9 +27,9 @@ public class OBJECTMAP extends DATUM
 	}
 	
 	@Override
-	public void set(DATUM d)
+	public void set(Datum d)
 	{
-		OBJECTMAP s = (OBJECTMAP) d;
+		ObjectMapDatum s = (ObjectMapDatum) d;
 		_value.clear();
 		_value.putAll(s._value);
 	}	

@@ -6,7 +6,6 @@
 #include "SObject.h"
 #include "utils.h"
 #include "mainloop.h"
-#include "fileio.h"
 #include <iostream>
 
 static string programname;
@@ -182,16 +181,22 @@ int main(int argc, const char* argv[])
 	if (createdb)
 	{
 		Log() << "creating database";
+		DatabaseCreate(dbname);
 		CreateWorld();
 		DatabaseCommit();
-		Log() << "done database creation, saving new database";
-		SaveDatabaseToFile(dbname);
-		Log() << "finished save";
 	}
+	else
+	{
+		Log() << "opening database";
+		DatabaseOpen(dbname);
+	}
+
 
 	if (zmqspec.empty())
 		Error() << "you must specify at least one listener specification";
 
 	Mainloop(zmqspec);
+	Log() << "closing database";
+	DatabaseClose();
 	return 0;
 }

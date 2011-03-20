@@ -123,7 +123,7 @@ do
 	for name, data in pairs(properties) do
 		definitionsoutf:write(
 			'const Property _propdata_', name, ' = ',
-			'{Datum::', data.type, ', Property::', data.scope, '};\n') 
+			'{Datum::', data.type, 'DatumType, Property::', data.scope, '};\n') 
 			 
 	end
 	
@@ -141,57 +141,6 @@ do
 		'};\n',
 		'const PropertyDataMap propertyDataMap(\n',
 		'\t_propdata, _propdata+(sizeof(_propdata)/sizeof(*_propdata)));\n'
-	)
-end
-
--- Write out the initialisation tables.
-
-do
-	for name in pairs(classes) do
-		definitionsoutf:write(
-			'extern const ClassInitData _classdata_', name, ';\n'
-		)
-	end
-	
-	for name, class in pairs(classes) do
-		definitionsoutf:write(
-			'const Hash::Type _proplist_', name, '[] =\n',
-			'\t{\n')
-		for _, property in ipairs(class) do
-			definitionsoutf:write('\t\tHash::', cname(property.name), ',\n')
-		end
-		definitionsoutf:write('};\n')
-			
-		definitionsoutf:write(
-			'const ClassInitData _classdata_', name, ' =\n',
-			'\t{\n')
-		if class.superclass then
-			definitionsoutf:write('\t\t&_classdata_', class.superclass, ',\n')
-		else
-			definitionsoutf:write('\t\tNULL,\n')
-		end
-		definitionsoutf:write(
-			'\t\tsizeof(_proplist_', name, ') / sizeof(*_proplist_', name, '),\n',
-			'\t\t_proplist_', name, '\n'
-		)
-		
-		definitionsoutf:write('\t};\n')
-	end
-	
-	definitionsoutf:write(
-		'const ClassInitialisationMap::value_type _classdata[] = {\n'
-	)
-	for name, _ in pairs(classes) do
-		definitionsoutf:write(
-			'\tClassInitialisationMap::value_type(',
-			'Hash::', cname(name), ', _classdata_', name, '),\n'
-		)
-	end
-	definitionsoutf:write('};\n')
-			
-	definitionsoutf:write(
-		'const ClassInitialisationMap classInitialisationMap(',
-			'_classdata, _classdata+boost::size(_classdata));'
 	)
 end
 
@@ -221,11 +170,13 @@ do
 		end
 		propertyaccessorshoutf:write(
 			'\n',
-			'\t{}\n'
+			'\t{}\n',
+			'\tvirtual ~', cname(name), 'Properties() {}\n'
 		)
 		
 		for _, property in ipairs(class) do
-			propertyaccessorshoutf:write('\tLazyDatum ', cname(property.name), ';\n')
+			propertyaccessorshoutf:write('\tLazyDatum<',
+				property.type, 'Datum> ', cname(property.name), ';\n')
 		end
 		propertyaccessorshoutf:write('};\n')
 	end

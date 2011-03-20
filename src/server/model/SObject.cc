@@ -25,7 +25,7 @@ static SObject* create_proxy(Database::Type oid, Hash::Type classtoken)
 
 Hash::Type SObject::GetClass(Database::Type oid)
 {
-	return DatabaseGet(oid, Hash::Class);
+	return *(TokenDatum*) DatabaseGet(oid, Hash::Class).get();
 }
 
 SObject* SObject::Get(Database::Type oid)
@@ -60,30 +60,32 @@ SObject::SObject(Database::Type oid):
 {
 }
 
+SObject::~SObject()
+{
+}
+
 void SObject::Initialise(Database::Type owner)
 {
 	InitialiseClass(*this);
-	Owner = owner;
+	*Owner = owner;
 }
 
 void SObject::Add(SObject* o)
 {
-	Datum& contents = Contents;
-	assert(!contents.InSet(o));
+	assert(!Contents->InSet(o));
 
-	contents.AddToSet(o);
-	o->Location = this;
+	Contents->AddToSet(o);
+	*o->Location = this;
 	OnAdditionOf(o);
 }
 
 void SObject::Remove(SObject* o)
 {
-	Datum& contents = Contents;
-	assert(contents.InSet(o));
+	assert(Contents->InSet(o));
 
 	OnRemovalOf(o);
-	contents.RemoveFromSet(o);
-	o->Location = Database::Null;
+	Contents->RemoveFromSet(o);
+	*o->Location = Database::Null;
 }
 
 void SObject::OnAdditionOf(SObject* o)

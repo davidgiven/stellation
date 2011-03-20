@@ -55,49 +55,49 @@
 
 * SObject
 
-Owner              OBJECT         LOCAL
-Class              TOKEN          LOCAL
-Contents           OBJECTSET      LOCAL
-Location           OBJECT         LOCAL
-Name               STRING         LOCAL
+Owner              Object         LOCAL
+Class              Token          LOCAL
+Contents           ObjectSet      LOCAL
+Location           Object         LOCAL
+Name               String         LOCAL
 
 * SUniverse SObject
 
-Galaxy             OBJECT         GLOBAL
-Players            OBJECTMAP      SERVERONLY
+Galaxy             Object         GLOBAL
+Players            ObjectMap      SERVERONLY
 
 * SGalaxy SObject
 
-AllLocations       OBJECTSET      SERVERONLY
-VisibleStars       OBJECTSET      GLOBAL
+AllLocations       ObjectSet      SERVERONLY
+VisibleStars       ObjectSet      GLOBAL
 
 * SStar SObject
 
-X                  NUMBER         GLOBAL
-Y                  NUMBER         GLOBAL
-Brightness         NUMBER         GLOBAL
-ResourcesA         NUMBER         LOCAL
-ResourcesO         NUMBER         LOCAL
-ResourcesM         NUMBER         LOCAL
-AsteroidsC         NUMBER         LOCAL
-AsteroidsM         NUMBER         LOCAL
+X                  Number         GLOBAL
+Y                  Number         GLOBAL
+Brightness         Number         GLOBAL
+ResourcesA         Number         LOCAL
+ResourcesO         Number         LOCAL
+ResourcesM         Number         LOCAL
+AsteroidsC         Number         LOCAL
+AsteroidsM         Number         LOCAL
 
 * SPlayer SObject
 
-Email              STRING         PRIVATE
-EmpireName         STRING         PRIVATE
-Password           STRING         SERVERONLY
-Fleets             OBJECTSET      PRIVATE
-VisibleObjects     OBJECTSET      PRIVATE
+Email              String         PRIVATE
+EmpireName         String         PRIVATE
+Password           String         SERVERONLY
+Fleets             ObjectSet      PRIVATE
+VisibleObjects     ObjectSet      PRIVATE
 
 * SFleet SObject
 
-JumpshipCount      NUMBER         LOCAL
+JumpshipCount      Number         LOCAL
 
 * SUnit SObject
 
-Mass               NUMBER         LOCAL
-Damage             NUMBER         LOCAL
+Mass               Number         LOCAL
+Damage             Number         LOCAL
 
 #* SFactory SUnit
 
