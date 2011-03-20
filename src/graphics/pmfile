@@ -15,8 +15,8 @@ povray = simple {
 star = povray {
 	class = "star",
 	file "src/graphics/star.pov",
-	width = "64",
-	height = "64",
+	width = "256",
+	height = "256",
 	povopts = {
 		"+UA",
 		"+K%temperature%"
