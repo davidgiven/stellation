@@ -19,6 +19,12 @@ CREATE TABLE 'eav'
 	PRIMARY KEY('oid', 'kid')
 );
 
+CREATE TABLE 'players'
+(
+	'email' TEXT PRIMARY KEY,
+	'oid' INTEGER
+);
+
 CREATE TABLE 'timers'
 (
 	'id' INTEGER PRIMARY KEY,

@@ -247,3 +247,38 @@ unsigned CurrentCanonicalTime()
 {
 	return canonicalTime;
 }
+
+void RegisterPlayer(const string& email, Database::Type oid)
+{
+	static SQLStatement* s = new SQLStatement(sql,
+			"INSERT INTO 'players' (email, oid) "
+				"VALUES (?, ?)");
+	s->Reset();
+	s->Bind(1, email);
+	s->Bind(2, (int)oid);
+	if (s->Step() != SQLITE_DONE)
+		Error() << "Unable to update database: "
+				<< sql->GetError();
+}
+
+void UnregisterPlayer(const string& email)
+{
+	static SQLStatement* s = new SQLStatement(sql,
+			"DROP FROM 'players' WHERE email = ?");
+	s->Reset();
+	s->Bind(1, email);
+	if (s->Step() != SQLITE_DONE)
+		Error() << "Unable to update database: "
+				<< sql->GetError();
+}
+
+Database::Type FindPlayer(const string& email)
+{
+	static SQLStatement* s = new SQLStatement(sql,
+			"SELECT oid FROM 'players' WHERE email = ?");
+	s->Reset();
+	s->Bind(1, email);
+	if (s->Step() == SQLITE_ROW)
+		return (Database::Type) s->ColumnInt(0);
+	return Database::Null;
+}

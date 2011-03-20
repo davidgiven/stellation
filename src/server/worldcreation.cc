@@ -107,10 +107,11 @@ void CreateWorld()
 void CreatePlayer(const string& name, const string& empirename,
 		const string& email, const string& password)
 {
-	SUniverse* universe = SUniverse::Get(Database::Universe);
-	if (universe->Players->FetchFromMap(name))
+	Database::Type playeroid = FindPlayer(email);
+	if (playeroid != Database::Null)
 		throw Hash::PlayerAlreadyExists;
 
+	SUniverse* universe = SUniverse::Get(Database::Universe);
 	SGalaxy* galaxy = SGalaxy::Get(universe->Galaxy);
 
 	SPlayer* player = SPlayer::Create(Database::Null);
@@ -120,7 +121,7 @@ void CreatePlayer(const string& name, const string& empirename,
 	*player->EmpireName = empirename;
 	*player->Email = email;
 	*player->Password = password;
-	universe->Players->AddToMap(email, player);
+	RegisterPlayer(email, *player);
 
 	SStar* star = SStar::Get(galaxy->VisibleStars->RandomSetMember());
 

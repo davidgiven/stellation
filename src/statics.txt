@@ -1,5 +1,5 @@
 * SGalaxy
-Count 50
+Count 80
 Radius 5
 
 * SCargoship

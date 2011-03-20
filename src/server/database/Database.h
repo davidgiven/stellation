@@ -29,6 +29,10 @@ extern Database::Type DatabaseAllocateOid();
 extern void UpdateCanonicalTime();
 extern unsigned CurrentCanonicalTime();
 
+extern void RegisterPlayer(const string& email, Database::Type oid);
+extern void UnregisterPlayer(const string& email);
+extern Database::Type FindPlayer(const string& email);
+
 extern void DatabaseWriteChangedDatums(Writer& writer,
 		Database::Type oid, bool owner,
 		double lastUpdate);

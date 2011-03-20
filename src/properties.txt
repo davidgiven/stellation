@@ -64,7 +64,6 @@ Name               String         LOCAL
 * SUniverse SObject
 
 Galaxy             Object         GLOBAL
-Players            ObjectMap      SERVERONLY
 
 * SGalaxy SObject
 

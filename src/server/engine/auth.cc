@@ -98,7 +98,7 @@ string CreateAuthenticationCookie(Reader& reader)
 		throw Hash::MalformedCommand;
 
 	SUniverse* universe = SUniverse::Get(Database::Universe);
-	Database::Type playeroid = universe->Players->FetchFromMap(email);
+	Database::Type playeroid = FindPlayer(email);
 
 	Log() << "authenticating " << email << " (who is " << playeroid << ")";
 	if (playeroid == Database::Null)
