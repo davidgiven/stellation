@@ -19,6 +19,7 @@ public:
 
 public:
 	Datum(Database::Type oid, Hash::Type kid);
+	virtual ~Datum();
 
 	enum Type
 	{

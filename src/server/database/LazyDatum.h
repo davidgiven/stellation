@@ -28,7 +28,7 @@ protected:
 private:
 	scalar<Database::Type> _oid;
 	scalar<Hash::Type> _kid;
-	shared_ptr<Datum> _object;
+	scalar<Datum*> _object;
 };
 
 template <class T>

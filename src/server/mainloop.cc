@@ -56,15 +56,15 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 	}
 
 	double lastupdate = reader.ReadNumber();
-
 	Hash::Type gamecommand = reader.ReadHash();
-	SPlayer* player = SPlayer::Get(playeroid);
-
-	Log() << "gamecommand " << gamecommand << " from " << *player->Name
-			<< " last update time " << lastupdate;
 
 	try
 	{
+		SPlayer* player = SPlayer::Get(playeroid);
+
+		Log() << "gamecommand " << gamecommand << " from " << *player->Name
+				<< " last update time " << lastupdate;
+
 		GameOperation(reader, player, gamecommand);
 
 		/* The operation succeeded. Recalculate the player's visible objects
@@ -91,6 +91,7 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 	SPlayer::VisibilityMap newVisible;
 
 	Log() << "calculating visible objects";
+	SPlayer* player = SPlayer::Get(playeroid);
 	player->CalculateVisibleObjects(newVisible);
 	Log() << "found " << newVisible.size() << " objects";
 
@@ -120,11 +121,10 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 	for (SPlayer::VisibilityMap::const_iterator i = newVisible.begin(),
 			e = newVisible.end(); i != e; i++)
 	{
-		shared_ptr<Datum> genericowner(DatabaseGet(i->first, Hash::Owner));
-		ObjectDatum& owner = *(ObjectDatum*) genericowner.get();
+		ObjectDatum* owner = (ObjectDatum*) DatabaseGet(i->first, Hash::Owner);
 
 		Database::Visibility v = i->second;
-		if (owner == playeroid)
+		if (*owner == playeroid)
 			v = Database::OwnerVisibility;
 		DatabaseWriteChangedDatums(writer, i->first, v, lastupdate);
 	}

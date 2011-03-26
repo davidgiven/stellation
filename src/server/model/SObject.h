@@ -55,7 +55,7 @@ public:
 	string GetStringStatic(Hash::Type kid);
 
 public:
-	boost::shared_ptr<Datum>& Get(Hash::Type key)
+	Datum* Get(Hash::Type key)
 	{ return DatabaseGet(_oid, key); }
 
 private:

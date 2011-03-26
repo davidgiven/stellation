@@ -25,7 +25,7 @@ extern void DatabaseOpen(const string& filename);
 extern void DatabaseCreate(const string& filename);
 extern void DatabaseClose();
 
-extern boost::shared_ptr<Datum>& DatabaseGet(Database::Type oid, Hash::Type kid);
+extern Datum* DatabaseGet(Database::Type oid, Hash::Type kid);
 extern bool DatabaseExists(Database::Type oid, Hash::Type kid);
 extern void DatabaseDirty(Datum* datum);
 extern void DatabaseCommit();

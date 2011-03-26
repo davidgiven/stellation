@@ -6,7 +6,8 @@ static set<LazyDatumBase*> datums;
 
 LazyDatumBase::LazyDatumBase(Database::Type oid, Hash::Type kid):
 	_oid(oid),
-	_kid(kid)
+	_kid(kid),
+	_object(NULL)
 {
 //	printf("lazydatumbase %p\n", this);
 }
@@ -20,7 +21,7 @@ LazyDatumBase::~LazyDatumBase()
 
 void LazyDatumBase::Reset()
 {
-	_object.reset();
+	_object = NULL;
 	DetachFromDatabase();
 }
 
@@ -31,7 +32,7 @@ Datum* LazyDatumBase::datum()
 		_object = DatabaseGet(_oid, _kid);
 		AttachToDatabase();
 	}
-	return _object.get();
+	return _object;
 }
 
 void LazyDatumBase::AttachToDatabase()

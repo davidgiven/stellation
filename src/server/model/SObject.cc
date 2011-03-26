@@ -25,7 +25,7 @@ static SObject* create_proxy(Database::Type oid, Hash::Type classtoken)
 
 Hash::Type SObject::GetClass(Database::Type oid)
 {
-	return *(TokenDatum*) DatabaseGet(oid, Hash::Class).get();
+	return *(TokenDatum*) DatabaseGet(oid, Hash::Class);
 }
 
 SObject* SObject::Get(Database::Type oid)

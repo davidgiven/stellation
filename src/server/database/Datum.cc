@@ -34,6 +34,10 @@ Datum::Datum(Database::Type oid, Hash::Type kid):
 {
 }
 
+Datum::~Datum()
+{
+}
+
 void Datum::Dirty()
 {
 	DatabaseDirty(this);

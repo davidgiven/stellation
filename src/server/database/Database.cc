@@ -14,8 +14,7 @@ static map<Hash::Type, int> hashtodb;
 static map<int, Hash::Type> dbtohash;
 
 typedef std::pair<Database::Type, Hash::Type> CacheKey;
-typedef shared_ptr<Datum> CacheValue;
-typedef map<CacheKey, CacheValue> Cache;
+typedef map<CacheKey, Datum*> Cache;
 
 static Cache datumcache;
 
@@ -132,13 +131,13 @@ Database::Type DatabaseAllocateOid()
 	return (Database::Type) databaseid++;
 }
 
-shared_ptr<Datum>& DatabaseGet(Database::Type oid, Hash::Type kid)
+Datum* DatabaseGet(Database::Type oid, Hash::Type kid)
 {
 	CacheKey key(oid, kid);
-	shared_ptr<Datum>& d = datumcache[key];
+	Datum* d = datumcache[key];
 	if (!d)
 	{
-		d.reset(Datum::Create(oid, kid));
+		d = datumcache[key] = Datum::Create(oid, kid);
 
 		static SQLStatement* s = new SQLStatement(sql,
 				"SELECT value, time FROM 'eav' WHERE oid=? AND kid=?");
@@ -202,8 +201,16 @@ void DatabaseRollback()
 	Log() << "rolling back";
 
 	SObject::FlushCache();
-	datumcache.clear();
 	LazyDatumBase::FlushCache();
+
+	/* All Datum pointers become invalid here. */
+	for (Cache::iterator i = datumcache.begin(),
+			e = datumcache.end(); i != e; i++)
+	{
+		delete i->second;
+		i->second = NULL;
+	}
+
 	rollback();
 	begin();
 }
@@ -220,7 +227,7 @@ void DatabaseWriteChangedDatums(Writer& writer,
 	while (s->Step() == SQLITE_ROW)
 	{
 		Hash::Type kid = dbtohash[s->ColumnInt(0)];
-		shared_ptr<Datum>& datum = DatabaseGet(oid, kid);
+		Datum* datum = DatabaseGet(oid, kid);
 
 		if (datum->ChangedSince(lastUpdate))
 		{
