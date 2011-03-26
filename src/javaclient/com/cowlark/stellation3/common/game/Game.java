@@ -10,6 +10,7 @@ import com.cowlark.stellation3.common.controllers.LocationController;
 import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
+import com.cowlark.stellation3.common.controllers.ObjectSummaryController;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -77,6 +78,8 @@ public abstract class Game
 	public void showStarDetails(SStar star)
 	{
 		MonitorGroup mg = new MonitorGroup();
+		star.createControlPanel(mg);
+		
 		Pane starPane = new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null,
 				star.Name.get());
 	}
@@ -112,6 +115,7 @@ public abstract class Game
 			ButtonsHandler bh, String... buttons);	
 	public abstract LocationController createLocationController(
 			LocationHandler lh, String label);
+	public abstract ObjectSummaryController createObjectSummaryController();
 
 	public abstract StarMapStarController createStarMapStarController(
 			StarMapStarHandler smsh, StarMapStarController.StarData stardata);

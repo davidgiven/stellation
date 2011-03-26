@@ -58,7 +58,7 @@ public class Static
 	
 	public int getInt(Hash cid, Hash kid)
 	{
-		return Integer.parseInt(getString(cid, kid));
+		return (int) Double.parseDouble(getString(cid, kid));
 	}
 	
 	public void downloadData(final CompletionListener listener)

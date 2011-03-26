@@ -1,6 +1,7 @@
 package com.cowlark.stellation3.common.controllers;
 
-public interface GroupTitleController extends Controller
+import com.cowlark.stellation3.common.game.HasStringValue;
+
+public interface GroupTitleController extends Controller, HasStringValue
 {
-	public String getTitle();
 }

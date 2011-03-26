@@ -4,7 +4,6 @@ import com.cowlark.stellation3.common.controllers.LocationController;
 import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.model.SObject;
 import com.cowlark.stellation3.common.model.SStar;
-import com.cowlark.stellation3.gwt.ControllerImpl;
 import com.cowlark.stellation3.gwt.S;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -21,7 +20,7 @@ public class LocationControllerImpl extends ControllerImpl
     {
 		super(2);
 		_lh = lh;
-		setCell(0, label);
+		setCell(0, label+":");
 		
 		_label = new Anchor();
 		_label.addClickHandler(this);

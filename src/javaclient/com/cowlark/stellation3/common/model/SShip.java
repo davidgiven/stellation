@@ -1,8 +1,8 @@
 package com.cowlark.stellation3.common.model;
 
-public class SJumpship extends SShip
+public class SShip extends SUnit
 {
-	public SJumpship(int oid)
+	public SShip(int oid)
 	{
 		super(oid);
 	}

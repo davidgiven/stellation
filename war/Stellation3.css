@@ -50,6 +50,14 @@ a:active {
 	font-weight: bold;
 }
 
+.groupTitle
+{
+	font-size: 120%;
+	border-bottom: 1px solid #888;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}	
+
 .gwt-PushButton-up, .gwt-PushButton-up-hovering, .gwt-PushButton-up-disabled,
 .gwt-PushButton-down, .gwt-PushButton-down-hovering,
 .gwt-PushButton-down-disabled

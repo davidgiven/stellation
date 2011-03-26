@@ -2,6 +2,9 @@ package com.cowlark.stellation3.common.model;
 
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.database.SBase;
+import com.cowlark.stellation3.common.monitors.Monitor;
+import com.cowlark.stellation3.common.monitors.MonitorGroup;
+import com.cowlark.stellation3.common.monitors.ObjectIdMonitor;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
 
@@ -20,6 +23,7 @@ public class SObject extends SBase implements Comparable<SObject>
 			case SPlayer:    return new SPlayer(oid);
 			case SFleet:     return new SFleet(oid);
 			case SUnit:      return new SUnit(oid);
+			case SShip:      return new SShip(oid);
 			case SJumpship:  return new SJumpship(oid);
 			default:         assert(false);
 		}
@@ -50,5 +54,15 @@ public class SObject extends SBase implements Comparable<SObject>
 	public int compareTo(SObject o)
 	{
 		return new Integer(Oid).compareTo(o.Oid);
+	}
+	
+	public void constructBasicControlPanelGroup(MonitorGroup group)
+	{
+		group.addMonitor(new ObjectIdMonitor(this));
+	}
+		
+	public void createControlPanel(MonitorGroup group)
+	{
+		constructBasicControlPanelGroup(group);
 	}
 }

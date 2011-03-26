@@ -1,4 +1,4 @@
-package com.cowlark.stellation3.gwt;
+package com.cowlark.stellation3.gwt.controllers;
 
 import com.cowlark.stellation3.common.controllers.Controller;
 import com.google.gwt.user.client.ui.Widget;
@@ -6,8 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 public class ControllerImpl implements Controller
 {
 	private Object[] _data;
-	private String _left;
-	private Widget _right;
+	private String _style;
 	
 	public ControllerImpl(int cells)
     {
@@ -32,5 +31,15 @@ public class ControllerImpl implements Controller
 		if (cell >= _data.length)
 			return null;
 		return _data[cell];
+	}
+	
+	public void setStyle(String style)
+	{
+		_style = style;
+	}
+	
+	public String getStyle()
+	{
+		return _style;
 	}
 }

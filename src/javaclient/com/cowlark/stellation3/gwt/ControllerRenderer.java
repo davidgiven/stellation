@@ -2,6 +2,7 @@ package com.cowlark.stellation3.gwt;
 
 import java.util.List;
 import com.cowlark.stellation3.common.controllers.Controller;
+import com.cowlark.stellation3.gwt.controllers.ControllerImpl;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -13,6 +14,8 @@ public class ControllerRenderer implements IsWidget
 	public ControllerRenderer()
     {
 		_container = new FlexTable();
+		_container.setWidth("100%");
+		_container.setHeight("100%");
     }
 	
 	public FlexTable getContainer()
@@ -28,7 +31,7 @@ public class ControllerRenderer implements IsWidget
 	
 	public void update(List<Controller> controllers)
 	{
-		_container.clear(true);
+		_container.removeAllRows();
 		int y = 0;
 		
 		int maxcols = 0;
@@ -47,7 +50,10 @@ public class ControllerRenderer implements IsWidget
 			{
 				Object o = ci.getCell(i);
 				if (o instanceof String)
-					_container.setText(y, i, (String)o);
+				{
+					String s = (String)o;
+					_container.setText(y, i, s);
+				}
 				else if (o instanceof Widget)
 					_container.setWidget(y, i, (Widget)o);
 				else if (o != null)
@@ -55,6 +61,10 @@ public class ControllerRenderer implements IsWidget
 				
 				_container.getFlexCellFormatter().
 					setColSpan(y, i, 1);
+				
+				String style = ci.getStyle();
+				if (style != null)
+					_container.getRowFormatter().addStyleName(y, style);
 			}
 			
 			if (width < maxcols)

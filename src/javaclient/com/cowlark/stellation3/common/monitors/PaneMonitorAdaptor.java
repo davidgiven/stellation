@@ -26,6 +26,7 @@ public class PaneMonitorAdaptor implements Pane, PaneHandler, HasMonitors
 		_updating = false;
 		
 		_monitor.attach(this);
+		updateAllMonitors();
     }
 	
 	@Override

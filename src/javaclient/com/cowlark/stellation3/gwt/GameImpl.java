@@ -9,6 +9,7 @@ import com.cowlark.stellation3.common.controllers.LocationController;
 import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
+import com.cowlark.stellation3.common.controllers.ObjectSummaryController;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -23,6 +24,7 @@ import com.cowlark.stellation3.gwt.controllers.ButtonsControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.GroupTitleControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.LocationControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.MarkupControllerImpl;
+import com.cowlark.stellation3.gwt.controllers.ObjectSummaryControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.StarMapImpl;
 import com.cowlark.stellation3.gwt.controllers.StarMapStarControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.TextFieldControllerImpl;
@@ -219,5 +221,11 @@ public class GameImpl extends Game
 			String label)
 	{
 		return new LocationControllerImpl(lh, label);
+	}
+	
+	@Override
+	public ObjectSummaryController createObjectSummaryController()
+	{
+	    return new ObjectSummaryControllerImpl();
 	}
 }
