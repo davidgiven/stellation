@@ -6,7 +6,7 @@
 	>
 	<ui:style>
 		.refreshlabel {
-			font-size: x-small;
+			font-size: 50%;
 		}
 	</ui:style>
 	
@@ -18,27 +18,17 @@
 		
 		<g:cell
 			horizontalAlignment='ALIGN_CENTER'
-			verticalAlignment='ALIGN_BOTTOM'
+			verticalAlignment='ALIGN_MIDDLE'
 			>
-			<g:LayoutPanel
+			<my:ButtonPanel
+				ui:field="_refreshButton"
 				width='3em'
 				height='3em'
 				>
-				<g:layer>
-					<my:ResizingCanvas
-						ui:field="_refreshButton"
-						/>
-				</g:layer>
-			</g:LayoutPanel>
-		</g:cell>
-		<g:cell
-			horizontalAlignment='ALIGN_CENTER'
-			verticalAlignment='ALIGN_TOP'
-			>
-			<g:Label
-				addStyleNames='{style.refreshlabel}'
-				text="Refresh"
-				/>
+				<my:ResizingCanvas
+					ui:field="_refreshCanvas"
+					/>
+			</my:ButtonPanel>
 		</g:cell>
 	</g:VerticalPanel>
 </ui:UiBinder> 
