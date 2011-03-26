@@ -20,18 +20,19 @@ import com.cowlark.stellation3.common.database.Transport;
 import com.cowlark.stellation3.common.game.CompletionListener;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.ui.ButtonsControllerImpl;
+import com.cowlark.stellation3.gwt.ui.CanvasResources;
+import com.cowlark.stellation3.gwt.ui.ClockWidget;
 import com.cowlark.stellation3.gwt.ui.DialogueImpl;
 import com.cowlark.stellation3.gwt.ui.GroupTitleControllerImpl;
 import com.cowlark.stellation3.gwt.ui.LocationControllerImpl;
 import com.cowlark.stellation3.gwt.ui.MarkupControllerImpl;
+import com.cowlark.stellation3.gwt.ui.RefreshWidget;
 import com.cowlark.stellation3.gwt.ui.Screen;
 import com.cowlark.stellation3.gwt.ui.StarMapImpl;
 import com.cowlark.stellation3.gwt.ui.StarMapStarControllerImpl;
-import com.cowlark.stellation3.gwt.ui.StaticPane;
 import com.cowlark.stellation3.gwt.ui.TabbedPane;
 import com.cowlark.stellation3.gwt.ui.TabbedPaneContainer;
 import com.cowlark.stellation3.gwt.ui.TextFieldControllerImpl;
-import com.cowlark.stellation3.gwt.ui.CanvasResources;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -52,6 +53,18 @@ public class GameImpl extends Game
 		_panes = new HashMap<PaneAspect, Pane>();
 		RootLayoutPanel.get().add(Screen);
     }
+	
+	@Override
+	public void loginCompleted(int playeroid)
+	{
+	    super.loginCompleted(playeroid);
+	    
+	    ClockWidget clock = new ClockWidget();
+	    Screen.ClockContainer.add(clock);
+	    
+	    RefreshWidget meta = new RefreshWidget();
+	    Screen.MetaContainer.add(meta);
+	}
 	
 	@Override
 	public void loadUIData(CompletionListener listener)

@@ -25,14 +25,17 @@ public class MarkupParser
 			
 			if (commandsplit.length > 0)
 			{
-				if (commandsplit[0].equals("indent"))
+				String cmd = commandsplit[0];
+				if (cmd.equals("indent"))
 				{
 					int spaces = Integer.parseInt(commandsplit[1]);
 					factory.indent(spaces);
 				}
-				else if (commandsplit[0].equals("bold"))
+				else if (cmd.equals("bold"))
 					factory.emitBoldText(commandsplit[1]);
-				else if (commandsplit[0].equals("star"))
+				else if (cmd.equals("time"))
+					factory.emitTime(Long.parseLong(commandsplit[1]));
+				else if (cmd.equals("star"))
 				{
 					int oid = Integer.parseInt(commandsplit[1]);
 					SStar star = (SStar) Game.Instance.Database.get(oid);
@@ -41,7 +44,7 @@ public class MarkupParser
 					double y = Double.parseDouble(commandsplit[4]);
 					factory.emitStar(star, name, x, y);
 				}
-				else if (commandsplit[0].equals("fleet"))
+				else if (cmd.equals("fleet"))
 				{
 					int oid = Integer.parseInt(commandsplit[1]);
 					SFleet fleet = (SFleet) Game.Instance.Database.get(oid);

@@ -16,35 +16,55 @@
 				/>
 		</g:layer>
 		
-		<g:layer left='17em' bottom='0em' right="50%" height="2em">
+		<g:layer left='0' right='0' top='0' bottom='0'>
+			<my:ResizingCanvas
+				ui:field="AnnotationCanvas"
+				/>
+		</g:layer>
+		
+		<g:layer left='22em' bottom='0em' right="50%" height="2em">
 			<g:Label
 				ui:field="BackgroundBottomLeftLabel"
 				addStyleNames="starmapLabel noevents"
 				/>
 		</g:layer>
 		
-		<g:layer right='17em' bottom='0em' left="50%" height="2em">
+		<g:layer right='22em' bottom='0em' left="50%" height="2em">
 			<g:Label
 				ui:field="BackgroundBottomRightLabel"
 				addStyleNames="starmapLabel noevents"
 				/>
 		</g:layer>
 		
-		<g:layer left='1em' top='1em' bottom='1em' width='15em'>
+		<g:layer left='1em' height='5em' bottom='1em' width='14em'>
+			<g:LayoutPanel
+				ui:field="ClockContainer"
+				addStyleNames="noevents"
+				/>
+		</g:layer>
+		
+		<g:layer left='16em' height='5em' bottom='1em' width='5em'>
+			<g:LayoutPanel
+				ui:field="MetaContainer"
+				addStyleNames="noevents"
+				/>
+		</g:layer>
+		
+		<g:layer left='1em' top='1em' bottom='7em' width='20em'>
 			<g:LayoutPanel
 				ui:field="LeftContainer"
 				addStyleNames="noevents"
 				/>
 		</g:layer>
 		
-		<g:layer right='1em' top='1em' bottom='1em' width='15em'>
+		<g:layer right='1em' top='1em' bottom='1em' width='20em'>
 			<g:LayoutPanel
 				ui:field="RightContainer"
 				addStyleNames="noevents"
 				/>
 		</g:layer>
 
-		<g:layer left='17em' right='17em' top='1em' bottom='1em'>
+		<g:layer left='22em' right='22em' top='1em' bottom='1em'>
 			<g:LayoutPanel
 				addStyleNames="noevents"
 				>

@@ -35,7 +35,8 @@ public class StarMapImpl implements
 {
 	private PaneHandler _ph;
 	private Vector<StarMapStarControllerImpl> _starImpls;
-	private ResizingCanvas _canvas;
+	private ResizingCanvas _backgroundCanvas;
+	private ResizingCanvas _annotationCanvas;
 	private Label _positionLabel;
 	private double _galactic_radius;
 	private double _scale;
@@ -57,15 +58,16 @@ public class StarMapImpl implements
     {
 		_ph = ph;
 		
-		_canvas = GameImpl.Instance.Screen.BackgroundCanvas;
+		_backgroundCanvas = GameImpl.Instance.Screen.BackgroundCanvas;
+		_annotationCanvas = GameImpl.Instance.Screen.AnnotationCanvas;
 		_positionLabel = GameImpl.Instance.Screen.BackgroundBottomLeftLabel;
 		
-		_canvas.addHandler(this, MouseWheelEvent.getType());
-		_canvas.addHandler(this, MouseDownEvent.getType());
-		_canvas.addHandler(this, MouseUpEvent.getType());
-		_canvas.addHandler(this, MouseOutEvent.getType());
-		_canvas.addHandler(this, MouseMoveEvent.getType());
-		_canvas.addResizeHandler(this);
+		_annotationCanvas.addHandler(this, MouseWheelEvent.getType());
+		_annotationCanvas.addHandler(this, MouseDownEvent.getType());
+		_annotationCanvas.addHandler(this, MouseUpEvent.getType());
+		_annotationCanvas.addHandler(this, MouseOutEvent.getType());
+		_annotationCanvas.addHandler(this, MouseMoveEvent.getType());
+		_backgroundCanvas.addResizeHandler(this);
 		
 		_starImpls = new Vector<StarMapStarControllerImpl>();
 		
@@ -75,7 +77,8 @@ public class StarMapImpl implements
 		_centerx = 0.0;
 		_centery = 0.0;
 		
-		_canvas.onResize();
+		_backgroundCanvas.onResize();
+		_annotationCanvas.onResize();
     }
 	
 	@Override
@@ -91,7 +94,7 @@ public class StarMapImpl implements
 	@Override
 	public void onResize(ResizeEvent event)
 	{
-		redraw();
+		redrawBackground();
 	}
 	
 	private static ImageElement getStarForBrightness(double brightness)
@@ -114,15 +117,15 @@ public class StarMapImpl implements
 	@Override
 	public void execute()
 	{
-		redraw();
+		redrawBackground();
 		_redrawPending = false;
 	}
 	
-	private void redraw()
+	private void redrawBackground()
 	{
-		Context2d c = _canvas.getContext2d();
-		double w = _canvas.getOffsetWidth();
-		double h = _canvas.getOffsetHeight();
+		Context2d c = _backgroundCanvas.getContext2d();
+		double w = _backgroundCanvas.getOffsetWidth();
+		double h = _backgroundCanvas.getOffsetHeight();
 		double mw = w / 2;
 		double mh = h / 2;
 		
@@ -183,8 +186,8 @@ public class StarMapImpl implements
 	
 	private Point screenToCoord(double sx, double sy)
 	{
-		double mw = _canvas.getOffsetWidth() / 2;
-		double mh = _canvas.getOffsetHeight() / 2;
+		double mw = _backgroundCanvas.getOffsetWidth() / 2;
+		double mh = _backgroundCanvas.getOffsetHeight() / 2;
 		
 		sx -= mw;
 		sy -= mh;
@@ -200,8 +203,8 @@ public class StarMapImpl implements
 	
 	private Point coordToScreen(double cx, double cy)
 	{
-		double mw = _canvas.getOffsetWidth() / 2;
-		double mh = _canvas.getOffsetHeight() / 2;
+		double mw = _backgroundCanvas.getOffsetWidth() / 2;
+		double mh = _backgroundCanvas.getOffsetHeight() / 2;
 		
 		cx += _centerx;
 		cy += _centery;
@@ -218,8 +221,8 @@ public class StarMapImpl implements
 	@Override
 	public void onMouseWheel(MouseWheelEvent event)
 	{
-		double mw = _canvas.getOffsetWidth() / 2;
-		double mh = _canvas.getOffsetHeight() / 2;
+		double mw = _backgroundCanvas.getOffsetWidth() / 2;
+		double mh = _backgroundCanvas.getOffsetHeight() / 2;
 		
 		/* After scaling, we want this point to be at the same place on the
 		 * screen. */
@@ -239,7 +242,7 @@ public class StarMapImpl implements
 		
 		_centerx += incorrectPointingAt.x - pointingAt.x;
 		_centery += incorrectPointingAt.y - pointingAt.y;
-		redraw();
+		redrawBackground();
 	}
 
 	@Override

@@ -1,0 +1,44 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:my="urn:import:com.cowlark.stellation3.gwt.ui"
+	>
+	<ui:style>
+		.refreshlabel {
+			font-size: x-small;
+		}
+	</ui:style>
+	
+	<g:VerticalPanel
+		addStyleNames='pane'
+		width="100%"
+		height="100%"
+		>
+		
+		<g:cell
+			horizontalAlignment='ALIGN_CENTER'
+			verticalAlignment='ALIGN_BOTTOM'
+			>
+			<g:LayoutPanel
+				width='3em'
+				height='3em'
+				>
+				<g:layer>
+					<my:ResizingCanvas
+						ui:field="_refreshButton"
+						/>
+				</g:layer>
+			</g:LayoutPanel>
+		</g:cell>
+		<g:cell
+			horizontalAlignment='ALIGN_CENTER'
+			verticalAlignment='ALIGN_TOP'
+			>
+			<g:Label
+				addStyleNames='{style.refreshlabel}'
+				text="Refresh"
+				/>
+		</g:cell>
+	</g:VerticalPanel>
+</ui:UiBinder> 

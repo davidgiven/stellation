@@ -54,6 +54,12 @@ public class MarkupBuilder implements HasMarkup
 	}
 	
 	@Override
+	public void emitTime(long time)
+	{
+		cmd("time", String.valueOf(time));
+	}
+	
+	@Override
 	public void emitStar(SStar star)
 	{
 		cmd("star", String.valueOf(star.Oid),

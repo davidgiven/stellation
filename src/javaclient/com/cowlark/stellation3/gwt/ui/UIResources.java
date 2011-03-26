@@ -11,6 +11,7 @@ public interface UIResources extends ClientBundle
 	ImageResource close();
 	ImageResource maximise();
 	ImageResource minimise();
+	ImageResource reload();
 	
 	ImageResource galaxy();
 	

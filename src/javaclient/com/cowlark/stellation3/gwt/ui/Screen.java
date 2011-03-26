@@ -45,10 +45,19 @@ public class Screen extends Composite implements RequiresResize, ProvidesResize
 	public ResizingCanvas BackgroundCanvas;
 	
 	@UiField
+	public ResizingCanvas AnnotationCanvas;
+	
+	@UiField
 	public Label BackgroundBottomLeftLabel;
 	
 	@UiField
 	public LayoutPanel LeftContainer;
+	
+	@UiField
+	public LayoutPanel ClockContainer;
+	
+	@UiField
+	public LayoutPanel MetaContainer;
 	
 	@UiField
 	public LayoutPanel MiddleContainer;

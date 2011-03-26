@@ -12,6 +12,7 @@ public class CanvasResources
 {
 	public static ImageElement Background;
 	public static ImageElement[] Star;
+	public static ImageElement Reload;
 	
 	private static int _loaded;
 	private static CompletionListener _listener;
@@ -27,7 +28,8 @@ public class CanvasResources
 		UIResources.Instance.star6(),
 		UIResources.Instance.star7(),
 		UIResources.Instance.star8(),
-		UIResources.Instance.star9()
+		UIResources.Instance.star9(),
+		UIResources.Instance.reload()
 	};
 	
 	static
@@ -49,6 +51,8 @@ public class CanvasResources
 					Star = new ImageElement[9];
 					for (int i=0; i<9; i++)
 						Star[i] = ImageElement.as(images[1+i].getElement());
+					
+					Reload = ImageElement.as(images[10].getElement());
 					
 					if (_listener != null)
 						_listener.onCompletion();
