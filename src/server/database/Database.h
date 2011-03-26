@@ -12,6 +12,13 @@ namespace Database
 	typedef struct opaque* Type;
 	const Type Null = NULL;
 	const Type Universe = (Type) 1;
+
+	enum Visibility
+	{
+		GlobalVisibility,
+		LocalVisibility,
+		OwnerVisibility
+	};
 }
 
 extern void DatabaseOpen(const string& filename);
@@ -34,7 +41,7 @@ extern void UnregisterPlayer(const string& email);
 extern Database::Type FindPlayer(const string& email);
 
 extern void DatabaseWriteChangedDatums(Writer& writer,
-		Database::Type oid, bool owner,
+		Database::Type oid, Database::Visibility visibility,
 		double lastUpdate);
 
 #endif

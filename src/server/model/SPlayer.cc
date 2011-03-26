@@ -32,9 +32,9 @@ SFleet* SPlayer::CreateFleet(SStar* location, const string& name)
 	return fleet;
 }
 
-static void add_with_contents(SObject::ObjectSet& visible, SObject* o)
+static void add_with_contents(SPlayer::VisibilityMap& visible, SObject* o)
 {
-	visible.insert(*o);
+	visible[*o] = Database::LocalVisibility;
 
 	for (SObject::ObjectSet::const_iterator i = o->Contents->SetBegin(),
 			e = o->Contents->SetEnd(); i != e; i++)
@@ -44,24 +44,24 @@ static void add_with_contents(SObject::ObjectSet& visible, SObject* o)
 	}
 }
 
-void SPlayer::CalculateVisibleObjects(ObjectSet& visible)
+void SPlayer::CalculateVisibleObjects(SPlayer::VisibilityMap& visible)
 {
 	/* The player and the universe itself are visible. */
 
 	SUniverse* universe = SUniverse::Get(Database::Universe);
 
-	visible.insert(*this);
-	visible.insert(*universe);
+	visible[*this] = Database::LocalVisibility;
+	visible[*universe] = Database::GlobalVisibility;
 
 	/* The galaxy and all (glowing) stars are visible. */
 
 	SGalaxy* galaxy = SGalaxy::Get(universe->Galaxy);
-	visible.insert(*galaxy);
+	visible[*galaxy] = Database::GlobalVisibility;
 
 	for (Datum::ObjectSet::const_iterator i = galaxy->VisibleStars->SetBegin(),
 			e = galaxy->VisibleStars->SetEnd(); i != e; i++)
 	{
-		visible.insert(*i);
+		visible[*i] = Database::GlobalVisibility;
 	}
 
 	/* We can see every fleet which has a jumpship. */

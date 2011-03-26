@@ -209,7 +209,7 @@ void DatabaseRollback()
 }
 
 void DatabaseWriteChangedDatums(Writer& writer,
-		Database::Type oid, bool owner,
+		Database::Type oid, Database::Visibility visibility,
 		double lastUpdate)
 {
 	static SQLStatement* s = new SQLStatement(sql,
@@ -227,8 +227,8 @@ void DatabaseWriteChangedDatums(Writer& writer,
 			const Property& propertyInfo = GetPropertyInfo(kid);
 
 			if ((propertyInfo.scope == Property::GLOBAL) ||
-				(propertyInfo.scope == Property::LOCAL) ||
-				((propertyInfo.scope == Property::PRIVATE) && owner))
+				((propertyInfo.scope == Property::LOCAL) && (visibility >= Database::LocalVisibility)) ||
+				((propertyInfo.scope == Property::PRIVATE) && (visibility >= Database::OwnerVisibility)))
 			{
 				writer.Write(oid);
 				writer.Write(kid);

@@ -71,24 +71,8 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 		 * list.
 		 */
 
-		Datum::ObjectSet newVisible;
-		Log() << "calculating visible objects";
-		player->CalculateVisibleObjects(newVisible);
-		Log() << "found " << newVisible.size() << " objects";
-
 		/* This is stupidly heavyweight, but it's the cleanest way to do it. */
 
-		Datum::ObjectSet oldVisible(player->VisibleObjects->SetBegin(),
-				player->VisibleObjects->SetEnd());
-		if (oldVisible != newVisible)
-		{
-			Log() << "visible object set changed!";
-
-			player->VisibleObjects->ClearSet();
-			for (Datum::ObjectSet::const_iterator i = newVisible.begin(),
-					e = newVisible.end(); i != e; i++)
-				player->VisibleObjects->AddToSet(*i);
-		}
 
 		writer.Write(tag);
 		writer.Write(Hash::OK);
@@ -102,16 +86,47 @@ static void game_operation(const string& tag, Reader& reader, Writer& writer)
 		DatabaseRollback();
 	}
 
+	/* Calculate the player's set of visible objects. */
+
+	SPlayer::VisibilityMap newVisible;
+
+	Log() << "calculating visible objects";
+	player->CalculateVisibleObjects(newVisible);
+	Log() << "found " << newVisible.size() << " objects";
+
+	Datum::ObjectSet newVisibleSet;
+	for (SPlayer::VisibilityMap::const_iterator i = newVisible.begin(),
+			e = newVisible.end(); i != e; i++)
+	{
+		newVisibleSet.insert(i->first);
+	}
+
+	Datum::ObjectSet oldVisibleSet(player->VisibleObjects->SetBegin(),
+			player->VisibleObjects->SetEnd());
+	if (oldVisibleSet != newVisibleSet)
+	{
+		Log() << "visible object set changed!";
+
+		player->VisibleObjects->ClearSet();
+		for (Datum::ObjectSet::const_iterator i = newVisibleSet.begin(),
+				e = newVisibleSet.end(); i != e; i++)
+			player->VisibleObjects->AddToSet(*i);
+		DatabaseCommit();
+	}
 	/* Send database updates to the client (even on error). */
 
 	writer.Write(CurrentCanonicalTime());
 
-	for (Datum::ObjectSet::const_iterator i = player->VisibleObjects->SetBegin(),
-			e = player->VisibleObjects->SetEnd(); i != e; i++)
+	for (SPlayer::VisibilityMap::const_iterator i = newVisible.begin(),
+			e = newVisible.end(); i != e; i++)
 	{
-		shared_ptr<Datum> genericowner(DatabaseGet(*i, Hash::Owner));
+		shared_ptr<Datum> genericowner(DatabaseGet(i->first, Hash::Owner));
 		ObjectDatum& owner = *(ObjectDatum*) genericowner.get();
-		DatabaseWriteChangedDatums(writer, *i, (owner == playeroid), lastupdate);
+
+		Database::Visibility v = i->second;
+		if (owner == playeroid)
+			v = Database::OwnerVisibility;
+		DatabaseWriteChangedDatums(writer, i->first, v, lastupdate);
 	}
 }
 

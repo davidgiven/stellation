@@ -55,11 +55,11 @@
 
 * SObject
 
-Owner              Object         LOCAL
-Class              Token          LOCAL
+Owner              Object         GLOBAL
+Class              Token          GLOBAL
 Contents           ObjectSet      LOCAL
-Location           Object         LOCAL
-Name               String         LOCAL
+Location           Object         GLOBAL
+Name               String         GLOBAL
 
 * SUniverse SObject
 

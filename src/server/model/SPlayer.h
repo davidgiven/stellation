@@ -10,6 +10,9 @@ class SPlayer : public SObject, public SPlayerProperties
 	CLASSLINK(SPlayer)
 
 public:
+	typedef map<Database::Type, Database::Visibility> VisibilityMap;
+
+public:
 	SPlayer(Database::Type oid);
 
 	template <class S>
@@ -23,7 +26,7 @@ public:
 
 	SFleet* CreateFleet(SStar* location, const string& name);
 
-	void CalculateVisibleObjects(ObjectSet& visible);
+	void CalculateVisibleObjects(VisibilityMap& visible);
 };
 
 #endif
