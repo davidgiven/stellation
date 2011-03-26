@@ -5,13 +5,13 @@ import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.gwt.ControllerImpl;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.PushButton;
 
 public class ButtonsControllerImpl extends ControllerImpl
 	implements ButtonsController
 {
-	private final Button[] _buttons;
+	private final PushButton[] _buttons;
 	private final ButtonsHandler _bh;
 	
 	public ButtonsControllerImpl(ButtonsHandler bh, String[] strings)
@@ -19,7 +19,7 @@ public class ButtonsControllerImpl extends ControllerImpl
 		super(2);
 		
 		_bh = bh;
-		_buttons = new Button[strings.length];
+		_buttons = new PushButton[strings.length];
 		
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.setWidth("100%");
@@ -28,7 +28,7 @@ public class ButtonsControllerImpl extends ControllerImpl
 		for (int i = 0; i < strings.length; i++)
 		{
 			final int index = i;
-			Button b = new Button(strings[i],
+			PushButton b = new PushButton(strings[i],
 					new ClickHandler()
 					{
 						@Override
@@ -39,7 +39,7 @@ public class ButtonsControllerImpl extends ControllerImpl
 						}
 					});
 			
-			b.setWidth("100%");
+//			b.setWidth("100%");
 			_buttons[i] = b;
 			hp.add(b);
 		}
