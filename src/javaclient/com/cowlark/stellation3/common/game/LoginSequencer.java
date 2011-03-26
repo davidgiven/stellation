@@ -65,7 +65,9 @@ public class LoginSequencer
 		
 		emailController.setStringValue("dg@cowlark.com");
 		passwordController.setStringValue("fnord");
-		//onButtonPressed(buttons, 1);
+		
+		/* Load images while the user is typing. */
+		Game.Instance.loadUIData(null);
     }
 	
 	private void userCredentialsEntered(String email, String password)
