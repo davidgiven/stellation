@@ -1,4 +1,4 @@
-package com.cowlark.stellation3.gwt.ui;
+package com.cowlark.stellation3.gwt.controllers;
 
 import java.util.List;
 import java.util.Vector;
@@ -9,6 +9,9 @@ import com.cowlark.stellation3.common.controllers.StarMapStarController;
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.GameImpl;
+import com.cowlark.stellation3.gwt.ui.CanvasResources;
+import com.cowlark.stellation3.gwt.ui.Point;
+import com.cowlark.stellation3.gwt.ui.ResizingCanvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.FillStrokeStyle;
 import com.google.gwt.core.client.Scheduler;

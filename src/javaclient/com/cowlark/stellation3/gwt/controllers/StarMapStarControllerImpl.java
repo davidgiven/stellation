@@ -1,4 +1,4 @@
-package com.cowlark.stellation3.gwt.ui;
+package com.cowlark.stellation3.gwt.controllers;
 
 import com.cowlark.stellation3.common.controllers.StarMapStarController;
 import com.cowlark.stellation3.common.controllers.StarMapStarHandler;
