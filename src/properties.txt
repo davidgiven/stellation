@@ -97,6 +97,7 @@ JumpshipCount      Number         LOCAL
 
 Mass               Number         LOCAL
 Damage             Number         LOCAL
+MaxDamage          Number         LOCAL
 
 #* SFactory SUnit
 
