@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <sstream>
 #include <zmq.hpp>
+#include <syslog.h>
 
 using std::string;
 
@@ -43,6 +44,8 @@ string safegetenv(const string& name)
 
 int main(int argc, const char* argv[])
 {
+	openlog("stellationcgi", 0, LOG_USER);
+
 	try
 	{
 		std::stringstream response;
@@ -109,11 +112,13 @@ int main(int argc, const char* argv[])
 	}
 	catch (const char* s)
 	{
+		syslog(LOG_ERR, "error: %s", s);
 		std::cout << "Status: 406 " << s <<
 				"\r\n\r\n" << s;
 	}
 	catch (zmq::error_t& e)
 	{
+		syslog(LOG_ERR, "zmq error: %s", e.what());
 		std::cout << "Status: 500 " << e.what() <<
 				"\r\n\r\n" << e.what();
 	}
