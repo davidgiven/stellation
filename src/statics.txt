@@ -2,6 +2,9 @@
 Count 80
 Radius 5
 
+* SStar
+Name Star
+
 * SCargoship
 Name Cargoship
 Description
