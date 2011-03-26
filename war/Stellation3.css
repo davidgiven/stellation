@@ -1,0 +1,160 @@
+BODY {
+	background: black;
+	color: white;
+	font-family: sans-serif;
+	font-size: small;
+}
+
+.minorGraticule {
+	fill: none;
+	stroke: #008;
+	stroke-width: 0.02;
+}
+
+.majorGraticule {
+	fill: none;
+	stroke: #00f;
+	stroke-width: 0.02;
+}
+
+.starIcon {
+	fill: #ff0;
+	stroke: none;
+}
+
+.starmapLabel {
+	color: white;
+}
+
+.pane {
+	background: rgba(0, 0, 0, 0.6);
+	color: white;
+	pointer-events: auto;
+}
+
+.yesevents {
+	pointer-events: auto;
+}
+
+a, a:visited, a:hover {
+	text-decoration: underline;
+	cursor: pointer;
+    color: #88f !important;
+}
+
+a:active {
+	color: #f88 !important;
+}
+
+.stardate {
+	font-weight: bold;
+}
+
+.gwt-PushButton-up, .gwt-PushButton-up-hovering, .gwt-PushButton-up-disabled,
+.gwt-PushButton-down, .gwt-PushButton-down-hovering,
+.gwt-PushButton-down-disabled
+{
+	background-color: #222;
+	text-align: center;
+	margin: 1px;
+	cursor: pointer;
+}
+	
+.gwt-PushButton-up, .gwt-PushButton-down
+{
+	border: 2px solid #bbb;
+	padding: 3px;
+}
+
+.gwt-PushButton-up-hovering, .gwt-PushButton-down-hovering
+{
+	border: 3px solid #bbb;
+	padding: 2px;
+}
+
+.gwt-PushButton-down-hovering
+{
+	background-color: #bbb;
+	color: #000;
+}
+
+.gwt-TextBox, .gwt-PasswordTextBox
+{
+	border: 1px solid #bbb;
+	padding: 4px;
+	background-color: #000;
+	color: #fff;
+}
+
+.gwt-DialogBox
+{
+	background: rgba(128, 128, 128, 0.6);
+}
+
+.gwt-DialogBox .dialogTopCenter
+{
+	height: 1.5em;
+	font-weight: bold;
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+}
+
+.gwt-DialogBox .dialogTopLeft,
+.gwt-DialogBox .dialogTopCenter,
+.gwt-DialogBox .dialogTopRight
+{
+	border-bottom: 1px solid black;
+	cursor: move;
+}
+	
+.gwt-DialogBox .dialogMiddleLeft,
+.gwt-DialogBox .dialogMiddleRight
+{
+	width: 0.5em;
+}
+
+.gwt-DialogBox .dialogBottomCenter
+{
+	height: 0.5em;
+}
+
+.gwt-DialogBox .dialogMiddleCenter
+{
+	padding-top: 0.5em;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContent
+{
+	border-style: hidden;
+	border-width: 3px 2px 2px;
+	overflow: hidden;
+	padding: 6px;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab {
+	pointer-events: auto;
+	height: 1.5em;
+	background: rgba(64, 64, 64, 0.6);
+	color: #888;
+	margin-left: 6px;
+	padding: 3px 6px 3px 6px;
+	cursor: pointer;
+	font-weight: bold;
+	text-align: center;
+}
+
+.gwt-TabLayoutPanel .togglebutton {
+	background: none;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelTab-selected {
+	background: rgba(16, 16, 16, 0.6) !important;
+	color: white !important;
+}
+
+.gwt-TabLayoutPanel .gwt-TabLayoutPanelContent {
+	pointer-events: auto;
+	background: rgba(16, 16, 16, 0.6);
+	color: white;
+	border-style: none !important;
+}
