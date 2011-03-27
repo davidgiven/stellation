@@ -2,11 +2,11 @@ package com.cowlark.stellation3.common.markup;
 
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.model.SFleet;
-import com.cowlark.stellation3.common.model.SStar;
+import com.cowlark.stellation3.common.model.SObject;
 
 public class MarkupParser
 {
-	public static void render(String markup, MarkupFactory factory)
+	public static void render(String markup, HasMarkup factory)
 	{
 		String[] split = markup.split("\1");
 		int i = 0;
@@ -35,21 +35,12 @@ public class MarkupParser
 					factory.emitBoldText(commandsplit[1]);
 				else if (cmd.equals("time"))
 					factory.emitTime(Long.parseLong(commandsplit[1]));
-				else if (cmd.equals("star"))
+				else if (cmd.equals("link"))
 				{
-					int oid = Integer.parseInt(commandsplit[1]);
-					SStar star = (SStar) Game.Instance.Database.get(oid);
-					String name = commandsplit[2];
-					double x = Double.parseDouble(commandsplit[3]);
-					double y = Double.parseDouble(commandsplit[4]);
-					factory.emitStar(star, name, x, y);
-				}
-				else if (cmd.equals("fleet"))
-				{
-					int oid = Integer.parseInt(commandsplit[1]);
-					SFleet fleet = (SFleet) Game.Instance.Database.get(oid);
-					String name = commandsplit[2];
-					factory.emitFleet(fleet, name);
+					String text = commandsplit[1];
+					int oid = Integer.parseInt(commandsplit[2]);
+					SObject object = (SObject) Game.Instance.Database.get(oid);
+					factory.emitLink(text, object);
 				}
 			}
 		}

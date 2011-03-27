@@ -4,6 +4,7 @@ import java.util.List;
 import com.cowlark.stellation3.common.controllers.Controller;
 import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.game.Game;
+import com.cowlark.stellation3.common.markup.MarkupBuilder;
 import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SObject;
 import com.cowlark.stellation3.common.model.SPlayer;
@@ -23,14 +24,16 @@ public class StarFleetMonitor extends CompositeMonitor<SFleet>
 	@Override
 	protected void update(SFleet object)
 	{
-		String title = object.Name.get();
+		MarkupBuilder mb = new MarkupBuilder();
+		mb.emitLink(object.Name.get(), object);
+		mb.emitPlainText(" (");
 		SPlayer owner = object.Owner.get();
 		if (owner == Game.Instance.Player)
-			title += " (yours)";
+			mb.emitPlainText("yours");
 		else if (owner != null)
-			title += " ("+owner.Name.get()+")";
-		
-		_title.setStringValue(title);
+			mb.emitLink(owner.Name.get(), owner);
+		mb.emitPlainText(")");
+		_title.setStringValue(mb.getMarkup());
 		
 		for (SObject o : object.Contents)
 		{

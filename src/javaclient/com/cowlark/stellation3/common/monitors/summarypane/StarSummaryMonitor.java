@@ -22,7 +22,7 @@ public class StarSummaryMonitor extends Monitor<SStar>
 	protected void update(SStar star)
 	{
 		MarkupBuilder mb = new MarkupBuilder();
-		mb.emitStar(star);
+		mb.emitLink(star.Name.get(), star);
 		_controller.setStringValue(mb.getMarkup());
 	}
 	

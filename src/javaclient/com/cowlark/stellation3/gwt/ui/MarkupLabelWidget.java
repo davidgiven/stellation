@@ -2,7 +2,7 @@ package com.cowlark.stellation3.gwt.ui;
 
 import java.util.Date;
 import com.cowlark.stellation3.common.game.Game;
-import com.cowlark.stellation3.common.markup.MarkupFactory;
+import com.cowlark.stellation3.common.markup.HasMarkup;
 import com.cowlark.stellation3.common.markup.MarkupParser;
 import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SObject;
@@ -14,9 +14,9 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.PopupPanel;
 
-public class MarkupLabelWidget extends HTML implements MarkupFactory
+public class MarkupLabelWidget extends HTML implements HasMarkup
 {
-	private static void showObject(int oid)
+	private static void showLink(int oid)
 	{
 		SObject o = Game.Instance.Database.get(oid);
 		switch (o.Class.get())
@@ -56,7 +56,7 @@ public class MarkupLabelWidget extends HTML implements MarkupFactory
 	}
 	
 	private static native void publish() /*-{
-		$wnd.showObject = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::showObject(I);
+		$wnd.showObject = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::showLink(I);
 		$wnd.showTimePopup = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::showTimePopup(Ljava/lang/String;Lcom/google/gwt/dom/client/NativeEvent;);
 		$wnd.hideTimePopup = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::hideTimePopup();
 	}-*/;
@@ -155,34 +155,14 @@ public class MarkupLabelWidget extends HTML implements MarkupFactory
 	}
 	
 	@Override
-	public void emitStar(SStar star, String name, double x, double y)
+	public void emitLink(String text, SObject object)
 	{
-		_rendering.append("<b>");
-		if (star != null)
-		{
-			_rendering.append("<a href='javascript:;' onclick='showObject(");
-			_rendering.append(star.Oid);
-			_rendering.append(");'>");
-		}
-		emitPlainText(name);
-		emitPlainText(" [");
-		emitPlainText(S.COORD_FORMAT.format(x));
-		emitPlainText(", ");
-		emitPlainText(S.COORD_FORMAT.format(y));
-		emitPlainText("]");
+		_rendering.append("<a href='javascript:;' onclick='showObject(");
+		_rendering.append(object.Oid);
+		_rendering.append(");'>");
 		
-		if (star != null)
-		{
-			_rendering.append("</a>");
-		}
-		_rendering.append("</b>");
-	}
-	
-	@Override
-	public void emitFleet(SFleet fleet, String name)
-	{
-		_rendering.append("<b>");
-		emitPlainText(name);
-		_rendering.append("</b>");
+		emitPlainText(text);
+		
+		_rendering.append("</a>");
 	}
 }

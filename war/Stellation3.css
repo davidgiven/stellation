@@ -36,17 +36,25 @@ BODY {
 	pointer-events: auto;
 }
 
-a, a:visited, a:hover {
-	text-decoration: underline;
+a, a:visited, a:hover
+{
+	text-decoration: none;
 	cursor: pointer;
     color: #88f !important;
 }
 
-a:active {
+a:hover
+{
+	color: #bbf !important;
+}
+
+a:active
+{
 	color: #f88 !important;
 }
 
-.stardate {
+.stardate
+{
 	font-weight: bold;
 }
 

@@ -23,7 +23,7 @@ public class FleetSummaryMonitor extends Monitor<SFleet>
 	{
 		MarkupBuilder mb = new MarkupBuilder();
 		mb.indent(1);
-		mb.emitFleet(fleet);
+		mb.emitLink(fleet.Name.get(), fleet);
 		_title.setStringValue(mb.getMarkup());
 	}
 	

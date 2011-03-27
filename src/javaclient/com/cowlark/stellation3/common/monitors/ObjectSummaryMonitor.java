@@ -5,6 +5,7 @@ import com.cowlark.stellation3.common.controllers.Controller;
 import com.cowlark.stellation3.common.controllers.ObjectSummaryController;
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.game.Game;
+import com.cowlark.stellation3.common.markup.MarkupBuilder;
 import com.cowlark.stellation3.common.model.SUnit;
 
 public class ObjectSummaryMonitor extends Monitor<SUnit>
@@ -25,7 +26,9 @@ public class ObjectSummaryMonitor extends Monitor<SUnit>
 			name = object.Name.get();
 		else
 			name = Game.Instance.Static.getString(object.Class.get(), Hash.Name);
-		_controller.setNameMarkup(name);
+		MarkupBuilder mb = new MarkupBuilder();
+		mb.emitLink(name, object);
+		_controller.setNameMarkup(mb.getMarkup());
 		
 		int damage = (int) object.Damage.get();
 		int maxdamage = Game.Instance.Static.getInt(object.Class.get(), Hash.MaxDamage);

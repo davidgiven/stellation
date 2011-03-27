@@ -1,7 +1,6 @@
 package com.cowlark.stellation3.common.markup;
 
-import com.cowlark.stellation3.common.model.SFleet;
-import com.cowlark.stellation3.common.model.SStar;
+import com.cowlark.stellation3.common.model.SObject;
 
 public class MarkupBuilder implements HasMarkup
 {
@@ -60,18 +59,8 @@ public class MarkupBuilder implements HasMarkup
 	}
 	
 	@Override
-	public void emitStar(SStar star)
+	public void emitLink(String text, SObject object)
 	{
-		cmd("star", String.valueOf(star.Oid),
-				star.Name.get(),
-				String.valueOf(star.X.get()),
-				String.valueOf(star.Y.get()));
-	}
-	
-	@Override
-	public void emitFleet(SFleet fleet)
-	{
-		cmd("fleet", String.valueOf(fleet.Oid),
-				fleet.Name.get());
+		cmd("link", text, String.valueOf(object.Oid));
 	}
 }
