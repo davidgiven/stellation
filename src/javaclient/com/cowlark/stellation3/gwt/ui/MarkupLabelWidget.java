@@ -4,9 +4,7 @@ import java.util.Date;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.markup.HasMarkup;
 import com.cowlark.stellation3.common.markup.MarkupParser;
-import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SObject;
-import com.cowlark.stellation3.common.model.SStar;
 import com.cowlark.stellation3.gwt.S;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Unit;
@@ -19,12 +17,7 @@ public class MarkupLabelWidget extends HTML implements HasMarkup
 	private static void showLink(int oid)
 	{
 		SObject o = Game.Instance.Database.get(oid);
-		switch (o.Class.get())
-		{
-			case SStar:
-				Game.Instance.showStarDetails((SStar) o);
-				break;
-		}
+		Game.Instance.showObject(o);
 	}
 	
 	private static PopupPanel _timePopup;

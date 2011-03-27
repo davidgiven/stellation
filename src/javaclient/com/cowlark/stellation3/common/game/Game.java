@@ -20,8 +20,10 @@ import com.cowlark.stellation3.common.database.Database;
 import com.cowlark.stellation3.common.database.RPCManager;
 import com.cowlark.stellation3.common.database.Transport;
 import com.cowlark.stellation3.common.model.SGalaxy;
+import com.cowlark.stellation3.common.model.SObject;
 import com.cowlark.stellation3.common.model.SPlayer;
 import com.cowlark.stellation3.common.model.SStar;
+import com.cowlark.stellation3.common.model.SUnit;
 import com.cowlark.stellation3.common.model.SUniverse;
 import com.cowlark.stellation3.common.monitors.MonitorGroup;
 import com.cowlark.stellation3.common.monitors.PaneMonitorAdaptor;
@@ -69,17 +71,44 @@ public abstract class Game
 		MonitorGroup mg = new MonitorGroup();
 		mg.addMonitor(new PlayerSummaryMonitor(Player));
 		
-		Pane leftPane = new PaneMonitorAdaptor(mg, PaneAspect.TITLE, null,
+		Pane leftPane = new PaneMonitorAdaptor(mg, PaneAspect.SUMMARY, null,
 				"Summary");
+	}
+	
+	public void showObject(SObject object)
+	{
+		MonitorGroup mg = new MonitorGroup();
+		
+		switch (object.Class.get())
+		{
+			case SStar:
+			{
+				SStar star = (SStar) object;
+				star.createControlPanel(mg);
+		
+				Pane starPane = new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null,
+					star.Name.get());
+				break;
+			}
+			
+			case SFleet:
+				break;
+				
+			case SJumpship:
+			{
+				SUnit unit = (SUnit) object;
+				unit.createControlPanel(mg);
+		
+				Pane starPane = new PaneMonitorAdaptor(mg, PaneAspect.CONTROLPANEL, null,
+					"Unit");
+				break;
+			}
+		}
 	}
 	
 	public void showStarDetails(SStar star)
 	{
 		MonitorGroup mg = new MonitorGroup();
-		star.createControlPanel(mg);
-		
-		Pane starPane = new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null,
-				star.Name.get());
 	}
 	
 	public abstract void loadUIData(CompletionListener listener);

@@ -3,9 +3,8 @@ package com.cowlark.stellation3.common.controllers;
 public enum PaneAspect
 {
 	LOGIN,
-	TITLE,
+	SUMMARY,
 	STARMAP,
-	FLEETSUMMARY,
 	LOCATION,
-	UNIT
+	CONTROLPANEL
 }

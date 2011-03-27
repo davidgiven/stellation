@@ -130,7 +130,7 @@ public class GameImpl extends Game
 				return _starmap;
 			}
 			
-			case TITLE:
+			case SUMMARY:
 			{
 				TabbedPane pane = new TabbedPane(aspect, ph, title);
 				replacePane(aspect, pane);
@@ -143,6 +143,14 @@ public class GameImpl extends Game
 				TabbedPane pane = new TabbedPane(aspect, ph, title);
 				replacePane(aspect, pane);
 				placePaneInTab(pane, Screen.MiddleContainer);
+				return pane;
+			}
+			
+			case CONTROLPANEL:
+			{
+				TabbedPane pane = new TabbedPane(aspect, ph, title);
+				replacePane(aspect, pane);
+				placePaneInTab(pane, Screen.RightContainer);
 				return pane;
 			}
 			

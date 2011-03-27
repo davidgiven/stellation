@@ -62,6 +62,9 @@ public class Screen extends Composite implements RequiresResize, ProvidesResize
 	@UiField
 	public LayoutPanel MiddleContainer;
 	
+	@UiField
+	public LayoutPanel RightContainer;
+	
 	public Screen(String firstName)
 	{
 		initWidget(uiBinder.createAndBindUi(this));
