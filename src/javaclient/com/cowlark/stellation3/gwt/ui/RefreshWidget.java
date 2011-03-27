@@ -1,8 +1,6 @@
 package com.cowlark.stellation3.gwt.ui;
 
-import com.cowlark.stellation3.common.database.RPCListener;
 import com.cowlark.stellation3.common.database.RPCMonitorHandler;
-import com.cowlark.stellation3.common.game.CompletionListener;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.S;
 import com.google.gwt.canvas.dom.client.Context2d;

@@ -13,7 +13,6 @@ import com.cowlark.stellation3.gwt.ui.CanvasResources;
 import com.cowlark.stellation3.gwt.ui.Point;
 import com.cowlark.stellation3.gwt.ui.ResizingCanvas;
 import com.google.gwt.canvas.dom.client.Context2d;
-import com.google.gwt.canvas.dom.client.FillStrokeStyle;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.ImageElement;

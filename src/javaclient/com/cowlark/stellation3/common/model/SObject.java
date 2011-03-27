@@ -2,7 +2,6 @@ package com.cowlark.stellation3.common.model;
 
 import com.cowlark.stellation3.common.database.Hash;
 import com.cowlark.stellation3.common.database.SBase;
-import com.cowlark.stellation3.common.monitors.Monitor;
 import com.cowlark.stellation3.common.monitors.MonitorGroup;
 import com.cowlark.stellation3.common.monitors.ObjectIdMonitor;
 import com.google.gwt.event.shared.HandlerManager;

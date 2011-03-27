@@ -3,7 +3,6 @@ package com.cowlark.stellation3.gwt.controllers;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
 import com.cowlark.stellation3.gwt.ui.MarkupLabelWidget;
-import com.google.gwt.user.client.ui.Label;
 
 public class MarkupControllerImpl extends ControllerImpl
 	implements MarkupController

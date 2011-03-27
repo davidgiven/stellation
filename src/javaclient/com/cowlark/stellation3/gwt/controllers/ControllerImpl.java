@@ -1,7 +1,6 @@
 package com.cowlark.stellation3.gwt.controllers;
 
 import com.cowlark.stellation3.common.controllers.Controller;
-import com.google.gwt.user.client.ui.Widget;
 
 public class ControllerImpl implements Controller
 {

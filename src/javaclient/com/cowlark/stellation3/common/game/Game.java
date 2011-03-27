@@ -6,8 +6,6 @@ import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.Controller;
 import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.LabelController;
-import com.cowlark.stellation3.common.controllers.LocationController;
-import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
 import com.cowlark.stellation3.common.controllers.ObjectSummaryController;
@@ -113,8 +111,6 @@ public abstract class Game
 			TextFieldHandler tfh, String label);
 	public abstract ButtonsController createButtonsController(
 			ButtonsHandler bh, String... buttons);	
-	public abstract LocationController createLocationController(
-			LocationHandler lh, String label);
 	public abstract ObjectSummaryController createObjectSummaryController();
 
 	public abstract StarMapStarController createStarMapStarController(

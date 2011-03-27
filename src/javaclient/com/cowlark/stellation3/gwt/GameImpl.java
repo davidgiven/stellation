@@ -5,8 +5,6 @@ import com.cowlark.stellation3.common.controllers.ButtonsController;
 import com.cowlark.stellation3.common.controllers.ButtonsHandler;
 import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.LabelController;
-import com.cowlark.stellation3.common.controllers.LocationController;
-import com.cowlark.stellation3.common.controllers.LocationHandler;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.controllers.MarkupHandler;
 import com.cowlark.stellation3.common.controllers.ObjectSummaryController;
@@ -22,7 +20,6 @@ import com.cowlark.stellation3.common.game.CompletionListener;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.gwt.controllers.ButtonsControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.GroupTitleControllerImpl;
-import com.cowlark.stellation3.gwt.controllers.LocationControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.MarkupControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.ObjectSummaryControllerImpl;
 import com.cowlark.stellation3.gwt.controllers.StarMapImpl;
@@ -215,12 +212,6 @@ public class GameImpl extends Game
 	        StarMapStarHandler smsh, StarMapStarController.StarData sd)
 	{
 	    return new StarMapStarControllerImpl(smsh, sd);
-	}
-	
-	public LocationController createLocationController(LocationHandler lh,
-			String label)
-	{
-		return new LocationControllerImpl(lh, label);
 	}
 	
 	@Override

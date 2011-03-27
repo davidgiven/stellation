@@ -2,7 +2,6 @@ package com.cowlark.stellation3.gwt.ui;
 
 import java.util.List;
 import com.cowlark.stellation3.common.controllers.Controller;
-import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
 import com.cowlark.stellation3.gwt.ControllerRenderer;
