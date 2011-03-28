@@ -3,6 +3,7 @@
 
 #include "SObject.h"
 class SJumpship;
+class STug;
 
 class SFleet : public SObject, public SFleetProperties
 {
@@ -14,7 +15,12 @@ public:
 	void OnAdditionOf(SObject* o);
 	void OnRemovalOf(SObject* o);
 
-	SJumpship* CreateJumpship();
+	template <class T> T* CreateShip()
+	{
+		T* ship = T::Create(*Owner);
+		Add(ship);
+		return ship;
+	}
 };
 
 #endif

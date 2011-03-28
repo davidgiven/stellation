@@ -15,4 +15,6 @@ public class S
 		= NumberFormat.getFormat("0.0");
 	public final static DateTimeFormat TIME_FORMAT
 		= DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+	public final static NumberFormat CARGO_FORMAT
+		= NumberFormat.getFormat("0");
 }

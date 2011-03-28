@@ -45,6 +45,7 @@ string safegetenv(const string& name)
 int main(int argc, const char* argv[])
 {
 	openlog("stellationcgi", 0, LOG_USER);
+	syslog(LOG_INFO, "started");
 
 	try
 	{
@@ -122,6 +123,7 @@ int main(int argc, const char* argv[])
 		std::cout << "Status: 500 " << e.what() <<
 				"\r\n\r\n" << e.what();
 	}
+	syslog(LOG_INFO, "ended");
 
 	return 0;
 }

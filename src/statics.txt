@@ -14,13 +14,13 @@ Description
     supply vessels in operation.
 Mass 1000.0
 MaxDamage 300.0
+BuildCostM 5000.0
 BuildCostA 10000.0
-BuildCostM 1000.0
-BuildCostO 5000.0
+BuildCostO 1000.0
 BuildTime 3.0
+MaintenanceCostM 0.0
 MaintenanceCostA 2.0
-MaintenanceCostM 1.0
-MaintenanceCostO 0.0
+MaintenanceCostO 1.0
 
 * SJumpship 
 Name Jumpship
@@ -33,10 +33,25 @@ Description
 	exact resonant frequency of the flaw is known.
 Mass 5000.0
 MaxDamage 1000.0
+BuildCostM 10000.0
 BuildCostA 20000.0
-BuildCostM 1000.0
-BuildCostO 10000.0
+BuildCostO 1000.0
 BuildTime 5.0
+MaintenanceCostM 0.0
 MaintenanceCostA 5.0
 MaintenanceCostM 2.0
-MaintenanceCostO 0.0
+
+* STug 
+Name Tug
+Description
+	Tugs are small, powerful craft used to tow otherwise unpowered vessels
+	and other artifacts.
+Mass 1000.0
+MaxDamage 1000.0
+BuildCostM 3000.0
+BuildCostA 8000.0
+BuildCostO 1000.0
+BuildTime 2.0
+MaintenanceCostM 0.0
+MaintenanceCostA 4.0
+MaintenanceCostO 1.0

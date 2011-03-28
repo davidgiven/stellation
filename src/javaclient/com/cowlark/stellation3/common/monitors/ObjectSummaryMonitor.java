@@ -21,13 +21,8 @@ public class ObjectSummaryMonitor extends Monitor<SUnit>
 	@Override
 	protected void update(SUnit object)
 	{
-		String name;
-		if (object.Name != null)
-			name = object.Name.get();
-		else
-			name = Game.Instance.Static.getString(object.Class.get(), Hash.Name);
 		MarkupBuilder mb = new MarkupBuilder();
-		mb.emitLink(name, object);
+		mb.emitLink(object.getName(), object);
 		_controller.setNameMarkup(mb.getMarkup());
 		
 		int damage = (int) object.Damage.get();

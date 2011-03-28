@@ -7,6 +7,8 @@
 #include "SGalaxy.h"
 #include "SUniverse.h"
 #include "SJumpship.h"
+#include "STug.h"
+#include "SCargoship.h"
 #include "SFleet.h"
 #include "Property.h"
 #include "statics.h"
@@ -68,6 +70,7 @@ void SObject::Initialise(Database::Type owner)
 {
 	InitialiseClass(*this);
 	*Owner = owner;
+	Contents->Dirty();
 }
 
 void SObject::Add(SObject* o)

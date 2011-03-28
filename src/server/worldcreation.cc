@@ -5,6 +5,9 @@
 #include "SStar.h"
 #include "SPlayer.h"
 #include "SFleet.h"
+#include "SJumpship.h"
+#include "STug.h"
+#include "SCargoship.h"
 #include "Log.h"
 #include "statics.h"
 #include "utils.h"
@@ -126,7 +129,10 @@ void CreatePlayer(const string& name, const string& empirename,
 	SStar* star = SStar::Get(galaxy->VisibleStars->RandomSetMember());
 
 	SFleet* fleet = player->CreateFleet(star, name + "'s starter fleet");
-	fleet->CreateJumpship();
+	fleet->CreateShip<SJumpship>();
+	fleet->CreateShip<STug>();
+	fleet->CreateShip<STug>();
+	fleet->CreateShip<SCargoship>();
 
 	Log() << "Created player " << player << ": " << name
 			<< " of " << empirename << ", aka " << email;

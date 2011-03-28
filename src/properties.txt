@@ -105,5 +105,9 @@ MaxDamage          Number         LOCAL
 
 * SJumpship SShip
 
-+ SCargoship
+* STug SShip
 
+* SCargoship SShip
+CargoM             Number         LOCAL
+CargoA             Number         LOCAL
+CargoO             Number         LOCAL

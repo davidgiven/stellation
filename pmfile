@@ -130,6 +130,8 @@ server_exe = cxxprogram {
 	mycxxfile "src/server/model/SUnit.cc",
 	mycxxfile "src/server/model/SShip.cc",
 	mycxxfile "src/server/model/SJumpship.cc",
+	mycxxfile "src/server/model/STug.cc",
+	mycxxfile "src/server/model/SCargoship.cc",
 	
 	install = pm.install("bin/server")
 }

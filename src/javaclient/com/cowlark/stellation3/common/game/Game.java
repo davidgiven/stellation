@@ -19,6 +19,7 @@ import com.cowlark.stellation3.common.controllers.TextFieldHandler;
 import com.cowlark.stellation3.common.database.Database;
 import com.cowlark.stellation3.common.database.RPCManager;
 import com.cowlark.stellation3.common.database.Transport;
+import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SGalaxy;
 import com.cowlark.stellation3.common.model.SObject;
 import com.cowlark.stellation3.common.model.SPlayer;
@@ -79,30 +80,24 @@ public abstract class Game
 	{
 		MonitorGroup mg = new MonitorGroup();
 		
-		switch (object.Class.get())
+		if (object instanceof SStar)
 		{
-			case SStar:
-			{
-				SStar star = (SStar) object;
-				star.createControlPanel(mg);
-		
-				Pane starPane = new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null,
-					star.Name.get());
-				break;
-			}
-			
-			case SFleet:
-				break;
-				
-			case SJumpship:
-			{
-				SUnit unit = (SUnit) object;
-				unit.createControlPanel(mg);
-		
-				Pane starPane = new PaneMonitorAdaptor(mg, PaneAspect.CONTROLPANEL, null,
-					"Unit");
-				break;
-			}
+			SStar star = (SStar) object;
+			star.createControlPanel(mg);
+	
+			new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null,
+				star.Name.get());
+		}
+		else if (object instanceof SFleet)
+		{
+		}
+		else if (object instanceof SUnit)
+		{
+			SUnit unit = (SUnit) object;
+			unit.createControlPanel(mg);
+	
+			new PaneMonitorAdaptor(mg, PaneAspect.CONTROLPANEL, null,
+				"Unit");
 		}
 	}
 	
