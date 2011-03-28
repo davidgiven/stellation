@@ -9,4 +9,5 @@ public interface HasMarkup
 	public void emitBoldText(String text);
 	public void emitTime(long time);
 	public void emitLink(String text, SObject object);
+	public void emitResources(double m, double a, double o);
 }

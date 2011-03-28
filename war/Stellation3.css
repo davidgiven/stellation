@@ -58,6 +58,28 @@ a:active
 	font-weight: bold;
 }
 
+.resourcesM, .resourcesA, .resourcesO
+{
+	font-weight: bold;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+	
+.resourcesM
+{
+	color: #f88;
+}
+
+.resourcesA
+{
+	color: #ff8;
+}
+
+.resourcesO
+{
+	color: #8f8;
+}
+
 .groupTitle
 {
 	font-size: 120%;

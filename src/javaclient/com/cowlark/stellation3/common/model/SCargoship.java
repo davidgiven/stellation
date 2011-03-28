@@ -14,13 +14,8 @@ public class SCargoship extends SShip
 	public String getSummaryDetailsMarkup()
 	{
 		MarkupBuilder mb = new MarkupBuilder();
-		mb.emitPlainText("Cargo: M=");
-		mb.emitPlainText(S.CARGO_FORMAT.format(CargoM.get()));
-		mb.emitPlainText(" A=");
-		mb.emitPlainText(S.CARGO_FORMAT.format(CargoA.get()));
-		mb.emitPlainText(" O=");
-		mb.emitPlainText(S.CARGO_FORMAT.format(CargoO.get()));
-		
+		mb.emitPlainText("Cargo: ");
+		mb.emitResources(CargoM.get(), CargoA.get(), CargoO.get());
 		return mb.getMarkup();
 	}
 }

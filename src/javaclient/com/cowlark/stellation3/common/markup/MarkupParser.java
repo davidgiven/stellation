@@ -3,6 +3,7 @@ package com.cowlark.stellation3.common.markup;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.model.SFleet;
 import com.cowlark.stellation3.common.model.SObject;
+import com.google.gwt.text.client.DoubleParser;
 
 public class MarkupParser
 {
@@ -25,22 +26,40 @@ public class MarkupParser
 			
 			if (commandsplit.length > 0)
 			{
-				String cmd = commandsplit[0];
-				if (cmd.equals("indent"))
+				switch (MarkupCommand.valueOf(commandsplit[0]))
 				{
-					int spaces = Integer.parseInt(commandsplit[1]);
-					factory.indent(spaces);
-				}
-				else if (cmd.equals("bold"))
-					factory.emitBoldText(commandsplit[1]);
-				else if (cmd.equals("time"))
-					factory.emitTime(Long.parseLong(commandsplit[1]));
-				else if (cmd.equals("link"))
-				{
-					String text = commandsplit[1];
-					int oid = Integer.parseInt(commandsplit[2]);
-					SObject object = (SObject) Game.Instance.Database.get(oid);
-					factory.emitLink(text, object);
+					case Indent:
+					{
+						int spaces = Integer.parseInt(commandsplit[1]);
+						factory.indent(spaces);
+						break;
+					}
+					
+					case Bold:
+						factory.emitBoldText(commandsplit[1]);
+						break;
+						
+					case Time:
+						factory.emitTime(Long.parseLong(commandsplit[1]));
+						break;
+						
+					case Link:
+					{
+						String text = commandsplit[1];
+						int oid = Integer.parseInt(commandsplit[2]);
+						SObject object = (SObject) Game.Instance.Database.get(oid);
+						factory.emitLink(text, object);
+						break;
+					}
+					
+					case Resources:
+					{
+						double m = Double.parseDouble(commandsplit[1]);
+						double a = Double.parseDouble(commandsplit[2]);
+						double o = Double.parseDouble(commandsplit[3]);
+						factory.emitResources(m, a, o);
+						break;
+					}
 				}
 			}
 		}

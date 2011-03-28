@@ -1,6 +1,7 @@
 package com.cowlark.stellation3.gwt.ui;
 
 import java.util.Date;
+import java.util.Formatter;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.markup.HasMarkup;
 import com.cowlark.stellation3.common.markup.MarkupParser;
@@ -20,38 +21,44 @@ public class MarkupLabelWidget extends HTML implements HasMarkup
 		Game.Instance.showObject(o);
 	}
 	
-	private static PopupPanel _timePopup;
-	private static Label _timePopupLabel;
+	private static PopupPanel _popup;
+	private static Label _popupLabel;
 	
 	private static void showTimePopup(String times, NativeEvent event)
 	{
-		if (_timePopup == null)
+		long timel = Long.parseLong(times);
+		Date time = new Date(timel * 1000L);
+		showPopup(S.TIME_FORMAT.format(time), event);
+	}
+	
+	private static void showPopup(String text, NativeEvent event)
+	{
+		if (_popup == null)
 		{
-			_timePopup = new PopupPanel();
-			_timePopupLabel = new Label();
-			_timePopup.add(_timePopupLabel);
+			_popup = new PopupPanel();
+			_popupLabel = new Label();
+			_popup.add(_popupLabel);
 		}
 		
 		int x = event.getClientX();
 		int y = event.getClientY();
 		
-		long timel = Long.parseLong(times);
-		Date time = new Date(timel * 1000L);
-		_timePopup.setPopupPosition(x+10, y+10);
-		_timePopupLabel.setText(S.TIME_FORMAT.format(time));
-		_timePopup.show();
+		_popup.setPopupPosition(x+10, y+10);
+		_popupLabel.setText(text);
+		_popup.show();
 	}
 	
-	private static void hideTimePopup()
+	private static void hidePopup()
 	{
-		if (_timePopup != null)
-			_timePopup.hide();
+		if (_popup != null)
+			_popup.hide();
 	}
 	
 	private static native void publish() /*-{
 		$wnd.showObject = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::showLink(I);
 		$wnd.showTimePopup = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::showTimePopup(Ljava/lang/String;Lcom/google/gwt/dom/client/NativeEvent;);
-		$wnd.hideTimePopup = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::hideTimePopup();
+		$wnd.showPopup = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::showPopup(Ljava/lang/String;Lcom/google/gwt/dom/client/NativeEvent;);
+		$wnd.hidePopup = @com.cowlark.stellation3.gwt.ui.MarkupLabelWidget::hidePopup();
 	}-*/;
 	
 	static
@@ -70,6 +77,11 @@ public class MarkupLabelWidget extends HTML implements HasMarkup
 		_rendering = new StringBuilder();
 		MarkupParser.render(markup, this);
 		setHTML(_rendering.toString());
+	}
+	
+	private String popup(String command)
+	{
+		return "onmousemove='"+command+"' onmouseover='"+command+"' onmouseout='hidePopup();'";
 	}
 	
 	@Override
@@ -138,11 +150,9 @@ public class MarkupLabelWidget extends HTML implements HasMarkup
         sb.append(t3);
 		
         String showtimepopup = "showTimePopup(\"" + time + "\", event);";
-		_rendering.append("<span class='stardate' onmousemove='");
-		_rendering.append(showtimepopup);
-		_rendering.append("' onmouseover='");
-		_rendering.append(showtimepopup);
-		_rendering.append("' onmouseout='hideTimePopup();'>");
+		_rendering.append("<span class='stardate' ");
+		_rendering.append(popup(showtimepopup));
+		_rendering.append(">");
 		emitPlainText(sb.toString());
 		_rendering.append("</span>");
 	}
@@ -157,5 +167,22 @@ public class MarkupLabelWidget extends HTML implements HasMarkup
 		emitPlainText(text);
 		
 		_rendering.append("</a>");
+	}
+	
+	private void emitresource(String classid, String label, double value)
+	{
+		String s = "<span class='" +
+			classid + "' " +
+			popup("showPopup(\""+label+"\", event);") +
+			">" + S.CARGO_FORMAT.format(value) + "</span>";
+		_rendering.append(s);
+	}
+	
+	@Override
+	public void emitResources(double m, double a, double o)
+	{
+		emitresource("resourcesM", "Metal", m);
+		emitresource("resourcesA", "Antimatter", a);
+		emitresource("resourcesO", "Organics", o);
 	}
 }

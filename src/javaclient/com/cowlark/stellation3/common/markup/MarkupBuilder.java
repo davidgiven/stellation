@@ -21,23 +21,28 @@ public class MarkupBuilder implements HasMarkup
 		return _sb.toString();
 	}
 	
-	private void cmd(String... cmds)
+	private void cmd(MarkupCommand c, String... cmds)
 	{
 		_sb.append('\1');
-		int i = 0;
-		for (i = 0; i < cmds.length-1; i++)
+		_sb.append(c.toString());
+		if (cmds.length > 0)
 		{
-			_sb.append(cmds[i]);
 			_sb.append('\2');
+			int i = 0;
+			for (i = 0; i < cmds.length-1; i++)
+			{
+				_sb.append(cmds[i]);
+				_sb.append('\2');
+			}
+			_sb.append(cmds[i]);
 		}
-		_sb.append(cmds[i]);
 		_sb.append('\1');
 	}
 	
 	@Override
 	public void indent(int spaces)
 	{
-		cmd("indent", String.valueOf(spaces));
+		cmd(MarkupCommand.Indent, String.valueOf(spaces));
 	}
 	
 	@Override
@@ -49,18 +54,27 @@ public class MarkupBuilder implements HasMarkup
 	@Override
 	public void emitBoldText(String text)
 	{
-		cmd("bold", text);
+		cmd(MarkupCommand.Bold, text);
 	}
 	
 	@Override
 	public void emitTime(long time)
 	{
-		cmd("time", String.valueOf(time));
+		cmd(MarkupCommand.Time, String.valueOf(time));
 	}
 	
 	@Override
 	public void emitLink(String text, SObject object)
 	{
-		cmd("link", text, String.valueOf(object.Oid));
+		cmd(MarkupCommand.Link, text, String.valueOf(object.Oid));
+	}
+	
+	@Override
+	public void emitResources(double m, double a, double o)
+	{
+		cmd(MarkupCommand.Resources,
+				String.valueOf(m),
+				String.valueOf(a),
+				String.valueOf(o));
 	}
 }
