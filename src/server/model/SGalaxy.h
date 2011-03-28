@@ -5,7 +5,7 @@
 
 class SGalaxy : public SObject, public SGalaxyProperties
 {
-	CLASSLINK(SGalaxy)
+	CLASSLINK(SGalaxy, SObject, SGalaxyProperties)
 
 public:
 	SGalaxy(Database::Type oid);

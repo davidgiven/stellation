@@ -178,7 +178,19 @@ do
 			propertyaccessorshoutf:write('\tLazyDatum<',
 				property.type, 'Datum> ', cname(property.name), ';\n')
 		end
-		propertyaccessorshoutf:write('};\n')
+		
+		propertyaccessorshoutf:write(
+			'\n',
+			'\tvoid Initialise(Database::Type owner)\n',
+			'\t{\n')
+			
+		for _, property in ipairs(class) do
+			propertyaccessorshoutf:write('\t\t', cname(property.name), '->Dirty();\n')
+		end
+	
+		propertyaccessorshoutf:write(
+			'\t}\n',
+			'};\n')
 	end
 end
 

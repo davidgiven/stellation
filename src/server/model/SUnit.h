@@ -5,12 +5,12 @@
 
 class SUnit : public SObject, public SUnitProperties
 {
-	CLASSLINK(SUnit)
+	CLASSLINK(SUnit, SObject, SUnitProperties)
 
 public:
 	SUnit(Database::Type oid);
 
-	void Initialise(Database::Type owner);
+	void Initialise();
 };
 
 #endif

@@ -7,7 +7,7 @@ class STug;
 
 class SFleet : public SObject, public SFleetProperties
 {
-	CLASSLINK(SFleet)
+	CLASSLINK(SFleet, SObject, SFleetProperties)
 
 public:
 	SFleet(Database::Type oid);

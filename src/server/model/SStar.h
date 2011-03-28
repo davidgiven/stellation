@@ -6,7 +6,7 @@ class SPlayer;
 
 class SStar : public SObject, public SStarProperties
 {
-	CLASSLINK(SStar)
+	CLASSLINK(SStar, SObject, SStarProperties)
 
 public:
 	SStar(Database::Type oid);

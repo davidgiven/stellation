@@ -70,6 +70,11 @@ void SObject::Initialise(Database::Type owner)
 {
 	InitialiseClass(*this);
 	*Owner = owner;
+	Initialise();
+}
+
+void SObject::Initialise()
+{
 	Contents->Dirty();
 }
 

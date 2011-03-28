@@ -8,9 +8,9 @@ SUnit::SUnit(Database::Type oid):
 {
 }
 
-void SUnit::Initialise(Database::Type owner)
+void SUnit::Initialise()
 {
-	SObject::Initialise(owner);
+	SObject::Initialise();
 
 	*Damage = 0.0;
 	*MaxDamage = GetNumberStatic(Hash::MaxDamage);

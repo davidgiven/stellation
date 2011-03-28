@@ -5,7 +5,7 @@
 
 class STug : public SShip, public STugProperties
 {
-	CLASSLINK(STug)
+	CLASSLINK(STug, SShip, STugProperties)
 
 public:
 	STug(Database::Type oid);

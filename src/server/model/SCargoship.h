@@ -5,12 +5,10 @@
 
 class SCargoship : public SShip, public SCargoshipProperties
 {
-	CLASSLINK(SCargoship)
+	CLASSLINK(SCargoship, SShip, SCargoshipProperties)
 
 public:
 	SCargoship(Database::Type oid);
-
-	void Initialise(Database::Type owner);
 };
 
 #endif

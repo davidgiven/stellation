@@ -5,7 +5,7 @@
 
 class SShip : public SUnit, public SShipProperties
 {
-	CLASSLINK(SShip)
+	CLASSLINK(SShip, SUnit, SShipProperties)
 
 public:
 	SShip(Database::Type oid);

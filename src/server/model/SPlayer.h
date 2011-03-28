@@ -7,7 +7,7 @@ class SFleet;
 
 class SPlayer : public SObject, public SPlayerProperties
 {
-	CLASSLINK(SPlayer)
+	CLASSLINK(SPlayer, SObject, SPlayerProperties)
 
 public:
 	typedef map<Database::Type, Database::Visibility> VisibilityMap;

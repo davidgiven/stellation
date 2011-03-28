@@ -5,7 +5,7 @@
 
 class SJumpship : public SShip, public SJumpshipProperties
 {
-	CLASSLINK(SJumpship)
+	CLASSLINK(SJumpship, SShip, SJumpshipProperties)
 
 public:
 	SJumpship(Database::Type oid);

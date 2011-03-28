@@ -5,7 +5,7 @@
 #include "property-accessors-h.h"
 #include <boost/cast.hpp>
 
-#define CLASSLINK(C) \
+#define CLASSLINK(C, S, P) \
 	public: \
 		static C* Get(SObject* o) \
 		{ return boost::polymorphic_downcast<C*>(o); } \
@@ -20,7 +20,11 @@
 		{ return boost::polymorphic_downcast<C*>(SObject::Create(Hash::C, owner)); } \
 		\
 		Hash::Type GetClass() const \
-		{ return Hash::C; }
+		{ return Hash::C; } \
+		\
+		void Initialise(Database::Type owner) \
+		{ P::Initialise(owner); \
+		  S::Initialise(owner); }
 
 class SObject : public noncopyable, public SObjectProperties
 {
@@ -44,6 +48,7 @@ public:
 	{ return _oid; }
 
 	virtual void Initialise(Database::Type owner);
+	virtual void Initialise();
 
 	void Add(SObject* o);
 	void Remove(SObject* o);

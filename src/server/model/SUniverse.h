@@ -5,7 +5,7 @@
 
 class SUniverse : public SObject, public SUniverseProperties
 {
-	CLASSLINK(SUniverse)
+	CLASSLINK(SUniverse, SObject, SUniverseProperties)
 
 public:
 	SUniverse(Database::Type oid);
