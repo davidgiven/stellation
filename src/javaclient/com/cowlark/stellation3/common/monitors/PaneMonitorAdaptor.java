@@ -1,8 +1,9 @@
 package com.cowlark.stellation3.common.monitors;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 import com.cowlark.stellation3.common.controllers.Controller;
+import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.Pane;
 import com.cowlark.stellation3.common.controllers.PaneAspect;
 import com.cowlark.stellation3.common.controllers.PaneHandler;
@@ -18,9 +19,9 @@ public class PaneMonitorAdaptor implements Pane, PaneHandler, HasMonitors
 	private boolean _updating;
 	
 	public PaneMonitorAdaptor(HasMonitors monitor, PaneAspect aspect,
-			PaneHandler ph, String title)
+			PaneHandler ph)
     {
-		_pane = Game.Instance.showPane(aspect, this, title);
+		_pane = Game.Instance.showPane(aspect, this, null);
 		_ph = ph;
 		_monitor = monitor;
 		_updating = false;
@@ -59,13 +60,29 @@ public class PaneMonitorAdaptor implements Pane, PaneHandler, HasMonitors
 						@Override
 						public void execute()
 						{
-							Vector<Controller> controllers = new Vector<Controller>();
-							emitControllers(controllers);
-							_pane.updateControllers(controllers);
-							_updating = false;
+							updateAllMonitorsImpl();
 						}
 					});
 		}
+	}
+	
+	private void updateAllMonitorsImpl()
+	{
+		LinkedList<Controller> controllers = new LinkedList<Controller>();
+		emitControllers(controllers);
+		
+		if (!controllers.isEmpty())
+		{
+			Controller first = controllers.getFirst();
+			if (first instanceof GroupTitleController)
+			{
+				controllers.removeFirst();
+				_pane.setTitle(((GroupTitleController)first).getStringValue());
+			}
+		}
+		
+		_pane.updateControllers(controllers);
+		_updating = false;
 	}
 	
 	@Override
@@ -94,6 +111,12 @@ public class PaneMonitorAdaptor implements Pane, PaneHandler, HasMonitors
 		detach();
 		if (_ph != null)
 			_ph.onPaneClosed(this);
+	}
+	
+	@Override
+	public void setTitle(String title)
+	{
+		_pane.setTitle(title);
 	}
 	
 	@Override

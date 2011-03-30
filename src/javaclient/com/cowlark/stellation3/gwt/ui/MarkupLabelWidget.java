@@ -80,7 +80,8 @@ public class MarkupLabelWidget extends HTML implements HasMarkup
 	public void setMarkup(String markup)
 	{
 		_rendering = new StringBuilder();
-		MarkupParser.render(markup, this);
+		if (markup != null)
+			MarkupParser.render(markup, this);
 		setHTML(_rendering.toString());
 	}
 	

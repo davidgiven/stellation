@@ -3,6 +3,7 @@ package com.cowlark.stellation3.common.monitors.summarypane;
 import java.util.List;
 import java.util.TreeSet;
 import com.cowlark.stellation3.common.controllers.Controller;
+import com.cowlark.stellation3.common.controllers.GroupTitleController;
 import com.cowlark.stellation3.common.controllers.MarkupController;
 import com.cowlark.stellation3.common.game.Game;
 import com.cowlark.stellation3.common.markup.MarkupBuilder;
@@ -14,12 +15,14 @@ import com.cowlark.stellation3.common.monitors.CompositeMonitor;
 
 public class PlayerSummaryMonitor extends CompositeMonitor<SPlayer>
 {
-	private MarkupController _title;
+	private GroupTitleController _title;
+	private MarkupController _playerTitle;
 	
 	public PlayerSummaryMonitor(SPlayer o)
     {
 	    super(o);
-	    _title = Game.Instance.createMarkupController(null, null);
+	    _title = Game.Instance.createGroupTitleController("Summary");
+	    _playerTitle = Game.Instance.createMarkupController(null, null);
     }
 	
 	@Override
@@ -29,7 +32,7 @@ public class PlayerSummaryMonitor extends CompositeMonitor<SPlayer>
 		mb.emitBoldText(player.Name.get());
 		mb.emitPlainText(" of ");
 		mb.emitBoldText(player.EmpireName.get());
-		_title.setStringValue(mb.getMarkup());
+		_playerTitle.setStringValue(mb.getMarkup());
 		
 		beginUpdate();
 		
@@ -62,6 +65,7 @@ public class PlayerSummaryMonitor extends CompositeMonitor<SPlayer>
 	public void emitControllers(List<Controller> list)
 	{
 		list.add(_title);
+		list.add(_playerTitle);
 	    super.emitControllers(list);
 	}
 }

@@ -60,6 +60,7 @@ public class SObject extends SBase implements Comparable<SObject>
 	
 	public void constructBasicControlPanelGroup(MonitorGroup group)
 	{
+		group.setTitle(getName());
 		group.addMonitor(new ObjectIdMonitor(this));
 	}
 		

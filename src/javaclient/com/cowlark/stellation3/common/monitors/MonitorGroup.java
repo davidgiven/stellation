@@ -30,17 +30,15 @@ public class MonitorGroup implements Iterable<Monitor<?>>, HasMonitors
 	
 	private final Vector<Monitor<?>> _monitors;
 	private final HashMap<Key, Monitor<?>> _oldMonitors;
-	private final String _name;
+	private String _title;
 	private HasMonitors _parent;
 	private GroupTitleController _nameController;
 	
-	public MonitorGroup(String name)
+	public MonitorGroup(String title)
     {
 	    _monitors = new Vector<Monitor<?>>();
 	    _oldMonitors = new HashMap<Key, Monitor<?>>();
-	    _name = name;
-	    if (_name != null)
-		    _nameController = Game.Instance.createGroupTitleController(_name);
+	    setTitle(title);
     }
 	
 	public MonitorGroup()
@@ -85,9 +83,23 @@ public class MonitorGroup implements Iterable<Monitor<?>>, HasMonitors
 		_oldMonitors.clear();
 	}
 	
-	public String getName()
+	public String getTitle()
 	{
-		return _name;
+		return _title;
+	}
+	
+	public void setTitle(String name)
+	{
+	    _title = name;
+	    if (_title != null)
+	    {
+	    	if (_nameController == null)
+			    _nameController = Game.Instance.createGroupTitleController(_title);
+	    	else
+	    		_nameController.setStringValue(_title);
+	    }
+	    else
+	    	_nameController = null;
 	}
 	
 	@Override

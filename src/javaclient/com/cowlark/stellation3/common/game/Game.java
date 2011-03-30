@@ -72,8 +72,7 @@ public abstract class Game
 		MonitorGroup mg = new MonitorGroup();
 		mg.addMonitor(new PlayerSummaryMonitor(Player));
 		
-		Pane leftPane = new PaneMonitorAdaptor(mg, PaneAspect.SUMMARY, null,
-				"Summary");
+		Pane leftPane = new PaneMonitorAdaptor(mg, PaneAspect.SUMMARY, null);
 	}
 	
 	public void showObject(SObject object)
@@ -85,8 +84,7 @@ public abstract class Game
 			SStar star = (SStar) object;
 			star.createControlPanel(mg);
 	
-			new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null,
-				star.Name.get());
+			new PaneMonitorAdaptor(mg, PaneAspect.LOCATION, null);
 		}
 		else if (object instanceof SFleet)
 		{
@@ -96,8 +94,7 @@ public abstract class Game
 			SUnit unit = (SUnit) object;
 			unit.createControlPanel(mg);
 	
-			new PaneMonitorAdaptor(mg, PaneAspect.CONTROLPANEL, null,
-				"Unit");
+			new PaneMonitorAdaptor(mg, PaneAspect.CONTROLPANEL, null);
 		}
 	}
 	
