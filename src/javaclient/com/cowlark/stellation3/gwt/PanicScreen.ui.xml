@@ -1,0 +1,62 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder
+	xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	>
+	
+	<ui:style>
+		.panel
+		{
+			background: rgba(255, 30, 30, 0.6);
+			font-size: large;
+			overflow: scroll;
+			display: block;
+			max-width: 100%;
+		}
+		
+		.text
+		{
+			padding: 2em;
+		}
+		
+		.stacktrace
+		{
+			font-size: medium;
+			font-family: monospace;
+		}
+	</ui:style>
+	
+	<g:VerticalPanel
+			addStyleNames="{style.panel}"
+			width="100%"
+			height="100%"
+			>
+		<g:VerticalPanel
+				addStyleNames="{style.text}"
+				>
+			<g:HTMLPanel>
+				<h1>Oh Noes</h1>
+				<p>Something's gone wrong!</p>
+				<p>
+					Don't worry, this is just a problem with the client; your
+					ships are safe on the server. Our crack team of professional
+					engineers is even now poring over the stack trace below, and
+					will fix things as soon as he can. For
+					now, your best bet is to press the button below and hope
+					it doesn't happen again.
+				</p>
+				<p>
+					<g:Button
+						ui:field="_reloadButton"
+						text="Restart Client"
+						/>
+				</p>
+			</g:HTMLPanel>
+			
+			<g:Label
+				ui:field="_stacktrace"
+				addStyleNames="{style.stacktrace}"
+				/>
+		</g:VerticalPanel>
+	</g:VerticalPanel>
+</ui:UiBinder> 

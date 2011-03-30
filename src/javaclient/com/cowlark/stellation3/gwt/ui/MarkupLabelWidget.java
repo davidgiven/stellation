@@ -72,6 +72,11 @@ public class MarkupLabelWidget extends HTML implements HasMarkup
     {
     }
 	
+	public MarkupLabelWidget(String markup)
+	{
+		setMarkup(markup);
+	}
+	
 	public void setMarkup(String markup)
 	{
 		_rendering = new StringBuilder();

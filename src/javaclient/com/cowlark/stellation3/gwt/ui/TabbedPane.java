@@ -14,7 +14,7 @@ public class TabbedPane implements Pane, Comparable<TabbedPane>
 	private PaneAspect _aspect;
 	private PaneHandler _ph;
 	private ScrollPanel _body;
-	private String _title;
+	private MarkupLabelWidget _title;
 	private ControllerRenderer _renderer;
 	private TabbedPaneContainer _container;
 	
@@ -23,7 +23,7 @@ public class TabbedPane implements Pane, Comparable<TabbedPane>
 		_aspect = aspect;
 		_ph = ph;
 		_body = new ScrollPanel();
-		_title = title;
+		_title = new MarkupLabelWidget(title);
 		_renderer = new ControllerRenderer();
 		_body.add(_renderer);
     }
@@ -34,7 +34,7 @@ public class TabbedPane implements Pane, Comparable<TabbedPane>
 		return _aspect.compareTo(o._aspect);
 	}
 	
-	public String getTab()
+	public MarkupLabelWidget getTab()
 	{
 		return _title;
 	}
@@ -47,6 +47,12 @@ public class TabbedPane implements Pane, Comparable<TabbedPane>
 	public void attach(TabbedPaneContainer container)
 	{
 		_container = container;
+	}
+	
+	@Override
+	public void setTitle(String title)
+	{
+		_title.setMarkup(title);
 	}
 	
 	@Override

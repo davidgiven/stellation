@@ -84,6 +84,11 @@ public class StarMapImpl implements
     }
 	
 	@Override
+	public void setTitle(String title)
+	{
+	}
+	
+	@Override
 	public void updateControllers(List<Controller> controllers)
 	{
 		_starImpls.clear();
