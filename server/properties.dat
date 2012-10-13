@@ -1,0 +1,113 @@
+# This file defines all the information about the properties used by the
+# system.
+
+# Used for serialisation.
+
++ Null
++ Number
++ String
++ Token
++ Object
++ ObjectSet
++ ObjectMap
+
+# Object statics.
+
++ Name
++ Description
++ Mass
++ MaxDamage
++ BuildCostA
++ BuildCostO
++ BuildCostM
++ BuildTime
++ MaintenanceCostA
++ MaintenanceCostO
++ MaintenanceCostM
+
+# Top-level commands.
+
++ CreatePlayer
++ Authenticate
++ GetStatic
++ GameOperation
+
+# Game commands.
+
++ Ping
++ ShutdownServer
++ Rename
+
+# Error codes.
+
++ OK
++ PlayerAlreadyExists
++ AuthenticationFailure
++ MalformedCommand
++ FleetAlreadyHasThisName
++ ObjectDoesNotExist
++ PrivilegeViolation
+
+# Miscellaneous.
+
++ Count
++ Radius
+
+* SObject
+
+Owner              Object         GLOBAL
+Class              Token          GLOBAL
+Contents           ObjectSet      LOCAL
+Location           Object         GLOBAL
+Name               String         GLOBAL
+
+* SUniverse SObject
+
+Galaxy             Object         GLOBAL
+
+* SGalaxy SObject
+
+AllLocations       ObjectSet      SERVERONLY
+VisibleStars       ObjectSet      GLOBAL
+
+* SStar SObject
+
+X                  Number         GLOBAL
+Y                  Number         GLOBAL
+Brightness         Number         GLOBAL
+ResourcesA         Number         LOCAL
+ResourcesO         Number         LOCAL
+ResourcesM         Number         LOCAL
+AsteroidsC         Number         LOCAL
+AsteroidsM         Number         LOCAL
+
+* SPlayer SObject
+
+Email              String         PRIVATE
+EmpireName         String         PRIVATE
+Password           String         SERVERONLY
+Fleets             ObjectSet      PRIVATE
+VisibleObjects     ObjectSet      PRIVATE
+
+* SFleet SObject
+
+JumpshipCount      Number         LOCAL
+
+* SUnit SObject
+
+Mass               Number         LOCAL
+Damage             Number         LOCAL
+MaxDamage          Number         LOCAL
+
+#* SFactory SUnit
+
+* SShip SUnit
+
+* SJumpship SShip
+
+* STug SShip
+
+* SCargoship SShip
+CargoM             Number         LOCAL
+CargoA             Number         LOCAL
+CargoO             Number         LOCAL
