@@ -52,5 +52,5 @@ function Load()
 	
 	fp:close()
 	
-	Datastore.SetTokens(tokens)
+	--Datastore.SetTokens(tokens)
 end

@@ -9,15 +9,13 @@ local rawset = rawset
 local rawget = rawget
 local require = require
 local Utils = require("Utils")
+local Classes = require("Classes")
 local SQL = require("ljsqlite3")
 local ffi = require("ffi")
-
-module("Datastore")
 
 local nextoid = 0
 local database = nil
 local statements = {}
-local tokens
 
 local function compile(sql)
 	local stmt = statements[sql]
@@ -29,42 +27,6 @@ local function compile(sql)
 	stmt = database:prepare(sql)
 	statements[sql] = stmt
 	return stmt
-end
-
-function Connect(filename)
-	database = SQL.open(filename)
-end
-
-function Disconnect()
-	if database then
-		database:close()
-		database = nil
-	end
-end
-
-function Begin()
-	compile("BEGIN"):step()
-end
-
-function Commit()
-	compile("COMMIT"):step()
-end
-
-function Rollback()
-	compile("ROLLBACK"):step()
-end
-
-function Init()
-	local dbinit = Utils.LoadFile("dbinit.sql")
-	database:exec(dbinit)
-end
-
-function Open()
-	local row = compile("SELECT MAX(oid) FROM eav"):step()
-	nextoid = tonumber(row[1])
-	if not nextoid then
-		nextoid = 1
-	end
 end
 
 local function write_property(oid, kid, value, time)
@@ -82,34 +44,43 @@ local function read_property(oid, kid)
 	--print(unpack(row))
 end
 
-function SetTokens(tokenmap)
-	compile("BEGIN"):step()
-	
-	for token in pairs(tokenmap) do
+local tokenMap = {}
+setmetatable(tokenMap,
+{
+	__index = function (self, token)
 		compile(
 			"INSERT OR IGNORE INTO tokens VALUES (NULL, ?)"
 		):bind(token):step()
-		
-		local row = compile(
-			"SELECT * FROM tokens WHERE value = ?"
-		):bind(token):step()
-		
-		local value = tonumber(row[1])
-		tokenmap[token] = value
-		tokenmap[value] = token
+			
+		if (type(token) == "number") then
+			-- number -> token
+			
+			local row = compile(
+				"SELECT value FROM tokens WHERE id = ?"
+			):bind(token):step()
+			
+			local value = tonumber(row[1])
+			print(value, token)
+			rawset(tokenMap, token, value)
+			rawset(tokenMap, value, token)
+			
+			return value
+		else
+			-- token -> number
+			
+			local row = compile(
+				"SELECT id FROM tokens WHERE value = ?"
+			):bind(token):step()
+			
+			local value = tonumber(row[1])
+			print(token, value)
+			rawset(tokenMap, token, value)
+			rawset(tokenMap, value, token)
+			
+			return value
+		end
 	end
-	
-	compile("COMMIT"):step()
-	
-	tokens = tokenmap
-end
-
-local Classes =
-{
-	SUniverse = require("classes.SUniverse"),
-	SGalaxy = require("classes.SGalaxy"),
-	SStar = require("classes.SStar")
-}
+})
 
 local function get_property_type(class, name)
 	while class do
@@ -150,7 +121,7 @@ local function get_datum(class, oid, name)
 		type = t,
 		oid = oid,
 		name = name,
-		kid = tokens[name],
+		kid = tokenMap[name],
 		value = t.default()
 	}
 	
@@ -170,13 +141,17 @@ end
 local function get_class_of_oid(oid)
 	local row = compile(
 		"SELECT value FROM eav WHERE oid=? AND kid=?"
-		):bind(oid, tokens["Class"]):step()
+		):bind(oid, tokenMap["Class"]):step()
+
+	if not row then
+		return nil
+	end
 	
-	local classname = tokens[tonumber(row[1])]
+	local classname = tokenMap[tonumber(row[1])]
 	return Classes[classname]
 end
 
-function Object(oid)
+local function new_object_proxy(oid)
 	local class = get_class_of_oid(oid)
 	Utils.Assert(class, "oid ", oid, " has no class!")
 	
@@ -258,12 +233,7 @@ function Object(oid)
 	return object
 end
 
-function Create(oid, class)
-	if not oid then
-		oid = nextoid
-		nextoid = nextoid + 1
-	end
-	
+local function create_object(oid, class)
 	if (type(class) == "string") then
 		local c = Classes[class]
 		if not c then
@@ -274,8 +244,61 @@ function Create(oid, class)
 	
 	compile(
 		"INSERT OR REPLACE INTO eav (oid, kid, value, time) VALUES (?, ?, ?, ?)"
-		):bind(oid, tokens["Class"], tokens[class.name], 0):step()
+		):bind(oid, tokenMap["Class"], tokenMap[class.name], 0):step()
 	
-	return Object(oid, class)
+	return new_object_proxy(oid, class)
 end
 
+return
+{
+	Connect = function (filename)
+		database = SQL.open(filename)
+	end,
+
+	Disconnect = function ()
+		if database then
+			database:close()
+			database = nil
+		end
+	end,
+
+	Begin = function ()
+		compile("BEGIN"):step()
+	end,
+
+	Commit = function ()
+		compile("COMMIT"):step()
+	end,
+
+	Rollback = function ()
+		compile("ROLLBACK"):step()
+	end,
+
+	Init = function ()
+		local dbinit = Utils.LoadFile("dbinit.sql")
+		database:exec(dbinit)
+	end,
+
+	TokenMap = tokenMap,
+	
+	Open = function ()
+		local row = compile("SELECT MAX(oid) FROM eav"):step()
+		nextoid = tonumber(row[1])
+		if not nextoid then
+			nextoid = 1
+		end
+	end,
+
+	CreateWithOid = create_object,
+	
+	Create = function (class)
+		if not oid then
+			oid = nextoid
+			nextoid = nextoid + 1
+		end		
+		
+		return create_object(oid, class)
+	end,
+	
+	Object = new_object_proxy
+}

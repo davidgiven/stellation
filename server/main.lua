@@ -3,7 +3,7 @@
 -- Add the directory containing this script to the package path.
 
 ServerDir = arg[0]:gsub("[^/]+$", "")
-package.path = ServerDir .. "?.lua;" .. package.path
+package.path = ServerDir .. "?.lua;" .. ServerDir .. "?/init.lua;" .. package.path
 
 local Datastore = require "Datastore"
 local Properties = require "Properties"
@@ -15,13 +15,13 @@ Properties.Load()
 
 Datastore.Begin()
 
-local SUniverse = Datastore.Create(0, "SUniverse")
-local SGalaxy = Datastore.Create(nil, "SGalaxy")
+local SUniverse = Datastore.CreateWithOid(0, "SUniverse")
+local SGalaxy = Datastore.Create("SGalaxy")
 
 SUniverse.Galaxy = SGalaxy
 
 for i = 1, 10 do
-	local s = Datastore.Create(nil, "SStar")
+	local s = Datastore.Create("SStar")
 	s.X = math.random() * 10 - 5 
 	s.Y = math.random() * 10 - 5 
 	s:commit()

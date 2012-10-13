@@ -8,7 +8,7 @@ local PRIVATE = Type.PRIVATE
 return
 {
 	name = "SUniverse",
-	superclass = require("classes.SObject"),
+	superclass = require("Classes.SObject"),
 
 	properties =
 	{

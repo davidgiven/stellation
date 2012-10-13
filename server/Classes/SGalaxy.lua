@@ -8,7 +8,7 @@ local PRIVATE = Type.PRIVATE
 return
 {
 	name = "SGalaxy",
-	superclass = require("classes.SObject"),
+	superclass = require("Classes.SObject"),
 	
 	properties =
 	{
