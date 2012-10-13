@@ -110,6 +110,15 @@ local function get_method(class, name)
 	end 
 end
 
+local function create_eav_table(type, name)
+	local tablename = "eav_"..name
+	compile(
+		"CREATE TABLE IF NOT EXISTS "..tablename.." (oid INTEGER PRIMARY KEY, value "..type.sqltype..", time INTEGER)"
+	):step()
+	
+	return tablename
+end
+
 local function get_datum(class, oid, name)
 	local t = get_property_type(class, name)
 	if not t then
@@ -133,15 +142,16 @@ local function put_datum(datum, value)
 	local str = datum.type.marshal(datum)
 	print("Set "..datum.oid.."."..datum.kid.."("..datum.name..") to "..str)
 	
+	local tablename = create_eav_table(datum.type, datum.name)
 	compile(
-		"INSERT OR REPLACE INTO eav (oid, kid, value, time) VALUES (?, ?, ?, ?)"
-		):bind(datum.oid, datum.kid, str, 0):step()
+		"INSERT OR REPLACE INTO "..tablename.." (oid, value, time) VALUES (?, ?, ?)"
+		):bind(datum.oid, str, 0):step()
 end
 
 local function get_class_of_oid(oid)
 	local row = compile(
-		"SELECT value FROM eav WHERE oid=? AND kid=?"
-		):bind(oid, tokenMap["Class"]):step()
+		"SELECT value FROM eav_Class WHERE oid=?"
+		):bind(oid):step()
 
 	if not row then
 		return nil
@@ -243,8 +253,8 @@ local function create_object(oid, class)
 	end
 	
 	compile(
-		"INSERT OR REPLACE INTO eav (oid, kid, value, time) VALUES (?, ?, ?, ?)"
-		):bind(oid, tokenMap["Class"], tokenMap[class.name], 0):step()
+		"INSERT OR REPLACE INTO eav_Class (oid, value, time) VALUES (?, ?, ?)"
+		):bind(oid, tokenMap[class.name], 0):step()
 	
 	return new_object_proxy(oid, class)
 end
@@ -282,7 +292,7 @@ return
 	TokenMap = tokenMap,
 	
 	Open = function ()
-		local row = compile("SELECT MAX(oid) FROM eav"):step()
+		local row = compile("SELECT MAX(oid) FROM eav_Class"):step()
 		nextoid = tonumber(row[1])
 		if not nextoid then
 			nextoid = 1
@@ -292,10 +302,8 @@ return
 	CreateWithOid = create_object,
 	
 	Create = function (class)
-		if not oid then
-			oid = nextoid
-			nextoid = nextoid + 1
-		end		
+		local oid = nextoid
+		nextoid = nextoid + 1
 		
 		return create_object(oid, class)
 	end,

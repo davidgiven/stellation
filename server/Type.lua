@@ -14,7 +14,7 @@ local ObjectType =
 	marshal = function (datum)
 		local v = datum.value
 		if (v == nil) then
-			return -1
+			return nil
 		elseif (type(v) == "number") then
 			return v
 		else
@@ -28,7 +28,9 @@ local ObjectType =
 	
 	default = function ()
 		return -1
-	end
+	end,
+	
+	sqltype = "INTEGER"
 }
 
 local TokenType =
@@ -43,7 +45,9 @@ local TokenType =
 	
 	default = function ()
 		return "<default token>"
-	end
+	end,
+	
+	sqltype = "INTEGER"
 }
 
 local ObjectSetType =
@@ -58,7 +62,9 @@ local ObjectSetType =
 	
 	default = function ()
 		return {}
-	end
+	end,
+	
+	sqltype = "TEXT"
 }
 
 local StringType =
@@ -73,7 +79,9 @@ local StringType =
 	
 	default = function ()
 		return ""
-	end
+	end,
+	
+	sqltype = "TEXT"
 }
 
 local NumberType =
@@ -88,7 +96,9 @@ local NumberType =
 	
 	default = function ()
 		return 0
-	end
+	end,
+	
+	sqltype = "REAL"
 }
 	
 local function typeinstance(type, scope)

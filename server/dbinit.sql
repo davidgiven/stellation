@@ -10,13 +10,11 @@ CREATE TABLE 'tokens'
 	'value' TEXT
 );
 
-CREATE TABLE 'eav'
+CREATE TABLE IF NOT EXISTS eav_Class
 (
-	'oid' INTEGER,
-	'kid' INTEGER,
-	'value' TEXT,
-	'time' INTEGER,
-	PRIMARY KEY('oid', 'kid')
+	oid INTEGER PRIMARY KEY,
+	value INTEGER,
+	time INTEGER
 );
 
 CREATE TABLE 'players'
