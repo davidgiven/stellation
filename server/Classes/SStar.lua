@@ -1,3 +1,4 @@
+local math_random = math.random
 local require = require
 local Type = require("Type")
 local GLOBAL = Type.GLOBAL
