@@ -19,7 +19,7 @@ local function Array(data)
 				d[k] = v
 			end
 			
-			for k, v in ipairs({...}) do
+			for _, v in ipairs({...}) do
 				d[#d+1] = v
 			end
 			
@@ -47,7 +47,7 @@ local function Set(data)
 				d[k] = true
 			end
 			
-			for v in ipairs({...}) do
+			for _, v in ipairs({...}) do
 				d[v] = true
 			end
 			
@@ -60,7 +60,7 @@ local function Set(data)
 				d[k] = true
 			end
 			
-			for v in ipairs({...}) do
+			for _, v in ipairs({...}) do
 				d[v] = nil
 			end
 			

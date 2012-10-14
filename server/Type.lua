@@ -8,6 +8,7 @@ local setmetatable = setmetatable
 local rawset = rawset
 local rawget = rawget
 local Utils = require("Utils")
+local Immutable = require("Immutable")
 
 local ObjectType =
 {
@@ -15,19 +16,18 @@ local ObjectType =
 		local v = datum.value
 		if (v == nil) then
 			return nil
-		elseif (type(v) == "number") then
-			return v
 		else
 			return v.Oid
 		end 
 	end,
 	
 	unmarshal = function (datum, str)
-		datum.value = tonumber(str)
+		local findproxy = require("Datastore").Object
+		datum.value = findproxy(tonumber(str))
 	end,
 	
 	default = function ()
-		return -1
+		return nil
 	end,
 	
 	sqltype = "INTEGER"
@@ -53,15 +53,27 @@ local TokenType =
 local ObjectSetType =
 {
 	marshal = function (datum)
-		return "{}"
+		local s = {}
+		for item in pairs(datum.value) do
+			s[#s+1] = item.Oid
+		end
+		return table.concat(s, " ")
 	end,
 	
 	unmarshal = function (datum, str)
-		datum.value = {}
+		local findproxy = require("Datastore").Object
+		local t = {}
+		
+		for s in string.match("%d+") do
+			local oid = tonumber(s)
+			t[#t+1] = findproxy(oid)
+		end
+		
+		datum.value = Immutable.Set(t)
 	end,
 	
 	default = function ()
-		return {}
+		return Immutable.Set({})
 	end,
 	
 	sqltype = "TEXT"
@@ -91,7 +103,7 @@ local NumberType =
 	end,
 	
 	unmarshal = function (datum, str)
-		datum.value = str
+		datum.value = tonumber(str)
 	end,
 	
 	default = function ()

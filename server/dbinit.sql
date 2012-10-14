@@ -4,10 +4,10 @@ PRAGMA synchronous = ON;
 
 BEGIN;
 
-CREATE TABLE 'tokens'
+CREATE TABLE IF NOT EXISTS tokens
 (
-	'id' INTEGER PRIMARY KEY,
-	'value' TEXT
+	id INTEGER PRIMARY KEY,
+	value TEXT
 );
 
 CREATE TABLE IF NOT EXISTS eav_Class
@@ -17,40 +17,40 @@ CREATE TABLE IF NOT EXISTS eav_Class
 	time INTEGER
 );
 
-CREATE TABLE 'players'
+CREATE TABLE IF NOT EXISTS players
 (
-	'email' TEXT PRIMARY KEY,
-	'oid' INTEGER
+	email TEXT PRIMARY KEY,
+	oid INTEGER
 );
 
-CREATE TABLE 'timers'
+CREATE TABLE IF NOT EXISTS timers
 (
-	'id' INTEGER PRIMARY KEY,
-	'time' REAL,
-	'oid' INTEGER,
-	'command' INTEGER
+	id INTEGER PRIMARY KEY,
+	time REAL,
+	oid INTEGER,
+	command INTEGER
 );
-CREATE INDEX 'timersindex' ON 'timers'
+CREATE INDEX IF NOT EXISTS timersindex ON timers
 (
-	'time' ASC
-);
-
-CREATE TABLE 'logentries'
-(
-	'id' INTEGER PRIMARY KEY,
-	'time' REAL,
-	'location' INTEGER,
-	'entry' TEXT
-);
-CREATE INDEX 'logentriesindex' ON 'logentries'
-(
-	'time' ASC
+	time ASC
 );
 
-CREATE TABLE 'visiblelogs'
+CREATE TABLE IF NOT EXISTS logentries
 (
-	'player' INTEGER PRIMARY KEY,
-	'log' INTEGER
+	id INTEGER PRIMARY KEY,
+	time REAL,
+	location INTEGER,
+	entry TEXT
+);
+CREATE INDEX IF NOT EXISTS logentriesindex ON logentries
+(
+	time ASC
+);
+
+CREATE TABLE IF NOT EXISTS visiblelogs
+(
+	player INTEGER PRIMARY KEY,
+	log INTEGER
 );
 
 COMMIT;

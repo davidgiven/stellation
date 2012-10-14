@@ -9,92 +9,15 @@ local rawset = rawset
 local rawget = rawget
 local require = require
 local Utils = require("Utils")
+local Log = require("Log")
 local Classes = require("Classes")
-local SQL = require("ljsqlite3")
-local ffi = require("ffi")
+local Database = require("Database")
+local SQL = Database.SQL
+local Tokens = require("Tokens")
+local Datum = require("Datum")
 
 local nextoid = 0
-local database = nil
-local statements = {}
-
-local function compile(sql)
-	local stmt = statements[sql]
-	if stmt then
-		stmt:reset()
-		return stmt
-	end
-	
-	stmt = database:prepare(sql)
-	statements[sql] = stmt
-	return stmt
-end
-
-local function write_property(oid, kid, value, time)
-	local result = compile(
-		"INSERT OR REPLACE INTO eav (oid, kid, value, time) VALUES (?, ?, ?, ?)"
-		):bind(oid, kid, value, time):step()
-	print(result)
-end
-
-local function read_property(oid, kid)
-	local row = compile(
-		"SELECT value, time FROM eav WHERE oid=? AND kid=?"
-		):bind(oid, kid):step()
-		
-	--print(unpack(row))
-end
-
-local tokenMap = {}
-setmetatable(tokenMap,
-{
-	__index = function (self, token)
-		compile(
-			"INSERT OR IGNORE INTO tokens VALUES (NULL, ?)"
-		):bind(token):step()
-			
-		if (type(token) == "number") then
-			-- number -> token
-			
-			local row = compile(
-				"SELECT value FROM tokens WHERE id = ?"
-			):bind(token):step()
-			
-			local value = tonumber(row[1])
-			print(value, token)
-			rawset(tokenMap, token, value)
-			rawset(tokenMap, value, token)
-			
-			return value
-		else
-			-- token -> number
-			
-			local row = compile(
-				"SELECT id FROM tokens WHERE value = ?"
-			):bind(token):step()
-			
-			local value = tonumber(row[1])
-			print(token, value)
-			rawset(tokenMap, token, value)
-			rawset(tokenMap, value, token)
-			
-			return value
-		end
-	end
-})
-
-local function get_property_type(class, name)
-	while class do
-		local p = class.properties
-		if p then
-			local t = p[name]
-			if t then
-				return t
-			end
-		end
-		
-		class = class.superclass
-	end
-end
+local proxies = {}
 
 local function get_method(class, name)
 	while class do
@@ -110,46 +33,8 @@ local function get_method(class, name)
 	end 
 end
 
-local function create_eav_table(type, name)
-	local tablename = "eav_"..name
-	compile(
-		"CREATE TABLE IF NOT EXISTS "..tablename.." (oid INTEGER PRIMARY KEY, value "..type.sqltype..", time INTEGER)"
-	):step()
-	
-	return tablename
-end
-
-local function get_datum(class, oid, name)
-	local t = get_property_type(class, name)
-	if not t then
-		return nil
-	end
-	
-	local datum = 
-	{
-		type = t,
-		oid = oid,
-		name = name,
-		kid = tokenMap[name],
-		value = t.default()
-	}
-	
-	return datum 
-end
-
-local function put_datum(datum, value)
-	datum.value = value
-	local str = datum.type.marshal(datum)
-	print("Set "..datum.oid.."."..datum.kid.."("..datum.name..") to "..str)
-	
-	local tablename = create_eav_table(datum.type, datum.name)
-	compile(
-		"INSERT OR REPLACE INTO "..tablename.." (oid, value, time) VALUES (?, ?, ?)"
-		):bind(datum.oid, str, 0):step()
-end
-
 local function get_class_of_oid(oid)
-	local row = compile(
+	local row = SQL(
 		"SELECT value FROM eav_Class WHERE oid=?"
 		):bind(oid):step()
 
@@ -157,7 +42,7 @@ local function get_class_of_oid(oid)
 		return nil
 	end
 	
-	local classname = tokenMap[tonumber(row[1])]
+	local classname = Tokens[tonumber(row[1])]
 	return Classes[classname]
 end
 
@@ -198,7 +83,7 @@ local function new_object_proxy(oid)
 				return c
 			end
 			
-			c = get_datum(class, oid, key)
+			c = Datum.Get(class, oid, key)
 			if c then
 				datumcache[key] = c
 				return c.value
@@ -210,7 +95,7 @@ local function new_object_proxy(oid)
 		__newindex = function (self, key, value)
 			-- Ensure the datum is cached.
 			if not datumcache[key] then
-				datumcache[key] = get_datum(class, oid, key)
+				datumcache[key] = Datum.Get(class, oid, key)
 			end
 			
 			-- Set the local copy.
@@ -233,7 +118,7 @@ local function new_object_proxy(oid)
 					Utils.FatalError("Property '", k, "' on oid ", oid, " has modified value but has not been loaded")
 				end
 				
-				put_datum(datum, v)
+				Datum.Put(datum, v)
 				object[k] = nil
 			end
 		end
@@ -252,9 +137,9 @@ local function create_object(oid, class)
 		class = c
 	end
 	
-	compile(
+	SQL(
 		"INSERT OR REPLACE INTO eav_Class (oid, value, time) VALUES (?, ?, ?)"
-		):bind(oid, tokenMap[class.name], 0):step()
+		):bind(oid, Tokens[class.name], 0):step()
 	
 	return new_object_proxy(oid, class)
 end
@@ -262,41 +147,29 @@ end
 return
 {
 	Connect = function (filename)
-		database = SQL.open(filename)
-	end,
+		Database.Connect(filename)
 
-	Disconnect = function ()
-		if database then
-			database:close()
-			database = nil
-		end
-	end,
-
-	Begin = function ()
-		compile("BEGIN"):step()
-	end,
-
-	Commit = function ()
-		compile("COMMIT"):step()
-	end,
-
-	Rollback = function ()
-		compile("ROLLBACK"):step()
-	end,
-
-	Init = function ()
-		local dbinit = Utils.LoadFile("dbinit.sql")
-		database:exec(dbinit)
-	end,
-
-	TokenMap = tokenMap,
-	
-	Open = function ()
-		local row = compile("SELECT MAX(oid) FROM eav_Class"):step()
+		local row = SQL("SELECT MAX(oid) FROM eav_Class"):step()
 		nextoid = tonumber(row[1])
 		if not nextoid then
 			nextoid = 1
 		end
+	end,
+
+	Disconnect = function ()
+		Database.Disconnect(filename)
+	end,
+
+	Begin = function ()
+		Database.Begin()
+	end,
+
+	Commit = function ()
+		Database.Commit()
+	end,
+
+	Rollback = function ()
+		Database.Rollback()
 	end,
 
 	CreateWithOid = create_object,
@@ -308,5 +181,14 @@ return
 		return create_object(oid, class)
 	end,
 	
-	Object = new_object_proxy
+	Object = function (oid)
+		local p = proxies[oid]
+		if p then
+			return p
+		end
+		
+		p = new_object_proxy(oid)
+		proxies[p] = oid
+		return p
+	end
 }

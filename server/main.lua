@@ -8,10 +8,10 @@ package.path = ServerDir .. "?.lua;" .. ServerDir .. "?/init.lua;" .. package.pa
 local Datastore = require "Datastore"
 local Properties = require "Properties"
 local WorldCreation = require "WorldCreation"
+local Log = require("Log")
 
+Log.M("start")
 Datastore.Connect("test.db")
-Datastore.Init()
-Datastore.Open()
 Properties.Load()
 
 Datastore.Begin()

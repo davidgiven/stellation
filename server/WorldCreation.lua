@@ -1,6 +1,7 @@
 local math_random = math.random
 local require = require
 local Datastore = require("Datastore")
+local S = require("S")
 
 local syllables1 =
 {
@@ -31,14 +32,47 @@ local function create_name()
 	return s
 end
 
+local function ordinate()
+	local o = math.random() * S.GalacticRadius * 2 - S.GalacticRadius
+	o = math.floor(o * 10) / 10
+	return o
+end
+
 return
 {
 	InitialiseGalaxy = function (galaxy)
-		for i = 1, 10 do
+		local positions = {}
+		while (#positions < S.NumberOfStars) do
+			local x = ordinate()
+			local y = ordinate()
+			local hash = "x="..x.."y="..y
+			if not positions[hash] then
+				positions[#positions+1] = {x=x, y=y}
+				positions[hash] = true
+			end
+		end
+
+		local names = {}
+		while (#names < S.NumberOfStars) do
+			local n = create_name()
+			if not names[n] then
+				names[#names+1] = n
+				names[n] = true
+			end
+		end
+				 
+		for i = 1, S.NumberOfStars do
 			local s = Datastore.Create("SStar")
-			s.Name = create_name()
-			s.X = math.random() * 10 - 5 
-			s.Y = math.random() * 10 - 5 
+			s.Name = names[i]
+			s.X = positions[i].x 
+			s.Y = positions[i].y
+			s.Brightness = 1.0 + math.random()*9.0
+			s.AsteroidsC = math.random(10)+10
+			s.AsteroidsM = math.random(10)+10
+
+			galaxy.AllLocations = galaxy.AllLocations + s
+			galaxy.VisibleStars = galaxy.VisibleStars + s
+			
 			s:commit()
 		end		
 	end
