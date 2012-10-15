@@ -16,14 +16,20 @@ Properties.Load()
 
 Datastore.Begin()
 
-local SUniverse = Datastore.CreateWithOid(0, "SUniverse")
-local SGalaxy = Datastore.Create("SGalaxy")
+if not Datastore.DoesObjectExist(0) then
+	Log.M("initialising new database")
+	local SUniverse = Datastore.CreateWithOid(0, "SUniverse")
+	local SGalaxy = Datastore.Create("SGalaxy")
+	
+	SUniverse.Galaxy = SGalaxy
+	WorldCreation.InitialiseGalaxy(SGalaxy)
 
-SUniverse.Galaxy = SGalaxy
-WorldCreation.InitialiseGalaxy(SGalaxy)
+	SGalaxy:commit()
+	SUniverse:commit()
+end
 
-SGalaxy:commit()
-SUniverse:commit()
+local SUniverse = Datastore.Object(0)
+Log.M("loading galaxy with ", #SUniverse.Galaxy.VisibleStars, " stars")
 
 Datastore.Commit()
 

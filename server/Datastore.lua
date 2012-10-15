@@ -42,7 +42,8 @@ local function get_class_of_oid(oid)
 		return nil
 	end
 	
-	local classname = Tokens[tonumber(row[1])]
+	local tokenid = tonumber(row[1])
+	local classname = Tokens[tokenid]
 	return Classes[classname]
 end
 
@@ -172,13 +173,19 @@ return
 		Database.Rollback()
 	end,
 
-	CreateWithOid = create_object,
+	CreateWithOid = function (oid, class)
+		local o = create_object(oid, class)
+		proxies[oid] = o
+		return o
+	end,
 	
 	Create = function (class)
 		local oid = nextoid
 		nextoid = nextoid + 1
 		
-		return create_object(oid, class)
+		local o = create_object(oid, class)
+		proxies[oid] = o
+		return o
 	end,
 	
 	Object = function (oid)
@@ -190,5 +197,10 @@ return
 		p = new_object_proxy(oid)
 		proxies[p] = oid
 		return p
+	end,
+	
+	DoesObjectExist = function (oid)
+		local c = get_class_of_oid(oid)
+		return not not c
 	end
 }

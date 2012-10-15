@@ -1,6 +1,7 @@
 local pairs = pairs
 local ipairs = ipairs
 local error = error
+local Utils = require("Utils")
 
 local function Array(data)
 	local mt
@@ -31,6 +32,27 @@ local function Array(data)
 end
 
 local function Set(data)
+	if data[1] then
+		-- The data contains an array part; convert to set format.
+		for _, v in ipairs(data) do
+			if data[v] then
+				Utils.FatalError("set contains duplicate entries")
+			end
+			data[v] = true
+		end
+	else
+		-- The data contains a set part only; convert to array format.
+		local newd = {}
+		for k, v in pairs(data) do
+			if (type(k) ~= "table") then
+				Utils.FatalError("set contains non-table items (is it an array with holes?)")
+			end
+			newd[k] = true
+			newd[#newd+1] = k
+		end
+		data = newd
+	end
+	
 	local mt
 	
 	mt =
@@ -43,8 +65,8 @@ local function Set(data)
 		
 		__add = function (self, ...)
 			local d = {}
-			for k in pairs(data) do
-				d[k] = true
+			for _, v in ipairs(data) do
+				d[v] = true
 			end
 			
 			for _, v in ipairs({...}) do
@@ -56,8 +78,8 @@ local function Set(data)
 		
 		__sub = function (self, ...)
 			local d = {}
-			for k in pairs(data) do
-				d[k] = true
+			for _, v in ipairs(data) do
+				d[v] = true
 			end
 			
 			for _, v in ipairs({...}) do

@@ -54,7 +54,7 @@ local ObjectSetType =
 {
 	marshal = function (datum)
 		local s = {}
-		for item in pairs(datum.value) do
+		for _, item in ipairs(datum.value) do
 			s[#s+1] = item.Oid
 		end
 		return table.concat(s, " ")
@@ -64,9 +64,9 @@ local ObjectSetType =
 		local findproxy = require("Datastore").Object
 		local t = {}
 		
-		for s in string.match("%d+") do
+		for s in string.gmatch(str, "%d+") do
 			local oid = tonumber(s)
-			t[#t+1] = findproxy(oid)
+			t[findproxy(oid)] = true
 		end
 		
 		datum.value = Immutable.Set(t)

@@ -16,27 +16,31 @@ local SQL = Database.SQL
 local tokenMap = {}
 setmetatable(tokenMap,
 {
-	__index = function (self, token)
-		SQL(
-			"INSERT OR IGNORE INTO tokens VALUES (NULL, ?)"
-		):bind(token):step()
-			
-		if (type(token) == "number") then
+	__index = function (self, v)
+		if (type(v) == "number") then
 			-- number -> token
 			
+			local value = v
 			local row = SQL(
 				"SELECT value FROM tokens WHERE id = ?"
-			):bind(token):step()
+			):bind(value):step()
 			
-			local value = tonumber(row[1])
-			Log.D("token '", value, "' has id ", token)
+			local token = row[1]
+			Log.D("token '", token, "' has id ", value)
 			rawset(tokenMap, token, value)
 			rawset(tokenMap, value, token)
 			
-			return value
+			return token
 		else
 			-- token -> number
-			
+
+			local token = v
+			Utils.Assert(not tonumber(token), "tokens should be alphanumeric!")
+						
+			SQL(
+				"INSERT OR IGNORE INTO tokens VALUES (NULL, ?)"
+			):bind(token):step()
+				
 			local row = SQL(
 				"SELECT id FROM tokens WHERE value = ?"
 			):bind(token):step()
