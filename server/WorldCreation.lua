@@ -1,6 +1,8 @@
 local math_random = math.random
 local require = require
 local Datastore = require("Datastore")
+local Database = require("Database")
+local Utils = require("Utils")
 local S = require("S")
 
 local syllables1 =
@@ -73,5 +75,33 @@ return
 			galaxy.AllLocations = galaxy.AllLocations + s
 			galaxy.VisibleStars = galaxy.VisibleStars + s
 		end		
+	end,
+	
+	CreatePlayer = function (name, empire, email, password)
+		local playercount = Database.SQL(
+			"SELECT COUNT(*) FROM players WHERE email = ?"
+			):bind(email):step()[1]
+		Utils.Assert(playercount == 0, "player with email ", email, " already exists")
+		 
+		local player = Datastore.Create("SPlayer")
+		player.Name = name
+		player.EmpireName = empire
+		player.Email = email
+		player.Password = password
+		
+		local stars = Datastore.Object(0).Galaxy.VisibleStars
+		local star = stars[math.random(#stars)]
+		
+		local fleet = Datastore.Create("SFleet")
+		star:Add(fleet)
+		fleet.Name = name .. "'s starter fleet"
+		player.Fleets = player.Fleets + fleet
+		
+		fleet:Create("SJumpship")
+		fleet:Create("STug")
+		fleet:Create("SCargoship")
+		
+		Database.SQL("INSERT INTO players VALUES (?, ?)")
+			:bind(email, player.Oid):step()
 	end
 }

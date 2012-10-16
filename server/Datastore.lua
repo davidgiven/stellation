@@ -214,5 +214,5 @@ return
 	DoesObjectExist = function (oid)
 		local c = get_class_of_oid(oid)
 		return not not c
-	end
+	end,
 }

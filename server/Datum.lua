@@ -43,9 +43,7 @@ return
 {
 	Get = function (class, oid, name)
 		local t = get_property_type(class, name)
-		if not t then
-			return nil
-		end
+		Utils.Assert(t, "property ", name, " is not defined on class ", class.name)
 		
 		local datum = 
 		{

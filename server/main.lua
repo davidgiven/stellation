@@ -23,6 +23,7 @@ if not Datastore.DoesObjectExist(0) then
 	
 	SUniverse.Galaxy = SGalaxy
 	WorldCreation.InitialiseGalaxy(SGalaxy)
+	WorldCreation.CreatePlayer("Test Player", "Test Empire", "test@invalid.com", "password")
 end
 
 local SUniverse = Datastore.Object(0)

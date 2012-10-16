@@ -1,5 +1,6 @@
 local require = require
 local Type = require("Type")
+local Utils = require("Utils")
 local GLOBAL = Type.GLOBAL
 local LOCAL = Type.LOCAL
 local SERVERONLY = Type.SERVERONLY
@@ -20,5 +21,20 @@ return
 	
 	methods =
 	{
+		Init = function (self)
+		end,
+		
+		Create = function (self, class)
+			local o = require("Datastore").Create(class)
+			o:Init()
+			self:Add(o)
+			return o
+		end,
+	
+		Add = function (self, object)
+			Utils.Assert(object.Location == nil, "object already belong to something")
+			object.Location = self
+			self.Contents = self.Contents + object
+		end
 	}
 }
