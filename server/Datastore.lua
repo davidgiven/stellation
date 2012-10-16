@@ -18,6 +18,7 @@ local Datum = require("Datum")
 
 local nextoid = 0
 local proxies = {}
+local dirty = {}
 
 local function get_method(class, name)
 	while class do
@@ -50,8 +51,6 @@ end
 local function new_object_proxy(oid)
 	local class = get_class_of_oid(oid)
 	Utils.Assert(class, "oid ", oid, " has no class!")
-	
-	local dirty = false
 	
 	local methodcache = {}
 	local datumcache = {}
@@ -101,7 +100,7 @@ local function new_object_proxy(oid)
 			
 			-- Set the local copy.
 			rawset(self, key, value)
-			dirty = true
+			dirty[object] = true
 		end,
 		
 		Oid = oid,
@@ -163,13 +162,26 @@ return
 
 	Begin = function ()
 		Database.Begin()
+		Utils.Assert(not next(dirty), "start of transaction and dirty object list is not empty")
 	end,
 
 	Commit = function ()
+		local count = 0
+		for o, _ in pairs(dirty) do
+			o:commit()
+			count = count + 1
+		end
+		Log.D("committed ", count, " dirty objects")
+		dirty = {}
 		Database.Commit()
 	end,
 
 	Rollback = function ()
+		Log.D("rolling back transaction")
+		for o, _ in pairs(dirty) do
+			o:rollback()
+		end
+		dirty = {}
 		Database.Rollback()
 	end,
 

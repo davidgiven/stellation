@@ -8,6 +8,6 @@ local error = error
 
 return
 {
-	GalacticRadius = 1,
-	NumberOfStars = 10
+	GalacticRadius = 2,
+	NumberOfStars = 20
 }

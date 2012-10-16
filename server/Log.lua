@@ -15,7 +15,7 @@ local function log(tag, args)
 		args[k] = tostring(args[k])
 	end
 	local t = gettime() - starttime
-	io.stderr:write("[", string.format("%.2f", t), "]: ", tag, ": ",
+	io.stderr:write("[", string.format("%.3f", t), "]: ", tag, ": ",
 		table.concat(args), "\n")
 end
 

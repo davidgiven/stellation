@@ -23,9 +23,6 @@ if not Datastore.DoesObjectExist(0) then
 	
 	SUniverse.Galaxy = SGalaxy
 	WorldCreation.InitialiseGalaxy(SGalaxy)
-
-	SGalaxy:commit()
-	SUniverse:commit()
 end
 
 local SUniverse = Datastore.Object(0)

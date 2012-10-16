@@ -72,8 +72,6 @@ return
 
 			galaxy.AllLocations = galaxy.AllLocations + s
 			galaxy.VisibleStars = galaxy.VisibleStars + s
-			
-			s:commit()
 		end		
 	end
 }
