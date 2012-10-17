@@ -9,9 +9,44 @@ local Datastore = require "Datastore"
 local Properties = require "Properties"
 local WorldCreation = require "WorldCreation"
 local Log = require("Log")
+local Utils = require("Utils")
+
+local database_filename
+
+do
+	local function do_unrecognised(o)
+		io.stderr:write("Error: unrecognised option ", o, " (try --help)\n")
+		os.exit(1)
+	end
+	
+	local function do_database(arg)
+		database_filename = arg
+		return 1
+	end
+	
+	local function do_help(arg)
+		io.stdout:write("stellationserver <options>...\n")
+		io.stdout:write("Options:\n")
+		io.stdout:write("  -h  --help         Shows this message\n")
+		io.stdout:write("  -dX --database X   Use X as the storage database\n")
+		os.exit(0)
+	end
+	
+	local cbtab =
+	{
+		["database"] = do_database,
+		["d"] = do_database,
+		["help"] = do_help,
+		["h"] = do_help,
+		[" unrecognised"] = do_unrecognised,
+		[" filename"] = do_unrecognised 
+	}
+	
+	Utils.ParseCommandLine(arg, cbtab)
+end
 
 Log.M("start")
-Datastore.Connect("test.db")
+Datastore.Connect(database_filename)
 Properties.Load()
 
 Datastore.Begin()
