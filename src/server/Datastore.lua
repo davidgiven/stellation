@@ -103,7 +103,7 @@ local function new_object_proxy(oid)
 			dirty[object] = true
 		end,
 		
-		Oid = oid,
+		Oid = tonumber(oid),
 		
 		rollback = function ()
 			for k, v in pairs(object) do

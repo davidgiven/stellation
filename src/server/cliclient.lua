@@ -11,7 +11,7 @@ local IO = require("IO")
 
 local socket_filename
 
-do
+local function parse_arguments(arg)
 	local function do_unrecognised(o)
 		io.stderr:write("Error: unrecognised option ", o, " (try --help)\n")
 		os.exit(1)
@@ -48,6 +48,36 @@ do
 	end
 end
 
+local function msg(packet)
+	return IO.ClientMessage(socket_filename, packet)
+end
+
 Log.M("start")
-IO.Connect(socket_filename)
-print(IO.SendMsg({1,2,3}))
+parse_arguments(arg)
+
+local r = msg {
+	cmd = "Authenticate",
+	email = "test@invalid.com",
+	password = "password"
+}
+if (r.result ~= "OK") then
+	r = msg {
+		cmd = "CreatePlayer",
+		email = "test@invalid.com",
+		password = "password",
+		name = "Test Player",
+		empire = "Testing Empire"
+	}
+	if (r.result ~= "OK") then
+		Utils.FatalError("unable to create new test player: ", r.result)
+	end
+	
+	r = msg {
+		cmd = "Authenticate",
+		email = "test@invalid.com",
+		password = "password"
+	}
+	if (r.result ~= "OK") then
+		Utils.FatalError("unable to authenticate newly created player --- very strange")
+	end
+end

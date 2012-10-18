@@ -81,7 +81,9 @@ return
 		local playercount = Database.SQL(
 			"SELECT COUNT(*) FROM players WHERE email = ?"
 			):bind(email):step()[1]
-		Utils.Assert(playercount == 0, "player with email ", email, " already exists")
+		if (playercount > 0) then
+			return nil, "PlayerExists"
+		end
 		 
 		local player = Datastore.Create("SPlayer")
 		player.Name = name
@@ -103,5 +105,6 @@ return
 		
 		Database.SQL("INSERT INTO players VALUES (?, ?)")
 			:bind(email, player.Oid):step()
+		return player
 	end
 }

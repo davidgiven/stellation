@@ -42,27 +42,33 @@ return
 			Log.S("received: ", slave)
 			
 			local recvs = slave:receive("*l")
-			Log.S("rcv: ", recvs)
+			Log.S("< ", recvs)
 			
-			local reply = JSON.encode("ack") .. "\n"
-			sendall(slave, reply)
+			local recv = JSON.decode(recvs)
+			local reply = callback(recv)
+			local replys = JSON.encode(reply)
+			Log.S("> ", replys)
+			sendall(slave, replys .. "\n")
 			
 			slave:close()
 		end
 	end,
 	
 	Connect = function (filename)
-		socket = UnixSocket()
-		local _, e = socket:connect(filename)
-		Utils.Check(e, "unable to connect socket")
 		Log.S("connected to ", filename)
 	end,
 	
-	SendMsg = function (xmsg)
+	ClientMessage = function (filename, xmsg)
+		local socket = UnixSocket()
+		local _, e = socket:connect(filename)
+		Utils.Check(e, "unable to connect socket")
+
 		local xmsgs = JSON.encode(xmsg) .. "\n"
 		sendall(socket, xmsgs)
 		local recvs, e = socket:receive("*l")
 		Utils.Check(e, "error on socket recv")
+		socket:close()
+		
 		return JSON.decode(recvs)
 	end,
 }

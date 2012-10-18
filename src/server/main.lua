@@ -11,11 +11,15 @@ local WorldCreation = require "WorldCreation"
 local Log = require("Log")
 local Utils = require("Utils")
 local IO = require("IO")
+local Commands = require("Commands")
 
 local database_filename
 local socket_filename
+local canonical_time
 
-do
+-- Parses command line arguments
+
+local function parse_arguments(arg)
 	local function do_unrecognised(o)
 		io.stderr:write("Error: unrecognised option ", o, " (try --help)\n")
 		os.exit(1)
@@ -65,11 +69,44 @@ do
 	end
 end
 
+-- Process a single incoming message
+
+local function handle_message_cb(msg)
+	Log.M("received message ", msg.cmd)
+	
+	local command = Commands[msg.cmd]
+	if not command then
+		return
+		{
+			tag = msg.tag,
+			time = canonical_time,
+			result = "BadCommand"
+		}
+	end
+	
+	canonical_time = canonical_time + 1
+	Datastore.Begin()
+	local reply = command(msg)
+	if (reply.result == "OK") then
+		Datastore.Commit()
+	else
+		Datastore.Rollback()
+	end
+	
+	reply.tag = msg.tag
+	reply.time = canonical_time
+	return reply
+end
+
 Log.M("start")
+parse_arguments(arg)
 Datastore.Connect(database_filename)
 Properties.Load()
 
 IO.Listen(socket_filename)
+
+canonical_time = 0
+Log.M("server canonical time is ", canonical_time)
 
 Datastore.Begin()
 
@@ -84,6 +121,6 @@ end
 
 Datastore.Commit()
 
-IO.EventLoop(nil)
+IO.EventLoop(handle_message_cb)
 
 Datastore.Disconnect()
