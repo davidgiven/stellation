@@ -30,7 +30,8 @@ local ObjectType =
 		return nil
 	end,
 	
-	sqltype = "INTEGER"
+	sqltype = "INTEGER",
+	jstype = "object"
 }
 
 local TokenType =
@@ -47,7 +48,8 @@ local TokenType =
 		return "<default token>"
 	end,
 	
-	sqltype = "INTEGER"
+	sqltype = "INTEGER",
+	jstype = "string"
 }
 
 local ObjectSetType =
@@ -76,7 +78,8 @@ local ObjectSetType =
 		return Immutable.Set({})
 	end,
 	
-	sqltype = "TEXT"
+	sqltype = "TEXT",
+	jstype = "objectset"
 }
 
 local StringType =
@@ -93,7 +96,8 @@ local StringType =
 		return ""
 	end,
 	
-	sqltype = "TEXT"
+	sqltype = "TEXT",
+	jstype = "string"
 }
 
 local NumberType =
@@ -110,7 +114,8 @@ local NumberType =
 		return 0
 	end,
 	
-	sqltype = "REAL"
+	sqltype = "REAL",
+	jstype = "number"
 }
 	
 local function typeinstance(type, scope)

@@ -13,6 +13,10 @@ return
 	name = "SShip",
 	superclass = super,
 	
+	statics =
+	{
+	},
+	
 	properties =
 	{
 	},

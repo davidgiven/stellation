@@ -13,6 +13,10 @@ return
 	name = "SUnit",
 	superclass = super,
 	
+	statics =
+	{
+	},
+	
 	properties =
 	{
 		Mass = Type.Number(LOCAL),

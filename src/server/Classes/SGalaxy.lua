@@ -10,6 +10,10 @@ return
 	name = "SGalaxy",
 	superclass = require("Classes.SObject"),
 	
+	statics =
+	{
+	},
+	
 	properties =
 	{
 		AllLocations = Type.ObjectSet(SERVERONLY),

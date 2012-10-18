@@ -81,3 +81,7 @@ if (r.result ~= "OK") then
 		Utils.FatalError("unable to authenticate newly created player --- very strange")
 	end
 end
+
+r = msg {
+	cmd = "GetStatics"
+}

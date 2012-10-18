@@ -11,6 +11,10 @@ return
 	name = "SStar",
 	superclass = require("Classes.SObject"),
 	
+	statics =
+	{
+	},
+	
 	properties =
 	{
 		X = Type.Number(GLOBAL),

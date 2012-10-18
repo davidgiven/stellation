@@ -13,6 +13,10 @@ return
 	name = "SPlayer",
 	superclass = super,
 	
+	statics =
+	{
+	},
+	
 	properties =
 	{
 		Email = Type.String(PRIVATE),

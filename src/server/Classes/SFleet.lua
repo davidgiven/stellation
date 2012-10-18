@@ -11,6 +11,10 @@ return
 	name = "SFleet",
 	superclass = require("Classes.SObject"),
 	
+	statics =
+	{
+	},
+	
 	properties =
 	{
 		JumpshipCount = Type.Number(LOCAL)

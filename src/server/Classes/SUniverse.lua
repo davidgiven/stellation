@@ -10,6 +10,10 @@ return
 	name = "SUniverse",
 	superclass = require("Classes.SObject"),
 
+	statics =
+	{
+	},
+	
 	properties =
 	{
 		Galaxy = Type.Object(GLOBAL)

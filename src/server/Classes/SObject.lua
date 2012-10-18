@@ -10,6 +10,10 @@ return
 {
 	name = "SObject",
 
+	statics =
+	{
+	},
+	
 	properties =
 	{
 		Owner = Type.Object(GLOBAL),

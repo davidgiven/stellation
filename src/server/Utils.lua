@@ -142,6 +142,25 @@ local function ParseCommandLine(args, cbtab)
 
 end
 
+--- Massages a static description string.
+-- Used for text in [[...]] blocks.
+--
+--    s: string
+--    returns: another string
+
+local function Unindent(input)
+	out = "\n" .. input
+	local out = out:gsub("\n[ \t]*", "\n")
+	out = out:gsub("\n\n", "¡")
+	out = out:gsub("\n", " ")
+	out = out:gsub("¡", "\n")
+	out = out:gsub("%s+", " ")
+	out = out:gsub("%s*$", "")
+	out = out:gsub("^%s*", "")
+	
+	return out
+end
+
 return
 {
 	OpenFile = OpenFile,
@@ -150,5 +169,6 @@ return
 	Check = Check,
 	Assert = Assert,
 	Argify = Argify,
-	ParseCommandLine = ParseCommandLine
+	ParseCommandLine = ParseCommandLine,
+	Unindent = Unindent
 }
