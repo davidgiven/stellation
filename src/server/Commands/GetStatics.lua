@@ -26,7 +26,6 @@ return function (msg)
 		end
 		
 		classes[class.name] = cout
-		print(class.name)
 	end
 
 	return

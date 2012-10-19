@@ -30,7 +30,7 @@ local ObjectType =
 		return nil
 	end,
 	
-	sqltype = "INTEGER",
+	sqltype = "INTEGER REFERENCES eav_Class(oid)",
 	jstype = "object"
 }
 
@@ -48,7 +48,7 @@ local TokenType =
 		return "<default token>"
 	end,
 	
-	sqltype = "INTEGER",
+	sqltype = "INTEGER REFERENCES tokens(id)",
 	jstype = "string"
 }
 

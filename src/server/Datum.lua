@@ -13,6 +13,7 @@ local Log = require("Log")
 local Database = require("Database")
 local SQL = Database.SQL
 local Tokens = require("Tokens")
+local G = require("G")
 
 local nextoid = 0
 
@@ -33,7 +34,8 @@ end
 local function create_eav_table(type, name)
 	local tablename = "eav_"..name
 	SQL(
-		"CREATE TABLE IF NOT EXISTS "..tablename.." (oid INTEGER PRIMARY KEY, value "..type.sqltype..", time INTEGER)"
+		"CREATE TABLE IF NOT EXISTS "..tablename..
+			" (oid INTEGER PRIMARY KEY REFERENCES eav_Class(oid), value "..type.sqltype..")"
 	):step()
 	
 	return tablename
@@ -72,8 +74,13 @@ return
 		local str = datum.type.marshal(datum)
 		
 		local tablename = create_eav_table(datum.type, datum.name)
+		
 		SQL(
-			"INSERT OR REPLACE INTO "..tablename.." (oid, value, time) VALUES (?, ?, ?)"
-			):bind(datum.oid, str, 0):step()
+			"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+			):bind(datum.oid, str):step()
+			
+		SQL(
+			"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
+			):bind(datum.oid, datum.kid, G.CanonicalTime):step()
 	end
 }

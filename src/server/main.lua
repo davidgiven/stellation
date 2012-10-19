@@ -12,10 +12,10 @@ local Log = require("Log")
 local Utils = require("Utils")
 local IO = require("IO")
 local Commands = require("Commands")
+local G = require("G")
 
 local database_filename
 local socket_filename
-local canonical_time
 
 -- Parses command line arguments
 
@@ -79,12 +79,12 @@ local function handle_message_cb(msg)
 		return
 		{
 			tag = msg.tag,
-			time = canonical_time,
+			time = G.CanonicalTime,
 			result = "BadCommand"
 		}
 	end
 	
-	canonical_time = canonical_time + 1
+	G.CanonicalTime = G.CanonicalTime + 1
 	Datastore.Begin()
 	local reply = command(msg)
 	if (reply.result == "OK") then
@@ -94,7 +94,7 @@ local function handle_message_cb(msg)
 	end
 	
 	reply.tag = msg.tag
-	reply.time = canonical_time
+	reply.time = G.CanonicalTime
 	return reply
 end
 
@@ -105,8 +105,8 @@ Properties.Load()
 
 IO.Listen(socket_filename)
 
-canonical_time = 0
-Log.M("server canonical time is ", canonical_time)
+G.CanonicalTime = Datastore.CalculateServerCanonicalTime() or 0
+Log.M("server canonical time is ", G.CanonicalTime)
 
 Datastore.Begin()
 

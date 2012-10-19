@@ -15,6 +15,7 @@ local Database = require("Database")
 local SQL = Database.SQL
 local Tokens = require("Tokens")
 local Datum = require("Datum")
+local G = require("G")
 
 local nextoid = 0
 local proxies = {}
@@ -136,11 +137,17 @@ local function create_object(oid, class)
 		end
 		class = c
 	end
-	
+
+	-- eav_Class must go first, as adding an entry here creates the class
+		
 	SQL(
-		"INSERT OR REPLACE INTO eav_Class (oid, value, time) VALUES (?, ?, ?)"
-		):bind(oid, Tokens[class.name], 0):step()
-	
+		"INSERT OR REPLACE INTO eav_Class (oid, value) VALUES (?, ?)"
+		):bind(oid, Tokens[class.name]):step()
+		
+	SQL(
+		"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
+		):bind(oid, Tokens[class.name], G.CanonicalTime):step()
+
 	return new_object_proxy(oid, class)
 end
 
@@ -215,4 +222,11 @@ return
 		local c = get_class_of_oid(oid)
 		return not not c
 	end,
+	
+	CalculateServerCanonicalTime = function ()
+		local t = SQL(
+			"SELECT MAX(time) FROM eav"
+			):step()[1]
+		return tonumber(t)
+	end
 }
