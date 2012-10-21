@@ -9,27 +9,41 @@ local rawset = rawset
 local rawget = rawget
 local Utils = require("Utils")
 local Immutable = require("Immutable")
+local Database = require("Database")
+local SQL = Database.SQL
+
+local findproxy_p
+local function findproxy(oid)
+	if not findproxy_p then
+		findproxy_p = require("Datastore").Object
+	end
+	return findproxy_p(oid)
+end
 
 local ObjectType =
 {
-	marshal = function (datum)
-		local v = datum.value
-		if (v == nil) then
+	Set = function (tablename, oid, value)
+		local v = nil
+		if value then
+			v = value.Oid
+		end
+		SQL(
+			"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+			):bind(oid, v):step()
+	end,
+	
+	Get = function (tablename, oid)
+		local row = SQL(
+			"SELECT value FROM "..tablename.." WHERE oid=?"
+			):bind(oid):step()
+		if not row then
 			return nil
 		else
-			return v.Oid
-		end 
+			return findproxy(tonumber(row[1]))
+		end
 	end,
-	
-	unmarshal = function (datum, str)
-		local findproxy = require("Datastore").Object
-		datum.value = findproxy(tonumber(str))
-	end,
-	
-	default = function ()
-		return nil
-	end,
-	
+
+	isaggregate = false,	
 	sqltype = "INTEGER REFERENCES eav_Class(oid)",
 	jstype = "object"
 }
@@ -48,72 +62,86 @@ local TokenType =
 		return "<default token>"
 	end,
 	
+	isaggregate = false,	
 	sqltype = "INTEGER REFERENCES tokens(id)",
 	jstype = "string"
 }
 
 local ObjectSetType =
 {
-	marshal = function (datum)
-		local s = {}
-		for _, item in ipairs(datum.value) do
-			s[#s+1] = item.Oid
-		end
-		return table.concat(s, " ")
+	Set = function (tablename, oid, value)
+		Utils.FatalError("cannot assign directly to objectset property")
 	end,
 	
-	unmarshal = function (datum, str)
-		local findproxy = require("Datastore").Object
-		local t = {}
-		
-		for s in string.gmatch(str, "%d+") do
-			local oid = tonumber(s)
-			t[findproxy(oid)] = true
-		end
-		
-		datum.value = Immutable.Set(t)
+	Get = function (tablename, oid)
+		return
+		{
+			Add = function (self, value)
+				SQL(
+					"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+					):bind(oid, value.Oid):step()
+			end,
+			
+			RandomItem = function (self)
+				print(tablename, oid)
+				local column = SQL(
+					"SELECT value FROM "..tablename.." WHERE oid = ?"
+					):bind(oid):resultset()[1]
+				
+				return findproxy(tonumber(column[math.random(#column)]))
+			end,
+		}
 	end,
-	
-	default = function ()
-		return Immutable.Set({})
-	end,
-	
-	sqltype = "TEXT",
+			
+	isaggregate = true,	
+	sqltype = "INTEGER REFERENCES eav_Class(oid)",
 	jstype = "objectset"
 }
 
 local StringType =
 {
-	marshal = function (datum)
-		return datum.value
+	Set = function (tablename, oid, value)
+		SQL(
+			"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+			):bind(oid, value):step()
 	end,
 	
-	unmarshal = function (datum, str)
-		datum.value = str
+	Get = function (tablename, oid)
+		local row = SQL(
+			"SELECT value FROM "..tablename.." WHERE oid=?"
+			):bind(oid):step()
+		if not row then
+			return ""
+		else
+			return row[1]
+		end
 	end,
-	
-	default = function ()
-		return ""
-	end,
-	
+		
+	isaggregate = false,	
 	sqltype = "TEXT",
 	jstype = "string"
 }
 
 local NumberType =
 {
-	marshal = function (datum)
-		return datum.value
+	Set = function (tablename, oid, value)
+		SQL(
+			"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+			):bind(oid, value):step()
 	end,
 	
-	unmarshal = function (datum, str)
-		datum.value = tonumber(str)
+	Get = function (tablename, oid)
+		local row = SQL(
+			"SELECT value FROM "..tablename.." WHERE oid=?"
+			):bind(oid):step()
+		if not row then
+			return 0
+		else
+			return tonumber(row[1])
+		end
 	end,
-	
-	default = function ()
-		return 0
-	end,
-	
+		
+	isaggregate = false,	
 	sqltype = "REAL",
 	jstype = "number"
 }

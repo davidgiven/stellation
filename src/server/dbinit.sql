@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS eav
 	time INTEGER,
 	PRIMARY KEY (oid, kid)
 );
+CREATE INDEX IF NOT EXISTS eav_byoid ON eav (oid);
 
 CREATE TABLE IF NOT EXISTS eav_Class
 (

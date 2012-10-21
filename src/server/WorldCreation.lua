@@ -72,8 +72,8 @@ return
 			s.AsteroidsC = math.random(10)+10
 			s.AsteroidsM = math.random(10)+10
 
-			galaxy.AllLocations = galaxy.AllLocations + s
-			galaxy.VisibleStars = galaxy.VisibleStars + s
+			galaxy.AllLocations:Add(s)
+			galaxy.VisibleStars:Add(s)
 		end		
 	end,
 	
@@ -92,12 +92,12 @@ return
 		player.Password = password
 		
 		local stars = Datastore.Object(0).Galaxy.VisibleStars
-		local star = stars[math.random(#stars)]
+		local star = stars:RandomItem()
 		
 		local fleet = Datastore.Create("SFleet")
 		star:Add(fleet)
 		fleet.Name = name .. "'s starter fleet"
-		player.Fleets = player.Fleets + fleet
+		player.Fleets:Add(fleet)
 		
 		fleet:Create("SJumpship")
 		fleet:Create("STug")

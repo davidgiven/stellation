@@ -26,7 +26,7 @@ setmetatable(tokenMap,
 			):bind(value):step()
 			
 			local token = row[1]
-			Log.D("token '", token, "' has id ", value)
+			--Log.D("token '", token, "' has id ", value)
 			rawset(tokenMap, token, value)
 			rawset(tokenMap, value, token)
 			
@@ -46,7 +46,7 @@ setmetatable(tokenMap,
 			):bind(token):step()
 			
 			local value = tonumber(row[1])
-			Log.D("token '", token, "' has id ", value)
+			--Log.D("token '", token, "' has id ", value)
 			rawset(tokenMap, token, value)
 			rawset(tokenMap, value, token)
 			

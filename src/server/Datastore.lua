@@ -69,7 +69,7 @@ local function new_object_proxy(oid)
 			
 			c = datumcache[key]
 			if c then
-				return c.value
+				return c:Get()
 			end
 
 			c = metatable[key]
@@ -84,45 +84,29 @@ local function new_object_proxy(oid)
 				return c
 			end
 			
-			c = Datum.Get(class, oid, key)
+			c = Datum.Lookup(class, oid, key)
 			if c then
 				datumcache[key] = c
-				return c.value
+				return c.Get()
 			end
 			
 			Utils.FatalError("Unknown method or property '", key, "' on ", class.name, "#", oid)
 		end,
 		
 		__newindex = function (self, key, value)
-			-- Ensure the datum is cached.
-			if not datumcache[key] then
-				datumcache[key] = Datum.Get(class, oid, key)
+			local c = datumcache[key]
+			if not c then
+				c = Datum.Lookup(class, oid, key)
+				if not c then
+					Utils.FatalError("Unknown method or property '", key, "' on ", class.name, "#", oid)
+				end
+				datumcache[key] = c
 			end
-			
-			-- Set the local copy.
-			rawset(self, key, value)
-			dirty[object] = true
+				
+			c.Set(value)
 		end,
 		
 		Oid = tonumber(oid),
-		
-		rollback = function ()
-			for k, v in pairs(object) do
-				object[k] = nil
-			end
-		end,
-		
-		commit = function ()
-			for k, v in pairs(object) do
-				local datum = datumcache[k]
-				if not datum then
-					Utils.FatalError("Property '", k, "' on oid ", oid, " has modified value but has not been loaded")
-				end
-				
-				Datum.Put(datum, v)
-				object[k] = nil
-			end
-		end
 	}
 	
 	setmetatable(object, metatable)
@@ -173,22 +157,10 @@ return
 	end,
 
 	Commit = function ()
-		local count = 0
-		for o, _ in pairs(dirty) do
-			o:commit()
-			count = count + 1
-		end
-		Log.D("committed ", count, " dirty objects")
-		dirty = {}
 		Database.Commit()
 	end,
 
 	Rollback = function ()
-		Log.D("rolling back transaction")
-		for o, _ in pairs(dirty) do
-			o:rollback()
-		end
-		dirty = {}
 		Database.Rollback()
 	end,
 

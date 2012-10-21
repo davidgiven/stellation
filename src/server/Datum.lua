@@ -33,54 +33,56 @@ end
 
 local function create_eav_table(type, name)
 	local tablename = "eav_"..name
+	local keytype = "PRIMARY KEY"
+	if type.isaggregate then
+		keytype = "NOT NULL"
+	end
 	SQL(
 		"CREATE TABLE IF NOT EXISTS "..tablename..
-			" (oid INTEGER PRIMARY KEY REFERENCES eav_Class(oid), value "..type.sqltype..")"
+			" (oid INTEGER "..keytype.." REFERENCES eav_Class(oid), value "..type.sqltype..")"
 	):step()
+	
+	if type.isaggregate then
+		SQL(
+			"CREATE INDEX IF NOT EXISTS index_byoid_"..tablename.." ON "..tablename.." (oid)"
+			):step()
+		SQL(
+			"CREATE INDEX IF NOT EXISTS index_byboth_"..tablename.." ON "..tablename.." (oid, value)"
+			):step()
+	end
 	
 	return tablename
 end
 
 return
 {
-	Get = function (class, oid, name)
+	Lookup = function (class, oid, name)
 		local t = get_property_type(class, name)
 		Utils.Assert(t, "property ", name, " is not defined on class ", class.name)
 		
+		local tablename = create_eav_table(t, name)
+
+		local kid = Tokens[name]
 		local datum = 
 		{
 			type = t,
 			oid = oid,
 			name = name,
-			kid = Tokens[name],
-		}
-		
-		local tablename = create_eav_table(t, name)
-		local row = SQL(
-			"SELECT value FROM "..tablename.." WHERE oid=?"
-			):bind(oid):step()
+			kid = kid,
 			
-		if row then
-			t.unmarshal(datum, row[1])
-		else
-			datum.value = t.default()
-		end
+			Get = function()
+				return t.Get(tablename, oid)
+			end,
+			
+			Set = function(value)
+				t.Set(tablename, oid, value)
+				
+				SQL(
+					"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
+					):bind(oid, kid, G.CanonicalTime):step()
+			end
+		}
 		
 		return datum 
 	end,
-
-	Put = function (datum, value)
-		datum.value = value
-		local str = datum.type.marshal(datum)
-		
-		local tablename = create_eav_table(datum.type, datum.name)
-		
-		SQL(
-			"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
-			):bind(datum.oid, str):step()
-			
-		SQL(
-			"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
-			):bind(datum.oid, datum.kid, G.CanonicalTime):step()
-	end
 }
