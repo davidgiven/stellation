@@ -1,4 +1,4 @@
-#!/usr/bin/env luajit-2.0.0-beta9
+#!/usr/bin/env luajit
 
 -- Add the directory containing this script to the package path.
 
@@ -81,7 +81,15 @@ if (r.result ~= "OK") then
 		Utils.FatalError("unable to authenticate newly created player --- very strange")
 	end
 end
+local cookie = r.cookie
+Log.X("authentication cookie: ", cookie)
+
+--r = msg {
+--	cmd = "GetStatics"
+--}
 
 r = msg {
-	cmd = "GetStatics"
+	cmd = "GameCommand",
+	cookie = cookie,
+	ctime = 0
 }

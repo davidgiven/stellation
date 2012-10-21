@@ -1,4 +1,4 @@
-#!/usr/bin/env luajit-2.0.0-beta9
+#!/usr/bin/env luajit
 
 -- Add the directory containing this script to the package path.
 
@@ -105,7 +105,7 @@ Properties.Load()
 
 IO.Listen(socket_filename)
 
-G.CanonicalTime = Datastore.CalculateServerCanonicalTime() or 0
+G.CanonicalTime = Datastore.CalculateServerCanonicalTime() or 1
 Log.M("server canonical time is ", G.CanonicalTime)
 
 Datastore.Begin()

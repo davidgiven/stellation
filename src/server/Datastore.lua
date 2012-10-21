@@ -10,7 +10,6 @@ local rawget = rawget
 local require = require
 local Utils = require("Utils")
 local Log = require("Log")
-local Classes = require("Classes")
 local Database = require("Database")
 local SQL = Database.SQL
 local Tokens = require("Tokens")
@@ -20,6 +19,14 @@ local G = require("G")
 local nextoid = 0
 local proxies = {}
 local dirty = {}
+
+local classes_p
+local function get_class(name)
+	if not classes_p then
+		classes_p = require("Classes")
+	end
+	return classes_p[name]
+end
 
 local function get_method(class, name)
 	while class do
@@ -46,7 +53,7 @@ local function get_class_of_oid(oid)
 	
 	local tokenid = tonumber(row[1])
 	local classname = Tokens[tokenid]
-	return Classes[classname]
+	return get_class(classname)
 end
 
 local function new_object_proxy(oid)
@@ -58,6 +65,19 @@ local function new_object_proxy(oid)
 	
 	local object = {}
 	local metatable
+	
+	local function getdatum(key)
+		local c = datumcache[key]
+		if not c then
+			c = Datum.Lookup(class, oid, key)
+			if not c then
+				Utils.FatalError("Unknown method or property '", key, "' on ", class.name, "#", oid)
+			end
+			datumcache[key] = c
+		end
+		
+		return c
+	end
 	
 	metatable =
 	{
@@ -94,16 +114,11 @@ local function new_object_proxy(oid)
 		end,
 		
 		__newindex = function (self, key, value)
-			local c = datumcache[key]
-			if not c then
-				c = Datum.Lookup(class, oid, key)
-				if not c then
-					Utils.FatalError("Unknown method or property '", key, "' on ", class.name, "#", oid)
-				end
-				datumcache[key] = c
-			end
-				
-			c.Set(value)
+			getdatum(key).Set(value)
+		end,
+		
+		__export_property = function (self, key)
+			return getdatum(key).Export()
 		end,
 		
 		Oid = tonumber(oid),
@@ -115,7 +130,7 @@ end
 
 local function create_object(oid, class)
 	if (type(class) == "string") then
-		local c = Classes[class]
+		local c = get_class(class)
 		if not c then
 			error("'"..class.."' is not a valid class name")
 		end
@@ -130,7 +145,7 @@ local function create_object(oid, class)
 		
 	SQL(
 		"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
-		):bind(oid, Tokens[class.name], G.CanonicalTime):step()
+		):bind(oid, Tokens["Class"], G.CanonicalTime):step()
 
 	return new_object_proxy(oid, class)
 end
@@ -200,5 +215,5 @@ return
 			"SELECT MAX(time) FROM eav"
 			):step()[1]
 		return tonumber(t)
-	end
+	end,
 }

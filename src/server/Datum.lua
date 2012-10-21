@@ -58,11 +58,18 @@ return
 {
 	Lookup = function (class, oid, name)
 		local t = get_property_type(class, name)
-		Utils.Assert(t, "property ", name, " is not defined on class ", class.name)
+		Utils.Assert(t, "property ", name or "<nil>", " is not defined on class ", class.name)
 		
 		local tablename = create_eav_table(t, name)
 
 		local kid = Tokens[name]
+		
+		local function dirty()
+			SQL(
+				"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
+				):bind(oid, kid, G.CanonicalTime):step()
+		end
+		 
 		local datum = 
 		{
 			type = t,
@@ -71,15 +78,17 @@ return
 			kid = kid,
 			
 			Get = function()
-				return t.Get(tablename, oid)
+				return t.Get(tablename, oid, dirty)
 			end,
 			
 			Set = function(value)
 				t.Set(tablename, oid, value)
-				
-				SQL(
-					"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
-					):bind(oid, kid, G.CanonicalTime):step()
+				dirty()
+			end,
+			
+			Export = function()
+				local f = t.Export or t.Get
+				return f(tablename, oid)
 			end
 		}
 		

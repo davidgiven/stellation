@@ -1,16 +1,8 @@
-local require = require
-local print = print
-local unpack = unpack
-local pairs = pairs
-local tonumber = tonumber
-local type = type
-local setmetatable = setmetatable
-local rawset = rawset
-local rawget = rawget
 local Utils = require("Utils")
 local Immutable = require("Immutable")
 local Database = require("Database")
 local SQL = Database.SQL
+local Tokens = require("Tokens")
 
 local findproxy_p
 local function findproxy(oid)
@@ -43,6 +35,17 @@ local ObjectType =
 		end
 	end,
 
+	Export = function (tablename, oid)
+		local row = SQL(
+			"SELECT value FROM "..tablename.." WHERE oid=?"
+			):bind(oid):step()
+		if not row then
+			return -1
+		else
+			return tonumber(row[1])
+		end
+	end,
+	
 	isaggregate = false,	
 	sqltype = "INTEGER REFERENCES eav_Class(oid)",
 	jstype = "object"
@@ -50,16 +53,21 @@ local ObjectType =
 
 local TokenType =
 {
-	marshal = function (datum)
-		return datum.value
+	Set = function (tablename, oid, value)
+		SQL(
+			"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+			):bind(oid, Tokens[value]):step()
 	end,
 	
-	unmarshal = function (datum, str)
-		datum.value = str
-	end,
-	
-	default = function ()
-		return "<default token>"
+	Get = function (tablename, oid)
+		local row = SQL(
+			"SELECT value FROM "..tablename.." WHERE oid=?"
+			):bind(oid):step()
+		if not row then
+			return nil
+		else
+			return Tokens[tonumber(row[1])]
+		end
 	end,
 	
 	isaggregate = false,	
@@ -69,30 +77,104 @@ local TokenType =
 
 local ObjectSetType =
 {
-	Set = function (tablename, oid, value)
+	Set = function (tablename, oid, kname, value)
 		Utils.FatalError("cannot assign directly to objectset property")
 	end,
 	
-	Get = function (tablename, oid)
+	Get = function (tablename, oid, dirty)
 		return
 		{
 			Add = function (self, value)
 				SQL(
 					"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
 					):bind(oid, value.Oid):step()
+				dirty()
 			end,
-			
+
+			Sub = function (self, value)
+				SQL(
+					"DELETE FROM "..tablename.." WHERE oid=? AND value=?"
+					):bind(oid, value.Oid):step()
+			end,
+						
 			RandomItem = function (self)
-				print(tablename, oid)
 				local column = SQL(
 					"SELECT value FROM "..tablename.." WHERE oid = ?"
 					):bind(oid):resultset()[1]
 				
 				return findproxy(tonumber(column[math.random(#column)]))
 			end,
+			
+			ToLua = function (self)
+				local column = SQL(
+					"SELECT value FROM "..tablename.." WHERE oid = ?"
+					):bind(oid):resultset()[1]
+
+				local s = {}
+				for _, i in ipairs(column) do
+					local o = findproxy(tonumber(i))
+					s[o] = true
+				end				
+				return s
+			end,
+			
+			FromLua = function (self, s)
+				SQL(
+					"DELETE FROM "..tablename.." WHERE oid = ?"
+					):bind(oid):step()
+					
+				for k, _ in pairs(s) do
+					SQL(
+						"INSERT INTO "..tablename.." (oid, value) VALUES (?, ?)"
+						):bind(oid, k.Oid):step()
+				end
+				
+				dirty()
+			end,
+			
+			Clear = function (self)
+				SQL(
+					"DELETE FROM "..tablename.." WHERE oid = ?"
+					):bind(oid):step()
+				dirty()
+			end,
+			
+			Iterate = function (self)
+				local query = SQL(
+					"SELECT value FROM "..tablename.." WHERE oid = ?"
+					):bind(oid)
+
+				return function ()
+					local row = query:step()
+					if not row then
+						return nil
+					end
+					
+					return findproxy(tonumber(row[1]))
+				end
+			end
 		}
 	end,
+	
+	Export = function (tablename, oid)
+		local result = {}
+		
+		local query = SQL(
+			"SELECT value FROM "..tablename.." WHERE oid = ?"
+			):bind(oid)
+
+		while true do
+			local row = query:step()
+			if not row then
+				break
+			end
 			
+			result[#result+1] = tonumber(row[1])
+		end
+		
+		return result
+	end,
+	
 	isaggregate = true,	
 	sqltype = "INTEGER REFERENCES eav_Class(oid)",
 	jstype = "objectset"
@@ -149,7 +231,7 @@ local NumberType =
 local function typeinstance(type, scope)
 	local t = {
 		__index = type,
-		scope = scope
+		scope = scope,
 	}
 	
 	return setmetatable(t, t)

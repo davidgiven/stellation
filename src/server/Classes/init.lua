@@ -2,14 +2,15 @@ local require = require
 
 return
 {
-	SUniverse = require("Classes.SUniverse"),
-	SGalaxy = require("Classes.SGalaxy"),
-	SStar = require("Classes.SStar"),
-	SPlayer = require("Classes.SPlayer"),
+	SCargoship = require("Classes.SCargoship"),
 	SFleet = require("Classes.SFleet"),
-	SUnit = require("Classes.SUnit"),
-	SShip = require("Classes.SShip"),
+	SGalaxy = require("Classes.SGalaxy"),
 	SJumpship = require("Classes.SJumpship"),
+	SObject = require("Classes.SObject"),
+	SPlayer = require("Classes.SPlayer"),
+	SShip = require("Classes.SShip"),
+	SStar = require("Classes.SStar"),
 	STug = require("Classes.STug"),
-	SCargoship = require("Classes.SCargoship")
+	SUnit = require("Classes.SUnit"),
+	SUniverse = require("Classes.SUniverse"),
 }

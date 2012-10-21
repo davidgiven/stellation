@@ -24,5 +24,7 @@ return
 	M = function(...) return log("main", {...}) end,
 	S = function(...) return log("socket", {...}) end,
 	D = function(...) return log("database", {...}) end,
-	C = function(...) return log("command", {...}) end
+	C = function(...) return log("command", {...}) end,
+	G = function(...) return log("game", {...}) end,
+	X = function(...) return log("client", {...}) end,
 }

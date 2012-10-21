@@ -30,6 +30,7 @@ return
 		
 		Create = function (self, class)
 			local o = require("Datastore").Create(class)
+			o.Owner = self.Owner
 			o:Init()
 			self:Add(o)
 			return o
@@ -39,6 +40,14 @@ return
 			Utils.Assert(object.Location == nil, "object already belong to something")
 			object.Location = self
 			self.Contents:Add(object)
+		end,
+		
+		AddToVisibilityMap = function(self, map)
+			for o in self.Contents:Iterate() do
+				map[o] = LOCAL
+				o:AddToVisibilityMap(map)
+			end
 		end
+		
 	}
 }

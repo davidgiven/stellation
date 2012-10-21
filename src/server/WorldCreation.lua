@@ -43,6 +43,9 @@ end
 return
 {
 	InitialiseGalaxy = function (galaxy)
+		local universe = Datastore.Object(0)
+		galaxy.Owner = universe
+		
 		local positions = {}
 		while (#positions < S.NumberOfStars) do
 			local x = ordinate()
@@ -65,6 +68,7 @@ return
 				 
 		for i = 1, S.NumberOfStars do
 			local s = Datastore.Create("SStar")
+			s.Owner = universe
 			s.Name = names[i]
 			s.X = positions[i].x 
 			s.Y = positions[i].y
@@ -86,6 +90,7 @@ return
 		end
 		 
 		local player = Datastore.Create("SPlayer")
+		player.Owner = player
 		player.Name = name
 		player.EmpireName = empire
 		player.Email = email
@@ -96,6 +101,7 @@ return
 		
 		local fleet = Datastore.Create("SFleet")
 		star:Add(fleet)
+		fleet.Owner = player
 		fleet.Name = name .. "'s starter fleet"
 		player.Fleets:Add(fleet)
 		
