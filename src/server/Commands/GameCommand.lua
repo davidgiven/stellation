@@ -37,20 +37,10 @@ local function is_property_exported(pscope, vscope, object, player)
 	return false
 end
 
-local all_properties = nil
 local function synchronise(ctime, visibilitymap, player)
 	Log.C("synchronising client with time ", ctime,
 		" against server with time ", G.CanonicalTime)
 
-	if not all_properties then
-		all_properties = {}
-		for _, c in pairs(Classes) do
-			for p, t in pairs(c.properties) do
-				all_properties[Tokens[p]] = t
-			end
-		end
-	end
-		
 	local cs = {}
 	for o, scope in pairs(visibilitymap) do
 		local statement = SQL(
@@ -67,7 +57,7 @@ local function synchronise(ctime, visibilitymap, player)
 			local kid = tonumber(row[2])
 			local object = Datastore.Object(oid)
 			
-			local t = all_properties[kid]
+			local t = Classes.properties[kid]
 			if is_property_exported(t.scope, scope, object, player) then
 				local c = cs[oid]
 				if not c then

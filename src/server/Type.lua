@@ -46,6 +46,7 @@ local ObjectType =
 		end
 	end,
 	
+	name = "ObjectType",
 	isaggregate = false,	
 	sqltype = "INTEGER REFERENCES eav_Class(oid)",
 	jstype = "object"
@@ -70,6 +71,7 @@ local TokenType =
 		end
 	end,
 	
+	name = "TokenType",
 	isaggregate = false,	
 	sqltype = "INTEGER REFERENCES tokens(id)",
 	jstype = "string"
@@ -175,6 +177,7 @@ local ObjectSetType =
 		return result
 	end,
 	
+	name = "ObjectSetType",
 	isaggregate = true,	
 	sqltype = "INTEGER REFERENCES eav_Class(oid)",
 	jstype = "objectset"
@@ -199,6 +202,7 @@ local StringType =
 		end
 	end,
 		
+	name = "StringType",
 	isaggregate = false,	
 	sqltype = "TEXT",
 	jstype = "string"
@@ -223,18 +227,27 @@ local NumberType =
 		end
 	end,
 		
+	name = "NumberType",
 	isaggregate = false,	
 	sqltype = "REAL",
 	jstype = "number"
 }
-	
+
+local cache = {}
 local function typeinstance(type, scope)
-	local t = {
-		__index = type,
-		scope = scope,
-	}
+	local key = type.name .. "\n" .. scope
+	local c = cache[key]
+	if not c then
+		c = {
+			__index = type,
+			scope = scope,
+		}
+		
+		setmetatable(c, c)
+		cache[key] = c
+	end
 	
-	return setmetatable(t, t)
+	return c
 end
 
 return
