@@ -13,6 +13,8 @@ local Log = require("Log")
 local UnixSocket = require("socket.unix")
 local JSON = require("cjson")
 
+JSON.encode_sparse_array(true)
+
 local socket
 
 local function sendall(s, data)
