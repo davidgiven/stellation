@@ -3,6 +3,7 @@ local Immutable = require("Immutable")
 local Database = require("Database")
 local SQL = Database.SQL
 local Tokens = require("Tokens")
+local JSON = require("cjson")
 
 local findproxy_p
 local function findproxy(oid)
@@ -40,7 +41,7 @@ local ObjectType =
 			"SELECT value FROM "..tablename.." WHERE oid=?"
 			):bind(oid):step()
 		if not row then
-			return -1
+			return JSON.null
 		else
 			return tonumber(row[1])
 		end
