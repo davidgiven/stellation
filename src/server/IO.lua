@@ -12,6 +12,7 @@ local Utils = require("Utils")
 local Log = require("Log")
 local UnixSocket = require("socket.unix")
 local JSON = require("cjson")
+local Posix = require("posix")
 
 JSON.encode_sparse_array(true)
 
@@ -26,6 +27,20 @@ local function sendall(s, data)
 	end
 end
 
+local function safe_decode(json)
+	local e, data = pcall(
+		function()
+			return JSON.decode(json)
+		end
+	)
+	
+	if e then
+		return data
+	else
+		return nil
+	end
+end
+
 return
 {
 	Listen = function (filename)
@@ -35,6 +50,8 @@ return
 		Utils.Check(e, "unable to bind socket")
 		socket:listen()
 		Log.S("listening on ", filename)
+		
+		_, e = Posix.chmod(filename, "a+rw")
 	end,
 	
 	EventLoop = function(callback)
@@ -44,14 +61,21 @@ return
 			Log.S("received: ", slave)
 			
 			local recvs = slave:receive("*l")
+
 			Log.S("< ", recvs)
-			
-			local recv = JSON.decode(recvs)
-			local reply = callback(recv)
-			local replys = JSON.encode(reply)
+			local recv = safe_decode(recvs)
+			local replys
+			if recv then
+				print(recv)
+				local reply = callback(recv)
+				replys = JSON.encode(reply)
+			else
+				replys = '{"result":"MalformedCommand"}'
+			end
+				
 			Log.S("> ", replys)
+				
 			sendall(slave, replys .. "\n")
-			
 			slave:close()
 		end
 	end,
