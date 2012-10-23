@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>main curl test file</title>
+
+<script>
+
+	// mock console for IE
+	if (!window.console) console = {};
+	if (!('log' in console)) {
+		console._msg = [];
+		console.log = function (msg) {
+			var _msg = this._msg;
+			_msg.push([].join.call(arguments, ' '));
+			clearTimeout(this._timeout);
+			this._timeout = setTimeout(function () {
+				alert(_msg.join('\n'));
+			}, 100);
+		};
+	}
+
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
+<script src="scripts/curl.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+	define("jquery", [], function() { return jQuery; });
+
+	curl(
+		{
+			baseUrl: "scripts/",
+		},
+		[
+			"jquery",
+			"main"
+		],
+		function ($, main)
+		{
+			console.log("document is " + document);
+			console.log("document.body is " + document.body);
+			console.log("jquery is " + $);
+
+			main.main();
+		}
+	);
+
+</script>
+
+</head>
+<body>
+
+<p>This text should all be the same <span style="color: #2faced;">color</span> if the css file loaded.</p>
+
+</body>
+</html>
