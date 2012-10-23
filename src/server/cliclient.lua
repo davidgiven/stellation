@@ -167,7 +167,7 @@ getstatics()
 r = RPC {
 	cmd = "GameCommand",
 	cookie = cookie,
-	ctime = server_time
+	time = server_time
 }
 synchronise(r)
 

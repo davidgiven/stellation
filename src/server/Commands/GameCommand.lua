@@ -75,9 +75,9 @@ local function synchronise(ctime, visibilitymap, player)
 end
 
 return function (msg)
-	local ctime = msg.ctime
+	local ctime = msg.time
 	if not ctime then
-		return { result = "MalformedCommand", extra = "No ctime specified" }
+		return { result = "MalformedCommand", extra = "No time specified" }
 	end
 	local cookie = msg.cookie
 	if not cookie then
