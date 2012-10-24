@@ -23,13 +23,13 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
 <script src="scripts/jquery.json-2.3.min.js"></script>
-<script src="scripts/curl.js"></script>
+<script src="scripts/require.js"></script>
 
 <script type="text/javascript">
 
 	define("jquery", [], function() { return jQuery; });
 
-	curl(
+	require(
 		{
 			baseUrl: "scripts/",
 		},
@@ -51,8 +51,6 @@
 
 </head>
 <body>
-
-<p>This text should all be the same <span style="color: #2faced;">color</span> if the css file loaded.</p>
-
+<div id="page">Loading!</div>
 </body>
 </html>
