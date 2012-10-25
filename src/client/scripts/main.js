@@ -1,12 +1,15 @@
-"use strict";
+(function()
+{
+	"use strict";
+	
+	window.G = window;
+	
+	G.CGI = "//localhost/cgi-bin/stellationcgi.cgi";
 
-define(
-	["jquery", "GameStateMachine"],
-	function ($, GameStateMachine)
+	G.main = function()
 	{
-		return {
-			main: GameStateMachine.Start
-		}; 
+		Terminal.Init();
+		GSM.Start();
 	}
-);
-
+}
+)();
