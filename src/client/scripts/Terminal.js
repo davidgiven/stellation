@@ -3,8 +3,75 @@
     "use strict";
 	var terminal;
 
+	var argify = function (input)
+	{
+		if (!input)
+			return [];
+		
+		var args = [];
+		var i = 0;
+		$.each(input.match(/("[^"]*")|(\s+)|([^\s"]+)/g),
+			function (_, s)
+			{
+				var r = /^\s*$/.exec(s);
+				if (r)
+				{
+					i++;
+					return;
+				}
+
+				if (!args[i])
+					args[i] = "";
+
+				r = /^"([^"]*)"$/.exec(s)
+				if (r)
+				{
+					args[i] += r[1];
+					return;
+				}
+				
+				args[i] += s;
+			}
+		);
+		
+		return args;
+	}
+	
 	var eval_cb = function (command, terminal)
 	{
+		var args = argify(command);
+		if (!args[0])
+			return;
+		
+		var params = {};
+		var pcount = -1;
+		for (var i=0; i<args.length; i++)
+		{
+			var s = args[i];
+			var r = /^(\w+)=(.*)$/.exec(s);
+			if (r)
+			{
+				if (params[r[1]])
+				{
+					Terminal.Error("parameter '"+r[1]+"' specified more than once");
+					return;
+				}
+				params[r[1]] = r[2];
+			}
+			else
+			{
+				params[pcount] = s;
+				pcount++;
+			}
+		}
+		
+		var command = params[-1];
+		delete params[-1];
+		var f = Commands[command];
+		if (!f)
+			Terminal.Error("command '"+command+"' not recognised; try 'help' for a list");
+		else
+			f(params);
 	};
 	
 	G.Terminal =
@@ -66,6 +133,11 @@
 		{
 			s = s.replace(/\[/g, '&#91;').replace(/\]/g, '&#93;');
 			terminal.echo(s);
+		},
+		
+		Error: function (s)
+		{
+			Terminal.Print("Error: "+s);
 		}
 	};
 }
