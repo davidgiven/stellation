@@ -4,7 +4,7 @@
 
     var attempt_login_cb = function()
     {
-        $("input").each(
+        $("#page input").each(
             function (a, b)
             {
                 b.disabled = true;
@@ -14,14 +14,31 @@
         var email = $("#email").prop("value");
         var password = $("#password").prop("value");
         
-        IO.RPC(
+        Commands.Authenticate(
             {
-                cmd: "Authenticate",
                 email: email,
                 password: password
             },
             function (msg)
             {
+                $("#page input").each(
+                        function (a, b)
+                        {
+                            b.enabled = true;
+                        }
+                    );
+                    
+            	if (msg.result == "OK")
+            	{
+            		IO.SetCookie(msg.cookie);
+            		Commands.Ping({},
+            			function (msg)
+            			{
+            				console.log("sync done");
+            				GSM.Game();
+            			}
+            		);
+            	}
             }
         );
     };

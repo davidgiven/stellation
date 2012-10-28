@@ -19,7 +19,7 @@
         Register: function ()
         {
             console.log("register");
-        }
+        },
 	};
 }
 )();

@@ -51,6 +51,8 @@
 			return servertime;
 		},
 		
+		Object: find_object,
+
 		ParseStatics: function(msg)
 		{
 			allproperties = {};
@@ -76,6 +78,7 @@
 		Synchronise: function(message)
 		{
 			console.log("applying delta from "+servertime+" to "+message.time);
+			servertime = message.time;
 			
 			$.each(message.changed,
 				function (oid, properties)
