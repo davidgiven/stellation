@@ -2,20 +2,23 @@
 {
 	"use strict";
 
-	var database;
-	var servertime;
+	var database = {};
+	var prototypes = {};
+	var servertime = 0;
+	var statics;
 	var allproperties;
+	var classes = {};
 	
 	var find_object = function (oid)
 	{
-		oid = oid|0;
-		var o = database[oid];
-		if (!o)
+		if (!database[oid])
 		{
-			o = { Oid: oid };
-			database[oid] = o;
+			var c = function() {};
+			c.prototype = prototypes[oid] = {};
+			database[oid] = new c();
 		}
-		return o;
+		
+		return database[oid];
 	};
 	
 	var typemapper =
@@ -30,11 +33,46 @@
 			$.each(o,
 				function (_, subo)
 				{
-					outo.push(find_object(o));
+					outo.push(find_object(subo));
 				}
 			);
 			return outo;
 		}
+	};
+	
+	var create_class = function (classname)
+	{
+		if (!classes[classname])
+		{
+    		var superclassname = statics[classname].superclass;
+    		var superclass = null;
+    		if (superclassname)
+    			superclass = create_class(superclassname);
+    		
+    		var f = function() {};
+    		if (superclass)
+    			f.prototype = superclass;
+    		else
+    			f.prototype = {};
+    		
+    		if (G.Classes[classname])
+    			$.each(G.Classes[classname],
+    				function (name, value)
+    				{
+    					f.prototype[name] = value;
+    				}
+    			);
+    		
+    		$.each(statics[classname].statics,
+    			function (name, value)
+    			{
+    				f.prototype[name] = value;
+    			}
+    		);
+    		
+    		classes[classname] = new f();
+		}
+		return classes[classname];
 	};
 	
 	G.Database =
@@ -51,12 +89,16 @@
 			return servertime;
 		},
 		
-		Object: find_object,
+		Object: function(oid)
+		{
+			return database[oid];
+		},
 
 		ParseStatics: function(msg)
 		{
 			allproperties = {};
-			$.each(msg.classes,
+			statics = msg.classes;
+			$.each(statics,
 				function (_, c)
 				{
 					$.each(c.properties,
@@ -94,6 +136,19 @@
 								o[name] = f(value);
 						}
 					);
+					
+					if (properties.Class)
+					{
+						var c = create_class(properties.Class);
+						var p = prototypes[oid];
+						
+						/* Yes, this is correct --- we want to iterate over
+						 * all properties in both the class and its
+						 * superclasses. */
+						
+						for (var name in c)
+							p[name] = c[name];
+					}
 				}
 			);
 		}

@@ -6,6 +6,8 @@
 	
 	G.CGI = "/cgi-bin/stellationcgi.cgi";
 
+	G.Classes = {};
+	
 	G.main = function()
 	{
 		Terminal.Init();

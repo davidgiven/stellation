@@ -108,7 +108,8 @@
         		$.each(o,
         			function (k, v)
         			{
-        				Terminal.Print("  "+k+" = "+v);
+        				if (o.hasOwnProperty(k))
+        					Terminal.Print("  "+k+" = "+v);
         			}
         		);
         		
