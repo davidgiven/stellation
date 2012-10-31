@@ -4,16 +4,17 @@ create_tiles()
 {
 	echo "Building tiles for zoom level $1 (total width $2)"
 	mkdir -p src/client/map/$1
-	convert res/galaxy.png -scale $2 -crop 500x500 -set filename:xy '%[fx:page.x/500]_%[fx:page.y/500]' src/client/map/$1/'%[filename:xy].jpg'
+	convert res/galaxy.png -scale $2 -crop 250x250 -set filename:xy '%[fx:page.x/250]_%[fx:page.y/250]' src/client/map/$1/'%[filename:xy].jpg'
 }
 
-create_tiles 0 500 &
-create_tiles 1 1000 &
-create_tiles 2 2000 &
+create_tiles 0 250 &
+create_tiles 1 500 &
+create_tiles 2 1000 &
 wait
-create_tiles 3 4000 &
-create_tiles 4 8000 &
+create_tiles 3 2000 &
+create_tiles 4 4000 &
+create_tiles 5 8000 &
 wait
-create_tiles 5 16000 &
+create_tiles 6 16000 &
 wait
 
