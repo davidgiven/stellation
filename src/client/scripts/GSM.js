@@ -20,6 +20,11 @@
         {
             console.log("register");
         },
+
+		Game: function ()
+		{
+			GamePage.Show();
+		},
 	};
 }
 )();
