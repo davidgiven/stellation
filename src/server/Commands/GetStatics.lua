@@ -13,6 +13,10 @@ return function (msg)
 			statics = {}
 		}
 
+		if class.superclass then
+			cout.superclass = class.superclass.name
+		end
+			
 		for name, type in pairs(class.properties) do
 			cout.properties[name] =
 			{

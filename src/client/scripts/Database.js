@@ -45,30 +45,24 @@
 		if (!classes[classname])
 		{
     		var superclassname = statics[classname].superclass;
-    		var superclass = null;
+    		var superclass = {};
     		if (superclassname)
     			superclass = create_class(superclassname);
     		
     		var f = function() {};
-    		if (superclass)
-    			f.prototype = superclass;
-    		else
-    			f.prototype = {};
+    		f.prototype = {};
     		
-    		if (G.Classes[classname])
-    			$.each(G.Classes[classname],
-    				function (name, value)
-    				{
-    					f.prototype[name] = value;
-    				}
-    			);
+    		for (var name in superclass)
+    			f.prototype[name] = superclass[name];
     		
-    		$.each(statics[classname].statics,
-    			function (name, value)
-    			{
-    				f.prototype[name] = value;
-    			}
-    		);
+    		var c = G.Classes[classname];
+    		if (c)
+    			for (var name in c)
+    				f.prototype[name] = c[name];
+
+    		var s = statics[classname].statics;
+    		for (var name in s)
+    			f.prototype[name] = s[name];
     		
     		classes[classname] = new f();
 		}
