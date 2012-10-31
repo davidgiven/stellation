@@ -7,6 +7,9 @@ create_tiles()
 	convert res/galaxy.png -scale $2 -crop 250x250 -set filename:xy '%[fx:page.x/250]_%[fx:page.y/250]' src/client/map/$1/'%[filename:xy].jpg'
 }
 
+povray res/galaxy.pov +ogalaxy.png +W16000 +H16000 -A -D
+mv galaxy.png res
+
 create_tiles 0 250 &
 create_tiles 1 500 &
 create_tiles 2 1000 &

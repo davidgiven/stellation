@@ -28,8 +28,8 @@ camera {
 #include "res/galaxy/GALAXY.BG"
 
 // GALAXY OBJECTS
-#declare galaxy_object_scale = 1;
-#declare galaxy_object_rotate = 30;
+#declare galaxy_object_scale = 0.8;
+#declare galaxy_object_rotate = 0;
 #declare galaxy_object_name = "Galaxy4";
 #declare galaxy_object_position = <0, 0, 0>;
 #declare galaxy_colour_turb = 1;
