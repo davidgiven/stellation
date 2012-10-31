@@ -35,9 +35,13 @@ local function create_name()
 	return s
 end
 
+local function round_to_tenths(n)
+	return math.floor(n*10) / 10
+end
+
 local function ordinate()
 	local o = math.random() * SGalaxy.statics.GalacticRadius * 2 - SGalaxy.statics.GalacticRadius
-	o = math.floor(o * 10) / 10
+	o = round_to_tenths(o)
 	return o
 end
 
@@ -73,7 +77,7 @@ return
 			s.Name = names[i]
 			s.X = positions[i].x 
 			s.Y = positions[i].y
-			s.Brightness = 1.0 + math.random()*9.0
+			s.Brightness = 1.0 + round_to_tenths(math.random()*9.0)
 			s.AsteroidsC = math.random(10)+10
 			s.AsteroidsM = math.random(10)+10
 
