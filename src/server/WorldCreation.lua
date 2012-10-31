@@ -3,7 +3,8 @@ local require = require
 local Datastore = require("Datastore")
 local Database = require("Database")
 local Utils = require("Utils")
-local S = require("S")
+local Classes = require("Classes")
+local SGalaxy = Classes.SGalaxy
 
 local syllables1 =
 {
@@ -35,7 +36,7 @@ local function create_name()
 end
 
 local function ordinate()
-	local o = math.random() * S.GalacticRadius * 2 - S.GalacticRadius
+	local o = math.random() * SGalaxy.statics.GalacticRadius * 2 - SGalaxy.statics.GalacticRadius
 	o = math.floor(o * 10) / 10
 	return o
 end
@@ -47,7 +48,7 @@ return
 		galaxy.Owner = universe
 		
 		local positions = {}
-		while (#positions < S.NumberOfStars) do
+		while (#positions < galaxy.NumberOfStars) do
 			local x = ordinate()
 			local y = ordinate()
 			local hash = "x="..x.."y="..y
@@ -58,7 +59,7 @@ return
 		end
 
 		local names = {}
-		while (#names < S.NumberOfStars) do
+		while (#names < galaxy.NumberOfStars) do
 			local n = create_name()
 			if not names[n] then
 				names[#names+1] = n
@@ -66,7 +67,7 @@ return
 			end
 		end
 				 
-		for i = 1, S.NumberOfStars do
+		for i = 1, galaxy.NumberOfStars do
 			local s = Datastore.Create("SStar")
 			s.Owner = universe
 			s.Name = names[i]

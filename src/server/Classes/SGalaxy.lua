@@ -12,6 +12,8 @@ return
 	
 	statics =
 	{
+		GalacticRadius = 7,
+		NumberOfStars = 20
 	},
 	
 	properties =

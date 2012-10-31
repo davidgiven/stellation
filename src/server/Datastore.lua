@@ -28,9 +28,17 @@ local function get_class(name)
 	return classes_p[name]
 end
 
-local function get_method(class, name)
+local function get_method_or_static(class, name)
 	while class do
 		local ms = class.methods
+		if ms then
+			local m = ms[name]
+			if m then
+				return m
+			end
+		end
+		
+		ms = class.statics
 		if ms then
 			local m = ms[name]
 			if m then
@@ -42,7 +50,7 @@ local function get_method(class, name)
 	end 
 end
 
-local function get_class_of_oid(oid)
+local functilocal function get_class_of_oid(oid)
 	local row = SQL(
 		"SELECT value FROM eav_Class WHERE oid=?"
 		):bind(oid):step()
@@ -98,7 +106,7 @@ local function new_object_proxy(oid)
 				return c
 			end
 			
-			c = get_method(class, key)
+			c = get_method_or_static(class, key)
 			if c then
 				methodcache[key] = c
 				return c

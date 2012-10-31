@@ -58,7 +58,9 @@ return
 {
 	Lookup = function (class, oid, name)
 		local t = get_property_type(class, name)
-		Utils.Assert(t, "property ", name or "<nil>", " is not defined on class ", class.name)
+		if not t then
+			return t
+		end
 		
 		local tablename = create_eav_table(t, name)
 
