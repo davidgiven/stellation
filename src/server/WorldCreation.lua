@@ -53,8 +53,10 @@ return
 		
 		local positions = {}
 		while (#positions < galaxy.NumberOfStars) do
-			local x = ordinate()
-			local y = ordinate()
+			local theta = math.random() * 2 * math.pi
+			local r = math.random() * SGalaxy.statics.GalacticRadius
+			local x = round_to_tenths(math.sin(theta) * r)
+			local y = round_to_tenths(math.cos(theta) * r)
 			local hash = "x="..x.."y="..y
 			if not positions[hash] then
 				positions[#positions+1] = {x=x, y=y}
