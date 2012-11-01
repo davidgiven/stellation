@@ -4,6 +4,9 @@
 
 	var database = {};
 	var prototypes = {};
+	var notifications = {};
+	var changed = {};
+	var change_message_pending = false;
 	var servertime = 0;
 	var statics;
 	var allproperties;
@@ -16,6 +19,7 @@
 			var c = function() {};
 			c.prototype = prototypes[oid] = {};
 			database[oid] = new c();
+			database[oid].Oid = oid;
 		}
 		
 		return database[oid];
@@ -69,12 +73,45 @@
 		return classes[classname];
 	};
 	
+	var get_notifications_for = function (o)
+	{
+		var n = notifications[o.Oid];
+		if (!n)
+			n = notifications[o.Oid] = new G.CallbackSet();
+		return n;
+	};
+	
+	var object_changed = function (o)
+	{
+		changed[o.Oid] = true;
+		if (!change_message_pending)
+		{
+			change_message_pending = true;
+			setTimeout(
+				function()
+				{
+					change_message_pending = false;
+					var oldchanged = changed;
+					changed = {};
+					
+					for (var oid in oldchanged)
+					{
+						var cbs = notifications[oid];
+						if (cbs)
+							cbs.call(find_object(oid));
+					}
+				},
+				0
+			);
+		}
+	};
+	
+	G.Universe = find_object(0);
+	
 	G.Database =
 	{
 		Reset: function()
 		{
-			database = {};
-			servertime = 0;
 			allproperties = {};
 		},
 	
@@ -85,9 +122,20 @@
 		
 		Object: function(oid)
 		{
-			return database[oid];
+			return find_object(oid);
 		},
 
+		Watch: function(o, f)
+		{
+			get_notifications_for(o).add(f);
+			object_changed(o);
+		},
+		
+		Unwatch: function(o, f)
+		{
+			get_notifications_for(o).remove(f);
+		},
+					
 		ParseStatics: function(msg)
 		{
 			allproperties = {};
@@ -120,6 +168,8 @@
 				function (oid, properties)
 				{
 					var o = find_object(oid);
+					object_changed(o);
+					
 					$.each(properties,
 						function (name, value)
 						{
