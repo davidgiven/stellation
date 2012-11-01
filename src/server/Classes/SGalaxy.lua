@@ -12,8 +12,8 @@ return
 	
 	statics =
 	{
-		GalacticRadius = 7,
-		NumberOfStars = 20
+		GalacticRadius = 30,
+		NumberOfStars = 200
 	},
 	
 	properties =
