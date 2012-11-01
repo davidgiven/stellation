@@ -24,10 +24,17 @@
 			function (_, star)
 			{
     			var m = L.marker([star.X, star.Y]);
+    			m.bindLabel(star.Name);
     			star_layer_group.addLayer(m);
     		}
 		);
 	}
+	
+	var on_mousemove_cb = function(event)
+	{
+		var p = event.latlng;
+		$("#currentcoordinates").text("["+p.lng+", "+p.lat+"]");
+	};
 	
     G.GamePage =
     {
@@ -71,6 +78,8 @@
 							noWrap: true
 						}
 					).addTo(map);
+					
+					map.on("mousemove", on_mousemove_cb);
 					
 					star_layer_group = L.layerGroup();
 					star_layer_group.addTo(map);
