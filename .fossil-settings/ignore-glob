@@ -1,4 +1,5 @@
 src/client/map/*
+src/client/res/*
 res/galaxy.png
 test.db
 

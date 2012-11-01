@@ -1,0 +1,17 @@
+#!/bin/sh
+
+make_star()
+{
+	povray res/star.pov +W256 +H256 +UA +K$1 -Ostar.png
+	mv star.png $2
+}
+
+make_star 4000 src/client/res/star1.png
+make_star 4500 src/client/res/star2.png
+make_star 5000 src/client/res/star3.png
+make_star 6000 src/client/res/star4.png
+make_star 7000 src/client/res/star5.png
+make_star 8000 src/client/res/star6.png
+make_star 9000 src/client/res/star7.png
+make_star 10000 src/client/res/star8.png
+make_star 11000 src/client/res/star9.png
