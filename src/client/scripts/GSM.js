@@ -8,7 +8,17 @@
         {
         	console.log("state machine init");
 			Database.Reset();
-			IO.GetStatics(GSM.Login);
+			IO.GetStatics(
+				function()
+				{
+					GamePage.Preload(
+						function()
+						{
+							GSM.Login();
+						}
+					);
+				}
+			);
         },
         
         Login: function ()

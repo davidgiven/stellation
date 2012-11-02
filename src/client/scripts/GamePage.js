@@ -7,6 +7,19 @@
 	var graticule_layer;
 	var star_layer_group;
 	
+	var star_images =
+		[
+		 	"res/star1.png",
+		 	"res/star2.png",
+		 	"res/star3.png",
+		 	"res/star4.png",
+		 	"res/star5.png",
+		 	"res/star6.png",
+		 	"res/star7.png",
+		 	"res/star8.png",
+		 	"res/star9.png",
+		];
+	
 	var any_star_changed_pending = false;
 	var star_changed_cb = function(o)
 	{
@@ -17,6 +30,20 @@
 		}
 	}
 	
+	var icon_for_star = function(star)
+	{
+		var b = Math.floor(star.Brightness) - 1;
+		var size = 8 * (1 + map.getZoom()*3);
+		
+		return L.icon(
+				{
+					iconUrl: star_images[b],
+    				iconSize: [size, size],
+    				iconAnchor: [size/2, size/2]
+				}
+			);
+	};
+	
 	var any_star_changed_cb = function()
 	{
 		any_star_changed_pending = false;
@@ -25,7 +52,12 @@
 		$.each(galaxy.VisibleStars,
 			function (_, star)
 			{
-    			var m = L.marker([star.X, star.Y]);
+    			var m = L.marker([star.X, star.Y],
+    				{
+    					icon: icon_for_star(star)
+    				}
+    			);
+    			
     			m.bindLabel(star.Name);
     			star_layer_group.addLayer(m);
     		}
@@ -109,7 +141,7 @@
 		/* Draw graticules. */
 		
 	    ctx.lineWidth = 0.5;
-        ctx.strokeStyle = "#0000ff";
+        ctx.strokeStyle = "rgba(0,0,100,0.2)";
         
         for (var x=x1; x<=x2; x+=gridx)
         {
@@ -146,6 +178,11 @@
 	
     G.GamePage =
     {
+    	Preload: function (cb)
+    	{
+    		G.PreloadImages(star_images, cb);
+    	},
+    	
         Show: function ()
         {
             $("#page").load("game.html",
@@ -192,6 +229,7 @@
 					graticule_layer.addTo(map);
 					
 					map.on("mousemove", on_mousemove_cb);
+					map.on("viewreset", star_changed_cb);
 					
 					star_layer_group = L.layerGroup();
 					star_layer_group.addTo(map);
