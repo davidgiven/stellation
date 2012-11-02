@@ -7,7 +7,8 @@
 	var graticule_layer;
 	var star_layer_group;
 	
-	var star_images =
+	var star_images = [];
+	var star_images_filenames =
 		[
 		 	"res/star1.png",
 		 	"res/star2.png",
@@ -38,7 +39,7 @@
 		return L.icon(
 				{
 					iconUrl: star_images[b],
-    				iconSize: [size, size],
+    				iconSize: [16, 16],
     				iconAnchor: [size/2, size/2]
 				}
 			);
@@ -47,14 +48,23 @@
 	var any_star_changed_cb = function()
 	{
 		any_star_changed_pending = false;
+		graticule_layer.redraw();
 
+		var icon = L.divIcon(
+			{
+				className: "invisible-map-marker", 
+				iconSize: [16, 16],
+				iconAnchor: [8, 8]
+			}
+		);
+		
 		star_layer_group.clearLayers();
 		$.each(galaxy.VisibleStars,
 			function (_, star)
 			{
-    			var m = L.marker([star.X, star.Y],
+    			var m = L.marker({lng: star.X, lat: star.Y},
     				{
-    					icon: icon_for_star(star)
+    					icon: icon
     				}
     			);
     			
@@ -105,6 +115,24 @@
 		return (i+1)/2 - (6 - map.getZoom()) / 4;
 	};
 	
+	var smallest_visible_graticule = function()
+	{
+		if (calculate_graticule_thickness(0.1) > 0)
+			return 0.1;
+		if (calculate_graticule_thickness(0.5) > 0)
+			return 0.5;
+		if (calculate_graticule_thickness(1.0) > 0)
+			return 1.0;
+		if (calculate_graticule_thickness(5.0) > 0)
+			return 5.0;
+		return 10.0;
+	};
+	
+	var floorto = function(n, quantum)
+	{
+		return Math.floor(n * quantum) / quantum;
+	};
+	
 	var drawtile_cb = function(canvas, tile)
 	{
 		var ctx = canvas.getContext("2d");
@@ -128,22 +156,21 @@
 		
 		/* Calculate the grid spacing. */
 		
-		var gridx = sensible_spacing(scalex);
-		var gridy = sensible_spacing(scaley);
+		var svg = smallest_visible_graticule();
 		
 		/* Calculate the area of grid we're going to draw. */
 		
-		var x1 = Math.floor(tl.lng);
+		var x1 = floorto(tl.lng, svg);
 		var x2 = Math.ceil(br.lng);
-		var y1 = Math.floor(tl.lat);
+		var y1 = floorto(tl.lat, svg);
 		var y2 = Math.ceil(br.lat);
 		
 		/* Draw graticules. */
 		
 	    ctx.lineWidth = 0.5;
-        ctx.strokeStyle = "rgba(0,0,100,0.2)";
+        ctx.strokeStyle = "rgba(0,0,0,0.1)";
         
-        for (var x=x1; x<=x2; x+=gridx)
+        for (var x=x1; x<=x2; x+=svg)
         {
         	var t = calculate_graticule_thickness(x);
         	if (t <= 0)
@@ -159,7 +186,7 @@
         	ctx.closePath();
         }
         
-        for (var y=y1; y<=y2; y+=gridy)
+        for (var y=y1; y<=y2; y+=svg)
         {
         	var t = calculate_graticule_thickness(y);
         	if (t <= 0)
@@ -174,13 +201,43 @@
         	ctx.stroke();
         	ctx.closePath();
         }
+        
+        /* Draw the stars. */
+        
+        $.each(galaxy.VisibleStars,
+        	function (_, star)
+        	{
+        		var b = Math.floor(star.Brightness) - 1;
+        		var size = 8 * (1 + map.getZoom()*3);
+
+            	var p = map.project({lng: star.X, lat: star.Y}).subtract(tl_px);
+            	var img = star_images[b];
+            	ctx.drawImage(img, p.x-size/2, p.y-size/2, size, size);
+        	}
+        );
 	};
 	
     G.GamePage =
     {
     	Preload: function (cb)
     	{
-    		G.PreloadImages(star_images, cb);
+    		var imagecount = star_images_filenames.length;
+    		
+    		$.each(star_images_filenames,
+    			function (i, name)
+    			{
+    				var image = new Image();
+    				star_images[i] = image;
+    				image.onload =
+    					function()
+    					{
+    						imagecount--;
+    						if (imagecount == 0)
+    							cb();
+    					};
+    				image.src = name;
+    			}
+    		);
     	},
     	
         Show: function ()
