@@ -49,6 +49,7 @@ return
 {
 	InitialiseGalaxy = function (galaxy)
 		local universe = Datastore.Object(0)
+		universe.Owner = universe
 		galaxy.Owner = universe
 		
 		local positions = {}
