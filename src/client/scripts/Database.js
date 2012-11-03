@@ -107,14 +107,21 @@
 	};
 	
 	G.Universe = find_object(0);
+	G.Player = null;
 	
 	G.Database =
 	{
 		Reset: function()
 		{
 			allproperties = {};
+			G.Player = null;
 		},
 	
+		SetPlayer: function(p)
+		{
+			G.Player = p;
+		},
+		
 		GetServerTime: function()
 		{
 			return servertime;

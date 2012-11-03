@@ -13,9 +13,10 @@
     	{
     		parameters: ["email", "password"],
     		onCompletion:
-    			function ()
+    			function (msg)
     			{
-    				console.log("auth complete");
+    				Database.SetPlayer(Database.Object(msg.oid));
+    				console.log("auth complete, oid="+msg.oid);
     			}
     	},
     	
@@ -92,7 +93,11 @@
         			return;
         		}
         
-        		var o = Database.Object(params.oid);
+        		var o;
+        		if (params.oid === "me")
+        			o = Player;
+        		else
+        			o = Database.Object(params.oid);
         		if (!o)
         		{
         			Terminal.Error("Object "+params.oid+" does not exist");
