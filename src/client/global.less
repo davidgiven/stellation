@@ -8,12 +8,23 @@ HTML, BODY, #page
 	overflow: hidden;
 }
 
+HTML
+{
+	font-size: 90%;
+}
+
+.ui-widget
+{
+	font-family: 'Dosis', sans-serif !important;
+	font-size: inherit !important;
+}
+
 #terminal
 {
 	position: absolute;
 	width: 100%;
 	font-family: 'Dosis', monospace;
-	z-index: 1;
+	z-index: 100000;
 }
 
 #map
@@ -26,10 +37,91 @@ HTML, BODY, #page
 {
 }
 
+.leaflet-right .leaflet-control
+{
+	margin-right: 22.5em !important;
+}
+
+.leaflet-bottom .leaflet-control
+{
+	margin-bottom: 1em !important;
+}
+
 #currentcoordinates
 {
 	position: absolute;
 	top: 0;
 	left: 0;
 	color: white;
+}
+
+/* Game dialogs */
+
+@left-column: 10em;
+
+.pane
+{
+	position: fixed;
+	display: block;
+	padding: 0.4em;
+	overflow: auto;
+	z-index: 10000;
+}
+
+#indexpane
+{
+	.pane;
+	left: 1em;
+	top: 7.5em;
+	bottom: 7.5em;
+	width: 14em;
+}
+
+#titlepane
+{
+	.pane;
+	left: 1em;
+	top: 1em;
+	width: 14em;
+	height: 5em;
+}
+
+#clockpane
+{
+	.pane;
+	left: 1em;
+	bottom: 1em;
+	width: 14em;
+	height: 5em;
+}
+
+#detailpane
+{
+	.pane;
+	right: 1em;
+	top: 1em;
+	bottom: 1em;
+	width: 20em;
+}
+
+#contentpane
+{
+	.pane;
+	top: 1em;
+	bottom: 1em;
+	left: 16.5em;
+	right: 22.5em;
+	width: auto;
+}
+
+/* Dialog configuration tweaks */
+
+.no-close .ui-dialog-titlebar-close
+{
+	display: none
+}
+
+.no-title .ui-dialog-titlebar
+{
+	display:none
 }

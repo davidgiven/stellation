@@ -268,10 +268,17 @@
 							maxZoom: 6,
 							crs: cartesianCRS,
 							attributionControl: false,
-							unloadInvisibleTiles: false
+							zoomControl: false,
+							unloadInvisibleTiles: false,
 						}
 					);
 
+					new L.Control.Zoom(
+						{
+							position: "bottomright"
+						}
+					).addTo(map);
+					
 					L.tileLayer("map/{z}/{x}_{y}.jpg",
 						{
 							attribution: "",
@@ -298,6 +305,23 @@
 						var star = galaxy.VisibleStars[i];
 						Database.Watch(star, star_changed_cb);
 					}
+					
+					/* Set up data panes. */
+					
+					$("#clockpane")
+						.addClass("ui-dialog ui-widget-content ui-corner-all");
+					
+					$("#titlepane")
+						.addClass("ui-dialog ui-widget-content ui-corner-all");
+					
+					$("#indexpane")
+						.addClass("ui-dialog ui-widget-content ui-corner-all");
+					
+					$("#detailpane")
+						.addClass("ui-dialog ui-widget-content ui-corner-all");
+					
+					$("#contentpane")
+						.addClass("ui-dialog ui-widget-content ui-corner-all");
             	}
             );
         }
