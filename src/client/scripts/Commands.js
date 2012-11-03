@@ -109,7 +109,30 @@
         			function (k, v)
         			{
         				if (o.hasOwnProperty(k))
-        					Terminal.Print("  "+k+" = "+v);
+        				{
+        					var s;
+        					
+        					if (v instanceof Array)
+        					{
+        						s = "[" +
+        							$.map(v,
+        								function (e)
+        								{
+        									return "#" + e.Oid;
+        								}
+        							).join(
+        								", "
+        							)
+        							+ "]";
+        					}
+        					else if (v instanceof Object)
+        						s = "#" + v.Oid;
+        					else
+        						s = v;
+        						
+        					
+        					Terminal.Print("  "+k+" = "+s);
+        				}
         			}
         		);
         		
