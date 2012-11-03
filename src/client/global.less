@@ -47,25 +47,24 @@ HTML
 	margin-bottom: 1em !important;
 }
 
-#currentcoordinates
-{
-	position: absolute;
-	top: 0;
-	left: 0;
-	color: white;
-}
-
 /* Game dialogs */
 
 @left-column: 10em;
 
 .pane
 {
-	position: fixed;
+	position: absolute;
 	display: block;
 	padding: 0.4em;
 	overflow: auto;
 	z-index: 10000;
+}
+
+.minimised-vertically
+{
+	height: 2.5em !important;
+	bottom: auto !important;
+	overflow: hidden !important;
 }
 
 #indexpane
@@ -112,6 +111,22 @@ HTML
 	left: 16.5em;
 	right: 22.5em;
 	width: auto;
+}
+
+#mapinfo
+{
+	position: absolute;
+	display: block;
+	bottom: 1em;
+	left: 16.5em;
+	right: 22.5em;
+	overflow: hidden;
+	text-align: center;
+}
+	
+#mapinfo .content
+{
+	color: white;
 }
 
 /* Dialog configuration tweaks */

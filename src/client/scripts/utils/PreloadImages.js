@@ -2,24 +2,25 @@
 {
 	"use strict";
 	
-	G.PreloadImages = function(uris, cb)
+	G.PreloadImages = function(uris, images, cb)
 	{
-	    var count = uris.length;
-	    $(
-	    	uris.map(
-	    		function(f)
-	    		{
-	    			return '<img src="'+f+'" />';
-	    		}
-	    	).join('')
-	    ).load(
-	    	function()
-	    	{
-	    		count--;
-	    		if (!count)
-	    			cb();
-	        }
-	    );
+		var imagecount = uris.length;
+		
+		$.each(uris,
+			function (i, name)
+			{
+				var image = new Image();
+				images[i] = image;
+				image.onload =
+					function()
+					{
+						imagecount--;
+						if (imagecount == 0)
+							cb();
+					};
+				image.src = name;
+			}
+		);
 	}
 }
 )();

@@ -77,7 +77,7 @@
 	var on_mousemove_cb = function(event)
 	{
 		var p = event.latlng;
-		$("#currentcoordinates").text("["+p.lng+", "+p.lat+"]");
+		$("#mapinfo .content").text("["+p.lng.toFixed(1)+", "+p.lat.toFixed(1)+"]");
 	};
 	
 	var sensible_spacing = function(scale)
@@ -130,7 +130,12 @@
 	
 	var floorto = function(n, quantum)
 	{
-		return Math.floor(n * quantum) / quantum;
+		return Math.floor(n / quantum) * quantum;
+	};
+	
+	var roundto = function(n, quantum)
+	{
+		return Math.round(n / quantum) * quantum;
 	};
 	
 	var drawtile_cb = function(canvas, tile)
@@ -221,23 +226,7 @@
     {
     	Preload: function (cb)
     	{
-    		var imagecount = star_images_filenames.length;
-    		
-    		$.each(star_images_filenames,
-    			function (i, name)
-    			{
-    				var image = new Image();
-    				star_images[i] = image;
-    				image.onload =
-    					function()
-    					{
-    						imagecount--;
-    						if (imagecount == 0)
-    							cb();
-    					};
-    				image.src = name;
-    			}
-    		);
+    		PreloadImages(star_images_filenames, star_images, cb);
     	},
     	
         Show: function ()
@@ -322,6 +311,32 @@
 					
 					$("#contentpane")
 						.addClass("ui-dialog ui-widget-content ui-corner-all");
+					
+					$("#contentpane .minimise-button")
+						.click(
+							function()
+							{
+								$("#contentpane").toggleClass("minimised-vertically");
+							}
+						);
+					
+					/* Make any hoverable buttons hoverable (used for control
+					 * buttons in pane title bars). */
+					
+					$("#page .needs-ui-state-hover").each(
+						function ()
+						{
+							$(this).hover(
+						        function ()
+						        {
+						            $(this).addClass('ui-state-hover');
+						        },
+						        function () {
+						            $(this).removeClass('ui-state-hover');
+						        }
+						    );
+						}
+					);
             	}
             );
         }
