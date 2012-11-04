@@ -337,6 +337,16 @@
 						    );
 						}
 					);
+					
+					TemplatedMonitor(Player, $("#titlepane"), "title_tmpl",
+						{
+							logout:
+								function()
+								{
+									GSM.Logout();
+								}
+						}
+					);
             	}
             );
         }

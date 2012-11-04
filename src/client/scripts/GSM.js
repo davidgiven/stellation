@@ -26,6 +26,12 @@
             LoginPage.Show();
         },
         
+        Logout: function ()
+        {
+        	Database.Reset();
+        	GSM.Login();
+        },
+        
         Register: function ()
         {
             console.log("register");
