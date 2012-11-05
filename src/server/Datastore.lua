@@ -209,7 +209,7 @@ return
 		end
 		
 		p = new_object_proxy(oid)
-		proxies[p] = oid
+		proxies[oid] = p
 		return p
 	end,
 	
