@@ -15,7 +15,7 @@
     		onCompletion:
     			function (msg)
     			{
-    				Database.SetPlayer(Database.Object(msg.oid));
+    				S.Database.SetPlayer(S.Database.Object(msg.oid));
     				console.log("auth complete, oid="+msg.oid);
     			}
     	},
@@ -42,7 +42,7 @@
         			var n = params[0];
         			var c = commands[n];
         			if (!c)
-        				Terminal.Print("There's no help for '"+n+"' --- try 'help' on its own for a list.");
+        				S.Terminal.Print("There's no help for '"+n+"' --- try 'help' on its own for a list.");
         			else
         			{
         				var s = "Syntax: ";
@@ -56,12 +56,12 @@
         					}
         				);
         				
-        				Terminal.Print(s);
+        				S.Terminal.Print(s);
         			}
         		}
         		else
         		{
-        			Terminal.Print("The following commands are understand. Do 'help <command>' for more info:");
+        			S.Terminal.Print("The following commands are understand. Do 'help <command>' for more info:");
         			$.each(commands,
         				function (name, command)
         				{
@@ -69,10 +69,10 @@
         					s += name;
         					if (command.shortHelp)
         						s += (": " + shortHelp);
-        					Terminal.Print(s);
+        					S.Terminal.Print(s);
         				}
         			);
-        			Terminal.Print("Capitalised commands call the server, lower case commands are local.");
+        			S.Terminal.Print("Capitalised commands call the server, lower case commands are local.");
         		}
         		
         		if (oncompletion)
@@ -89,18 +89,18 @@
         			params.oid = params[0];
         		if (!params.oid)
         		{
-        			Terminal.Error("you must supply an object id");
+        			S.Terminal.Error("you must supply an object id");
         			return;
         		}
         
         		var o;
         		if (params.oid === "me")
-        			o = Player;
+        			o = S.Player;
         		else
-        			o = Database.Object(params.oid);
+        			o = S.Database.Object(params.oid);
         		if (!o)
         		{
-        			Terminal.Error("Object "+params.oid+" does not exist");
+        			S.Terminal.Error("Object "+params.oid+" does not exist");
         			return;
         		}
         		
@@ -108,7 +108,7 @@
         		if (o.Name)
         			s += (" ("+o.Name+")");
         		s += (" "+o.Class);
-        		Terminal.Print(s);
+        		S.Terminal.Print(s);
         		
         		$.each(o,
         			function (k, v)
@@ -136,7 +136,7 @@
         						s = v;
         						
         					
-        					Terminal.Print("  "+k+" = "+s);
+        					S.Terminal.Print("  "+k+" = "+s);
         				}
         			}
         		);
@@ -147,19 +147,19 @@
     	}
     };
     
-    G.Commands = {};
+    S.Commands = {};
     $.each(commands,
     	function (name, command)
     	{
     		if (command.callback)
-    			G.Commands[name] = command.callback;
+    			S.Commands[name] = command.callback;
     		else
-        		G.Commands[name] =
+        		S.Commands[name] =
         			function (message, oncompletion)
         			{
         				if (message[0])
         				{
-        					Terminal.Error("command '"+name+"' understands key/value arguments only");
+        					S.Terminal.Error("command '"+name+"' understands key/value arguments only");
         					return;
         				}
         				
@@ -174,12 +174,12 @@
         				if (command.gamecommand)
         				{
         					message.gcmd = name;
-        					IO.GameCommand(message, cb);
+        					S.IO.GameCommand(message, cb);
         				}
         				else
         				{
         					message.cmd = name;
-        					IO.RPC(message, cb);
+        					S.IO.RPC(message, cb);
         				}
         			};
     	}

@@ -14,7 +14,7 @@
         var email = $("#email").prop("value");
         var password = $("#password").prop("value");
         
-        Commands.Authenticate(
+        S.Commands.Authenticate(
             {
                 email: email,
                 password: password
@@ -30,12 +30,12 @@
                     
             	if (msg.result == "OK")
             	{
-            		IO.SetCookie(msg.cookie);
-            		Commands.Ping({},
+            		S.IO.SetCookie(msg.cookie);
+            		S.Commands.Ping({},
             			function (msg)
             			{
             				console.log("sync done");
-            				GSM.Game();
+            				S.GSM.Game();
             			}
             		);
             	}
@@ -43,7 +43,7 @@
         );
     };
     
-    G.LoginPage =
+    S.LoginPage =
     {
         Show: function ()
         {
@@ -70,7 +70,7 @@
                         .click(
                             function (event)
                             {
-                            	GSM.Register();
+                            	S.GSM.Register();
                             }
                         );
                         

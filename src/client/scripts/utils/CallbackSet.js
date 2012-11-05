@@ -34,6 +34,6 @@
 			copyset[i](arg);
 	};
 	
-	G.CallbackSet = c;
+	S.CallbackSet = c;
 }
 )();

@@ -2,19 +2,19 @@
 {
 	"use strict";
 	
-	G.GSM =
+	S.GSM =
 	{
         Start: function ()
         {
         	console.log("state machine init");
-			Database.Reset();
-			IO.GetStatics(
+			S.Database.Reset();
+			S.IO.GetStatics(
 				function()
 				{
-					GamePage.Preload(
+					S.GamePage.Preload(
 						function()
 						{
-							GSM.Login();
+							S.GSM.Login();
 						}
 					);
 				}
@@ -23,13 +23,13 @@
         
         Login: function ()
         {
-            LoginPage.Show();
+            S.LoginPage.Show();
         },
         
         Logout: function ()
         {
-        	Database.Reset();
-        	GSM.Login();
+        	S.Database.Reset();
+        	S.GSM.Login();
         },
         
         Register: function ()
@@ -39,7 +39,7 @@
 
 		Game: function ()
 		{
-			GamePage.Show();
+			S.GamePage.Show();
 		},
 	};
 }

@@ -4,7 +4,7 @@
 	var authcookie;
 	var tag = 0;
 	
-	G.IO =
+	S.IO =
 	{
 		RPC: function(message, success_cb)
 		{
@@ -16,7 +16,7 @@
 				s += "="+message.gcmd;
 			console.log(s);
 			
-			$.ajax(G.CGI,
+			$.ajax(S.CGI,
 					{
 						data: "data=" + $.toJSON(message),
 						dataType: "json",
@@ -34,10 +34,10 @@
 		
 		GetStatics: function(success_cb)
 		{
-			IO.RPC({ cmd: "GetStatics" },
+			S.IO.RPC({ cmd: "GetStatics" },
 				function (data)
 				{
-					Database.ParseStatics(data);
+					S.Database.ParseStatics(data);
 					success_cb();
 				}
 			);
@@ -53,12 +53,12 @@
 		{
 			message.cmd = "GameCommand";
 			message.cookie = authcookie;
-			message.time = Database.GetServerTime();
-			IO.RPC(message,
+			message.time = S.Database.GetServerTime();
+			S.IO.RPC(message,
 				function (data)
 				{
     				if (data.changed)
-    					Database.Synchronise(data);
+    					S.Database.Synchronise(data);
     				if (success_cb)
     					success_cb(data);
 				}

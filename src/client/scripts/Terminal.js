@@ -74,7 +74,7 @@
 			f(params);
 	};
 	
-	G.Terminal =
+	S.Terminal =
 	{
 		Init: function ()
 		{
@@ -126,7 +126,7 @@
 				}
 			);
 			
-			console.log = Terminal.Print;
+			console.log = S.Terminal.Print;
 		},
 		
 		Print: function (s)

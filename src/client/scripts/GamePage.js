@@ -222,11 +222,11 @@
         );
 	};
 	
-    G.GamePage =
+    S.GamePage =
     {
     	Preload: function (cb)
     	{
-    		PreloadImages(star_images_filenames, star_images, cb);
+    		S.PreloadImages(star_images_filenames, star_images, cb);
     	},
     	
         Show: function ()
@@ -234,7 +234,7 @@
             $("#page").load("game.html",
             	function ()
             	{
-            		galaxy = Universe.Galaxy;
+            		galaxy = S.Galaxy;
 
             		/* We apply a pretty nasty fudge factor here, because the
             		 * background image is rather smaller than the galactic
@@ -287,12 +287,12 @@
 					star_layer_group = L.layerGroup();
 					star_layer_group.addTo(map);
 					
-					Database.Watch(galaxy, star_changed_cb);
+					S.Database.Watch(galaxy, star_changed_cb);
 					
 					for (var i=0; i<galaxy.VisibleStars.length; i++)
 					{
 						var star = galaxy.VisibleStars[i];
-						Database.Watch(star, star_changed_cb);
+						S.Database.Watch(star, star_changed_cb);
 					}
 					
 					/* Set up data panes. */
@@ -338,12 +338,12 @@
 						}
 					);
 					
-					TemplatedMonitor(Player, $("#titlepane"), "title_tmpl",
+					S.TemplatedMonitor(S.Player, $("#titlepane"), "title_tmpl",
 						{
 							logout:
 								function()
 								{
-									GSM.Logout();
+									S.GSM.Logout();
 								}
 						}
 					);

@@ -2,16 +2,16 @@
 {
 	"use strict";
 	
-	window.G = window;
+	window.S = {};
 	
-	G.CGI = "/cgi-bin/stellationcgi.cgi";
+	S.CGI = "/cgi-bin/stellationcgi.cgi";
 
-	G.Classes = {};
+	S.Classes = {};
 	
-	G.main = function()
+	S.main = function()
 	{
-		Terminal.Init();
-		GSM.Start();
+		S.Terminal.Init();
+		S.GSM.Start();
 	}
 }
 )();

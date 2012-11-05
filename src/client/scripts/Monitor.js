@@ -15,7 +15,7 @@
         	}
     };
 
-    G.Monitor =
+    S.Monitor =
     	function (object, element, callback)
     	{
     		var object_changed_cb =
@@ -29,10 +29,10 @@
     		
     		element.data("s_object", object);
     		element.data("s_callback", object_changed_cb);
-    		Database.Watch(object, object_changed_cb);
+    		S.Database.Watch(object, object_changed_cb);
     	};
 
-    G.TemplatedMonitor =
+    S.TemplatedMonitor =
     	function (object, element, template, events)
     	{
     		var object_change_cb =
@@ -83,6 +83,6 @@
     	    		element.append(tdom);
     			}
     		
-    		Monitor(object, element, object_change_cb);
+    		S.Monitor(object, element, object_change_cb);
     	};
 })();

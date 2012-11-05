@@ -2,7 +2,7 @@
 {
 	"use strict";
 	
-	G.PreloadImages = function(uris, images, cb)
+	S.PreloadImages = function(uris, images, cb)
 	{
 		var imagecount = uris.length;
 		

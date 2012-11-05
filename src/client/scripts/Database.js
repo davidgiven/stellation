@@ -59,7 +59,7 @@
     		for (var name in superclass)
     			f.prototype[name] = superclass[name];
     		
-    		var c = G.Classes[classname];
+    		var c = S.Classes[classname];
     		if (c)
     			for (var name in c)
     				f.prototype[name] = c[name];
@@ -77,7 +77,7 @@
 	{
 		var n = notifications[o.Oid];
 		if (!n)
-			n = notifications[o.Oid] = new G.CallbackSet();
+			n = notifications[o.Oid] = new S.CallbackSet();
 		return n;
 	};
 	
@@ -106,20 +106,21 @@
 		}
 	};
 	
-	G.Universe = find_object(0);
-	G.Player = null;
+	S.Universe = find_object(0);
+	S.Galaxy = null;
+	S.Player = null;
 	
-	G.Database =
+	S.Database =
 	{
 		Reset: function()
 		{
 			allproperties = {};
-			G.Player = null;
+			S.Player = null;
 		},
 	
 		SetPlayer: function(p)
 		{
-			G.Player = p;
+			S.Player = p;
 		},
 		
 		GetServerTime: function()
@@ -202,6 +203,8 @@
 					}
 				}
 			);
+			
+			S.Galaxy = S.Universe.Galaxy;
 		}
 	};
 }
