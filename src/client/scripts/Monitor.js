@@ -86,6 +86,11 @@
             		
     	    		element.empty();
     	    		element.append(tdom);
+    	    		
+    	    		/* Do any custom code. */
+    	    		
+    	    		if (events._changed)
+    	    			events._changed(o, element);
     			}
     		
     		S.Monitor(object, element, object_change_cb);

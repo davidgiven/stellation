@@ -60,7 +60,7 @@
 		
 		star_layer_group.clearLayers();
 		$.each(galaxy.VisibleStars,
-			function (_, star)
+			function (star)
 			{
     			var m = L.marker({lng: star.X, lat: star.Y},
     				{
@@ -338,15 +338,8 @@
 						}
 					);
 					
-					S.TemplatedMonitor(S.Player, $("#titlepane"), "title_tmpl",
-						{
-							logout:
-								function()
-								{
-									S.GSM.Logout();
-								}
-						}
-					);
+					S.TitlePaneMonitor($("#titlepane"));
+					S.IndexPaneMonitor($("#indexpane .content"));
             	}
             );
         }

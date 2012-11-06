@@ -10,9 +10,8 @@
 	<div class="ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix">
 		<span class="ui-dialog-title">Index</span>
 	</div>
-	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed turpis eros, scelerisque vitae suscipit nec, egestas lacinia sem. Duis eu malesuada diam. Pellentesque laoreet ullamcorper massa sit amet gravida. Etiam lobortis tellus sagittis nulla blandit ornare. Nam accumsan tempus augue ut semper. Nulla eu turpis urna. Duis rutrum, lorem a consequat feugiat, est risus dictum dui, sagittis scelerisque purus turpis eget nunc. Vestibulum nec orci et sem tincidunt feugiat ac sit amet risus. Fusce dictum, est eget egestas semper, justo est placerat magna, et pharetra lectus turpis sit amet enim. Quisque rhoncus congue posuere. Donec non enim lorem, vel rutrum nulla. Nam id arcu quis mauris viverra congue. Sed elementum scelerisque arcu eu ornare. Fusce volutpat fringilla elit, id porta nunc dapibus at. Etiam vitae metus diam.
-
-In hac habitasse platea dictumst. Nullam sollicitudin orci eget dui tristique nec auctor nisi consequat. Maecenas pulvinar, sapien id scelerisque scelerisque, quam nibh commodo felis, nec laoreet arcu velit congue orci. Donec ac libero augue, et dignissim ante. Mauris vitae sapien ut risus pulvinar rutrum id ut eros. In convallis tincidunt libero at consectetur. Nam malesuada porttitor mollis. Nunc rhoncus tortor non eros ultricies sit amet sagittis nulla molestie. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dictum, lectus sed facilisis adipiscing, elit odio bibendum purus, ut cursus eros nisl in ante. Fusce ultrices, ante quis malesuada pellentesque, sapien sapien tempor orci, eget mattis lacus dui sed magna. Aenean nibh velit, posuere nec auctor quis, vulputate eu augue. Sed gravida nunc lorem, id gravida nibh. Donec a tortor ut odio feugiat consequat nec at erat.
+	
+	<div class="content"/>
 </div>
 
 <div id="clockpane">Clock</div>
@@ -51,4 +50,17 @@ In hac habitasse platea dictumst. Nullam sollicitudin orci eget dui tristique ne
 	<div class="links">
 		<a href="#" s_link="logout">Logout</a>
 	</div>
+</script>
+
+<script type="text/html" id="index_overall_tmpl">
+	<ul class=".content"/>
+</script>
+
+<script type="text/html" id="index_star_tmpl">
+	<p>{{Name}} [{{X}}, {{Y}}]</p>
+	<ul class=".content"/>
+</script>
+
+<script type="text/html" id="index_fleet_tmpl">
+	<p>{{Name}}</p>
 </script>

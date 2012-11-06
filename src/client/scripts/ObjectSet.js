@@ -43,6 +43,25 @@
     	return !!this.data[o.Oid];
     };
     
+    S.ObjectSet.prototype.asSortedArray = function(cb)
+    {
+    	var array = [];
+    	
+    	for (var oid in this.data)
+    	{
+    		var o = this.data[oid];
+    		array.push(o);
+    	}
+    	
+		array.sort(cb);
+		return array;
+    };
+
+    S.ObjectSet.prototype.orderedEach = function(sortcb, cb)
+    {
+    	return $.each(this.asSortedArray(sortcb), cb);
+    };
+    
     var originalEach = $.each;
     $.each = function(o, f)
     {
