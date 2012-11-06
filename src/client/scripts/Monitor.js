@@ -11,7 +11,7 @@
             {
         		var o = $(this).data("s_object");
         		var f = $(this).data("s_callback");
-        		Database.Unwatch(o, f);
+        		S.Database.Unwatch(o, f);
         	}
     };
 
@@ -27,8 +27,13 @@
     		if (element.data("s_object") || element.data("s_callback"))
     			throw "element "+element+" is already a monitor";
     		
+    		/* Ensure that when the element is destroyed, we unregister the
+    		 * watch callback. */
+    		
     		element.data("s_object", object);
     		element.data("s_callback", object_changed_cb);
+    		element.on("s_objectdestroyed", $.noop);
+    			
     		S.Database.Watch(object, object_changed_cb);
     	};
 
