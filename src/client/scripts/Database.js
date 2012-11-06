@@ -33,11 +33,11 @@
 		
 		objectset: function(o)
 		{
-			var outo = [];
+			var outo = new S.ObjectSet();
 			$.each(o,
 				function (_, subo)
 				{
-					outo.push(find_object(subo));
+					outo.add(find_object(subo));
 				}
 			);
 			return outo;

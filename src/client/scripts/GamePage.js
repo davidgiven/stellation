@@ -210,7 +210,7 @@
         /* Draw the stars. */
         
         $.each(galaxy.VisibleStars,
-        	function (_, star)
+        	function (star)
         	{
         		var b = Math.floor(star.Brightness) - 1;
         		var size = 8 * (1 + map.getZoom()*3);
