@@ -44,9 +44,9 @@
 <!-- Templates -->
 
 <script type="text/html" id="title_tmpl">
-	<div class="name">{{Name}}</div>
+	<div class="name" s_attr="Name"/>
 	<span class="intertext">of the</span>
-	<div class="empire">{{EmpireName}}</div>
+	<div class="empire" s_attr="EmpireName"/>
 	<div class="links">
 		<a href="#" s_link="logout">Logout</a>
 	</div>
@@ -57,10 +57,10 @@
 </script>
 
 <script type="text/html" id="index_star_tmpl">
-	<p>{{Name}} [{{X}}, {{Y}}]</p>
+	<p><span s_attr="showName"/> [<span s_attr="X"/>, <span s_attr="Y"/>]</p>
 	<ul class=".content"/>
 </script>
 
 <script type="text/html" id="index_fleet_tmpl">
-	<p>{{Name}}</p>
+	<p s_attr="Name"/>
 </script>

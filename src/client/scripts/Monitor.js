@@ -43,35 +43,29 @@
     		var object_change_cb =
     			function (o)
     			{
-            		var ts = document.getElementById(template).innerHTML;
-            		var tdom = $(ts);
+    				var ts = document.getElementById(template).innerHTML;
+            		var tdom = document.createElement("div");
+            		tdom.innerHTML = ts;
             		
-    	    		/* Expand any text in the template. */
-    	    		
-            		var textnodes = tdom.andSelf().contents().filter(
-            			function()
-            			{
-            				return this.nodeType == 3;
-            			}
-            		);
+            		/* Expand any attribute references. */
             		
-            		$.each(textnodes,
+            		$(tdom).find("*[s_attr]").each(
             			function (_, node)
             			{
-            				node.nodeValue = node.nodeValue.replace(
-            					/{{([^}:]*:)?([^}]+)}}/g,
-            	    			function (m, a, b)
-            	    			{
-            	    				var v = "" + object[b];
-            	    				return v.escapeHTML();
-            	    			}
-            				);
+            				var attrname = $(node).attr("s_attr");
+            				var v = object[attrname];
+            				if (typeof(v) == "function")
+            					v = v(object);
+            				if (typeof(v) == "string")
+            					v = document.createTextNode(v);
+            				
+            				$(node).append(v);
             			}
-    	    		);
+            		);
     	    		
             		/* Connect up links. */
             		
-            		$.each(tdom.find("*[s_link]"),
+            		$(tdom).find("*[s_link]").each(
             			function (_, node)
             			{
             				var name = $(node).attr("s_link");
@@ -85,7 +79,7 @@
             		);
             		
     	    		element.empty();
-    	    		element.append(tdom);
+    	    		$(tdom).children().appendTo(element);
     	    		
     	    		/* Do any custom code. */
     	    		
