@@ -320,23 +320,7 @@
 							}
 						);
 					
-					/* Make any hoverable buttons hoverable (used for control
-					 * buttons in pane title bars). */
-					
-					$("#page .needs-ui-state-hover").each(
-						function ()
-						{
-							$(this).hover(
-						        function ()
-						        {
-						            $(this).addClass('ui-state-hover');
-						        },
-						        function () {
-						            $(this).removeClass('ui-state-hover');
-						        }
-						    );
-						}
-					);
+					S.Hoverise($("#page"));
 					
 					S.TitlePaneMonitor($("#titlepane"));
 					S.IndexPaneMonitor($("#indexpane .content"));

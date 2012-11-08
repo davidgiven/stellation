@@ -37,56 +37,62 @@
     		S.Database.Watch(object, object_changed_cb);
     	};
 
-    S.TemplatedMonitor =
-    	function (object, element, template, events)
-    	{
-    		var object_change_cb =
-    			function (o)
-    			{
-    				var ts = document.getElementById(template).innerHTML;
-            		var tdom = document.createElement("div");
-            		tdom.innerHTML = ts;
-            		
-            		/* Expand any attribute references. */
-            		
-            		$(tdom).find("*[s_attr]").each(
-            			function (_, node)
-            			{
-            				var attrname = $(node).attr("s_attr");
-            				var v = object[attrname];
-            				if (typeof(v) == "function")
-            					v = v(object);
-            				if (typeof(v) == "string")
-            					v = document.createTextNode(v);
-            				
-            				$(node).append(v);
-            			}
-            		);
-    	    		
-            		/* Connect up links. */
-            		
-            		$(tdom).find("*[s_link]").each(
-            			function (_, node)
-            			{
-            				var name = $(node).attr("s_link");
-            				$(node).click(
-            					function()
-            					{
-            						events[name](o, element);
-            					}
-            				);
-            			}
-            		);
-            		
-    	    		element.empty();
-    	    		$(tdom).children().appendTo(element);
-    	    		
-    	    		/* Do any custom code. */
-    	    		
-    	    		if (events._changed)
-    	    			events._changed(o, element);
-    			}
-    		
-    		S.Monitor(object, element, object_change_cb);
-    	};
+    S.ExpandTemplate = function (object, element, template, events)
+	{
+		var ts = document.getElementById(template).innerHTML;
+		var tdom = document.createElement("div");
+		tdom.innerHTML = ts;
+		
+		/* Expand any attribute references. */
+		
+		$(tdom).find("*[s_attr]").each(
+			function (_, node)
+			{
+				var attrname = $(node).attr("s_attr");
+				var v = object[attrname];
+				if (typeof(v) == "function")
+					v = v(object);
+				if (typeof(v) == "string")
+					v = document.createTextNode(v);
+				
+				$(node).append(v);
+			}
+		);
+		
+		/* Connect up links. */
+		
+		$(tdom).find("*[s_link]").each(
+			function (_, node)
+			{
+				var name = $(node).attr("s_link");
+				$(node).click(
+					function()
+					{
+						events[name](o, element);
+					}
+				);
+			}
+		);
+		
+		$(element).empty();
+		$(tdom).children().appendTo(element);
+		
+		S.Hoverise(element);
+	};
+    	
+    S.TemplatedMonitor = function (object, element, template, events)
+	{
+		var object_change_cb =
+			function (o)
+			{
+				S.ExpandTemplate(object, element, template, events);
+	    		
+	    		/* Do any custom code. */
+	    		
+	    		if (events._changed)
+	    			events._changed(o, element);
+			}
+		
+		S.Monitor(object, element, object_change_cb);
+	};
 })();

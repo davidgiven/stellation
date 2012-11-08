@@ -12,3 +12,4 @@ String.prototype.escapeHTML = function()
     div.appendChild(document.createTextNode(this));
     return div.innerHTML;
 };
+
