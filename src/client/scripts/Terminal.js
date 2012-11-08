@@ -67,7 +67,7 @@
 		
 		var command = params[-1];
 		delete params[-1];
-		var f = Commands[command];
+		var f = S.Commands[command];
 		if (!f)
 			Terminal.Error("command '"+command+"' not recognised; try 'help' for a list");
 		else

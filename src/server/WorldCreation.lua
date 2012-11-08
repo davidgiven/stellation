@@ -83,6 +83,9 @@ return
 			s.Brightness = 1.0 + round_to_tenths(math.random()*9.0)
 			s.AsteroidsC = math.random(10)+10
 			s.AsteroidsM = math.random(10)+10
+			s.ResourcesA = 0
+			s.ResourcesO = 0
+			s.ResourcesM = 0
 
 			galaxy.AllLocations:Add(s)
 			galaxy.VisibleStars:Add(s)

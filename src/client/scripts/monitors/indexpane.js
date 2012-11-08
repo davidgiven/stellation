@@ -25,6 +25,9 @@
 	{
 		S.TemplatedMonitor(fleet, element, "index_fleet_tmpl",
 			{
+				clicked: function (object, element)
+				{
+				}
 			}
 		);
 	};

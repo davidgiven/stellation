@@ -2,6 +2,13 @@
 {
     "use strict";
     
+    var teardown = function (element)
+    {
+		var o = $(element).data("s_object");
+		var f = $(element).data("s_callback");
+		S.Database.Unwatch(o, f);
+    };
+    
     /* Register our magic cleanup event. */
     
     $.event.special.s_objectdestroyed =
@@ -9,15 +16,15 @@
         teardown:
             function()
             {
-        		var o = $(this).data("s_object");
-        		var f = $(this).data("s_callback");
-        		S.Database.Unwatch(o, f);
+        		teardown(this);
         	}
     };
 
     S.Monitor =
     	function (object, element, callback)
     	{
+    		element = $(element).first();
+    		
     		var object_changed_cb =
     			function (o)
     			{
@@ -25,7 +32,7 @@
     			};
     			
     		if (element.data("s_object") || element.data("s_callback"))
-    			throw "element "+element+" is already a monitor";
+    			teardown(element);
     		
     		/* Ensure that when the element is destroyed, we unregister the
     		 * watch callback. */
@@ -43,8 +50,11 @@
 		var tdom = document.createElement("div");
 		tdom.innerHTML = ts;
 		
-		/* Expand any attribute references. */
+		/* Expand any attribute references. Don't add them just yet or else
+		 * we'll recurse into them while doing the template expansion. That's
+		 * bad. */
 		
+		var appendations = [];
 		$(tdom).find("*[s_attr]").each(
 			function (_, node)
 			{
@@ -55,7 +65,7 @@
 				if (typeof(v) == "string")
 					v = document.createTextNode(v);
 				
-				$(node).append(v);
+				appendations.push({node: $(node), value: v});
 			}
 		);
 		
@@ -68,16 +78,29 @@
 				$(node).click(
 					function()
 					{
-						events[name](o, element);
+						events[name](object, element);
 					}
 				);
 			}
 		);
+
+		/* Hoverise any buttons. */
+				
+		S.Hoverise(element);
+
+		/* Now add all nodes we thought about appending earlier. */
+		
+		$.each(appendations,
+			function (_, p)
+			{
+				p.node.append(p.value);
+			}
+		);
+		
+		/* Add the DOM to the document. */
 		
 		$(element).empty();
 		$(tdom).children().appendTo(element);
-		
-		S.Hoverise(element);
 	};
     	
     S.TemplatedMonitor = function (object, element, template, events)

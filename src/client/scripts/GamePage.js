@@ -326,6 +326,20 @@
 					S.IndexPaneMonitor($("#indexpane .content"));
             	}
             );
+        },
+        
+        ChangeMapFocus: function (x, y)
+        {
+        	$("#contentpane").addClass("minimised-vertically");
+        	
+        	map.panTo({lng: x, lat: y});
+        	map.setZoom(4);
+        },
+        
+        ChangeSummary: function (object)
+        {
+        	$("#contentpane").removeClass("minimised-vertically");
+        	object.createSummary($("#contentpane .content"));
         }
     };
 }

@@ -23,11 +23,7 @@
 			<span class="ui-icon ui-icon-arrowthickstop-1-n"/>
 		</a>
 	</div>
-	<p>
-	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed turpis eros, scelerisque vitae suscipit nec, egestas lacinia sem. Duis eu malesuada diam. Pellentesque laoreet ullamcorper massa sit amet gravida. Etiam lobortis tellus sagittis nulla blandit ornare. Nam accumsan tempus augue ut semper. Nulla eu turpis urna. Duis rutrum, lorem a consequat feugiat, est risus dictum dui, sagittis scelerisque purus turpis eget nunc. Vestibulum nec orci et sem tincidunt feugiat ac sit amet risus. Fusce dictum, est eget egestas semper, justo est placerat magna, et pharetra lectus turpis sit amet enim. Quisque rhoncus congue posuere. Donec non enim lorem, vel rutrum nulla. Nam id arcu quis mauris viverra congue. Sed elementum scelerisque arcu eu ornare. Fusce volutpat fringilla elit, id porta nunc dapibus at. Etiam vitae metus diam.
-</p><p>
-	In hac habitasse platea dictumst. Nullam sollicitudin orci eget dui tristique nec auctor nisi consequat. Maecenas pulvinar, sapien id scelerisque scelerisque, quam nibh commodo felis, nec laoreet arcu velit congue orci. Donec ac libero augue, et dignissim ante. Mauris vitae sapien ut risus pulvinar rutrum id ut eros. In convallis tincidunt libero at consectetur. Nam malesuada porttitor mollis. Nunc rhoncus tortor non eros ultricies sit amet sagittis nulla molestie. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean dictum, lectus sed facilisis adipiscing, elit odio bibendum purus, ut cursus eros nisl in ante. Fusce ultrices, ante quis malesuada pellentesque, sapien sapien tempor orci, eget mattis lacus dui sed magna. Aenean nibh velit, posuere nec auctor quis, vulputate eu augue. Sed gravida nunc lorem, id gravida nibh. Donec a tortor ut odio feugiat consequat nec at erat.
-	</p>
+	<div class="content"/>
 </div>
 
 <div id="detailpane">
@@ -57,17 +53,35 @@
 </script>
 
 <script type="text/html" id="index_star_tmpl">
-	<p><span s_attr="showName"/> [<span s_attr="X"/>, <span s_attr="Y"/>]</p>
-	<ul class=".content"/>
+	<li>
+		<span s_attr="showName"/> [<span s_attr="X"/>, <span s_attr="Y"/>]
+		<ul class=".content"/>
+	</li>
 </script>
 
 <script type="text/html" id="index_fleet_tmpl">
-	<p s_attr="Name"/>
+	<li>
+		<a href="#" s_attr="Name" s_link="clicked"/>
+	</li>
 </script>
 
 <script type="text/html" id="star_name_tmpl">
-	<span s_attr="Name"/>
-	<a href="#" class="ui-corner-all ui-state-default needs-ui-state-hover inline-icon">
+	<a href="#" s_attr="Name" s_link="summary"/>
+	<a href="#" class="inline-icon" s_link="map">
 		<span class="ui-icon ui-icon-arrow-4-diag"/>
 	</a>
+</script>
+
+<script type="text/html" id="star_summary_tmpl">
+	<div>
+		<img class="starimage"/>
+		<b>Name: </b><span s_attr="showName"/><br/>
+		<b>Coordinates: </b>[<span s_attr="X"/>, <span s_attr="Y"/>]<br/>
+		<b>Brightness: </b><span s_attr="Brightness"/><br/>
+		<b>Asteroids: </b><span s_attr="AsteroidsC"/> carbonaceous,
+			<span s_attr="AsteroidsM"/> metallic<br/>
+		<b>Free resources: </b><span s_attr="ResourcesA"/> antimatter,
+			<span s_attr="ResourcesO"/> organic,
+			<span s_attr="ResourcesM"/> metal<br/>
+	</div>
 </script>
