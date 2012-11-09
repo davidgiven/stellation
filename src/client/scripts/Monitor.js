@@ -47,15 +47,14 @@
     S.ExpandTemplate = function (object, element, template, events)
 	{
 		var ts = document.getElementById(template).innerHTML;
-		var tdom = document.createElement("div");
-		tdom.innerHTML = ts;
+		var tdom = $(ts);
 		
 		/* Expand any attribute references. Don't add them just yet or else
 		 * we'll recurse into them while doing the template expansion. That's
 		 * bad. */
 		
 		var appendations = [];
-		$(tdom).find("*[s_attr]").each(
+		$(tdom).findAndSelf("*[s_attr]").each(
 			function (_, node)
 			{
 				var attrname = $(node).attr("s_attr");
@@ -71,7 +70,7 @@
 		
 		/* Connect up links. */
 		
-		$(tdom).find("*[s_link]").each(
+		$(tdom).findAndSelf("*[s_link]").each(
 			function (_, node)
 			{
 				var name = $(node).attr("s_link");
@@ -86,7 +85,7 @@
 
 		/* Hoverise any buttons. */
 				
-		S.Hoverise(element);
+		S.Hoverise(tdom);
 
 		/* Now add all nodes we thought about appending earlier. */
 		
@@ -100,7 +99,7 @@
 		/* Add the DOM to the document. */
 		
 		$(element).empty();
-		$(tdom).children().appendTo(element);
+		$(tdom).appendTo(element);
 	};
     	
     S.TemplatedMonitor = function (object, element, template, events)

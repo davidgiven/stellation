@@ -8,5 +8,10 @@
     	{
     		return "#"+o.Oid;
     	},
+    	
+    	createSummary: function (element)
+    	{
+    		$(element).text("summary pane for "+this.Oid);
+    	}
     };
 })();

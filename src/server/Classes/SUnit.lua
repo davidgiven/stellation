@@ -21,11 +21,14 @@ return
 	{
 		Mass = Type.Number(LOCAL),
 		Damage = Type.Number(LOCAL),
-		MaxDamage = Type.Number(LOCAL)
 	},
 	
 	methods =
 	{
-		Init = super.methods.Init
+		Init = function (self)
+			self.Damage = 0
+			
+			super.methods.Init(self)
+		end
 	}
 }

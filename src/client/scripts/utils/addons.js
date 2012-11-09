@@ -13,3 +13,7 @@ String.prototype.escapeHTML = function()
     return div.innerHTML;
 };
 
+$.fn.findAndSelf = function(selector)
+{
+	return this.find(selector).add(this.filter(selector))
+}

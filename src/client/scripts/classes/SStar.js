@@ -33,6 +33,16 @@
         					var b = parseInt(object.Brightness);
         					var img = $(element).find(".starimage");
         					img.attr("src", "res/star"+b+".png");
+        					
+        					var t = $(element).find(".star_summary_content");
+        					$.each(object.Contents,
+        						function (o)
+        						{
+            						var e = $("<tbody/>");
+            						t.append(e);
+            						o.createSummary(e);
+        						}
+        					);
         				}
         		}
         	);
