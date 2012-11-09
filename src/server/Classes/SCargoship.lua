@@ -34,6 +34,9 @@ return
 		MaintenanceCostM = 0.0,
 		MaintenanceCostA = 2.0,
 		MaintenanceCostO = 1.0,
+		CargoM = 0,
+		CargoA = 0,
+		CargoO = 0
 	},
 	
 	properties =
@@ -45,12 +48,6 @@ return
 	
 	methods =
 	{
-		Init = function (self)
-			self.CargoM = 0
-			self.CargoA = 0
-			self.CargoO = 0
-			
-			super.methods.Init(self)
-		end
+		Init = super.methods.Init
 	}
 }

@@ -15,6 +15,7 @@ return
 	
 	statics =
 	{
+		Damage = 0
 	},
 	
 	properties =
@@ -26,8 +27,6 @@ return
 	methods =
 	{
 		Init = function (self)
-			self.Damage = 0
-			
 			super.methods.Init(self)
 		end
 	}

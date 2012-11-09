@@ -13,6 +13,9 @@ return
 	
 	statics =
 	{
+		ResourcesA = 0,
+		ResourcesO = 0,
+		ResourcesM = 0
 	},
 	
 	properties =

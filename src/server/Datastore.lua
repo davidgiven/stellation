@@ -90,23 +90,17 @@ local function new_object_proxy(oid)
 	metatable =
 	{
 		__index = function (self, key)
-			local c = methodcache[key]
-			if c then
-				return c
-			end
-			
-			c = datumcache[key]
+			local c = datumcache[key]
 			if c then
 				return c:Get()
 			end
 
-			c = metatable[key]
+			c = methodcache[key]
 			if c then
-				methodcache[key] = c
 				return c
 			end
 			
-			c = get_method_or_static(class, key)
+			c = metatable[key]
 			if c then
 				methodcache[key] = c
 				return c
@@ -118,10 +112,17 @@ local function new_object_proxy(oid)
 				return c.Get()
 			end
 			
+			c = get_method_or_static(class, key)
+			if c then
+				methodcache[key] = c
+				return c
+			end
+			
 			Utils.FatalError("Unknown method or property '", key, "' on ", class.name, "#", oid)
 		end,
 		
 		__newindex = function (self, key, value)
+			methodcache[key] = nil
 			getdatum(key).Set(value)
 		end,
 		

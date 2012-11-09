@@ -146,14 +146,23 @@ local ObjectSetType =
 				local query = SQL(
 					"SELECT value FROM "..tablename.." WHERE oid = ?"
 					):bind(oid)
+				local resultset = query:resultset()
+				if not resultset then
+					return function()
+						return nil
+					end
+				end
+				local results = resultset[1]
+				local i = 1
 
 				return function ()
-					local row = query:step()
+					local row = results[i]
 					if not row then
 						return nil
 					end
-					
-					return findproxy(tonumber(row[1]))
+
+					i = i + 1					
+					return findproxy(tonumber(row))
 				end
 			end
 		}
