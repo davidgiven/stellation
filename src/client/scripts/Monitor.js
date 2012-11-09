@@ -60,7 +60,7 @@
 				var attrname = $(node).attr("s_attr");
 				var v = object[attrname];
 				if (typeof(v) == "function")
-					v = v(object);
+					v = v.call(object, object);
 				if (typeof(v) == "string")
 					v = document.createTextNode(v);
 				
@@ -111,7 +111,7 @@
 	    		
 	    		/* Do any custom code. */
 	    		
-	    		if (events._changed)
+	    		if (events && events._changed)
 	    			events._changed(o, element);
 			}
 		

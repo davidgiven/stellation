@@ -72,6 +72,14 @@
 	</a>
 </script>
 
+<script type="text/html" id="cargo_fragment_tmpl">
+	<span>
+		<span s_attr="CargoM"/> metal,
+		<span s_attr="CargoA"/> antimatter,
+		<span s_attr="CargoO"/> organic
+	</span>
+</script>
+
 <script type="text/html" id="star_summary_tmpl">
 	<div>
 		<img class="starimage"/>
@@ -89,15 +97,19 @@
 </script>
 
 <script type="text/html" id="fleet_summary_tmpl">
-	<tr colspan="0">
-		<th><h1><span s_attr="Name"/></h1></th>
+	<tr>
+		<td class="heading" colspan="3">
+			<h1><span s_attr="Name"/></h1>
+		</td>
 	</tr>
-	<tr class="fleet_content"/>
 </script>
 
-<script type="text/html" id="ship_summary_tmpl">
-	<td s_attr="Name"/>
-	<td>
+<script type="text/html" id="unit_summary_tmpl">
+	<td class="nowrap notlastcolumn">
+		<a href="#" s_attr="Name" s_link="details"/>
+	</td>
+	<td class="nowrap notlastcolumn">
 		<span s_attr="Damage"/> / <span s_attr="MaxDamage"/>
 	</td>
+	<td class="remaining" s_attr="showSummaryDetail"/td>
 </script>

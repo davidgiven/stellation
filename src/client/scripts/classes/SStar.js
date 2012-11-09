@@ -41,6 +41,10 @@
             						var e = $("<tbody/>");
             						t.append(e);
             						o.createSummary(e);
+            						
+            						e = $("<tbody/>");
+            						t.append(e)
+            						o.createContentSummary(e);
         						}
         					);
         				}

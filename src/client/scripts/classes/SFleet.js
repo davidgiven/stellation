@@ -6,22 +6,28 @@
     {	
     	createSummary: function (element)
     	{
-        	S.TemplatedMonitor(this, element, "fleet_summary_tmpl",
-        		{
-        			_changed: function (object, element)
-        			{
-    					var t = $(element).find(".fleet_content");
-    					$.each(object.Contents,
-    						function (o)
-    						{
-        						var e = $("<tr/>");
-        						t.append(e);
-        						o.createSummary(e);
-    						}
-    					);
-        			}
-        		}
-        	);
+        	S.TemplatedMonitor(this, element, "fleet_summary_tmpl");
+    	},
+    	
+    	createContentSummary: function (element)
+    	{
+    		var object = this;
+    		var object_change_cb =
+    			function (o)
+    			{
+    				$(element).empty();
+    	    		
+					$.each(object.Contents,
+						function (o)
+						{
+    						var e = $("<tr/>");
+    						$(element).append(e);
+    						o.createSummary(e);
+						}
+					);
+    			}
+    		
+    		S.Monitor(object, element, object_change_cb);
     	}
     };
 })();
