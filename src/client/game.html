@@ -119,6 +119,32 @@
 	<td class="remaining" s_attr="showSummaryDetail"/td>
 </script>
 
+<script type="text/html" id="mass_help_tmpl">
+	<p>
+		Heavier vessels require more energy to transport through a wormhole.
+	</p>
+</script>
+
+<script type="text/html" id="damage_help_tmpl">
+	<p>
+		Indicates how badly damaged this unit is. The unit will be destroyed
+		if more than <span s_attr="MaxDamage"/> units of damage are done to it.
+	</p>
+</script>
+
+<script type="text/html" id="upkeep_help_tmpl">
+	<p>
+		How much resources this unit requires to run. If insufficient resources
+		are available, the unit may shut down or be destroyed.
+	</p>
+	<p>
+		Resources are first looked for in orbit around the current star. If
+		they are not available there, then they will be consumed from
+		cargoships in the current fleet. Beware that they are not looked for
+		in cargoships belonging to a <i>different</i> fleet!
+	</p>
+</script>
+
 <script type="text/html" id="unit_details_tmpl">
 	<tr>
 		<td colspan="3">
@@ -131,10 +157,7 @@
 	<tr>
 		<th>
 			Mass
-
-			<a href="#" class="inline-icon ui-state-default ui-corner-all needs-ui-state-hover help-button">
-				?
-			</a>
+			<help template="mass_help_tmpl"/>
 		</th>
 		<td>
 			<span s_attr="Mass"/> tonnes
@@ -143,10 +166,7 @@
 	<tr>
 		<th>
 			Damage
-
-			<a href="#" class="inline-icon ui-state-default ui-corner-all needs-ui-state-hover help-button">
-				?
-			</a>
+			<help template="damage_help_tmpl"/>
 		</th>
 		<td>
 			<span s_attr="Damage"/> / <span s_attr="MaxDamage"/>
@@ -155,10 +175,7 @@
 	<tr>
 		<th>
 			Upkeep/hr
-
-			<a href="#" class="inline-icon ui-state-default ui-corner-all needs-ui-state-hover help-button">
-				?
-			</a>
+			<help template="upkeep_help_tmpl"/>
 		</th>
 		<td>
 			<span s_attr="MaintenanceCostM"/> metal,
@@ -168,6 +185,20 @@
 	</tr>
 </script>
 
+<script type="text/html" id="cargoship_cargo_help_tmpl">
+	<p>
+		Cargoships can carry any amount of metal, organics or antimatter.
+		The more they carry, the larger the mass of the ship.
+	</p>
+</script>
+
+<script type="text/html" id="cargoship_available_help_tmpl">
+	<p>
+		This indicates how much resources are available for pickup in orbit
+		around the current star.
+	</p>
+</script>
+
 <script type="text/html" id="cargoship_details_tmpl">
 	<tr>
 		<td colspan="3">
@@ -175,7 +206,10 @@
 		</td>
 	</tr>
 	<tr>
-		<td>Cargo</td>
+		<td>
+			Cargo
+			<help template="cargoship_cargo_help_tmpl"/>
+		</td>
 		<td>
 			<span s_attr="CargoM"/> metal,
 			<span s_attr="CargoA"/> antimatter,
@@ -183,7 +217,10 @@
 		</td>
 	</tr>
 	<tr>
-		<td>Available</td>
+		<td>
+			Available
+			<help template="cargoship_available_help_tmpl"/>
+		</td>
 		<td class="available"/>
 	</tr>
 	<tr>

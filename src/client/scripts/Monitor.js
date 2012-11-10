@@ -85,7 +85,7 @@
 
 		/* Add any needed jquery markup. */
 				
-		S.Markup(tdom);
+		S.Markup(tdom, object);
 
 		/* Now add all nodes we thought about appending earlier. */
 		
