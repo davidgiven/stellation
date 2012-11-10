@@ -2,7 +2,7 @@
 {
 	"use strict";
 	
-	S.Hoverise = function (s)
+	S.Markup = function (s)
 	{
 		$(s).andSelf().find(".needs-ui-state-hover").each(
     		function ()
@@ -18,6 +18,13 @@
     		    );
     		}
     	);
+		
+		$(s).andSelf().find(":button").each(
+			function ()
+			{
+				$(this).button();
+			}
+		);
 	};
 }
 )();

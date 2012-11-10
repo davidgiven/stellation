@@ -83,9 +83,9 @@
 			}
 		);
 
-		/* Hoverise any buttons. */
+		/* Add any needed jquery markup. */
 				
-		S.Hoverise(tdom);
+		S.Markup(tdom);
 
 		/* Now add all nodes we thought about appending earlier. */
 		

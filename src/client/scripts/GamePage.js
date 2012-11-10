@@ -320,7 +320,7 @@
 							}
 						);
 					
-					S.Hoverise($("#page"));
+					S.Markup($("#page"));
 					
 					S.TitlePaneMonitor($("#titlepane"));
 					S.IndexPaneMonitor($("#indexpane .content"));
