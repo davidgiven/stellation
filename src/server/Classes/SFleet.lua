@@ -16,11 +16,17 @@ return
 	
 	statics =
 	{
+		TargetX = 0,
+		TargetY = 0,
+		AntimatterJumpCost = 1,
+		JumpSpeed = 1
 	},
 	
 	properties =
 	{
-		JumpshipCount = Type.Number(LOCAL)
+		JumpshipCount = Type.Number(LOCAL),
+		TargetX = Type.Number(PRIVATE),
+		TargetY = Type.Number(PRIVATE)
 	},
 	
 	methods =

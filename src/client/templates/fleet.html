@@ -14,14 +14,14 @@
 
 <script type="text/html" id="details">
 	<tr>
-		<td colspan="3">
+		<td colspan="2">
 			<h1>
 				<span s_attr="Name"/> (#<span s_attr="Oid"/>)
 			</h1>
 		</td>
 	</tr>
 	<tr>
-		<td colspan="3">
+		<td colspan="2">
 			<h1>
 				Jump controls
 			</h1>
@@ -38,6 +38,9 @@
 		</th>
 		<td>
 			<span class="current"/>
+			<a href="#" class="inline-icon" s_link="current_map">
+				<span class="ui-icon ui-icon-arrow-4-diag"/>
+			</a>
 		</td>
 	</tr>
 	<tr>
@@ -45,14 +48,22 @@
 			Selected target
 			<help>
 				<p>
-					Enter your target coordinates here.
+					Where the fleet is currently configured to jump to.
 				</p>
 			</help>
 		</th>
 		<td>
-			<input type="textfield" class="target"/>
+			[<span s_attr="TargetX"/>, <span s_attr="TargetY"/>] 
+			<a href="#" class="inline-icon" s_link="target_map">
+				<span class="ui-icon ui-icon-arrow-4-diag"/>
+			</a>
 		</td>
 	</tr>
+	<tr>
+		<th> </th>
+		<td>
+			<button>Copy from map</button>
+		</td>
 	<tr>
 		<th>
 			Distance to target
@@ -95,7 +106,7 @@
 	</tr>
 	<tr>
 		<th> </th>
-		<td colspan="2">
+		<td>
 			<button>Jump</button>
 		</td>
 	</tr>

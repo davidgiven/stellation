@@ -45,18 +45,22 @@
     		{
     			var cx = object.Location.X;
     			var cy = object.Location.Y;
+    			var tx = object.TargetX;
+    			var ty = object.TargetY;
     			
     			$(element).find(".current").text(
     				cx + ", " + cy
     			);
     			
-    			var distance = 0;
-    			var time = 0;
-    			var antimatter = 0;
+    			var dx = cx - tx;
+    			var dy = cy - ty;
+    			var distance = Math.sqrt(dx*dx + dy*dy);
+    			var time = distance;
+    			var antimatter = distance * object.Mass;
     			
-    			$(element).find(".distance").text(distance);
-    			$(element).find(".time").text(time);
-    			$(element).find(".antimatter").text(antimatter);
+    			$(element).find(".distance").text(distance.toFixed(1));
+    			$(element).find(".time").text(time.toFixed(3));
+    			$(element).find(".antimatter").text(antimatter.toFixed());
     		};
     		
     		var e = $("<tbody/>");
@@ -66,6 +70,16 @@
         			_changed: function (object, element)
         			{
         				update();
+        			},
+        			
+        			current_map: function (object, element)
+        			{
+						S.GamePage.ChangeMapFocus(object.Location.X, object.Location.Y);
+        			},
+        			
+        			target_map: function (object, element)
+        			{
+						S.GamePage.ChangeMapFocus(object.TargetX, object.TargetY);
         			}
         		}
         	);
