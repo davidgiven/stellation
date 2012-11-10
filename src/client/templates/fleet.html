@@ -1,0 +1,102 @@
+<script type="text/html" id="index">
+	<li>
+		<a href="#" s_attr="Name" s_link="clicked"/>
+	</li>
+</script>
+
+<script type="text/html" id="summary">
+	<tr>
+		<td class="heading" colspan="3">
+			<h1><a href="#" s_attr="Name" s_link="details"/></h1>
+		</td>
+	</tr>
+</script>
+
+<script type="text/html" id="details">
+	<tr>
+		<td colspan="3">
+			<h1>
+				<span s_attr="Name"/> (#<span s_attr="Oid"/>)
+			</h1>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="3">
+			<h1>
+				Jump controls
+			</h1>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Current location
+			<help>
+				<p>
+					The current location of this fleet.
+				</p>
+			</help>
+		</th>
+		<td>
+			<span class="current"/>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Selected target
+			<help>
+				<p>
+					Enter your target coordinates here.
+				</p>
+			</help>
+		</th>
+		<td>
+			<input type="textfield" class="target"/>
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Distance to target
+			<help>
+				<p>
+					The distance from here to the target coordinates.
+				</p>
+			</help>
+		</th>
+		<td>
+			<span class="distance"/> parsecs
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Time to target
+			<help>
+				<p>
+					How long this jump will take.
+				</p>
+			</help>
+		</th>
+		<td>
+			<span class="time"/> hours
+		</td>
+	</tr>
+	<tr>
+		<th>
+			Antimatter reqd
+			<help>
+				<p>
+					The amount of antimatter this jump will consume. The
+					antimatter must be available from cargoships in this fleet.
+				</p>
+			</help>
+		</th>
+		<td>
+			<span class="antimatter"/>
+		</td>
+	</tr>
+	<tr>
+		<th> </th>
+		<td colspan="2">
+			<button>Jump</button>
+		</td>
+	</tr>
+</script>

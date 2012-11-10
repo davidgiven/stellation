@@ -19,7 +19,7 @@
     		
     		var e = $("<tbody/>");
     		$(element).append(e);
-        	S.TemplatedMonitor(object, e, "cargoship_details_tmpl",
+        	S.TemplatedMonitor(object, e, "cargoship.details",
         		{
         			_changed: function (object, element)
         			{

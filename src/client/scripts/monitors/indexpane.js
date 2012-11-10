@@ -23,7 +23,7 @@
 		
     S.IndexPaneFleetMonitor = function (fleet, element)
 	{
-		S.TemplatedMonitor(fleet, element, "index_fleet_tmpl",
+		S.TemplatedMonitor(fleet, element, "fleet.index",
 			{
 				clicked: function (object, element)
 				{
@@ -35,7 +35,7 @@
 	
     S.IndexPaneStarMonitor = function (star, element)
 	{
-		S.TemplatedMonitor(star, element, "index_star_tmpl",
+		S.TemplatedMonitor(star, element, "star.index",
 			{
 				_changed:
 					function (object, element)

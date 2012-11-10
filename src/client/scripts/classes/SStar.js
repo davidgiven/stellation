@@ -7,7 +7,7 @@
     	showName: function (o)
     	{
     		var e = document.createElement("span");
-    		S.ExpandTemplate(o, e, "star_name_tmpl",
+    		S.ExpandTemplate(o, e, "star.name",
     			{
     				map: function (object, element)
 					{
@@ -25,7 +25,7 @@
     	
     	createSummary: function (element)
     	{
-        	S.TemplatedMonitor(this, element, "star_summary_tmpl",
+        	S.TemplatedMonitor(this, element, "star.summary",
         		{
         			_changed:
         				function (object, element)

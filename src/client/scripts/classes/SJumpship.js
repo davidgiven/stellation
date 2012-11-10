@@ -12,7 +12,7 @@
     		
     		var e = $("<tbody/>");
     		$(element).append(e);
-        	S.TemplatedMonitor(object, e, "jumpship_details_tmpl",
+        	S.TemplatedMonitor(object, e, "jumpship.details",
         		{
         			fleet: function (object, element)
         			{

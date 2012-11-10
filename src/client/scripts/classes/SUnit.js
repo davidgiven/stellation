@@ -6,7 +6,7 @@
     {	
     	createSummary: function (element)
     	{
-        	S.TemplatedMonitor(this, element, "unit_summary_tmpl",
+        	S.TemplatedMonitor(this, element, "unit.summary",
         		{
         			details: function (object, element)
         			{
@@ -27,7 +27,7 @@
     		
     		var e = $("<tbody/>");
     		$(element).append(e);
-        	S.TemplatedMonitor(object, e, "unit_details_tmpl",
+        	S.TemplatedMonitor(object, e, "unit.details",
         		{
         		}
         	);

@@ -6,7 +6,7 @@
     {	
     	createSummary: function (element)
     	{
-        	S.TemplatedMonitor(this, element, "fleet_summary_tmpl",
+        	S.TemplatedMonitor(this, element, "fleet.summary",
         		{
         			details: function (object)
         			{
@@ -61,7 +61,7 @@
     		
     		var e = $("<tbody/>");
     		$(element).append(e);
-        	S.TemplatedMonitor(object, e, "fleet_details_tmpl",
+        	S.TemplatedMonitor(object, e, "fleet.details",
         		{
         			_changed: function (object, element)
         			{
@@ -69,7 +69,6 @@
         			}
         		}
         	);
-
-    	}
+    	},
     };
 })();

@@ -20,6 +20,40 @@
         	}
     };
 
+    var templatefiles = {};
+    var loadtemplate = function (name, id, cb)
+    {
+    	var f = function(element)
+    	{
+    		var e = $(element).find("#"+id);
+    		cb(e);
+    	}
+    	
+    	var e = templatefiles[name];
+    	if (e)
+    	{
+    		if (e._loaded)
+    			f(e);
+    		else
+    			e._callbacks.add(f);
+    		return;
+    	}
+    	
+    	e = $("<body/>");
+    	e._loaded = false;
+    	e._callbacks = $.Callbacks();
+    	e._callbacks.add(f);
+    	templatefiles[name] = e;
+    	
+    	e.load("templates/" + name + ".html",
+    		function ()
+    		{
+    			e._loaded = true;
+    			e._callbacks.fire(e);
+    		}
+    	);
+    };
+    
     S.Monitor =
     	function (object, element, callback)
     	{
@@ -47,8 +81,22 @@
     S.ExpandTemplate = function (object, element, template, events)
 	{
     	if (typeof(template) == "string")
-    		template = document.getElementById(template);
-		var tdom = $(template.innerHTML);
+    	{
+    		var s = template.split(".");
+    		if (s.length == 1)
+    			template = document.getElementById(template);
+    		else
+    		{
+    			loadtemplate(s[0], s[1],
+    				function (e)
+    				{
+    					S.ExpandTemplate(object, element, e, events);
+    				}
+    			);
+    			return;
+    		}
+    	}
+		var tdom = $($(template).html());
 		
 		/* Expand any attribute references. Don't add them just yet or else
 		 * we'll recurse into them while doing the template expansion. That's
@@ -101,6 +149,11 @@
 		
 		$(element).empty();
 		$(tdom).appendTo(element);
+		
+		/* Notify the user that the template has loaded. */
+		
+		if (events && events._changed)
+			events._changed(object, element);
 	};
     	
     S.TemplatedMonitor = function (object, element, template, events)
@@ -109,11 +162,6 @@
 			function (o)
 			{
 				S.ExpandTemplate(object, element, template, events);
-	    		
-	    		/* Do any custom code. */
-	    		
-	    		if (events && events._changed)
-	    			events._changed(o, element);
 			}
 		
 		S.Monitor(object, element, object_change_cb);
