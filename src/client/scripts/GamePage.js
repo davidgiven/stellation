@@ -340,6 +340,13 @@
         {
         	$("#contentpane").removeClass("minimised-vertically");
         	object.createSummary($("#contentpane .content"));
+        },
+        
+        ChangeDetail: function (object)
+        {
+        	var e = $("#detailpane .content");
+        	e.empty();
+        	object.createDetails(e);
         }
     };
 }

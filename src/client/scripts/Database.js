@@ -136,7 +136,7 @@
 		Watch: function(o, f)
 		{
 			get_notifications_for(o).add(f);
-			object_changed(o);
+			f(o);
 		},
 		
 		Unwatch: function(o, f)

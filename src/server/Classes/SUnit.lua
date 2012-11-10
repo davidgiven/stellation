@@ -15,7 +15,10 @@ return
 	
 	statics =
 	{
-		Damage = 0
+		Damage = 0,
+		MaintenanceCostM = 0,
+		MaintenanceCostA = 0,
+		MaintenanceCostO = 0,
 	},
 	
 	properties =

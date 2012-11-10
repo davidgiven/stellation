@@ -27,6 +27,7 @@
 			{
 				clicked: function (object, element)
 				{
+					S.GamePage.ChangeDetail(object);
 				}
 			}
 		);

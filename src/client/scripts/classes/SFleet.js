@@ -6,7 +6,14 @@
     {	
     	createSummary: function (element)
     	{
-        	S.TemplatedMonitor(this, element, "fleet_summary_tmpl");
+        	S.TemplatedMonitor(this, element, "fleet_summary_tmpl",
+        		{
+        			details: function (object)
+        			{
+    					S.GamePage.ChangeDetail(object);
+        			}
+        		}
+        	);
     	},
     	
     	createContentSummary: function (element)
