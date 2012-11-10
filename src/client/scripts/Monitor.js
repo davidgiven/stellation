@@ -46,8 +46,9 @@
 
     S.ExpandTemplate = function (object, element, template, events)
 	{
-		var ts = document.getElementById(template).innerHTML;
-		var tdom = $(ts);
+    	if (typeof(template) == "string")
+    		template = document.getElementById(template);
+		var tdom = $(template.innerHTML);
 		
 		/* Expand any attribute references. Don't add them just yet or else
 		 * we'll recurse into them while doing the template expansion. That's

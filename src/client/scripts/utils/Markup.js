@@ -9,16 +9,21 @@
 		$(s).andSelf().find("help").each(
 			function ()
 			{
-				var template = $(this).attr("template");
+				var object = this;
 				
 				var newnode = $("<a href='#' class='inline-icon ui-state-default ui-corner-all needs-ui-state-hover help-button'>?</a>");
-				$(this).replaceWith(newnode);
+				$(object).replaceWith(newnode);
 				$(newnode).tooltip(
 					{
 						items: "a",
 						content: function()
 						{
 							var e = $("<div/>");
+							
+							var template = $(object).attr("template");
+							if (!template)
+								template = object;
+							
 							S.ExpandTemplate(object, e, template, {});
 							return e;
 						}

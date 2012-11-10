@@ -35,6 +35,41 @@
     			}
     		
     		S.Monitor(object, element, object_change_cb);
+    	},
+    	
+    	createDetails: function (element)
+    	{
+    		var object = this;
+    		
+    		var update = function()
+    		{
+    			var cx = object.Location.X;
+    			var cy = object.Location.Y;
+    			
+    			$(element).find(".current").text(
+    				cx + ", " + cy
+    			);
+    			
+    			var distance = 0;
+    			var time = 0;
+    			var antimatter = 0;
+    			
+    			$(element).find(".distance").text(distance);
+    			$(element).find(".time").text(time);
+    			$(element).find(".antimatter").text(antimatter);
+    		};
+    		
+    		var e = $("<tbody/>");
+    		$(element).append(e);
+        	S.TemplatedMonitor(object, e, "fleet_details_tmpl",
+        		{
+        			_changed: function (object, element)
+        			{
+        				update();
+        			}
+        		}
+        	);
+
     	}
     };
 })();
