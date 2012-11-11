@@ -383,6 +383,7 @@
         {
         	$("#contentpane").addClass("minimised-vertically");
         	
+    		crosshairs_marker.setLatLng({lng: x, lat: y});
         	map.panTo({lng: x, lat: y});
         	map.setZoom(4);
         },
