@@ -80,6 +80,14 @@
         			target_map: function (object, element)
         			{
 						S.GamePage.ChangeMapFocus(object.TargetX, object.TargetY);
+        			},
+        			
+        			copy_from_map: function (object, element)
+        			{
+        				var xy = S.GamePage.GetMapTarget();
+        				object.TargetX = xy.x;
+        				object.TargetY = xy.y;
+        				update();
         			}
         		}
         	);

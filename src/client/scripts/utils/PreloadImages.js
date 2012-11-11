@@ -9,8 +9,12 @@
 		$.each(uris,
 			function (i, name)
 			{
-				var image = new Image();
-				images[i] = image;
+				var image = images[i];
+				if (!image)
+				{
+					image = new Image();
+					images[i] = image;
+				}
 				image.onload =
 					function()
 					{
@@ -21,6 +25,17 @@
 				image.src = name;
 			}
 		);
+	}
+	
+	S.PreloadImage = function(uri, cb)
+	{
+		var image = new Image();
+		image.onload =
+			function()
+			{
+				cb(image);
+			}
+		image.src = uri;
 	}
 }
 )();

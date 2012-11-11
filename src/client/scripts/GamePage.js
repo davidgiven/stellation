@@ -21,6 +21,9 @@
 		 	"res/star9.png",
 		];
 	
+	var crosshairs_image;
+	var crosshairs_marker;
+	
 	var any_star_changed_pending = false;
 	var star_changed_cb = function(o)
 	{
@@ -62,9 +65,17 @@
 		$.each(galaxy.VisibleStars,
 			function (star)
 			{
-    			var m = L.marker({lng: star.X, lat: star.Y},
+				var latlng = {lng: star.X, lat: star.Y}
+    			var m = L.marker(latlng,
     				{
     					icon: icon
+    				}
+    			);
+    			
+    			m.on("click",
+    				function()
+    				{
+    					crosshairs_marker.setLatLng(latlng);
     				}
     			);
     			
@@ -73,6 +84,14 @@
     		}
 		);
 	}
+	
+	var clicked_cb = function(event)
+	{
+		var x = roundto(event.latlng.lng, 0.1);
+		var y = roundto(event.latlng.lat, 0.1);
+		
+		crosshairs_marker.setLatLng({lng: x, lat: y});
+	};
 	
 	var on_mousemove_cb = function(event)
 	{
@@ -226,7 +245,18 @@
     {
     	Preload: function (cb)
     	{
-    		S.PreloadImages(star_images_filenames, star_images, cb);
+    		S.PreloadImages(star_images_filenames, star_images,
+    			function()
+    			{
+    				S.PreloadImage("res/crosshairs.png",
+    					function (img)
+    					{
+    						crosshairs_image = img;
+    						cb();
+    					}
+    				);
+    			}
+    		);
     	},
     	
         Show: function ()
@@ -277,13 +307,30 @@
 						}
 					).addTo(map);
 					
+					/* The graticules and star graphics. */
+					
 					graticule_layer = L.tileLayer.canvas();
 					graticule_layer.drawTile = drawtile_cb;
 					graticule_layer.addTo(map);
 					
-					map.on("mousemove", on_mousemove_cb);
-					map.on("viewreset", star_changed_cb);
+					/* The crosshairs need to go *under* the star hotspots. */
 					
+	    			crosshairs_marker = L.marker({lng: 0, lat: 0},
+	    				{
+	    					clickable: false,
+	    					icon: L.icon(
+    							{
+    								iconUrl: "res/crosshairs.png",
+    			    				iconSize: [32, 32],
+    			    				iconAnchor: [16, 16]
+    							}
+    						)
+	    				}
+	    			);
+	    			crosshairs_marker.addTo(map);
+
+	    			/* The star hotspots themselves. */
+	    			
 					star_layer_group = L.layerGroup();
 					star_layer_group.addTo(map);
 					
@@ -294,7 +341,11 @@
 						var star = galaxy.VisibleStars[i];
 						S.Database.Watch(star, star_changed_cb);
 					}
-					
+
+					map.on("mousemove", on_mousemove_cb);
+					map.on("viewreset", star_changed_cb);
+					map.on("click", clicked_cb);
+
 					/* Set up data panes. */
 					
 					$("#clockpane")
@@ -347,6 +398,12 @@
         	var e = $("#detailpane .content");
         	e.empty();
         	object.createDetails(e);
+        },
+        
+        GetMapTarget: function()
+        {
+        	var latlng = crosshairs_marker.getLatLng();
+        	return {x: latlng.lng, y: latlng.lat};
         }
     };
 }
