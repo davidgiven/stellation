@@ -11,6 +11,9 @@ local Type = require("Type")
 
 return function (player, msg)
 	local fleet = Datastore.Object(msg.oid)
+	fleet:CheckClass("SFleet")
+	fleet:CheckManipulatableBy(player)
+	
 	fleet.TargetX = msg.x
 	fleet.TargetY = msg.y
 	
