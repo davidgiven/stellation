@@ -1,13 +1,3 @@
-local require = require
-local print = print
-local unpack = unpack
-local pairs = pairs
-local tonumber = tonumber
-local type = type
-local setmetatable = setmetatable
-local rawset = rawset
-local rawget = rawget
-local require = require
 local Utils = require("Utils")
 local Log = require("Log")
 local UnixSocket = require("socket.unix")
@@ -62,18 +52,17 @@ return
 			
 			local recvs = slave:receive("*l")
 
-			Log.S("< ", recvs)
+			--Log.S("< ", recvs)
 			local recv = safe_decode(recvs)
 			local replys
 			if recv then
-				print(recv)
 				local reply = callback(recv)
 				replys = JSON.encode(reply)
 			else
 				replys = '{"result":"MalformedCommand"}'
 			end
 				
-			Log.S("> ", replys)
+			--Log.S("> ", replys)
 				
 			sendall(slave, replys .. "\n")
 			slave:close()
