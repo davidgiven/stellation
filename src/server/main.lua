@@ -90,6 +90,7 @@ local function handle_message_cb(msg)
 	if (reply.result == "OK") then
 		Datastore.Commit()
 	else
+		Log.M("rolling back database, because: ", reply.result)
 		Datastore.Rollback()
 	end
 	

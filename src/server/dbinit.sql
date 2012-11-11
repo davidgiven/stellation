@@ -8,8 +8,9 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS tokens
 (
 	id INTEGER PRIMARY KEY,
-	value TEXT
+	value TEXT UNIQUE
 );
+CREATE INDEX IF NOT EXISTS tokens_byvalue ON tokens (value);
 
 CREATE TABLE IF NOT EXISTS eav
 (

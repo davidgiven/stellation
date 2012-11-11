@@ -1,13 +1,3 @@
-local require = require
-local print = print
-local unpack = unpack
-local pairs = pairs
-local tonumber = tonumber
-local type = type
-local setmetatable = setmetatable
-local rawset = rawset
-local rawget = rawget
-local require = require
 local Utils = require("Utils")
 local Log = require("Log")
 local Database = require("Database")
@@ -18,7 +8,6 @@ local G = require("G")
 
 local nextoid = 0
 local proxies = {}
-local dirty = {}
 
 local classes_p
 local function get_class(name)
@@ -177,7 +166,6 @@ return
 
 	Begin = function ()
 		Database.Begin()
-		Utils.Assert(not next(dirty), "start of transaction and dirty object list is not empty")
 	end,
 
 	Commit = function ()
@@ -186,6 +174,9 @@ return
 
 	Rollback = function ()
 		Database.Rollback()
+		
+		-- Destroy all proxies (as we might have stale cached data).
+		proxies = {}
 	end,
 
 	CreateWithOid = function (oid, class)

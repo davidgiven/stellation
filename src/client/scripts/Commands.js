@@ -31,6 +31,11 @@
     		parameters: []
     	},
     	
+    	ChangeFleetTarget:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid", "x", "y"]
+    	},
     	
     	help:
     	{

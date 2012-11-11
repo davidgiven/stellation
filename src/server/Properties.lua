@@ -1,4 +1,3 @@
-local print = print
 local Utils = require("Utils")
 local Datastore = require("Datastore")
 

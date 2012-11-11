@@ -85,9 +85,13 @@
         			copy_from_map: function (object, element)
         			{
         				var xy = S.GamePage.GetMapTarget();
-        				object.TargetX = xy.x;
-        				object.TargetY = xy.y;
-        				update();
+        				S.Commands.ChangeFleetTarget(
+        					{
+        						oid: object.Oid,
+        						x: xy.x,
+        						y: xy.y
+        					}
+        				);
         			}
         		}
         	);

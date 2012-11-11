@@ -166,6 +166,7 @@ getstatics()
 
 r = RPC {
 	cmd = "GameCommand",
+	gcmd = "Ping",
 	cookie = cookie,
 	time = server_time
 }

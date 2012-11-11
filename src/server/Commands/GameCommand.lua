@@ -8,6 +8,7 @@ local G = require("G")
 local AuthDB = require("AuthDB")
 local Classes = require("Classes")
 local Type = require("Type")
+local GameCommands = require("GameCommands")
 
 local function is_property_exported(pscope, vscope, object, player)
 	-- The player can see the object, somehow. What properties do we export?
@@ -42,6 +43,7 @@ local function synchronise(ctime, visibilitymap, player)
 		" against server with time ", G.CanonicalTime)
 
 	local cs = {}
+	local count = 0
 	for o, scope in pairs(visibilitymap) do
 		local statement = SQL(
 			"SELECT oid, kid, time FROM eav WHERE oid=? AND time>?"
@@ -66,12 +68,13 @@ local function synchronise(ctime, visibilitymap, player)
 				end
 				
 				local kname = Tokens[kid]
-				c[kname] = object:__export_property(kname) 
+				c[kname] = object:__export_property(kname)
+				count = count + 1 
 			end
 		end
 	end
 	
-	return cs
+	return cs, count
 end
 
 return function (msg)
@@ -87,16 +90,20 @@ return function (msg)
 	if not player then
 		return { result = "AuthenticationFailed" }
 	end
-	
+
+	local cmd = GameCommands[msg.gcmd]
+	if not cmd then
+		return { result = "BadCommand" }
+	end
+	Log.G("running game command ", msg.gcmd)
+	local result = cmd(player, msg)
+		
 	Log.G("calculating visibility map")
 	local visibilitymap = player:CalculateVisibilityMap()
 	Log.G("calculation done")
-	local sync = synchronise(ctime, visibilitymap, player)
-	Log.G(#sync, " changed properties")
+	local sync, count = synchronise(ctime, visibilitymap, player)
+	Log.G(count, " changed properties")
 	
-	return
-	{
-		result = "OK",
-		changed = sync
-	}
+	result.changed = sync
+	return result
 end
