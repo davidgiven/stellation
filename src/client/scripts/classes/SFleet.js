@@ -72,6 +72,11 @@
         				update();
         			},
         			
+        			show_summary: function (object, element)
+        			{
+        				S.GamePage.ChangeSummary(object.Location);
+        			},
+        			
         			current_map: function (object, element)
         			{
 						S.GamePage.ChangeMapFocus(object.Location.X, object.Location.Y);
