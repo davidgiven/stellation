@@ -115,7 +115,10 @@ return
 		
 		fleet:Create("SJumpship")
 		fleet:Create("STug")
-		fleet:Create("SCargoship")
+		local cs = fleet:Create("SCargoship")
+		cs.CargoM = 100000.0
+		cs.CargoA = 100000.0
+		cs.CargoO = 100000.0
 		
 		local fleet2 = Datastore.Create("SFleet")
 		star:Add(fleet2)
