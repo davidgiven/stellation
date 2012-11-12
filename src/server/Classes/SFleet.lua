@@ -42,6 +42,10 @@ return
 		
 		jump = function (self)
 			local tid = Timers.SetTimerDelta(10, self, "on_emerge_from_jump")
-		end
+		end,
+		
+		on_emerge_from_jump = function (self)
+			Log.G("emerging from jump!")
+		end,
 	}
 }
