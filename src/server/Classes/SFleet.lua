@@ -42,15 +42,15 @@ return
 	{
 		Add = function (self, object)
 			super.methods.Add(self, object)
-			self:adjust_fleet_totals()
+			self:AdjustFleetTotals()
 		end,
 		
 		Sub = function (self, object)
 			super.methods.Sub(self, object)
-			self:adjust_fleet_totals()
+			self:AdjustFleetTotals()
 		end,
 			
-		adjust_fleet_totals = function (self)
+		AdjustFleetTotals = function (self)
 			local j = 0
 			local mass = 0
 			local mm = 0
@@ -75,7 +75,7 @@ return
 			self.MaintenanceCostO = mo
 		end,
 			
-		jump = function (self)
+		Jump = function (self)
 			
 		end,
 		

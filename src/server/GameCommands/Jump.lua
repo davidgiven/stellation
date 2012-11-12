@@ -14,7 +14,7 @@ return function (player, msg)
 	fleet:CheckClass("SFleet")
 	fleet:CheckManipulatableBy(player)
 
-	fleet:jump() 
+	fleet:Jump() 
 	
 	return {
 		result = "OK"
