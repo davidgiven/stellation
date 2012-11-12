@@ -20,24 +20,39 @@ return
 		TargetX = 0,
 		TargetY = 0,
 		AntimatterJumpCost = 1,
-		JumpSpeed = 1
+		JumpSpeed = 1,
+		Mass = 0,
+		MaintenanceCostM = 0,
+		MaintenanceCostA = 0,
+		MaintenanceCostO = 0,
 	},
 	
 	properties =
 	{
 		JumpshipCount = Type.Number(LOCAL),
 		TargetX = Type.Number(PRIVATE),
-		TargetY = Type.Number(PRIVATE)
+		TargetY = Type.Number(PRIVATE),
+		Mass = Type.Number(LOCAL),
+		MaintenanceCostM = Type.Number(PRIVATE),
+		MaintenanceCostA = Type.Number(PRIVATE),
+		MaintenanceCostO = Type.Number(PRIVATE),
 	},
 	
 	methods =
 	{
 		Add = function (self, object)
 			super.methods.Add(self, object)
+			
 			if (object.Class == "SJumpship") then
 				self.JumpshipCount = self.JumpshipCount + 1
 				Log.G("jumpship count of fleet ", self.Oid, " adjusted to ", self.JumpshipCount)
 			end
+			
+			Log.G("adding object of class ", object.Class, " mass ", object.Mass)
+			self.Mass = self.Mass + object.Mass
+			self.MaintenanceCostM = self.MaintenanceCostM + object.MaintenanceCostM
+			self.MaintenanceCostA = self.MaintenanceCostA + object.MaintenanceCostA
+			self.MaintenanceCostO = self.MaintenanceCostO + object.MaintenanceCostO
 		end,
 		
 		jump = function (self)

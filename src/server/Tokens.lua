@@ -8,7 +8,6 @@ local tokenMap
 local function reset()
 	Log.D("flushing token cache")
 	tokenMap = {}
-	tokenMap.__flush = reset
 	setmetatable(tokenMap,
 	{
 		__index = function (self, v)

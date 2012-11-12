@@ -37,6 +37,7 @@ return
 			return o
 		end,
 	
+	
 		Add = function (self, object)
 			Utils.Assert(object.Location == nil, "object already belong to something")
 			object.Location = self

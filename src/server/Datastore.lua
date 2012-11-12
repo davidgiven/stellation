@@ -98,6 +98,14 @@ local function new_object_proxy(oid)
 			c = Datum.Lookup(class, oid, key)
 			if c then
 				datumcache[key] = c
+				
+				if not c.type.isaggregate and not c.IsSet() then
+					local defaultc = get_method_or_static(class, key)
+					if defaultc then
+						c.Set(defaultc)
+					end
+				end
+				
 				return c.Get()
 			end
 			

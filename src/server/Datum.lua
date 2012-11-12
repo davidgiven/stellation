@@ -69,6 +69,14 @@ return
 			name = name,
 			kid = kid,
 			
+			IsSet = function()
+				local isset = SQL(
+					"SELECT COUNT(*) FROM "..tablename.." WHERE oid = ?"
+					):bind(oid):step()
+				
+				return isset[1] ~= 0
+			end,
+			
 			Get = function()
 				return t.Get(tablename, oid, dirty)
 			end,
