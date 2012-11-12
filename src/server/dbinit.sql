@@ -38,12 +38,9 @@ CREATE TABLE IF NOT EXISTS timers
 	id INTEGER PRIMARY KEY,
 	time REAL,
 	oid INTEGER REFERENCES eav_Class(oid),
-	command INTEGER
+	command TEXT
 );
-CREATE INDEX IF NOT EXISTS timersindex ON timers
-(
-	time ASC
-);
+CREATE INDEX IF NOT EXISTS timersindex ON timers (time ASC);
 
 CREATE TABLE IF NOT EXISTS logentries
 (

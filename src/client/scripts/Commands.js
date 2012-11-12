@@ -37,6 +37,12 @@
     		parameters: ["oid", "x", "y"]
     	},
     	
+    	Jump:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid"]
+    	},
+    	
     	help:
     	{
     		parameters: [],

@@ -6,6 +6,7 @@ local LOCAL = Type.LOCAL
 local SERVERONLY = Type.SERVERONLY
 local PRIVATE = Type.PRIVATE
 local Log = require("Log")
+local Timers = require("Timers")
 
 local super = require("Classes.SObject")
 
@@ -37,6 +38,10 @@ return
 				self.JumpshipCount = self.JumpshipCount + 1
 				Log.G("jumpship count of fleet ", self.Oid, " adjusted to ", self.JumpshipCount)
 			end
+		end,
+		
+		jump = function (self)
+			local tid = Timers.SetTimerDelta(10, self, "on_emerge_from_jump")
 		end
 	}
 }

@@ -92,6 +92,15 @@
         						y: xy.y
         					}
         				);
+        			},
+        			
+        			jump: function (object, element)
+        			{
+        				S.Commands.Jump(
+        					{
+        						oid: object.Oid
+        					}
+        				);
         			}
         		}
         	);

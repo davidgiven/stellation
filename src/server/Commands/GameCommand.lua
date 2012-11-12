@@ -9,6 +9,7 @@ local AuthDB = require("AuthDB")
 local Classes = require("Classes")
 local Type = require("Type")
 local GameCommands = require("GameCommands")
+local Timers = require("Timers")
 
 local function is_property_exported(pscope, vscope, object, player)
 	-- The player can see the object, somehow. What properties do we export?
@@ -89,6 +90,15 @@ return function (msg)
 	local player = AuthDB.VerifyAuthCookie(cookie)
 	if not player then
 		return { result = "AuthenticationFailed" }
+	end
+	
+	Log.G("running pending timers")
+	if Timers.RunNextPendingTimer() then
+		while Timers.RunNextPendingTimer() do
+		end
+		
+		Datastore.Commit()
+		Datastore.Begin()
 	end
 
 	local cmd = GameCommands[msg.gcmd]
