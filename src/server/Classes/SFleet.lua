@@ -42,21 +42,41 @@ return
 	{
 		Add = function (self, object)
 			super.methods.Add(self, object)
-			
-			if (object.Class == "SJumpship") then
-				self.JumpshipCount = self.JumpshipCount + 1
-				Log.G("jumpship count of fleet ", self.Oid, " adjusted to ", self.JumpshipCount)
-			end
-			
-			Log.G("adding object of class ", object.Class, " mass ", object.Mass)
-			self.Mass = self.Mass + object.Mass
-			self.MaintenanceCostM = self.MaintenanceCostM + object.MaintenanceCostM
-			self.MaintenanceCostA = self.MaintenanceCostA + object.MaintenanceCostA
-			self.MaintenanceCostO = self.MaintenanceCostO + object.MaintenanceCostO
+			self:adjust_fleet_totals()
 		end,
 		
+		Sub = function (self, object)
+			super.methods.Sub(self, object)
+			self:adjust_fleet_totals()
+		end,
+			
+		adjust_fleet_totals = function (self)
+			local j = 0
+			local mass = 0
+			local mm = 0
+			local ma = 0
+			local mo = 0
+			
+			for ship in self.Contents.Iterate() do
+				if (ship.Class == "SJumpship") then
+					j = j + 1
+				end
+				
+				mass = mass + ship.Mass
+				mm = mm + ship.MaintenanceCostM
+				ma = ma + ship.MaintenanceCostA
+				mo = mo + ship.MaintenanceCostO
+			end
+			
+			self.JumpshipCount = j
+			self.Mass = mass
+			self.MaintenanceCostM = mm
+			self.MaintenanceCostA = ma
+			self.MaintenanceCostO = mo
+		end,
+			
 		jump = function (self)
-			local tid = Timers.SetTimerDelta(10, self, "on_emerge_from_jump")
+			
 		end,
 		
 		on_emerge_from_jump = function (self)

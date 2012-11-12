@@ -32,9 +32,10 @@ end
 --- Halts with a fatal error.
 
 local function FatalError(...)
-	local args = {...}
-	for k, v in ipairs(args) do
-		args[k] = tostring(args[k])
+	local args = {}
+	for i = 1, select("#", ...) do
+		local a = select(i, ...)
+		args[#args+1] = tostring(a)
 	end
 	error(table.concat(args))
 end
@@ -61,8 +62,7 @@ end
 
 local function Assert(e, ...)
 	if not e then
-		local args = {...}
-		FatalError(unpack(args))
+		FatalError(...)
 	end
 end
 

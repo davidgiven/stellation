@@ -126,6 +126,7 @@ return
 		fleet2.Name = name .. "'s second fleet"
 		player.Fleets:Add(fleet2)
 		fleet2:Create("STug")
+		cs:MoveTo(fleet2)
 		
 		Database.SQL("INSERT INTO players VALUES (?, ?)")
 			:bind(email, player.Oid):step()

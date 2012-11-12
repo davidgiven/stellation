@@ -54,6 +54,10 @@ local functilocal function get_class_of_oid(oid)
 end
 
 local function new_object_proxy(oid)
+	if not oid then
+		return nil
+	end
+	
 	local class = get_class_of_oid(oid)
 	Utils.Assert(class, "oid ", oid, " has no class!")
 	
@@ -81,7 +85,7 @@ local function new_object_proxy(oid)
 		__index = function (self, key)
 			local c = datumcache[key]
 			if c then
-				return c:Get()
+				return c.Get()
 			end
 
 			c = methodcache[key]
@@ -207,9 +211,11 @@ return
 		if p then
 			return p
 		end
-		
+
 		p = new_object_proxy(oid)
-		proxies[oid] = p
+		if p then
+			proxies[oid] = p
+		end
 		return p
 	end,
 	

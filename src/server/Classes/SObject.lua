@@ -37,13 +37,25 @@ return
 			return o
 		end,
 	
-	
 		Add = function (self, object)
 			Utils.Assert(object.Location == nil, "object already belong to something")
 			object.Location = self
 			self.Contents:Add(object)
 		end,
+	
+		Sub = function (self, object)
+			Utils.Assert(object.Location ~= nil, "object must belong to something")
+			object.Location = nil
+			self.Contents:Sub(object)
+		end,
 		
+		MoveTo = function (self, newlocation)
+			if self.Location then
+				self.Location:Sub(self)
+			end
+			newlocation:Add(self)
+		end,
+			
 		AddToVisibilityMap = function(self, map)
 			for o in self.Contents:Iterate() do
 				map[o] = LOCAL
