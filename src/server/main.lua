@@ -79,12 +79,10 @@ local function handle_message_cb(msg)
 		return
 		{
 			tag = msg.tag,
-			time = G.CanonicalTime,
 			result = "BadCommand"
 		}
 	end
 	
-	G.CanonicalTime = G.CanonicalTime + 1
 	Datastore.Begin()
 	local reply = command(msg)
 	if (reply.result == "OK") then
@@ -95,7 +93,6 @@ local function handle_message_cb(msg)
 	end
 	
 	reply.tag = msg.tag
-	reply.time = G.CanonicalTime
 	return reply
 end
 
@@ -105,9 +102,6 @@ Datastore.Connect(database_filename)
 Properties.Load()
 
 IO.Listen(socket_filename)
-
-G.CanonicalTime = Datastore.CalculateServerCanonicalTime() or 1
-Log.M("server canonical time is ", G.CanonicalTime)
 
 Datastore.Begin()
 

@@ -7,7 +7,6 @@
 	var notifications = {};
 	var changed = {};
 	var change_message_pending = false;
-	var servertime = 0;
 	var statics;
 	var allproperties;
 	var classes = {};
@@ -123,11 +122,6 @@
 			S.Player = p;
 		},
 		
-		GetServerTime: function()
-		{
-			return servertime;
-		},
-		
 		Object: function(oid)
 		{
 			return find_object(oid);
@@ -169,9 +163,6 @@
 		
 		Synchronise: function(message)
 		{
-			console.log("applying delta from "+servertime+" to "+message.time);
-			servertime = message.time;
-			
 			$.each(message.changed,
 				function (oid, properties)
 				{

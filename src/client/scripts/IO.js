@@ -53,7 +53,6 @@
 		{
 			message.cmd = "GameCommand";
 			message.cookie = authcookie;
-			message.time = S.Database.GetServerTime();
 			S.IO.RPC(message,
 				function (data)
 				{

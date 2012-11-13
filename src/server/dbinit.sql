@@ -12,15 +12,6 @@ CREATE TABLE IF NOT EXISTS tokens
 );
 CREATE INDEX IF NOT EXISTS tokens_byvalue ON tokens (value);
 
-CREATE TABLE IF NOT EXISTS eav
-(
-	oid INTEGER REFERENCES eav_Class(oid),
-	kid INTEGER REFERENCES tokens(id),
-	time INTEGER,
-	PRIMARY KEY (oid, kid)
-);
-CREATE INDEX IF NOT EXISTS eav_byoid ON eav (oid);
-
 CREATE TABLE IF NOT EXISTS eav_Class
 (
 	oid INTEGER PRIMARY KEY,

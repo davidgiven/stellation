@@ -29,6 +29,10 @@ local properties
 local server_time = 0
 
 local function object(oid)
+	if not oid then
+		return nil
+	end
+	
 	local o = database[oid]
 	if not o then
 		o = {}

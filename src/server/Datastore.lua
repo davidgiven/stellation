@@ -80,6 +80,23 @@ local function new_object_proxy(oid)
 		return c
 	end
 	
+	local function getdatumwithdefaultvalue(key)
+		local c = Datum.Lookup(class, oid, key)
+		if c then
+			datumcache[key] = c
+			
+			if not c.type.isaggregate and not c.IsSet() then
+				local defaultc = get_method_or_static(class, key)
+				if defaultc then
+					c.Set(defaultc)
+				end
+			end
+			
+			return c
+		end
+		return nil
+	end
+	
 	metatable =
 	{
 		__index = function (self, key)
@@ -99,17 +116,8 @@ local function new_object_proxy(oid)
 				return c
 			end
 			
-			c = Datum.Lookup(class, oid, key)
+			c = getdatumwithdefaultvalue(key)
 			if c then
-				datumcache[key] = c
-				
-				if not c.type.isaggregate and not c.IsSet() then
-					local defaultc = get_method_or_static(class, key)
-					if defaultc then
-						c.Set(defaultc)
-					end
-				end
-				
 				return c.Get()
 			end
 			
@@ -127,8 +135,8 @@ local function new_object_proxy(oid)
 			getdatum(key).Set(value)
 		end,
 		
-		__export_property = function (self, key)
-			return getdatum(key).Export()
+		__get_datum = function (self, key)
+			return getdatumwithdefaultvalue(key)
 		end,
 		
 		Oid = tonumber(oid),
@@ -153,10 +161,6 @@ local function create_object(oid, class)
 		"INSERT OR REPLACE INTO eav_Class (oid, value) VALUES (?, ?)"
 		):bind(oid, Tokens[class.name]):step()
 		
-	SQL(
-		"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
-		):bind(oid, Tokens["Class"], G.CanonicalTime):step()
-
 	return new_object_proxy(oid, class)
 end
 
@@ -222,12 +226,5 @@ return
 	DoesObjectExist = function (oid)
 		local c = get_class_of_oid(oid)
 		return not not c
-	end,
-	
-	CalculateServerCanonicalTime = function ()
-		local t = SQL(
-			"SELECT MAX(time) FROM eav"
-			):step()[1]
-		return tonumber(t)
 	end,
 }

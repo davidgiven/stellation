@@ -6,6 +6,7 @@ local Tokens = require("Tokens")
 local G = require("G")
 
 local nextoid = 0
+local seenbydb = {}
 
 local function get_property_type(class, name)
 	while class do
@@ -56,10 +57,10 @@ return
 
 		local kid = Tokens[name]
 		
+		local propertyhash = oid .. "." .. name
+
 		local function dirty()
-			SQL(
-				"INSERT OR REPLACE INTO eav (oid, kid, time) VALUES (?, ?, ?)"
-				):bind(oid, kid, G.CanonicalTime):step()
+			seenbydb[propertyhash] = {}
 		end
 		 
 		local datum = 
@@ -89,7 +90,19 @@ return
 			Export = function()
 				local f = t.Export or t.Get
 				return f(tablename, oid)
-			end
+			end,
+			
+			TestAndSetSyncBit = function()
+				local s = seenbydb[propertyhash]
+				if not s then
+					s = {}
+					seenbydb[propertyhash] = s
+				end
+
+				local needssync = (s[G.CurrentCookie] ~= true)
+				s[G.CurrentCookie] = true
+				return needssync				
+			end 
 		}
 		
 		return datum 

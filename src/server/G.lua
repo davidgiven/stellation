@@ -8,5 +8,5 @@ local error = error
 
 return
 {
-	CanonicalTime = 0
+	CurrentCookie = nil
 }

@@ -39,39 +39,33 @@ local function is_property_exported(pscope, vscope, object, player)
 	return false
 end
 
-local function synchronise(ctime, visibilitymap, player)
-	Log.C("synchronising client with time ", ctime,
-		" against server with time ", G.CanonicalTime)
+local function synchronise(visibilitymap, player)
+	Log.C("synchronising client ", G.CurrentCookie)
 
 	local cs = {}
 	local count = 0
-	for o, scope in pairs(visibilitymap) do
-		local statement = SQL(
-			"SELECT oid, kid, time FROM eav WHERE oid=? AND time>?"
-			):bind(o.Oid, ctime)
-	
-		while true do
-			local row = statement:step()
-			if not row then
-				break
-			end
-			
-			local oid = tonumber(row[1])
-			local kid = tonumber(row[2])
-			local object = Datastore.Object(oid)
-			
-			local t = Classes.properties[kid]
-			if is_property_exported(t.scope, scope, object, player) then
-				local c = cs[oid]
-				if not c then
-					c = {}
-					cs[oid] = c
+	for object, scope in pairs(visibilitymap) do
+		local class = Classes[object.Class]
+		local oid = object.Oid
+		
+		while class do
+			for name, type in pairs(class.properties) do
+				if is_property_exported(type.scope, scope, object, player) then
+					local datum = object:__get_datum(name)
+					if datum.TestAndSetSyncBit() then
+						local c = cs[oid]
+						if not c then
+							c = {}
+							cs[oid] = c
+						end
+						
+						c[name] = datum.Export(name)
+						count = count + 1 
+					end
 				end
-				
-				local kname = Tokens[kid]
-				c[kname] = object:__export_property(kname)
-				count = count + 1 
 			end
+			
+			class = class.superclass
 		end
 	end
 	
@@ -79,10 +73,6 @@ local function synchronise(ctime, visibilitymap, player)
 end
 
 return function (msg)
-	local ctime = msg.time
-	if not ctime then
-		return { result = "MalformedCommand", extra = "No time specified" }
-	end
 	local cookie = msg.cookie
 	if not cookie then
 		return { result = "MalformedCommand", extra = "No cookie specified" }
@@ -91,6 +81,7 @@ return function (msg)
 	if not player then
 		return { result = "AuthenticationFailed" }
 	end
+	G.CurrentCookie = cookie
 	
 	Log.G("running pending timers")
 	if Timers.RunNextPendingTimer() then
@@ -120,7 +111,7 @@ return function (msg)
 	Log.G("calculating visibility map")
 	local visibilitymap = player:CalculateVisibilityMap()
 	Log.G("calculation done")
-	local sync, count = synchronise(ctime, visibilitymap, player)
+	local sync, count = synchronise(visibilitymap, player)
 	Log.G(count, " changed properties")
 	
 	result.changed = sync
