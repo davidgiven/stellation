@@ -39,7 +39,7 @@ local function get_method_or_static(class, name)
 	end 
 end
 
-local functilocal function get_class_of_oid(oid)
+local function get_class_of_oid(oid)
 	local row = SQL(
 		"SELECT value FROM eav_Class WHERE oid=?"
 		):bind(oid):step()

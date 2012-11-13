@@ -98,6 +98,7 @@ local ObjectSetType =
 				SQL(
 					"DELETE FROM "..tablename.." WHERE oid=? AND value=?"
 					):bind(oid, value.Oid):step()
+				dirty()
 			end,
 						
 			RandomItem = function (self)

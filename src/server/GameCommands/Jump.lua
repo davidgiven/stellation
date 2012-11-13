@@ -14,6 +14,7 @@ return function (player, msg)
 	fleet:CheckClass("SFleet")
 	fleet:CheckManipulatableBy(player)
 
+	Log.G("performing jump")
 	fleet:Jump() 
 	
 	return {

@@ -7,6 +7,7 @@ local SERVERONLY = Type.SERVERONLY
 local PRIVATE = Type.PRIVATE
 local Log = require("Log")
 local Timers = require("Timers")
+local Datastore = require("Datastore")
 
 local super = require("Classes.SObject")
 
@@ -76,7 +77,11 @@ return
 		end,
 			
 		Jump = function (self)
-			
+			local Universe = Datastore.Object(0)
+			local Galaxy = Universe.Galaxy
+			local target = Galaxy:GetLocation(self.TargetX, self.TargetY)
+			Log.G("jumping fleet ", self.Oid, " to ", target.Oid)
+			self:MoveTo(target)
 		end,
 		
 		on_emerge_from_jump = function (self)

@@ -106,17 +106,16 @@ return function (msg)
 		return { result = "BadCommand" }
 	end
 	Log.G("running game command ", msg.gcmd)
-	local _, result = xpcall(
+	local e, result = pcall(
 		function()
 			return cmd(player, msg)
-		end,
-		function(e)
-			if (type(e) == "table") then
-				return e
-			end
-			error(e)
 		end
 	)
+	if not e then
+		if (type(result) == "string") then
+			error(result)
+		end
+	end
 		
 	Log.G("calculating visibility map")
 	local visibilitymap = player:CalculateVisibilityMap()
