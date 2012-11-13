@@ -65,6 +65,7 @@
     		
     		var e = $("<tbody/>");
     		$(element).append(e);
+    		
         	S.TemplatedMonitor(object, e, "fleet.details",
         		{
         			_changed: function (object, element)

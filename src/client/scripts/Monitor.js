@@ -25,7 +25,7 @@
     {
     	var f = function(element)
     	{
-    		var e = $(element).find("#"+id);
+    		var e = $(element).find("[id='"+id+"']");
     		cb(e);
     	}
     	
@@ -82,12 +82,18 @@
 	{
     	if (typeof(template) == "string")
     	{
-    		var s = template.split(".");
-    		if (s.length == 1)
+			if (!S.Player.cansee(object))
+				template += ".invisible";
+    		
+    		var dot = template.indexOf(".");
+    		if (dot == -1)
     			template = document.getElementById(template);
     		else
     		{
-    			loadtemplate(s[0], s[1],
+    			var left = template.substring(0, dot);
+    			var right = template.substring(dot+1);
+    			
+    			loadtemplate(left, right,
     				function (e)
     				{
     					S.ExpandTemplate(object, element, e, events);

@@ -196,6 +196,19 @@
 			);
 			
 			S.Galaxy = S.Universe.Galaxy;
+			
+			/* Now, go look at all the objects we have notifications for
+			 * which *aren't* in the player's visible set and fire
+			 * notifications for them. */
+			
+			$.each(notifications,
+				function (oid, callbackset)
+				{
+					var o = find_object(oid);
+					if (!S.Player.cansee(o))
+						object_changed(o);
+				}
+			);
 		}
 	};
 }

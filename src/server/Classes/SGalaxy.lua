@@ -36,7 +36,7 @@ return
 			
 			local s = Datastore.Create("SStar")
 			s.Owner = universe
-			s.Name = "Interstellar Space ["..x..", "..y.."]"
+			s.Name = "Interstellar Space"
 			s.X = x 
 			s.Y = y
 			s.Brightness = 0
