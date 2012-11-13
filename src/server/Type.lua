@@ -87,11 +87,28 @@ local ObjectSetType =
 	Get = function (tablename, oid, dirty)
 		return
 		{
-			Add = function (self, value)
-				SQL(
-					"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+			IsSet = function (self, value)
+				local result = SQL(
+					"SELECT value FROM "..tablename.." WHERE oid=? AND value=?"
 					):bind(oid, value.Oid):step()
-				dirty()
+					
+				if result then
+					return true
+				end
+				return false
+			end,
+			
+			Add = function (self, value)
+				local result = SQL(
+					"SELECT value FROM "..tablename.." WHERE oid=? AND value=?"
+					):bind(oid, value.Oid):step()
+					
+				if not result then
+					SQL(
+						"INSERT INTO "..tablename.." (oid, value) VALUES (?, ?)"
+						):bind(oid, value.Oid):step()
+					dirty()
+				end
 			end,
 
 			Sub = function (self, value)
@@ -123,17 +140,49 @@ local ObjectSetType =
 			end,
 			
 			FromLua = function (self, s)
-				SQL(
-					"DELETE FROM "..tablename.." WHERE oid = ?"
-					):bind(oid):step()
-					
-				for k, _ in pairs(s) do
-					SQL(
-						"INSERT INTO "..tablename.." (oid, value) VALUES (?, ?)"
-						):bind(oid, k.Oid):step()
+				local d = false
+
+				-- Read the old value of the set.
+								
+				local results = SQL(
+					"SELECT value FROM "..tablename.." WHERE oid=?"
+					):bind(oid):resultset()
+
+				local olds = {}
+				if results then
+					for _, i in ipairs(results[1]) do
+						local o = findproxy(tonumber(i))
+						olds[o] = true
+					end
+				end				
+				
+				-- Delete any items which are in the old set but not in the
+				-- new set.
+				
+				for k, _ in pairs(olds) do
+					if not s[k] then
+						SQL(
+							"DELETE FROM "..tablename.." WHERE oid=? AND value=?"
+							):bind(oid, k.Oid):step()
+						d = true
+					end
 				end
 				
-				dirty()
+				-- Insert any items which are in the new set but not in the
+				-- old set.
+				
+				for k, _ in pairs(s) do
+					if not olds[k] then
+						SQL(
+							"INSERT INTO "..tablename.." (oid, value) VALUES (?, ?)"
+							):bind(oid, k.Oid):step()
+						d = true
+					end
+				end
+				
+				if d then
+					dirty()
+				end
 			end,
 			
 			Clear = function (self)

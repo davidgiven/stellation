@@ -110,6 +110,8 @@ return function (msg)
 		
 	Log.G("calculating visibility map")
 	local visibilitymap = player:CalculateVisibilityMap()
+	player.VisibleObjects:FromLua(visibilitymap)
+	
 	Log.G("calculation done")
 	local sync, count = synchronise(visibilitymap, player)
 	Log.G(count, " changed properties")
