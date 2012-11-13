@@ -18,6 +18,8 @@ local function compile(sql)
 	return stmt
 end
 
+local dblocked = false
+
 return
 {
 	Connect = function (filename)
@@ -37,18 +39,24 @@ return
 	end,
 
 	Begin = function ()
+		Utils.Assert(not dblocked, "BEGIN inside transaction")
 		Log.D("BEGIN")
 		compile("BEGIN"):step()
+		dblocked = true
 	end,
 
 	Commit = function ()
+		Utils.Assert(dblocked, "COMMIT outside transaction")
 		Log.D("COMMIT")
 		compile("COMMIT"):step()
+		dblocked = false
 	end,
 
 	Rollback = function ()
+		Utils.Assert(dblocked, "ROLLBACK outside transaction")
 		Log.D("ROLLBACK")
 		compile("ROLLBACK"):step()
+		dblocked = false
 		
 		for k in pairs(rollbacknotifications) do
 			k()
