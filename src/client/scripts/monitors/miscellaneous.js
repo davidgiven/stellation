@@ -5,7 +5,7 @@
     S.TitlePaneMonitor =
     	function (e)
     	{
-        	S.TemplatedMonitor(S.Player, e, "title_tmpl",
+        	S.TemplatedMonitor(S.Player, e, "fragments.title",
         		{
         			logout:
         				function()

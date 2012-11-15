@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xmlns="http://www.w3.org/1999/xhtml">
+	<template id="title">
+		<div class="name" s_attr="Name"/>
+		<span class="intertext">of the</span>
+		<div class="empire" s_attr="EmpireName"/>
+		<div class="links">
+			<a href="#" s_link="logout">Logout</a>
+		</div>
+	</template>
+	
+	<template id="index">
+		<ul class="content"/>
+	</template>
+</templates>

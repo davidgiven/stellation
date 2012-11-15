@@ -64,7 +64,7 @@
     	
     S.IndexPaneMonitor = function (e)
 	{
-    	S.TemplatedMonitor(S.Player, e, "index_overall_tmpl",
+    	S.TemplatedMonitor(S.Player, e, "fragments.index",
     		{
     			_changed:
     				function (object, element)

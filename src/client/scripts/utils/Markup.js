@@ -34,7 +34,7 @@
 		
 		/* Add hover controls to anything which asks for it. */
 		
-		$(s).andSelf().find(".needs-ui-state-hover").each(
+		$(s).andSelf().find("[class~=needs-ui-state-hover]").each(
     		function ()
     		{
     			$(this).hover(
@@ -51,7 +51,7 @@
 		
 		/* All buttons become, er, buttons. */
 		
-		$(s).andSelf().find(":button").each(
+		$(s).andSelf().find("input[type=button]").each(
 			function ()
 			{
 				$(this).button();

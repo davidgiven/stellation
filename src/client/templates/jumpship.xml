@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xmlns="http://www.w3.org/1999/xhtml">
+	<template id="details">
+		<tr>
+			<td colspan="3">
+				<h1>Jump controls</h1>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="3">
+				For warp drive controls, see <a href="#" s_link="fleet">the
+				fleet control panel</a>.
+			</td>
+		</tr>
+	</template>
+</templates>

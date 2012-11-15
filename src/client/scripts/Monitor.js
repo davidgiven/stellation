@@ -39,17 +39,34 @@
     		return;
     	}
     	
-    	e = $("<body/>");
+    	e = {};
     	e._loaded = false;
     	e._callbacks = $.Callbacks();
     	e._callbacks.add(f);
     	templatefiles[name] = e;
-    	
-    	e.load("templates/" + name + ".html",
-    		function ()
+
+    	var filename = "templates/" + name + ".xml"; 
+    	$.ajax(
     		{
-    			e._loaded = true;
-    			e._callbacks.fire(e);
+    			type: "GET",
+            	url: filename,
+            	dataType: "xml",
+            	
+            	success:
+            		function(xml)
+                	{
+                		xml._loaded = true;
+                		xml._callbacks = e._callbacks;
+                		e = xml;
+                		templatefiles[name] = e;
+            			e._callbacks.fire(e);
+                	},
+                	
+                error:
+                	function(_, status, error)
+                	{
+                		console.log("AJAX error loading "+filename+": "+status);
+                	}
     		}
     	);
     };
@@ -102,7 +119,7 @@
     			return;
     		}
     	}
-		var tdom = $($(template).html());
+		var tdom = $(template).contents().clone();
 		
 		/* Expand any attribute references. Don't add them just yet or else
 		 * we'll recurse into them while doing the template expansion. That's

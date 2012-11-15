@@ -7,7 +7,7 @@
     	showSummaryDetail: function ()
     	{
     		var e = $("<span/>");
-    		S.ExpandTemplate(this, e, "cargo_fragment_tmpl");
+    		S.ExpandTemplate(this, e, "cargoship.cargo");
     		return e;
     	},
 	
@@ -26,7 +26,7 @@
         				var star = object.Location.Location;
         				var e = $(element).find(".available");
         				
-        				S.TemplatedMonitor(star, e, "resources_fragment_tmpl");
+        				S.TemplatedMonitor(star, e, "cargoship.resources");
         			}
         		}
         	);
