@@ -99,7 +99,7 @@
 	{
     	if (typeof(template) == "string")
     	{
-			if (!S.Player.cansee(object))
+			if (object && !S.Player.cansee(object))
 				template += ".invisible";
     		
     		var dot = template.indexOf(".");

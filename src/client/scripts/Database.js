@@ -4,6 +4,7 @@
 
 	var database = {};
 	var prototypes = {};
+	var globalnotifications = new S.CallbackSet();
 	var notifications = {};
 	var changed = {};
 	var change_message_pending = false;
@@ -74,6 +75,9 @@
 	
 	var get_notifications_for = function (o)
 	{
+		if (!o)
+			return globalnotifications;
+		
 		var n = notifications[o.Oid];
 		if (!n)
 			n = notifications[o.Oid] = new S.CallbackSet();
@@ -209,6 +213,10 @@
 						object_changed(o);
 				}
 			);
+			
+			/* Fire any global notifications. */
+			
+			globalnotifications.call();
 		}
 	};
 }

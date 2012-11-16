@@ -64,15 +64,15 @@
     	
     S.IndexPaneMonitor = function (e)
 	{
-    	S.TemplatedMonitor(S.Player, e, "fragments.index",
+    	S.TemplatedMonitor(null, e, "fragments.index",
     		{
     			_changed:
-    				function (object, element)
+    				function (_, element)
     				{
     					/* Collect set of visible stars. */
     				
     					var starset = new S.ObjectSet();
-    					$.each(object.Fleets,
+    					$.each(S.Player.Fleets,
     						function (f)
     						{
     							if (f.JumpshipCount > 0)
