@@ -36,13 +36,28 @@
 		</p>
 	</template>
 	
+	<template id="details.invisible">
+		<tr>
+			<td colspan="2">
+				<h1>
+					<span s_attr="Name"/> (#<span s_attr="Oid"/>)
+				</h1>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				This unit is not currently visible to any of your sensors.
+			</td>
+		</tr>
+	</template>
+	
 	<template id="details">
 		<tr>
 			<td colspan="3">
 				<h1>
 					<span s_attr="Name"/> (#<span s_attr="Oid"/>)
 				</h1>
-				<p s_attr="Detemplateion"/>
+				<p s_attr="Description"/>
 			</td>
 		</tr>
 		<tr>

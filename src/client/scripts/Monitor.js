@@ -155,10 +155,6 @@
 			}
 		);
 
-		/* Add any needed jquery markup. */
-				
-		S.Markup(tdom, object);
-
 		/* Now add all nodes we thought about appending earlier. */
 		
 		$.each(appendations,
@@ -173,6 +169,10 @@
 		$(element).empty();
 		$(tdom).appendTo(element);
 		
+		/* Add any needed jquery markup. */
+		
+		S.Markup(tdom, object);
+
 		/* Notify the user that the template has loaded. */
 		
 		if (events && events._changed)
