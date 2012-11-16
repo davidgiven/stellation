@@ -10,6 +10,7 @@ local Classes = require("Classes")
 local Type = require("Type")
 local GameCommands = require("GameCommands")
 local Timers = require("Timers")
+local Socket = require("socket")
 
 local function is_property_exported(pscope, vscope, object, player)
 	-- The player can see the object, somehow. What properties do we export?
@@ -116,6 +117,7 @@ return function (msg)
 	local sync, count = synchronise(visibilitymap, player)
 	Log.G(count, " changed properties")
 	
+	result.time = Socket.gettime()
 	result.changed = sync
 	return result
 end

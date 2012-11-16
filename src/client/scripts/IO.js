@@ -56,6 +56,8 @@
 			S.IO.RPC(message,
 				function (data)
 				{
+					if (data.time)
+						S.SetServerTime(data.time);
     				if (data.changed)
     					S.Database.Synchronise(data);
     				if (success_cb)

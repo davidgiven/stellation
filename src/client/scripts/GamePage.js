@@ -375,6 +375,7 @@
 					
 					S.TitlePaneMonitor($("#titlepane"));
 					S.IndexPaneMonitor($("#indexpane .content"));
+					S.ClockMonitor($("#clockpane"));
             	}
             );
         },

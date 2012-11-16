@@ -43,7 +43,7 @@
 	.pane;
 	left: 1em;
 	top: 7.5em;
-	bottom: 7.5em;
+	bottom: 5.5em;
 	width: 14em;
 }
 
@@ -52,15 +52,6 @@
 	.pane;
 	left: 1em;
 	top: 1em;
-	width: 14em;
-	height: 5em;
-}
-
-#clockpane
-{
-	.pane;
-	left: 1em;
-	bottom: 1em;
 	width: 14em;
 	height: 5em;
 }
@@ -146,7 +137,6 @@
 
 /* Detail pane */
 
-
 #detailpane
 {
 	.pane;
@@ -173,5 +163,38 @@
 	TR
 	{
 		min-height: 1.6em;
+	}
+}
+
+/* Clock pane */
+
+#clockpane
+{
+	.pane;
+	left: 1em;
+	bottom: 1em;
+	width: 14em;
+	height: 3em;
+	
+	.label
+	{
+		position: absolute;
+		top: 0.2em;
+		left: 0;
+		right: 0;
+		text-align: center;
+		font-size: 70%;
+		font-variant: small-caps;
+		color: #aaaaaa;
+	}
+		
+	.time
+	{
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0.2em;
+		text-align: center;
+		font-size: 200%;
 	}
 }
