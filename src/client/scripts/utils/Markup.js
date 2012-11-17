@@ -49,6 +49,15 @@
     		}
     	);
 		
+		/* Add pane style to anything which is a pane. */
+		
+		$(s).andSelf().find("[class~=pane]").each(
+			function()
+			{
+				$(this).addClass("ui-dialog ui-widget-content ui-corner-all");
+			}
+		);
+
 		/* All buttons become, er, buttons. */
 		
 		$(s).andSelf().find("input[type=button]").each(

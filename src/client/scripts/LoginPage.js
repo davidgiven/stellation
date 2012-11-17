@@ -50,6 +50,8 @@
             $("#page").load("login.html",
             	function ()
             	{
+            		S.Markup($("#page"));
+            		
                     $("#email").keydown(
                         function (event)
                         {

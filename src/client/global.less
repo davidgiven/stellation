@@ -5,6 +5,7 @@ HTML, BODY, #page
 	padding: 0;
 	width: 100%;
 	height: 100%;
+	background-color: black;
 	overflow: hidden;
 }
 
@@ -29,6 +30,17 @@ H1
 TABLE, TBODY
 {
 	width: 100%;
+}
+
+INPUT[type=email], INPUT[type=password], INPUT[type=text]
+{
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 1px dotted white;
+	background-color: transparent;
+	color: white;
+	font-size: 110%;
 }
 
 .ui-widget
@@ -86,3 +98,15 @@ TABLE, TBODY
 		margin-top: 0.75em;
 	}	
 }
+
+.pane
+{
+	position: absolute;
+	display: block;
+	padding: 0.4em;
+	overflow: auto;
+	z-index: 10000;
+}
+
+@import "login.less";
+@import "game.less";
