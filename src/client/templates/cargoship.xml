@@ -9,21 +9,34 @@
 	</template>
 		
 	<template id="resources">
-		<span>
-			<span s_attr="ResourcesM"/> metal,
-			<span s_attr="ResourcesA"/> antimatter,
-			<span s_attr="ResourcesO"/> organic
-		</span>
+		<th>
+			Available
+			<help>
+				<p>
+					This indicates how much resources are available for pickup in orbit
+					around the current star.
+				</p>
+			</help>
+		</th>
+		<td class="centre" s_attr="ResourcesM"/>
+		<td class="centre" s_attr="ResourcesA"/>
+		<td class="centre" s_attr="ResourcesO"/>
 	</template>
 	
 	<template id="details">
 		<tr>
-			<td colspan="3">
+			<td colspan="9">
 				<h1>Cargo controls</h1>
 			</td>
 		</tr>
 		<tr>
-			<td>
+			<td> </td>
+			<th class="centre">Metal</th>
+			<th class="centre">Antimatter</th>
+			<th class="centre">Organics</th>
+		</tr>
+		<tr>
+			<th>
 				Cargo
 				<help>
 					<p>
@@ -31,31 +44,83 @@
 						The more they carry, the larger the mass of the ship.
 					</p>
 				</help>
-			</td>
-			<td>
-				<span s_attr="CargoM"/> metal,
-				<span s_attr="CargoA"/> antimatter,
-				<span s_attr="CargoO"/> organic
+			</th>
+			<td class="centre" s_attr="CargoM"/>
+			<td class="centre" s_attr="CargoA"/>
+			<td class="centre" s_attr="CargoO"/>
+		</tr>
+		<tr>
+			<th> </th>
+			<td colspan="9" class="centre">
+				<input type="button" value="↑ Load ↑"/>
 			</td>
 		</tr>
 		<tr>
-			<td>
-				Available
+			<th class="right">
 				<help>
 					<p>
-						This indicates how much resources are available for pickup in orbit
-						around the current star.
+						Sets the amount of cargo to load or unload to a
+						percentage of the current amount of cargo.
 					</p>
 				</help>
+			</th>
+			<td colspan="9" class="centre small">
+				<a href="#" s_link="cargo_0">0%</a>
+				<a href="#" s_link="cargo_25">25%</a>
+				<a href="#" s_link="cargo_50">50%</a>
+				<a href="#" s_link="cargo_75">75%</a>
+				<a href="#" s_link="cargo_100">100%</a>
 			</td>
-			<td class="available"/>
 		</tr>
 		<tr>
-			<td> </td>
+			<th class="right">
+				<help>
+					<p>
+						Enter the amount of cargo you want to load or unload
+						here, and then press the appropriate button. The
+						percentages above and below will set the amount to
+						a proportion of the ship's cargo, or the amount of
+						available resources in the system. 
+					</p>
+					<p>
+						Nothing	will happen until you press <b>Load</b> or <b>Unload</b>.
+					</p> 
+				</help>
+			</th>
 			<td>
-				<input type="button" value="Load all"/>
-				<input type="button" value="Unload all"/>
+				<input id="cargoshipmetal" type="text" class="maxwidth centre"/>
+			</td>
+			<td>
+				<input id="cargoshipantimatter" type="text" class="maxwidth centre"/>
+			</td>
+			<td>
+				<input id="cargoshiporganics" type="text" class="maxwidth centre"/>
 			</td>
 		</tr>
+		<tr>
+			<th class="right">
+				<help>
+					<p>
+						Sets the amount of cargo to load or unload to a
+						percentage of the current amount of resources available
+						in this star system.
+					</p>
+				</help>
+			</th>
+			<td colspan="9" class="centre small">
+				<a href="#" s_link="available_0">0%</a>
+				<a href="#" s_link="available_25">25%</a>
+				<a href="#" s_link="available_50">50%</a>
+				<a href="#" s_link="available_75">75%</a>
+				<a href="#" s_link="available_100">100%</a>
+			</td>
+		</tr>
+		<tr>
+			<th> </th>
+			<td colspan="9" class="centre">
+				<input type="button" value="↓ Unload ↓"/>
+			</td>
+		</tr>
+		<tr class="available"/>
 	</template>
 </templates>

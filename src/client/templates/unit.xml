@@ -38,14 +38,14 @@
 	
 	<template id="details.invisible">
 		<tr>
-			<td colspan="2">
+			<td colspan="9">
 				<h1>
 					<span s_attr="Name"/> (#<span s_attr="Oid"/>)
 				</h1>
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2">
+			<td colspan="9">
 				This unit is not currently visible to any of your sensors.
 			</td>
 		</tr>
@@ -53,7 +53,7 @@
 	
 	<template id="details">
 		<tr>
-			<td colspan="3">
+			<td colspan="9">
 				<h1>
 					<span s_attr="Name"/> (#<span s_attr="Oid"/>)
 				</h1>
@@ -65,7 +65,7 @@
 				Mass
 				<help template="unit.mass_help"/>
 			</th>
-			<td>
+			<td colspan="9">
 				<span s_attr="Mass"/> tonnes
 			</td>
 		</tr>
@@ -74,7 +74,7 @@
 				Damage
 				<help template="unit.damage_help"/>
 			</th>
-			<td>
+			<td colspan="9">
 				<span s_attr="Damage"/> / <span s_attr="MaxDamage"/>
 			</td>
 		</tr>
@@ -83,7 +83,7 @@
 				Upkeep/hr
 				<help template="unit.upkeep_help"/>
 			</th>
-			<td>
+			<td colspan="9">
 				<span s_attr="MaintenanceCostM"/> metal,
 				<span s_attr="MaintenanceCostA"/> antimatter,
 				<span s_attr="MaintenanceCostO"/> organic

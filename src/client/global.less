@@ -17,6 +17,7 @@ HTML
 A
 {
 	color: #aaaaff !important;
+	text-decoration: none !important;
 }
 	
 H1
@@ -32,7 +33,7 @@ TABLE, TBODY
 	width: 100%;
 }
 
-INPUT[type=email], INPUT[type=password], INPUT[type=text]
+INPUT[type=email], INPUT[type=password], INPUT[type=text], INPUT[type="number"]
 {
 	border-top: none;
 	border-left: none;
@@ -40,13 +41,38 @@ INPUT[type=email], INPUT[type=password], INPUT[type=text]
 	border-bottom: 1px dotted white;
 	background-color: transparent;
 	color: white;
-	font-size: 110%;
+	font-size: 100%;
+}
+
+INPUT[type="number"]
+{
+	text-align: center;
 }
 
 .ui-widget
 {
 	font-family: 'Dosis', sans-serif !important;
 	font-size: inherit !important;
+}
+
+.centre
+{
+	text-align: center;
+}
+
+.right
+{
+	text-align: right;
+}
+
+.small
+{
+	font-size: 75%;
+}
+
+.maxwidth
+{
+	width: 100%;
 }
 
 #terminal
