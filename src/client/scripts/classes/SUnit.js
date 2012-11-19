@@ -21,6 +21,20 @@
     		return "";
     	},
     	
+    	fleetName: function ()
+    	{
+    		var e = $("<span/>");
+    		S.TemplatedMonitor(this.Location, e, "fleet.index");
+    		return e;
+    	},
+    	
+    	starName: function ()
+    	{
+    		var e = $("<span/>");
+    		S.TemplatedMonitor(this.Location.Location, e, "star.name");
+    		return e;
+    	},
+    	
     	createDetails: function (element)
     	{
     		var object = this;

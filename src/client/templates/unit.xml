@@ -62,6 +62,17 @@
 		</tr>
 		<tr>
 			<th>
+				Location
+				<help>
+					The star system this ship is located within.
+				</help>
+			</th>
+			<td colspan="9">
+				<span s_attr="starName"/>
+			</td>
+		</tr>
+		<tr>
+			<th>
 				Mass
 				<help template="unit.mass_help"/>
 			</th>
