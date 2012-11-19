@@ -10,12 +10,15 @@ local Classes = require("Classes")
 local Type = require("Type")
 
 return function (player, msg)
-	local fleet = Datastore.Object(msg.oid)
-	fleet:CheckClass("SFleet")
-	fleet:CheckManipulatableBy(player)
-	
-	fleet.TargetX = tonumber(msg.x)
-	fleet.TargetY = tonumber(msg.y)
+	local ship = Datastore.Object(msg.oid)
+	ship:CheckClass("SCargoship")
+	ship:CheckManipulatableBy(player)
+
+	local m = tonumber(msg.m)
+	local a = tonumber(msg.a)
+	local o = tonumber(msg.o)
+	Log.G("cargoship load/unload; m=", m, " a=", a, " o=", o)
+	ship:LoadUnload(m, a, o) 
 	
 	return {
 		result = "OK"

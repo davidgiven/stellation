@@ -48,6 +48,28 @@ return
 	
 	methods =
 	{
-		Init = super.methods.Init
+		Init = super.methods.Init,
+		
+		LoadUnload = function(self, m, a, o)
+			local star = self.Location.Location
+			local rm = star.ResourcesM - m
+			local ra = star.ResourcesA - a
+			local ro = star.ResourcesO - o
+			local cm = self.CargoM + m
+			local ca = self.CargoA + a
+			local co = self.CargoO + o
+			
+			if (rm < 0) or (ra < 0) or (ro < 0) or
+			   (cm < 0) or (ca < 0) or (co < 0) then
+			   	error { result = "InsufficientResources" }
+			end
+			
+			star.ResourcesM = rm
+			star.ResourcesA = ra
+			star.ResourcesO = ro
+			self.CargoM = cm
+			self.CargoA = ca
+			self.CargoO = co
+		end
 	}
 }

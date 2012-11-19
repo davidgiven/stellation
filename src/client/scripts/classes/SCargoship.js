@@ -41,6 +41,36 @@
     			adjust_loading(m*f, a*f, o*f);
     		};
     		
+    		var number_or_0 = function(e)
+    		{
+    			var s = e.val();
+    			if (s)
+    				return parseInt(s);
+    			return 0;
+    		};
+    		
+    		var loadunload = function(f)
+    		{
+    			var m = f * number_or_0($("#cargoshipmetal"));
+    			var a = f * number_or_0($("#cargoshipantimatter"));
+    			var o = f * number_or_0($("#cargoshiporganics"));
+    			
+    			if (isNaN(m) || isNaN(a) || isNaN(o))
+    			{
+    				S.GSM.Error("Please enter numbers, or leave the cells blank.");
+    				return;
+    			}
+    			
+    			S.Commands.CargoshipLoadUnload(
+    				{
+    					oid: object.Oid,
+    					m: m,
+    					a: a,
+    					o: o
+    				}
+    			);
+    		};
+    		
     		var e = $("<tbody/>");
     		$(element).append(e);
         	S.TemplatedMonitor(object, e, "cargoship.details",
@@ -63,7 +93,17 @@
         			available_25: function() { adjust_to_available(0.25); },        			
         			available_50: function() { adjust_to_available(0.50); },        			
         			available_75: function() { adjust_to_available(0.75); },        			
-        			available_100: function() { adjust_to_available(1.00); },        			
+        			available_100: function() { adjust_to_available(1.00); },
+        			
+        			load: function (object, element)
+        			{
+        				loadunload(1);
+        			},
+        			
+        			unload: function (object, element)
+        			{
+        				loadunload(-1);
+        			}
         		}
         	);
     

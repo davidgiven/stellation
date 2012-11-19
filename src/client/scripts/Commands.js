@@ -43,6 +43,12 @@
     		parameters: ["oid"]
     	},
     	
+    	CargoshipLoadUnload:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid", "m", "a", "o"]
+    	},
+    	
     	help:
     	{
     		parameters: [],

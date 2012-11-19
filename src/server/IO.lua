@@ -52,7 +52,7 @@ return
 			
 			local recvs = slave:receive("*l")
 
-			Log.S("< ", recvs)
+			--Log.S("< ", recvs)
 			local recv = safe_decode(recvs)
 			local replys
 			if recv then
@@ -62,7 +62,7 @@ return
 				replys = '{"result":"MalformedCommand"}'
 			end
 				
-			Log.S("> ", replys)
+			--Log.S("> ", replys)
 				
 			sendall(slave, replys .. "\n")
 			slave:close()

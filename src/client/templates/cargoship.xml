@@ -52,7 +52,7 @@
 		<tr>
 			<th> </th>
 			<td colspan="9" class="centre">
-				<input type="button" value="↑ Load ↑"/>
+				<input type="button" value="↑ Load ↑" s_link="load"/>
 			</td>
 		</tr>
 		<tr>
@@ -118,7 +118,7 @@
 		<tr>
 			<th> </th>
 			<td colspan="9" class="centre">
-				<input type="button" value="↓ Unload ↓"/>
+				<input type="button" value="↓ Unload ↓" s_link="unload"/>
 			</td>
 		</tr>
 		<tr class="available"/>

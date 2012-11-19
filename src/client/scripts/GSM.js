@@ -21,6 +21,11 @@
 			);
         },
         
+        Error: function (e)
+        {
+        	console.log("Error: "+e);
+        },
+        
         Login: function ()
         {
             S.LoginPage.Show();
