@@ -139,6 +139,11 @@ local function new_object_proxy(oid)
 			return getdatumwithdefaultvalue(key)
 		end,
 		
+		__flush_caches = function (self)
+			methodcache = {}
+			datumcache = {}
+		end,
+		
 		Oid = tonumber(oid),
 	}
 	
@@ -191,8 +196,10 @@ return
 	Rollback = function ()
 		Database.Rollback()
 		
-		-- Destroy all proxies (as we might have stale cached data).
-		proxies = {}
+		-- Flush all proxies (as we might have stale cached data).
+		for _, o in pairs(proxies) do
+			o:__flush_caches()
+		end
 	end,
 
 	CreateWithOid = function (oid, class)
