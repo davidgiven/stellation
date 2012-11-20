@@ -2,6 +2,7 @@ PRAGMA auto_vacuum = FULL;
 PRAGMA encoding = "UTF-8";
 PRAGMA synchronous = OFF;
 PRAGMA foreign_keys = ON;
+PRAGMA temp_store = MEMORY;
 
 BEGIN;
 
@@ -56,6 +57,18 @@ CREATE TABLE IF NOT EXISTS visiblelogs
 (
 	player INTEGER PRIMARY KEY REFERENCES eav_Class(oid),
 	log INTEGER
+);
+
+CREATE TEMPORARY TABLE IF NOT EXISTS pscopes
+(
+	kid INTEGER PRIMARY KEY,
+	scope INTEGER
+);
+
+CREATE TEMPORARY TABLE IF NOT EXISTS vscopes
+(
+	oid INTEGER PRIMARY KEY,
+	scope INTEGER
 );
 
 COMMIT;

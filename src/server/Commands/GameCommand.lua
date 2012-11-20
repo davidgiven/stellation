@@ -12,49 +12,81 @@ local GameCommands = require("GameCommands")
 local Timers = require("Timers")
 local Socket = require("socket")
 
-local function is_property_exported(pscope, vscope, object, player)
-	-- The player can see the object, somehow. What properties do we export?
-	-- If the object belongs to the player, export everything (except the
-	-- server-only ones).
+local pscopes_table_inited = false
 
-	if (object.Owner == player) and (pscope ~= Type.SERVERONLY) then
-		return true
+local function init_pscopes_table()
+	SQL("DELETE FROM pscopes"):step()
+	
+	for kid, type in pairs(Classes.properties) do
+		SQL("INSERT INTO pscopes (kid, scope) VALUES (?, ?)")
+			:bind(kid, type.scope):step()
 	end
-	
-	-- This must be someone else's object. If we seeing it via a global view,
-	-- then we can only see global properties.
-	
-	if (vscope == Type.GLOBAL) and (pscope == Type.GLOBAL) then
-		return true
-	end
-	
-	-- If via a local view, the global or local objects.
-	
-	if (vscope == Type.LOCAL) and
-			((pscope == Type.GLOBAL) or (pscope == Type.LOCAL)) then
-		return true
-	end
-	
-	-- Otherwise, the player doesn't get to see the property.
-	
-	return false
+	pscopes_table_inited = true
 end
 
 local function synchronise(visibilitymap, player)
+	if not pscopes_table_inited then
+		init_pscopes_table()
+	end
+	
 	Log.C("synchronising client ", G.CurrentCookie)
 
 	local cs = {}
 	local count = 0
 	
-	local qq = {}
-	for object in pairs(visibilitymap) do
-		qq[#qq+1] = object.Oid
+	SQL("DELETE FROM vscopes"):step()
+	for object, vscope in pairs(visibilitymap) do
+		SQL("INSERT INTO vscopes (oid, scope) VALUES (?, ?)")
+			:bind(object.Oid, vscope):step()
 	end
-	local q = "("..table.concat(qq, ",")..")"
 	
-	local query = SQL(
-		"SELECT oid, kid FROM eav WHERE oid IN "..q
-		)
+	-- GLOBAL = 0,
+	-- LOCAL = 1,
+	-- SERVERONLY = 2,
+	-- PRIVATE = 3,
+	--
+	-- ?1 = player.oid
+
+	local query = SQL(	
+		[[
+			SELECT eav.oid, eav.kid FROM eav
+			INNER JOIN vscopes ON (vscopes.oid == eav.oid) 
+			INNER JOIN pscopes ON (pscopes.kid == eav.kid)
+			WHERE
+				(
+					(
+						-- Any visible object owned by the player is fully
+						-- visible.
+						
+						(pscopes.scope != 2) AND
+						EXISTS (
+							SELECT value FROM eav_Owner
+								WHERE (eav_Owner.oid == eav.oid) AND
+									(eav_Owner.value == ?1)
+						)
+					)
+					OR
+					(
+						-- Objects being seen globally only have their global
+						-- properties visible.
+						
+						(vscopes.scope == 0) AND
+						(pscopes.scope == 0)
+					)
+					OR
+					(
+						-- Objects being seen locally have their global and
+						-- local properties visible.
+						
+						(vscopes.scope == 1) AND
+						(pscopes.scope IN (0, 1))
+					)
+				)
+		]]
+	)  
+	
+	query:bind(player.Oid)
+	 
 	local result = query:step()
 	while result do
 		local oid = tonumber(result[1])
@@ -65,18 +97,16 @@ local function synchronise(visibilitymap, player)
 		local object = Datastore.Object(oid)
 		local scope = visibilitymap[object]
 
-		if is_property_exported(type.scope, scope, object, player) then
-			local datum = object:__get_datum(name)
-			if datum.TestAndSetSyncBit() then
-				local c = cs[oid]
-				if not c then
-					c = {}
-					cs[oid] = c
-				end
-				
-				c[name] = datum.Export(name)
-				count = count + 1 
+		local datum = object:__get_datum(name)
+		if datum.TestAndSetSyncBit() then
+			local c = cs[oid]
+			if not c then
+				c = {}
+				cs[oid] = c
 			end
+			
+			c[name] = datum.Export(name)
+			count = count + 1 
 		end
 		
 		result = query:step()

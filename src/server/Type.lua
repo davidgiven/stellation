@@ -312,10 +312,10 @@ end
 
 return
 { 
-	GLOBAL = "global",
-	LOCAL = "local",
-	SERVERONLY = "serveronly",
-	PRIVATE = "private",
+	GLOBAL = 0,
+	LOCAL = 1,
+	SERVERONLY = 2,
+	PRIVATE = 3,
 
 	Object = function (scope)
 		return typeinstance(ObjectType, scope)
