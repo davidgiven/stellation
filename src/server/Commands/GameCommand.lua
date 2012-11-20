@@ -29,7 +29,7 @@ local function synchronise(visibilitymap, player)
 		init_pscopes_table()
 	end
 	
-	Log.C("synchronising client ", G.CurrentCookie)
+	Log.C("calculating sync map for ", G.CurrentCookie)
 
 	local cs = {}
 	local count = 0
@@ -86,11 +86,13 @@ local function synchronise(visibilitymap, player)
 	)  
 	
 	query:bind(player.Oid)
+	local results, resultscount = query:resultset()
 	 
-	local result = query:step()
-	while result do
-		local oid = tonumber(result[1])
-		local kid = tonumber(result[2])
+	Log.C("collating changed properties")
+
+	for i = 1, resultscount do
+		local oid = tonumber(results[1][i])
+		local kid = tonumber(results[2][i])
 		local type = Classes.properties[kid]
 		local name = Tokens[kid]
 		
