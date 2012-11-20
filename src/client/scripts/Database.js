@@ -117,7 +117,6 @@
 	{
 		Reset: function()
 		{
-			allproperties = {};
 			S.Player = null;
 		},
 	
