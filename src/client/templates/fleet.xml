@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xmlns="http://www.w3.org/1999/xhtml">
 	<template id="index">
-		<li>
-			<a href="#" s_attr="Name" s_link="clicked"/>
-		</li>
+		<a href="#" s_attr="Name" s_link="clicked"/>
 	</template>
 	
 	<template id="summary">

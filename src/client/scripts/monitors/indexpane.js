@@ -49,11 +49,12 @@
         					}
         				);
         				
+        				var ce = $(element).find(".content")
         				fleets.orderedEach(sort_by_oids,
         					function (_, fleet)
         					{
-        						var e = $("<ul/>");
-        						element.append(e);
+        						var e = $("<li/>");
+        						ce.append(e);
         						S.IndexPaneFleetMonitor(fleet, e);
         					}
         				);
@@ -85,7 +86,7 @@
     					starset.orderedEach(sort_by_names,
     						function (_, star)
     						{
-    							var e = $("<ul/>");
+    							var e = $("<ul class='star'/>");
     							element.append(e);
     							S.IndexPaneStarMonitor(star, e);
     						}
