@@ -48,10 +48,7 @@ CREATE TABLE IF NOT EXISTS logentries
 	location INTEGER,
 	entry TEXT
 );
-CREATE INDEX IF NOT EXISTS logentriesindex ON logentries
-(
-	time ASC
-);
+CREATE INDEX IF NOT EXISTS logentriesindex ON logentries (time ASC);
 
 CREATE TABLE IF NOT EXISTS visiblelogs
 (
@@ -59,16 +56,25 @@ CREATE TABLE IF NOT EXISTS visiblelogs
 	log INTEGER
 );
 
-CREATE TEMPORARY TABLE IF NOT EXISTS pscopes
+CREATE TABLE IF NOT EXISTS pscopes
 (
 	kid INTEGER PRIMARY KEY,
 	scope INTEGER
 );
 
-CREATE TEMPORARY TABLE IF NOT EXISTS vscopes
+CREATE TABLE IF NOT EXISTS vscopes
 (
 	oid INTEGER PRIMARY KEY,
 	scope INTEGER
 );
+
+CREATE TABLE IF NOT EXISTS seenby
+(
+	oid INTEGER,
+	kid INTEGER,
+	cookie TEXT,
+	UNIQUE (oid, kid, cookie) 
+);
+CREATE INDEX IF NOT EXISTS seenbyindex ON seenby (oid, kid);
 
 COMMIT;

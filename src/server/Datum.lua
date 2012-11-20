@@ -6,7 +6,6 @@ local Tokens = require("Tokens")
 local G = require("G")
 
 local nextoid = 0
-local seenbydb = {}
 
 local function get_property_type(class, name)
 	while class do
@@ -57,10 +56,9 @@ return
 
 		local kid = Tokens[name]
 		
-		local propertyhash = oid .. "." .. name
-
 		local function dirty()
-			seenbydb[propertyhash] = {}
+			SQL("DELETE FROM seenby WHERE oid=? AND kid=?")
+				:bind(oid, kid):step()
 		end
 		
 		SQL("INSERT OR IGNORE INTO eav (oid, kid) VALUES (?, ?)")
@@ -95,16 +93,9 @@ return
 				return f(tablename, oid)
 			end,
 			
-			TestAndSetSyncBit = function()
-				local s = seenbydb[propertyhash]
-				if not s then
-					s = {}
-					seenbydb[propertyhash] = s
-				end
-
-				local needssync = (s[G.CurrentCookie] ~= true)
-				s[G.CurrentCookie] = true
-				return needssync				
+			Synced = function()
+				SQL("INSERT OR REPLACE INTO seenby (oid, kid, cookie) VALUES (?, ?, ?)")
+					:bind(oid, kid, G.CurrentCookie):step()
 			end 
 		}
 		

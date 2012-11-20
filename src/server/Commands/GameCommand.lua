@@ -46,6 +46,7 @@ local function synchronise(visibilitymap, player)
 	-- PRIVATE = 3,
 	--
 	-- ?1 = player.oid
+	-- ?2 = cookie
 
 	local query = SQL(	
 		[[
@@ -53,6 +54,13 @@ local function synchronise(visibilitymap, player)
 			INNER JOIN vscopes ON (vscopes.oid == eav.oid) 
 			INNER JOIN pscopes ON (pscopes.kid == eav.kid)
 			WHERE
+				NOT EXISTS (
+					SELECT cookie FROM seenby WHERE
+						(seenby.oid == eav.oid) AND
+						(seenby.kid == eav.kid) AND
+						(seenby.cookie == ?2)
+				)
+				AND 
 				(
 					(
 						-- Any visible object owned by the player is fully
@@ -85,7 +93,7 @@ local function synchronise(visibilitymap, player)
 		]]
 	)  
 	
-	query:bind(player.Oid)
+	query:bind(player.Oid, G.CurrentCookie)
 	local results, resultscount = query:resultset()
 	 
 	Log.C("collating changed properties")
@@ -100,16 +108,15 @@ local function synchronise(visibilitymap, player)
 		local scope = visibilitymap[object]
 
 		local datum = object:__get_datum(name)
-		if datum.TestAndSetSyncBit() then
-			local c = cs[oid]
-			if not c then
-				c = {}
-				cs[oid] = c
-			end
-			
-			c[name] = datum.Export(name)
-			count = count + 1 
+		datum.Synced()
+		local c = cs[oid]
+		if not c then
+			c = {}
+			cs[oid] = c
 		end
+			
+		c[name] = datum.Export(name)
+		count = count + 1 
 		
 		result = query:step()
 	end
