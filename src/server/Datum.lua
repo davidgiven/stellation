@@ -93,9 +93,9 @@ return
 				return f(tablename, oid)
 			end,
 			
-			Synced = function()
+			Synced = function(id)
 				SQL("INSERT OR REPLACE INTO seenby (oid, kid, cookie) VALUES (?, ?, ?)")
-					:bind(oid, kid, G.CurrentCookie):step()
+					:bind(oid, kid, id):step()
 			end 
 		}
 		

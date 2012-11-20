@@ -11,6 +11,7 @@ local Type = require("Type")
 local GameCommands = require("GameCommands")
 local Timers = require("Timers")
 local Socket = require("socket")
+local AuthDB = require("AuthDB")
 
 local pscopes_table_inited = false
 
@@ -29,7 +30,8 @@ local function synchronise(visibilitymap, player)
 		init_pscopes_table()
 	end
 	
-	Log.C("calculating sync map for ", G.CurrentCookie)
+	local cookieid = AuthDB.GetCookieID(G.CurrentCookie)
+	Log.C("calculating sync map for ", G.CurrentCookie, " (id ", cookieid, ")")
 
 	local cs = {}
 	local count = 0
@@ -46,7 +48,7 @@ local function synchronise(visibilitymap, player)
 	-- PRIVATE = 3,
 	--
 	-- ?1 = player.oid
-	-- ?2 = cookie
+	-- ?2 = cookie id
 
 	local query = SQL(	
 		[[
@@ -93,7 +95,7 @@ local function synchronise(visibilitymap, player)
 		]]
 	)  
 	
-	query:bind(player.Oid, G.CurrentCookie)
+	query:bind(player.Oid, cookieid)
 	local results, resultscount = query:resultset()
 	 
 	Log.C("collating changed properties")
@@ -108,7 +110,7 @@ local function synchronise(visibilitymap, player)
 		local scope = visibilitymap[object]
 
 		local datum = object:__get_datum(name)
-		datum.Synced()
+		datum.Synced(cookieid)
 		local c = cs[oid]
 		if not c then
 			c = {}

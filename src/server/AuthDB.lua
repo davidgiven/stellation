@@ -6,6 +6,7 @@ local Database = require("Database")
 local SQL = Database.SQL
 
 local authentications = {}
+local authcount = 0
 
 local function create_cookie()
 	while true do
@@ -35,14 +36,29 @@ return
 	
 		local oid = tonumber(row[1])
 		local player = Datastore.Object(oid)
-		local cookie = create_cookie()
-		authentications[cookie] = player
-		Log.C("new auth cookie ", cookie, " for player ", email)
 		
-		return cookie, player
+		while true do
+			local cookie = create_cookie()
+			if not authentications[cookie] then
+				authcount = authcount+1
+				authentications[cookie] = {player=player, id=authcount}
+				
+				Log.C("new auth cookie ", cookie, " (id ", authcount, ") for player ", email)
+				
+				return cookie, player
+			end
+		end
 	end,
 	
 	VerifyAuthCookie = function (cookie)
-		return authentications[cookie]
+		local p = authentications[cookie]
+		if p then
+			return p.player
+		end
+		return nil
+	end,
+	
+	GetCookieID = function (cookie)
+		return authentications[cookie].id
 	end
 }

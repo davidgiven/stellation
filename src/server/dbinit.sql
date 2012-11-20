@@ -56,25 +56,25 @@ CREATE TABLE IF NOT EXISTS visiblelogs
 	log INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS pscopes
+CREATE TEMPORARY TABLE pscopes
 (
 	kid INTEGER PRIMARY KEY,
 	scope INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS vscopes
+CREATE TEMPORARY TABLE vscopes
 (
 	oid INTEGER PRIMARY KEY,
 	scope INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS seenby
+CREATE TEMPORARY TABLE seenby
 (
 	oid INTEGER,
 	kid INTEGER,
-	cookie TEXT,
+	cookie INTEGER,
 	UNIQUE (oid, kid, cookie) 
 );
-CREATE INDEX IF NOT EXISTS seenbyindex ON seenby (oid, kid);
+CREATE INDEX seenbyindex ON seenby (oid, kid);
 
 COMMIT;
