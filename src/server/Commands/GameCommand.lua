@@ -45,28 +45,40 @@ local function synchronise(visibilitymap, player)
 
 	local cs = {}
 	local count = 0
-	for object, scope in pairs(visibilitymap) do
-		local class = Classes[object.Class]
-		local oid = object.Oid
-		
-		while class do
-			for name, type in pairs(class.properties) do
-				if is_property_exported(type.scope, scope, object, player) then
-					local datum = object:__get_datum(name)
-					if datum.TestAndSetSyncBit() then
-						local c = cs[oid]
-						if not c then
-							c = {}
-							cs[oid] = c
-						end
-						
-						c[name] = datum.Export(name)
-						count = count + 1 
+	
+	local qq = {}
+	for object in pairs(visibilitymap) do
+		qq[#qq+1] = object.Oid
+	end
+	local q = "("..table.concat(qq, ",")..")"
+	
+	for name, type in pairs(Classes.properties) do
+		name = Tokens[name]
+		local query = SQL(
+			"SELECT oid FROM eav_"..name.." WHERE oid IN "..q
+			)
+		local result = query:step()
+			
+		while result do
+			local oid = tonumber(result[1])
+			local object = Datastore.Object(oid)
+			local scope = visibilitymap[object]
+
+			if is_property_exported(type.scope, scope, object, player) then
+				local datum = object:__get_datum(name)
+				if datum.TestAndSetSyncBit() then
+					local c = cs[oid]
+					if not c then
+						c = {}
+						cs[oid] = c
 					end
+					
+					c[name] = datum.Export(name)
+					count = count + 1 
 				end
 			end
 			
-			class = class.superclass
+			result = query:step()
 		end
 	end
 	
