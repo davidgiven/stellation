@@ -166,6 +166,10 @@ local function create_object(oid, class)
 		"INSERT OR REPLACE INTO eav_Class (oid, value) VALUES (?, ?)"
 		):bind(oid, Tokens[class.name]):step()
 		
+	SQL(
+		"INSERT OR REPLACE INTO eav (oid, kid) VALUES (?, ?)"
+		):bind(oid, Tokens["Class"]):step()
+		
 	return new_object_proxy(oid, class)
 end
 

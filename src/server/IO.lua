@@ -62,7 +62,7 @@ return
 				replys = '{"result":"MalformedCommand"}'
 			end
 				
-			--Log.S("> ", replys)
+			Log.S("> ", replys)
 				
 			sendall(slave, replys .. "\n")
 			slave:close()

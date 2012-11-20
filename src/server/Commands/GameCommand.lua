@@ -52,34 +52,34 @@ local function synchronise(visibilitymap, player)
 	end
 	local q = "("..table.concat(qq, ",")..")"
 	
-	for name, type in pairs(Classes.properties) do
-		name = Tokens[name]
-		local query = SQL(
-			"SELECT oid FROM eav_"..name.." WHERE oid IN "..q
-			)
-		local result = query:step()
-			
-		while result do
-			local oid = tonumber(result[1])
-			local object = Datastore.Object(oid)
-			local scope = visibilitymap[object]
+	local query = SQL(
+		"SELECT oid, kid FROM eav WHERE oid IN "..q
+		)
+	local result = query:step()
+	while result do
+		local oid = tonumber(result[1])
+		local kid = tonumber(result[2])
+		local type = Classes.properties[kid]
+		local name = Tokens[kid]
+		
+		local object = Datastore.Object(oid)
+		local scope = visibilitymap[object]
 
-			if is_property_exported(type.scope, scope, object, player) then
-				local datum = object:__get_datum(name)
-				if datum.TestAndSetSyncBit() then
-					local c = cs[oid]
-					if not c then
-						c = {}
-						cs[oid] = c
-					end
-					
-					c[name] = datum.Export(name)
-					count = count + 1 
+		if is_property_exported(type.scope, scope, object, player) then
+			local datum = object:__get_datum(name)
+			if datum.TestAndSetSyncBit() then
+				local c = cs[oid]
+				if not c then
+					c = {}
+					cs[oid] = c
 				end
+				
+				c[name] = datum.Export(name)
+				count = count + 1 
 			end
-			
-			result = query:step()
 		end
+		
+		result = query:step()
 	end
 	
 	return cs, count

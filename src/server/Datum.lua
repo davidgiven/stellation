@@ -62,7 +62,10 @@ return
 		local function dirty()
 			seenbydb[propertyhash] = {}
 		end
-		 
+		
+		SQL("INSERT OR IGNORE INTO eav (oid, kid) VALUES (?, ?)")
+			:bind(oid, kid):step()
+			
 		local datum = 
 		{
 			type = t,

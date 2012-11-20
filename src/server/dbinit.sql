@@ -18,6 +18,13 @@ CREATE TABLE IF NOT EXISTS eav_Class
 	value INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS eav
+(
+	oid INTEGER REFERENCES eav_Class(oid),
+	kid INTEGER REFERENCES tokens(id),
+	PRIMARY KEY (oid, kid)
+);
+
 CREATE TABLE IF NOT EXISTS players
 (
 	email TEXT PRIMARY KEY,
