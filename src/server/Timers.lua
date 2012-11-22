@@ -5,6 +5,7 @@ local Datastore = require("Datastore")
 local SQL = Database.SQL
 local Socket = require("socket")
 local Log = require("Log")
+local ResourceConsumption = require("ResourceConsumption")
 
 local function settimer(time, object, command)
 	SQL("INSERT INTO timers (time, oid, command) VALUES (?, ?, ?)")
@@ -28,13 +29,16 @@ return
 	end,
 	
 	RunNextPendingTimer = function()
-		local result = SQL("SELECT id, oid, command FROM timers WHERE time < ? ORDER BY time ASC LIMIT 1")
-			:bind(Socket.gettime())
-			:step()
+		local result = SQL("SELECT id, oid, command, time FROM timers WHERE time < ? ORDER BY time ASC LIMIT 1")
+			:bind(Socket.gettime()):step()
 		if result then
 			local timerid = result[1]
 			local oid = result[2]
 			local command = result[3]
+			local time = tonumber(result[4])
+			
+			ResourceConsumption.ConsumeTo(Socket.gettime());
+			
 			SQL("DELETE FROM timers WHERE id = ?")
 				:bind(timerid)
 				:step()
@@ -43,6 +47,8 @@ return
 			local object = Datastore.Object(oid)
 			object[command](object)
 			return true
+		else
+			ResourceConsumption.ConsumeTo(Socket.gettime())
 		end
 		return false
 	end

@@ -6,6 +6,13 @@ PRAGMA temp_store = MEMORY;
 
 BEGIN;
 
+CREATE TABLE IF NOT EXISTS variables
+(
+	key TEXT NOT NULL PRIMARY KEY,
+	value TEXT
+);
+INSERT OR IGNORE INTO variables (key, value) VALUES ('timestamp', 0);
+
 CREATE TABLE IF NOT EXISTS tokens
 (
 	id INTEGER PRIMARY KEY,
