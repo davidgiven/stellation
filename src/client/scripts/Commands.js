@@ -134,18 +134,16 @@
         				{
         					var s;
         					
-        					if (v instanceof Array)
+        					if (v instanceof S.ObjectSet)
         					{
-        						s = "[" +
-        							$.map(v,
-        								function (e)
-        								{
-        									return "#" + e.Oid;
-        								}
-        							).join(
-        								", "
-        							)
-        							+ "]";
+        						var ss = [];
+        						$.each(v,
+        							function (e)
+    								{
+    									ss.push("#" + e.Oid);
+    								}
+        						);
+        						s = "[" + ss.join(", ") + "]";
         					}
         					else if (v instanceof Object)
         						s = "#" + v.Oid;

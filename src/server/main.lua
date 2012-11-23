@@ -5,6 +5,8 @@
 ServerDir = arg[0]:gsub("[^/]+$", "")
 package.path = ServerDir .. "?.lua;" .. ServerDir .. "?/init.lua;" .. package.path
 
+local Database = require("Database")
+local SQL = Database.SQL
 local Datastore = require "Datastore"
 local Properties = require "Properties"
 local WorldCreation = require "WorldCreation"
@@ -13,6 +15,7 @@ local Utils = require("Utils")
 local IO = require("IO")
 local Commands = require("Commands")
 local G = require("G")
+local Tokens = require("Tokens")
 
 local database_filename
 local socket_filename
@@ -107,7 +110,14 @@ Datastore.Begin()
 
 if not Datastore.DoesObjectExist(0) then
 	Log.M("initialising new database")
-	local SUniverse = Datastore.CreateWithOid(0, "SUniverse")
+	
+	-- Brute-force create the Universe object with id 0.
+	
+	SQL(
+		"INSERT INTO eav_Class (oid, value) VALUES (?, ?)"
+		):bind(0, Tokens["SUniverse"]):step()
+	
+	local SUniverse = Datastore.Object(0)
 	local SGalaxy = Datastore.Create("SGalaxy")
 	
 	SUniverse.Galaxy = SGalaxy

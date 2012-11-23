@@ -6,7 +6,6 @@ local Tokens = require("Tokens")
 local Datum = require("Datum")
 local G = require("G")
 
-local nextoid = 0
 local proxies = {}
 
 local classes_p
@@ -151,7 +150,7 @@ local function new_object_proxy(oid)
 	return object
 end
 
-local function create_object(oid, class)
+local function create_object(class)
 	if (type(class) == "string") then
 		local c = get_class(class)
 		if not c then
@@ -160,12 +159,17 @@ local function create_object(oid, class)
 		class = c
 	end
 
-	-- eav_Class must go first, as adding an entry here creates the class
+	-- eav_Class must go first, as adding an entry here creates the class and
+	-- defines the oid.
 		
 	SQL(
-		"INSERT OR REPLACE INTO eav_Class (oid, value) VALUES (?, ?)"
-		):bind(oid, Tokens[class.name]):step()
+		"INSERT INTO eav_Class (value) VALUES (?)"
+		):bind(Tokens[class.name]):step()
 		
+	local row = SQL("SELECT last_insert_rowid()"):step()
+	Utils.Assert(row, "last_insert_rowid() returned nil?")
+	local oid = tonumber(row[1])
+	
 	SQL(
 		"INSERT OR REPLACE INTO eav (oid, kid) VALUES (?, ?)"
 		):bind(oid, Tokens["Class"]):step()
@@ -177,12 +181,6 @@ return
 {
 	Connect = function (filename)
 		Database.Connect(filename)
-
-		local row = SQL("SELECT MAX(oid) FROM eav_Class"):step()
-		nextoid = tonumber(row[1])
-		if not nextoid then
-			nextoid = 1
-		end
 	end,
 
 	Disconnect = function ()
@@ -206,18 +204,9 @@ return
 		end
 	end,
 
-	CreateWithOid = function (oid, class)
-		local o = create_object(oid, class)
-		proxies[oid] = o
-		return o
-	end,
-	
 	Create = function (class)
-		local oid = nextoid
-		nextoid = nextoid + 1
-		
-		local o = create_object(oid, class)
-		proxies[oid] = o
+		local o = create_object(class)
+		proxies[o.Oid] = o
 		return o
 	end,
 	
