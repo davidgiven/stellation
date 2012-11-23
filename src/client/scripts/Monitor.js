@@ -95,6 +95,14 @@
     		S.Database.Watch(object, object_changed_cb);
     	};
 
+    var suffices =
+    {
+    	i: function (s)
+    	{
+    		return parseInt(s);
+    	}
+    };
+    
     S.ExpandTemplate = function (object, element, template, events)
 	{
     	if (typeof(template) == "string")
@@ -130,11 +138,25 @@
 			function (_, node)
 			{
 				var attrname = $(node).attr("s_attr");
-				var v = object[attrname];
+				var suffix = null;
+				
+	    		var dot = attrname.indexOf(".");
+	    		if (dot != -1)
+	    		{
+	    			suffix = attrname.substring(dot+1);
+	    			attrname = attrname.substring(0, dot);
+	    		}
+
+				var v = object[attrname];				
 				if (typeof(v) == "function")
 					v = v.call(object, object);
-				if (typeof(v) == "string")
+				if ((typeof(v) == "string") || (typeof(v) == "number"))
+				{
+					if (suffix)
+						v = suffices[suffix](v);
+					
 					v = document.createTextNode(v);
+				}
 				
 				appendations.push({node: $(node), value: v});
 			}

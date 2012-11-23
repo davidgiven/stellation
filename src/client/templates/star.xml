@@ -33,9 +33,9 @@
 			<b>Brightness: </b><span s_attr="Brightness"/><br/>
 			<b>Asteroids: </b><span s_attr="AsteroidsC"/> carbonaceous,
 				<span s_attr="AsteroidsM"/> metallic<br/>
-			<b>Free resources: </b><span s_attr="ResourcesA"/> antimatter,
-				<span s_attr="ResourcesO"/> organic,
-				<span s_attr="ResourcesM"/> metal<br/>
+			<b>Free resources: </b><span s_attr="ResourcesM.i"/> metal,
+				<span s_attr="ResourcesA.i"/> antimatter,
+				<span s_attr="ResourcesO.i"/> organics<br/>
 	
 			<table class="star_summary_content"/>
 		</div>

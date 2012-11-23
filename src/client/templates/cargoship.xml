@@ -2,9 +2,9 @@
 <templates xmlns="http://www.w3.org/1999/xhtml">
 	<template id="cargo">
 		<span>
-			<span s_attr="CargoM"/> metal,
-			<span s_attr="CargoA"/> antimatter,
-			<span s_attr="CargoO"/> organic
+			<span s_attr="CargoM.i"/> metal,
+			<span s_attr="CargoA.i"/> antimatter,
+			<span s_attr="CargoO.i"/> organic
 		</span>
 	</template>
 		
@@ -18,9 +18,9 @@
 				</p>
 			</help>
 		</th>
-		<td class="centre" s_attr="ResourcesM"/>
-		<td class="centre" s_attr="ResourcesA"/>
-		<td class="centre" s_attr="ResourcesO"/>
+		<td class="centre" s_attr="ResourcesM.i"/>
+		<td class="centre" s_attr="ResourcesA.i"/>
+		<td class="centre" s_attr="ResourcesO.i"/>
 	</template>
 	
 	<template id="details">
@@ -45,9 +45,9 @@
 					</p>
 				</help>
 			</th>
-			<td class="centre" s_attr="CargoM"/>
-			<td class="centre" s_attr="CargoA"/>
-			<td class="centre" s_attr="CargoO"/>
+			<td class="centre" s_attr="CargoM.i"/>
+			<td class="centre" s_attr="CargoA.i"/>
+			<td class="centre" s_attr="CargoO.i"/>
 		</tr>
 		<tr>
 			<th> </th>
@@ -108,11 +108,11 @@
 				</help>
 			</th>
 			<td colspan="9" class="centre small">
-				<a href="#" s_link="available_0">0%</a>
-				<a href="#" s_link="available_25">25%</a>
-				<a href="#" s_link="available_50">50%</a>
-				<a href="#" s_link="available_75">75%</a>
-				<a href="#" s_link="available_100">100%</a>
+				<a href="#" s_link="available_0">0.i</a>
+				<a href="#" s_link="available_25">25.i</a>
+				<a href="#" s_link="available_50">50.i</a>
+				<a href="#" s_link="available_75">75.i</a>
+				<a href="#" s_link="available_100">100.i</a>
 			</td>
 		</tr>
 		<tr>
