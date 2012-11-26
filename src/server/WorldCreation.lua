@@ -130,6 +130,8 @@ return
 		
 		Database.SQL("INSERT INTO players VALUES (?, ?)")
 			:bind(email, player.Oid):step()
+			
+		player:Log(nil, "Intergalactic jump complete.")
 		return player
 	end
 }

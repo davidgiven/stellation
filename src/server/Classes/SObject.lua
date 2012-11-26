@@ -29,6 +29,20 @@ return
 		Init = function (self)
 		end,
 		
+		IsA = function (self, class)
+			local classes = require("Classes")
+			local c = classes[self.Class]
+			local tc = classes[class]
+			
+			while (c ~= tc) do
+				c = c.superclass
+				if not c then
+					return false
+				end
+			end
+			return true
+		end,
+		
 		Create = function (self, class)
 			local o = require("Datastore").Create(class)
 			o.Owner = self.Owner
@@ -111,15 +125,8 @@ return
 		-- class (or a subclass thereof).
 		
 		CheckClass = function (self, class)
-			local classes = require("Classes")
-			local c = classes[self.Class]
-			local tc = classes[class]
-			
-			while (c ~= tc) do
-				c = c.superclass
-				if not c then
-					error({ result = "IncorrectClass" })
-				end
+			if not self:IsA(class) then
+				error({ result = "IncorrectClass" })
 			end
 		end,
 	}

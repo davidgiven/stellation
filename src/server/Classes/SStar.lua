@@ -5,6 +5,10 @@ local GLOBAL = Type.GLOBAL
 local LOCAL = Type.LOCAL
 local SERVERONLY = Type.SERVERONLY
 local PRIVATE = Type.PRIVATE
+local Database = require("Database")
+local SQL = Database.SQL
+local Log = require("Log")
+local Socket = require("socket")
 
 return
 {
@@ -32,5 +36,17 @@ return
 	
 	methods =
 	{
+		Log = function (self, timestamp, ...)
+			local playerset = {}
+			for o in self.Contents:Iterate() do
+				if o:IsA("SFleet") then
+					if (o.JumpshipCount > 0) then
+						playerset[o.Owner] = true
+					end
+				end
+			end
+			
+			Database.Log(self, timestamp, playerset, ...)
+		end
 	}
 }

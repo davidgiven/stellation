@@ -1,6 +1,7 @@
 local Utils = require("Utils")
 local Log = require("Log")
 local SQL = require("ljsqlite3")
+local Socket = require("socket")
 
 local database = nil
 local statements = {}
@@ -67,5 +68,38 @@ return
 		rollbacknotifications[f] = true
 	end,
 	
-	SQL = compile 
+	SQL = compile,
+	
+	Log = function(location, timestamp, players, ...)
+		local locationoid = nil
+		if location then
+			locationoid = location.Oid
+		end
+		
+		if not timestamp then
+			timestamp = Socket.gettime()
+		end
+		local msg = Utils.Stringify(...)
+		
+		local playerlist = {}
+		for p in pairs(players) do
+			playerlist[#playerlist+1] = p.Oid
+		end
+		
+		Log.P(locationoid, "@", string.format("%.3f", timestamp),
+			" [", table.concat(playerlist, ", "), "]: ", msg)
+		
+		compile(
+			"INSERT INTO logentries (time, location, entry) VALUES (?, ?, ?)"
+			):bind(timestamp, locationoid, msg):step()
+			
+		local row = tonumber(compile("SELECT last_insert_rowid()"):step()[1])
+		
+		for p in pairs(players) do
+			compile(
+				"INSERT INTO visiblelogs (player, log) VALUES (?, ?)"
+				):bind(p.Oid, row):step()
+		end 
+	end
+	 
 }

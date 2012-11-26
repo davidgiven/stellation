@@ -6,6 +6,7 @@ local LOCAL = Type.LOCAL
 local SERVERONLY = Type.SERVERONLY
 local PRIVATE = Type.PRIVATE
 local Datastore = require("Datastore")
+local Database = require("Database")
 
 local super = require("Classes.SObject")
 
@@ -66,6 +67,11 @@ return
 			end
 			
 			return map
+		end,
+		
+		Log = function (self, timestamp, ...)
+			Database.Log(nil, timestamp, {[self]=true}, ...)
 		end
+		
 	}
 }

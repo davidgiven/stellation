@@ -161,6 +161,22 @@ local function Unindent(input)
 	return out
 end
 
+--- Expands the parameters into a string.
+-- Works with non-string values, including nil.
+--
+--    ...: any values
+--    returns: a string
+
+local function Stringify(...)
+	local args = {...}
+	local argslen = select("#", ...)
+	for i = 1, argslen do
+		args[i] = tostring(args[i])
+	end
+	return table.concat(args, "", 1, argslen)
+end
+
+
 return
 {
 	OpenFile = OpenFile,
@@ -170,5 +186,6 @@ return
 	Assert = Assert,
 	Argify = Argify,
 	ParseCommandLine = ParseCommandLine,
-	Unindent = Unindent
+	Unindent = Unindent,
+	Stringify = Stringify
 }

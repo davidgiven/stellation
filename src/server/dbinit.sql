@@ -59,9 +59,10 @@ CREATE INDEX IF NOT EXISTS logentriesindex ON logentries (time ASC);
 
 CREATE TABLE IF NOT EXISTS visiblelogs
 (
-	player INTEGER PRIMARY KEY REFERENCES eav_Class(oid),
-	log INTEGER
+	player INTEGER REFERENCES eav_Class(oid),
+	log INTEGER REFERENCES logentries(id)
 );
+CREATE INDEX IF NOT EXISTS visiblelogs_byplayer ON visiblelogs (player);
 
 CREATE TEMPORARY TABLE pscopes
 (

@@ -98,6 +98,7 @@ return
 		local results, nrecords = query:resultset()
 		for i = 1, nrecords do
 			local oid = results[1][i]
+			local star = Datastore.Object(oid)
 			fastconsume(tonumber(oid), delta)
 		end
 		
