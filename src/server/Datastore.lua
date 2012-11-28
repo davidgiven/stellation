@@ -227,4 +227,11 @@ return
 		local c = get_class_of_oid(oid)
 		return not not c
 	end,
+	
+	Destroy = function (o)
+		o:__flush_caches()
+		local oid = o.Oid
+		
+		SQL("DELETE FROM eav_Class WHERE oid=?"):bind(oid):step()
+	end
 }

@@ -41,7 +41,7 @@ classes =
 	SStar = require("Classes.SStar"),
 	STug = require("Classes.STug"),
 	SUnit = require("Classes.SUnit"),
-	SUniverse = require("Classes.SUniverse"),	
+	SUniverse = require("Classes.SUniverse")
 }
 setmetatable(classes, mt)
 

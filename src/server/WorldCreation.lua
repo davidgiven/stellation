@@ -115,18 +115,13 @@ return
 		
 		fleet:Create("SJumpship")
 		fleet:Create("STug")
+		
 		local cs = fleet:Create("SCargoship")
 		cs.CargoM = 100000.0
 		cs.CargoA = 100000.0
 		cs.CargoO = 100000.0
 		
-		local fleet2 = Datastore.Create("SFleet")
-		star:Add(fleet2)
-		fleet2.Owner = player
-		fleet2.Name = name .. "'s second fleet"
-		player.Fleets:Add(fleet2)
-		fleet2:Create("STug")
-		cs:MoveTo(fleet2)
+		fleet:Create("STug")
 		
 		Database.SQL("INSERT INTO players VALUES (?, ?)")
 			:bind(email, player.Oid):step()

@@ -1,4 +1,3 @@
-local require = require
 local Type = require("Type")
 local Utils = require("Utils")
 local Log = require("Log")
@@ -6,6 +5,7 @@ local GLOBAL = Type.GLOBAL
 local LOCAL = Type.LOCAL
 local SERVERONLY = Type.SERVERONLY
 local PRIVATE = Type.PRIVATE
+local Datastore = require("Datastore")
 
 return
 {
@@ -61,6 +61,14 @@ return
 			Utils.Assert(object.Location ~= nil, "object must belong to something")
 			object.Location = nil
 			self.Contents:Sub(object)
+		end,
+		
+		Destroy = function (self)
+			if self.Location then
+				self.Location:Sub(self)
+			end
+			
+			Datastore.Destroy(self)
 		end,
 		
 		MoveTo = function (self, newlocation)

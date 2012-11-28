@@ -29,7 +29,7 @@ local function create_eav_table(type, name)
 	end
 	SQL(
 		"CREATE TABLE IF NOT EXISTS "..tablename..
-			" (oid INTEGER "..keytype.." REFERENCES eav_Class(oid), value "..type.sqltype..")"
+			" (oid INTEGER "..keytype.." REFERENCES eav_Class(oid) ON DELETE CASCADE, value "..type.sqltype..")"
 	):step()
 	
 	if type.isaggregate then

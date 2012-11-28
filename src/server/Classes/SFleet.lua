@@ -89,7 +89,14 @@ return
 		end,
 		
 		Starve = function (self, timestamp)
-			self.Location:Log(timestamp, "fleet ", self.Name, " has starved.")
+			local star = self.Location
+			star:Log(timestamp, "fleet ", self.Name, " has starved.")
+			star.Debris = star.Debris + self.Mass
+			
+			for o in self.Contents:Iterate() do
+				Log.G("destroying ", o.Oid)
+				o:Destroy()
+			end
 		end,
 	}
 }

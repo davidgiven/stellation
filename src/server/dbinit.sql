@@ -28,13 +28,13 @@ CREATE TABLE IF NOT EXISTS eav_Class
 
 CREATE TABLE IF NOT EXISTS eav_Contents
 (
-	oid INTEGER REFERENCES eav_Class(oid),
-	value INTEGER REFERENCES eav_Class(oid)
+	oid INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE,
+	value INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS eav
 (
-	oid INTEGER REFERENCES eav_Class(oid),
+	oid INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE,
 	kid INTEGER REFERENCES tokens(id),
 	PRIMARY KEY (oid, kid)
 );
@@ -42,14 +42,14 @@ CREATE TABLE IF NOT EXISTS eav
 CREATE TABLE IF NOT EXISTS players
 (
 	email TEXT PRIMARY KEY,
-	oid INTEGER REFERENCES eav_Class(oid)
+	oid INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS timers
 (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	time REAL,
-	oid INTEGER REFERENCES eav_Class(oid),
+	oid INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE,
 	command TEXT
 );
 CREATE INDEX IF NOT EXISTS timersindex ON timers (time ASC);
@@ -65,7 +65,7 @@ CREATE INDEX IF NOT EXISTS logentriesindex ON logentries (time ASC);
 
 CREATE TABLE IF NOT EXISTS visiblelogs
 (
-	player INTEGER REFERENCES eav_Class(oid),
+	player INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE,
 	log INTEGER REFERENCES logentries(id)
 );
 CREATE INDEX IF NOT EXISTS visiblelogs_byplayer ON visiblelogs (player);

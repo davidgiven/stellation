@@ -19,7 +19,8 @@ return
 	{
 		ResourcesA = 0,
 		ResourcesO = 0,
-		ResourcesM = 0
+		ResourcesM = 0,
+		Debris = 0
 	},
 	
 	properties =
@@ -31,7 +32,8 @@ return
 		ResourcesO = Type.Number(LOCAL),
 		ResourcesM = Type.Number(LOCAL),
 		AsteroidsC = Type.Number(LOCAL),
-		AsteroidsM = Type.Number(LOCAL)
+		AsteroidsM = Type.Number(LOCAL),
+		Debris = Type.Number(LOCAL)
 	},
 	
 	methods =

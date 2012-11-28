@@ -49,7 +49,7 @@ local ObjectType =
 	
 	name = "ObjectType",
 	isaggregate = false,	
-	sqltype = "INTEGER REFERENCES eav_Class(oid)",
+	sqltype = "INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE",
 	jstype = "object"
 }
 
@@ -239,7 +239,7 @@ local ObjectSetType =
 	
 	name = "ObjectSetType",
 	isaggregate = true,	
-	sqltype = "INTEGER REFERENCES eav_Class(oid)",
+	sqltype = "INTEGER REFERENCES eav_Class(oid) ON DELETE CASCADE",
 	jstype = "objectset"
 }
 
