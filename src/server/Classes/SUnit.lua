@@ -31,6 +31,11 @@ return
 	{
 		Init = function (self)
 			super.methods.Init(self)
-		end
+		end,
+				
+		Starve = function (self, timestamp)
+			self.Location:Log(timestamp, "unit ", self.Name, " has starved.")
+		end,
+		
 	}
 }

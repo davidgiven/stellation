@@ -87,5 +87,9 @@ return
 		on_emerge_from_jump = function (self)
 			Log.G("emerging from jump!")
 		end,
+		
+		Starve = function (self, timestamp)
+			self.Location:Log(timestamp, "fleet ", self.Name, " has starved.")
+		end,
 	}
 }

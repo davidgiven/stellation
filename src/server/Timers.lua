@@ -3,7 +3,6 @@ local Immutable = require("Immutable")
 local Database = require("Database")
 local Datastore = require("Datastore")
 local SQL = Database.SQL
-local Socket = require("socket")
 local Log = require("Log")
 local ResourceConsumption = require("ResourceConsumption")
 
@@ -14,12 +13,37 @@ local function settimer(time, object, command)
 	return SQL("SELECT last_insert_rowid()"):step()[1]
 end
 
+local function runnextpendingtimer()
+	local result = SQL("SELECT id, oid, command, time FROM timers WHERE time < ? ORDER BY time ASC LIMIT 1")
+		:bind(Utils.Time()):step()
+	if result then
+		local timerid = result[1]
+		local oid = result[2]
+		local command = result[3]
+		local time = tonumber(result[4])
+		
+		ResourceConsumption.ConsumeTo(Utils.Time());
+		
+		SQL("DELETE FROM timers WHERE id = ?")
+			:bind(timerid)
+			:step()
+			
+		Log.G("timer #", timerid, " oid=", oid, " command=", command)
+		local object = Datastore.Object(oid)
+		object[command](object)
+		return true
+	else
+		ResourceConsumption.ConsumeTo(Utils.Time())
+	end
+	return false
+end
+
 return
 {
 	SetTimer = settimer,
 	
 	SetTimerDelta = function(time, object, command)
-		return settimer(Socket.gettime() + time, object, command)
+		return settimer(Utils.Time() + time, object, command)
 	end,
 	
 	UnsetTimer = function(timerid)
@@ -28,28 +52,16 @@ return
 			:step()
 	end,
 	
-	RunNextPendingTimer = function()
-		local result = SQL("SELECT id, oid, command, time FROM timers WHERE time < ? ORDER BY time ASC LIMIT 1")
-			:bind(Socket.gettime()):step()
-		if result then
-			local timerid = result[1]
-			local oid = result[2]
-			local command = result[3]
-			local time = tonumber(result[4])
+	RunNextPendingTimer = runnextpendingtimer,
+	
+	BringUpToDate = function()
+		Log.G("running pending timers")
+		if runnextpendingtimer() then
+			while runnextpendingtimer() do
+			end
 			
-			ResourceConsumption.ConsumeTo(Socket.gettime());
-			
-			SQL("DELETE FROM timers WHERE id = ?")
-				:bind(timerid)
-				:step()
-				
-			Log.G("timer #", timerid, " oid=", oid, " command=", command)
-			local object = Datastore.Object(oid)
-			object[command](object)
-			return true
-		else
-			ResourceConsumption.ConsumeTo(Socket.gettime())
-		end
-		return false
+			Datastore.Commit()
+			Datastore.Begin()
+		end	
 	end
 }

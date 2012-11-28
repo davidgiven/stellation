@@ -77,7 +77,7 @@ return
 		end
 		
 		if not timestamp then
-			timestamp = Socket.gettime()
+			timestamp = Utils.Time()
 		end
 		local msg = Utils.Stringify(...)
 		

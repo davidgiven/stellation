@@ -16,6 +16,7 @@ local IO = require("IO")
 local Commands = require("Commands")
 local G = require("G")
 local Tokens = require("Tokens")
+local Timers = require("Timers")
 
 local database_filename
 local socket_filename
@@ -124,6 +125,7 @@ if not Datastore.DoesObjectExist(0) then
 	WorldCreation.InitialiseGalaxy(SGalaxy)
 end
 
+Timers.BringUpToDate()
 Datastore.Commit()
 
 IO.EventLoop(handle_message_cb)

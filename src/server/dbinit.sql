@@ -26,6 +26,12 @@ CREATE TABLE IF NOT EXISTS eav_Class
 	value INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS eav_Contents
+(
+	oid INTEGER REFERENCES eav_Class(oid),
+	value INTEGER REFERENCES eav_Class(oid)
+);
+
 CREATE TABLE IF NOT EXISTS eav
 (
 	oid INTEGER REFERENCES eav_Class(oid),

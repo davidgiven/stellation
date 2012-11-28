@@ -10,7 +10,7 @@ local Classes = require("Classes")
 local Type = require("Type")
 local GameCommands = require("GameCommands")
 local Timers = require("Timers")
-local Socket = require("socket")
+local Utils = require("Utils")
 local AuthDB = require("AuthDB")
 
 local pscopes_table_inited = false
@@ -136,16 +136,9 @@ return function (msg)
 		return { result = "AuthenticationFailed" }
 	end
 	G.CurrentCookie = cookie
-	
-	Log.G("running pending timers")
-	if Timers.RunNextPendingTimer() then
-		while Timers.RunNextPendingTimer() do
-		end
-		
-		Datastore.Commit()
-		Datastore.Begin()
-	end
 
+	Timers.BringUpToDate()
+		
 	local cmd = GameCommands[msg.gcmd]
 	if not cmd then
 		return { result = "BadCommand" }
@@ -170,7 +163,7 @@ return function (msg)
 	local sync, count = synchronise(visibilitymap, player)
 	Log.G(count, " changed properties")
 	
-	result.time = Socket.gettime()
+	result.time = Utils.Time()
 	result.changed = sync
 	return result
 end

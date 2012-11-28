@@ -6,13 +6,12 @@
     
     var gettime = function()
     {
-    	return (new Date().getTime()) / 1000;
+    	return (new Date().getTime()) / 3600000;
     };
     
     var update = function(element)
     {
-		var now = S.TimeDelta + gettime(); // seconds
-		now = now / 3600; // to hours
+		var now = S.TimeDelta + gettime(); // hours
 		
 		var thou = parseInt(now / 1000);
 		var hours = parseInt(now) % 1000;

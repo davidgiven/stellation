@@ -1,11 +1,5 @@
-local os = os
-local io = io
-local table = table
-local ipairs = ipairs
-local tostring = tostring
-local unpack = unpack
-local error = error
 local ServerDir = ServerDir
+local Socket = require("socket")
 
 --- Opens a resource file (but does not read it in).
 -- Files are lookup up in the server directory.
@@ -176,6 +170,14 @@ local function Stringify(...)
 	return table.concat(args, "", 1, argslen)
 end
 
+--- Returns the current timestamp in hours since epoch.
+-- HOURS. Not seconds.
+--
+--    returns: a value in hours, not seconds
+
+local function Time()
+	return Socket.gettime() / 3600
+end
 
 return
 {
@@ -187,5 +189,6 @@ return
 	Argify = Argify,
 	ParseCommandLine = ParseCommandLine,
 	Unindent = Unindent,
-	Stringify = Stringify
+	Stringify = Stringify,
+	Time = Time
 }
