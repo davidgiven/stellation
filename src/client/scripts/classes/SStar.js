@@ -47,6 +47,12 @@
             						o.createContentSummary(e);
         						}
         					);
+        					
+        					var e = $(element).find(".star_summary_debris");
+        					if (object.Debris > 0)
+        						S.ExpandTemplate(object, e, "star.debris");
+        					else
+        						e.empty();
         				}
         		}
         	);

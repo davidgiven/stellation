@@ -95,7 +95,7 @@ return
 			
 			for o in self.Contents:Iterate() do
 				Log.G("destroying ", o.Oid)
-				o:Destroy()
+				o:Scrap()
 			end
 		end,
 	}

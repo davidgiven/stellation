@@ -25,6 +25,10 @@
 		</div>
 	</template>
 	
+	<template id="debris">
+		<b>Debris: </b><span s_attr="Debris.i"/> tonnes
+	</template>
+	
 	<template id="summary">
 		<div>
 			<img class="starimage"/>
@@ -36,6 +40,7 @@
 			<b>Free resources: </b><span s_attr="ResourcesM.i"/> metal,
 				<span s_attr="ResourcesA.i"/> antimatter,
 				<span s_attr="ResourcesO.i"/> organics<br/>
+			<span class="star_summary_debris"/>
 	
 			<table class="star_summary_content"/>
 		</div>

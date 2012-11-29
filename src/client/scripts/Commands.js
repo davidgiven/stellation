@@ -49,6 +49,12 @@
     		parameters: ["oid", "m", "a", "o"]
     	},
     	
+    	UnitScrap:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid"]
+    	},
+    	
     	help:
     	{
     		parameters: [],

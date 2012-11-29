@@ -37,5 +37,18 @@ return
 			self.Location:Log(timestamp, "unit ", self.Name, " has starved.")
 		end,
 		
+		FindStar = function (self)
+			local loc = self.Location
+			while loc and not loc:IsA("SStar") do
+				loc = loc.Location
+			end
+			return loc
+		end,
+		
+		Scrap = function (self)
+			local star = self:FindStar() 
+			star.Debris = star.Debris + self.Mass
+			self:Destroy()
+		end,
 	}
 }
