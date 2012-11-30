@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS seenby
 	cookie INTEGER,
 	UNIQUE (oid, kid, cookie) 
 );
-CREATE INDEX seenbyindex ON seenby (oid, kid);
+CREATE INDEX IF NOT EXISTS seenbyindex ON seenby (oid, kid);
 DELETE FROM seenby;
 
 CREATE TABLE IF NOT EXISTS eav_Class
