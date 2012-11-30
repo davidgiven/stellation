@@ -114,7 +114,9 @@ return
 		player.Fleets:Add(fleet)
 		
 		fleet:Create("SJumpship")
-		fleet:Create("STug")
+		
+		local tug1 = fleet:Create("STug")
+		tug1:Create("SMessageBuoy")
 		
 		local cs = fleet:Create("SCargoship")
 		cs.CargoM = 100000.0
