@@ -134,5 +134,42 @@ INPUT[type="number"]
 	z-index: 10000;
 }
 
+.menu
+{
+	border: 0 !important;
+	
+	> LI
+	{
+		width: 16px;
+		height: 16px;
+
+		> A
+		{
+			width: 16px;
+			height: 16px;
+			
+			padding: 0 !important;
+		}
+	}
+	
+	.dropdownmenubutton
+	{
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.headermenu
+{
+	display: inline !important;
+	float: right;
+	
+	UL
+	{
+		z-index: 99999;
+		width: 8em;
+	}
+}
+
 @import "login.less";
 @import "game.less";

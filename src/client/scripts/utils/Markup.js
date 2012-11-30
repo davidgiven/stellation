@@ -32,6 +32,15 @@
 			}
 		);
 		
+		/* Menu buttons. */
+		
+		$(s).andSelf().find("[class~=menubutton]").each(
+			function()
+			{
+				$(this).addClass("inline-icon ui-state-default ui-corner-all needs-ui-state-hover");
+			}
+		);
+
 		/* Add hover controls to anything which asks for it. */
 		
 		$(s).andSelf().find("[class~=needs-ui-state-hover]").each(
@@ -64,6 +73,23 @@
 			function ()
 			{
 				$(this).button();
+			}
+		);
+		
+		/* Popup menus. */
+		
+		$(s).andSelf().find("[class~=menu]").menu(
+			{
+				position:
+				{
+					my: "right top",
+					at: "right bottom"
+				},
+				
+				icons:
+				{
+					submenu: "ui-icon-triangle-1-s"
+				}
 			}
 		);
 	};
