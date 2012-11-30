@@ -21,7 +21,7 @@ local function get_property_type(class, name)
 	end
 end
 
-local function create_eav_table(type, name)
+local function create_eav_table(type, name, kid)
 	local tablename = "eav_"..name
 	local keytype = "PRIMARY KEY"
 	if type.isaggregate then
@@ -41,6 +41,30 @@ local function create_eav_table(type, name)
 			):step()
 	end
 	
+	SQL(
+		"CREATE TRIGGER IF NOT EXISTS "..tablename.."_delete_trigger AFTER DELETE ON "..tablename.." "..
+		"FOR EACH ROW "..
+		"BEGIN "..
+			"DELETE FROM seenby WHERE oid=OLD.oid AND kid="..kid.."; "..
+		"END"
+		):step()
+		
+	SQL(
+		"CREATE TRIGGER IF NOT EXISTS "..tablename.."_update_trigger AFTER UPDATE ON "..tablename.." "..
+		"FOR EACH ROW "..
+		"BEGIN "..
+			"DELETE FROM seenby WHERE oid=OLD.oid AND kid="..kid.."; "..
+		"END"
+		):step()
+		
+	SQL(
+		"CREATE TRIGGER IF NOT EXISTS "..tablename.."_insert_trigger AFTER INSERT ON "..tablename.." "..
+		"FOR EACH ROW "..
+		"BEGIN "..
+			"DELETE FROM seenby WHERE oid=NEW.oid AND kid="..kid.."; "..
+		"END"
+		):step()
+		
 	return tablename
 end
 
@@ -52,14 +76,8 @@ return
 			return t
 		end
 		
-		local tablename = create_eav_table(t, name)
-
 		local kid = Tokens[name]
-		
-		local function dirty()
-			SQL("DELETE FROM seenby WHERE oid=? AND kid=?")
-				:bind(oid, kid):step()
-		end
+		local tablename = create_eav_table(t, name, kid)
 		
 		SQL("INSERT OR IGNORE INTO eav (oid, kid) VALUES (?, ?)")
 			:bind(oid, kid):step()
@@ -80,12 +98,11 @@ return
 			end,
 			
 			Get = function()
-				return t.Get(tablename, oid, dirty)
+				return t.Get(tablename, oid)
 			end,
 			
 			Set = function(value)
 				t.Set(tablename, oid, value)
-				dirty()
 			end,
 			
 			Export = function()

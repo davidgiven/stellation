@@ -20,6 +20,16 @@ CREATE TABLE IF NOT EXISTS tokens
 );
 CREATE INDEX IF NOT EXISTS tokens_byvalue ON tokens (value);
 
+CREATE TABLE IF NOT EXISTS seenby
+(
+	oid INTEGER,
+	kid INTEGER,
+	cookie INTEGER,
+	UNIQUE (oid, kid, cookie) 
+);
+CREATE INDEX seenbyindex ON seenby (oid, kid);
+DELETE FROM seenby;
+
 CREATE TABLE IF NOT EXISTS eav_Class
 (
 	oid INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -81,14 +91,5 @@ CREATE TEMPORARY TABLE vscopes
 	oid INTEGER PRIMARY KEY,
 	scope INTEGER
 );
-
-CREATE TEMPORARY TABLE seenby
-(
-	oid INTEGER,
-	kid INTEGER,
-	cookie INTEGER,
-	UNIQUE (oid, kid, cookie) 
-);
-CREATE INDEX seenbyindex ON seenby (oid, kid);
 
 COMMIT;

@@ -84,7 +84,7 @@ local ObjectSetType =
 		Utils.FatalError("cannot assign directly to objectset property")
 	end,
 	
-	Get = function (tablename, oid, dirty)
+	Get = function (tablename, oid)
 		return
 		{
 			IsSet = function (self, value)
@@ -107,7 +107,6 @@ local ObjectSetType =
 					SQL(
 						"INSERT INTO "..tablename.." (oid, value) VALUES (?, ?)"
 						):bind(oid, value.Oid):step()
-					dirty()
 				end
 			end,
 
@@ -115,7 +114,6 @@ local ObjectSetType =
 				SQL(
 					"DELETE FROM "..tablename.." WHERE oid=? AND value=?"
 					):bind(oid, value.Oid):step()
-				dirty()
 			end,
 						
 			RandomItem = function (self)
@@ -140,8 +138,6 @@ local ObjectSetType =
 			end,
 			
 			FromLua = function (self, s)
-				local d = false
-
 				-- Read the old value of the set.
 								
 				local results = SQL(
@@ -164,7 +160,6 @@ local ObjectSetType =
 						SQL(
 							"DELETE FROM "..tablename.." WHERE oid=? AND value=?"
 							):bind(oid, k.Oid):step()
-						d = true
 					end
 				end
 				
@@ -176,12 +171,7 @@ local ObjectSetType =
 						SQL(
 							"INSERT INTO "..tablename.." (oid, value) VALUES (?, ?)"
 							):bind(oid, k.Oid):step()
-						d = true
 					end
-				end
-				
-				if d then
-					dirty()
 				end
 			end,
 			
@@ -189,7 +179,6 @@ local ObjectSetType =
 				SQL(
 					"DELETE FROM "..tablename.." WHERE oid = ?"
 					):bind(oid):step()
-				dirty()
 			end,
 			
 			Iterate = function (self)
