@@ -34,10 +34,54 @@
 		
 		/* Menu buttons. */
 		
-		$(s).andSelf().find("[class~=menubutton]").each(
+		$(s).andSelf().find("menubutton").each(
 			function()
 			{
-				$(this).addClass("inline-icon ui-state-default ui-corner-all needs-ui-state-hover");
+				var element = this;
+				
+				var newnode = $("<a href='#' class='inline-icon ui-state-default ui-corner-all needs-ui-state-hover menu-button'>⚙</a>");
+				$(element).replaceWith(newnode);
+				
+				var menu = $(element).find("> UL").clone();
+				$("#page").append(menu);
+				$(menu).addClass("menu");
+				$(menu).hide();
+				$(menu).menu();
+				
+				var hidden = true;
+				var showmenu = function()
+				{
+					if (!hidden)
+						return;
+					hidden = false;
+						
+					$(menu).show();
+					$(menu).position(
+						{
+							of: newnode,
+							at: "right bottom",
+							my: "right top"
+						}
+					);
+					
+					var e = $(menu).find("a:first");
+					e.focus();
+				};
+				
+				var hidemenu = function()
+				{
+					if (hidden)
+						return;
+					hidden = true;
+					
+					$(menu).hide();
+					newnode.focus();
+				};
+				
+				newnode.click(showmenu);
+				menu.mouseleave(hidemenu);
+				newnode.hover(showmenu);
+				menu.focusout(hidemenu);
 			}
 		);
 

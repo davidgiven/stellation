@@ -56,15 +56,15 @@
 			<td colspan="9">
 				<h1>
 					<span s_attr="Name"/> (#<span s_attr="Oid"/>)
-					<ul class="headermenu menu">
-						<li><a href="#" class="dropdownmenubutton"/>
+					<div class="fright">
+						<help s_attr="Description"/>
+						<menubutton>
 							<ul>
 								<li><a href="#">Scrap unit</a></li>
 							</ul>
-						</li>
-					</ul>
+						</menubutton>
+					</div>
 				</h1>
-				<p s_attr="Description"/>
 			</td>
 		</tr>
 		<tr>
