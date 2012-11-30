@@ -43,6 +43,14 @@
     		$(element).append(e);
         	S.TemplatedMonitor(object, e, "unit.details",
         		{
+        			unitscrap: function()
+        			{
+        				S.Commands.UnitScrap(
+        					{
+        						oid: object.Oid
+        					}
+        				);
+        			}
         		}
         	);
 

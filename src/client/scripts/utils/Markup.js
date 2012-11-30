@@ -2,7 +2,7 @@
 {
 	"use strict";
 	
-	S.Markup = function (s, object)
+	S.Markup = function (s, object, events)
 	{		
 		/* Replace 'help' elements with their actual representation. */
 		
@@ -42,11 +42,20 @@
 				var newnode = $("<a href='#' class='inline-icon ui-state-default ui-corner-all needs-ui-state-hover menu-button'>⚙</a>");
 				$(element).replaceWith(newnode);
 				
-				var menu = $(element).find("> UL").clone();
+				var menu = $(element).find("> UL");
 				$("#page").append(menu);
 				$(menu).addClass("menu");
 				$(menu).hide();
-				$(menu).menu();
+				$(menu).menu(
+					{
+						select: function(event, ui)
+						{
+							var e = $(ui.item).find("a");
+							var link = e.attr("s_link");
+							events[link](object, e); 
+						}
+					}
+				);
 				
 				var hidden = true;
 				var showmenu = function()

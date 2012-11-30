@@ -193,7 +193,7 @@
 		
 		/* Add any needed jquery markup. */
 		
-		S.Markup(tdom, object);
+		S.Markup(tdom, object, events);
 
 		/* Notify the user that the template has loaded. */
 		

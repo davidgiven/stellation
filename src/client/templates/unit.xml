@@ -60,7 +60,7 @@
 						<help s_attr="Description"/>
 						<menubutton>
 							<ul>
-								<li><a href="#">Scrap unit</a></li>
+								<li><a href="#" s_link="unitscrap">Scrap unit</a></li>
 							</ul>
 						</menubutton>
 					</div>
