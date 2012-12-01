@@ -25,7 +25,7 @@ return
 		    supply vessels in operation.
 		]],
 		
-		Mass = 1000.0,
+		RestMass = 1000.0,
 		MaxDamage = 300.0,
 		BuildCostM = 5000.0,
 		BuildCostA = 10000.0,

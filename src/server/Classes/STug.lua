@@ -8,10 +8,12 @@ local LOCAL = Type.LOCAL
 local SERVERONLY = Type.SERVERONLY
 local PRIVATE = Type.PRIVATE
 
+local super = require("Classes.SShip")
+
 return
 {
 	name = "STug",
-	superclass = require("Classes.SShip"),
+	superclass = super,
 	
 	statics =
 	{
@@ -20,7 +22,7 @@ return
 			Tugs are small, powerful craft used to tow otherwise unpowered vessels
 			and other artifacts.
 		]],
-		Mass = 1000.0,
+		RestMass = 1000.0,
 		MaxDamage = 1000.0,
 		BuildCostM = 3000.0,
 		BuildCostA = 8000.0,
@@ -37,5 +39,16 @@ return
 	
 	methods =
 	{
+		Add = function (self, object)
+			super.methods.Add(self, object)
+			self.Mass = self.RestMass + object.Mass
+			self:AdjustFleetTotals()
+		end,
+		
+		Sub = function (self, object)
+			super.methods.Sub(self, object)
+			self.Mass = self.RestMass
+			self:AdjustFleetTotals()
+		end,
 	}
 }

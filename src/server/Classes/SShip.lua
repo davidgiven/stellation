@@ -23,6 +23,8 @@ return
 	
 	methods =
 	{
-		Init = super.methods.Init
+		Init = super.methods.Init,
+		Add = super.methods.Add,
+		Sub = super.methods.Sub,
 	}
 }

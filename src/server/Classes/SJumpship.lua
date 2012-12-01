@@ -24,7 +24,7 @@ return
 			from one jumpship to another, but only ones for which the
 			exact resonant frequency of the flaw is known.
 		]],
-		Mass = 5000.0,
+		RestMass = 5000.0,
 		MaxDamage = 1000.0,
 		BuildCostM = 10000.0,
 		BuildCostA = 20000.0,

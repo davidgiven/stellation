@@ -23,7 +23,7 @@ return
 			small amounts of data. They are ideal for leaving messages for
 			people.
 		]],
-		Mass = 1.0,
+		RestMass = 1.0,
 		MaxDamage = 1.0,
 		BuildCostM = 100.0,
 		BuildCostA = 10.0,
