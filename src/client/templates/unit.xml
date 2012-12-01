@@ -10,12 +10,6 @@
 		<td class="remaining" s_attr="showSummaryDetail"/>
 	</template>
 	
-	<template id="mass_help">
-		<p>
-			Heavier vessels require more energy to transport through a wormhole.
-		</p>
-	</template>
-	
 	<template id="damage_help">
 		<p>
 			Indicates how badly damaged this unit is. The unit will be destroyed
@@ -80,8 +74,28 @@
 		</tr>
 		<tr>
 			<th>
-				Mass
-				<help template="unit.mass_help"/>
+				Unladen mass
+				<help>
+					<p>
+						The mass of the ship as it comes from the factory,
+						without including any cargo or add-on modules.
+					</p>
+				</help>
+			</th>
+			<td colspan="9">
+				<span s_attr="RestMass"/> tonnes
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Current mass
+				<help>
+					<p>
+						The mass of the ship including any cargo or add-on
+						modules. This governs how difficult it is to move the
+						fleet and also controls how big a target it is.
+					</p>
+				</help>
 			</th>
 			<td colspan="9">
 				<span s_attr="Mass"/> tonnes

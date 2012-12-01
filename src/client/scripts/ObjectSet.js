@@ -23,6 +23,16 @@
     	}
     };
     
+    S.ObjectSet.prototype.first = function()
+    {
+    	for (var oid in this.data)
+    	{
+    		var o = this.data[oid];
+    		return o;
+    	}
+    	return null;
+    };
+    
     S.ObjectSet.prototype.add = function(o)
     {
     	this.data[o.Oid] = o;
