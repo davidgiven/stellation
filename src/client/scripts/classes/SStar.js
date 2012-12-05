@@ -2,6 +2,36 @@
 {
     "use strict";
 
+    var tristate = function (x, y)
+    {
+    	if (x < y)
+    		return -1;
+    	if (x > y)
+    		return 1;
+    	return 0;
+    }
+    
+    var unit_sort_cb = function (o1, o2)
+    {
+    	var c1 = o1.Class;
+    	var c2 = o2.Class;
+    	if ((c1 === "SFleet") && (c2 !== "SFleet"))
+    		return 1;
+    	if ((c1 !== "SFleet") && (c2 === "SFleet"))
+    		return -1;
+
+    	var i = tristate(o1.Class, o2.Class);
+    	if (i)
+    		return i;
+    	
+    	i = tristate(o1.Owner.Oid, o2.Owner.Oid);
+    	if (i)
+    		return i;
+    	
+    	i = tristate(o1.Name, o2.Name);
+    	return i;
+    };
+    
     S.Classes.SStar =
     {
     	showName: function (o)
@@ -35,8 +65,9 @@
         					img.attr("src", "res/star"+b+".png");
         					
         					var t = $(element).find(".star_summary_content");
-        					$.each(object.Contents,
-        						function (o)
+        					object.Contents.orderedEach(
+        						unit_sort_cb,
+        						function (_, o)
         						{
             						var e = $("<tbody/>");
             						t.append(e);

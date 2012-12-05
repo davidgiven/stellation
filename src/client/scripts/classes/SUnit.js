@@ -4,23 +4,15 @@
 
     S.Classes.SUnit =
     {	
-    	createSummary: function (element)
-    	{
-        	S.TemplatedMonitor(this, element, "unit.summary",
-        		{
-        			details: function (object, element)
-        			{
-    					S.GamePage.ChangeDetail(object);
-        			}
-        		}
-        	);
-    	},
-    	
     	showSummaryDetail: function ()
     	{
     		return "";
     	},
-    	
+    	    	
+    	createContentSummary: function (element)
+    	{
+    	},
+
     	fleetName: function ()
     	{
     		var e = $("<span/>");
@@ -28,10 +20,18 @@
     		return e;
     	},
     	
+    	findStar: function ()
+    	{
+    		var loc = this;
+    		while (loc && (loc.Class !== "SStar"))
+    			loc = loc.Location;
+    		return loc;
+    	},
+    	
     	starName: function ()
     	{
     		var e = $("<span/>");
-    		S.TemplatedMonitor(this.Location.Location, e, "star.name");
+    		S.TemplatedMonitor(this.findStar(), e, "star.name");
     		return e;
     	},
     	
@@ -53,7 +53,6 @@
         			}
         		}
         	);
-
     	}
     };
 })();

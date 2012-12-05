@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xmlns="http://www.w3.org/1999/xhtml">
+	<template id="summary">
+		<tr s_drag="fixed">
+			<td class="nowrap notlastcolumn">
+				<a href="#" s_attr="Name" s_link="details"/>
+			</td>
+			<td class="nowrap notlastcolumn">
+				<span s_attr="Damage"/> / <span s_attr="MaxDamage"/>
+			</td>
+			<td class="nowrap notlastcolumn">
+				<span s_attr="showOwner"/>
+			</td>
+			<td class="remaining" s_attr="showSummaryDetail" colspan="9"/>
+		</tr>
+	</template>
+</templates>

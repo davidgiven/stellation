@@ -12,6 +12,14 @@
     	}
     };
     
+    S.ObjectSet.prototype.length = function()
+    {
+    	var i = 0;
+    	for (var oid in this.data)
+    		i++;
+    	return i;
+    };
+    
     S.ObjectSet.prototype.each = function(f)
     {
     	for (var oid in this.data)

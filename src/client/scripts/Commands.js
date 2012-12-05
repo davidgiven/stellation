@@ -55,6 +55,18 @@
     		parameters: ["oid"]
     	},
     	
+    	TugLoad:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid", "cargo"]
+    	},
+    	
+    	TugUnload:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid"]
+    	},
+    	
     	help:
     	{
     		parameters: [],

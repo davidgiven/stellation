@@ -6,7 +6,7 @@
 	
 	<template id="summary">
 		<tr>
-			<td class="heading" colspan="3">
+			<td class="heading" colspan="9">
 				<h1><a href="#" s_attr="Name" s_link="details"/></h1>
 			</td>
 		</tr>

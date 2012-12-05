@@ -43,7 +43,8 @@ classes =
 	SUnit = require("Classes.SUnit"),
 	SUniverse = require("Classes.SUniverse"),
 	SFixed = require("Classes.SFixed"),
-	SMessageBuoy = require("Classes.SMessageBuoy")
+	SMessageBuoy = require("Classes.SMessageBuoy"),
+	SMessage = require("Classes.SMessage"),
 }
 setmetatable(classes, mt)
 

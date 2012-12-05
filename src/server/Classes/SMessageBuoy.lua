@@ -36,7 +36,6 @@ return
 	
 	properties =
 	{
-		Messages = Type.ObjectSet(LOCAL),
 	},
 	
 	methods =

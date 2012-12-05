@@ -50,5 +50,10 @@ return
 			self.Mass = self.RestMass
 			self:AdjustFleetTotals()
 		end,
+		
+		FindCargo = function (self)
+			local i = self.Contents:Iterate()
+			return i()
+		end,
 	}
 }

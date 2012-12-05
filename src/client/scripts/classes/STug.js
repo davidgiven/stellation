@@ -53,6 +53,7 @@
 						S.TemplatedMonitor(object, controls,
 							"tug.controls_loaded",
 							{
+								unload: events.unload
 							}
 						);
 					}
@@ -69,7 +70,21 @@
     				
     			load: function (object, e, o)
     			{
-    				console.log("oid="+o.Oid);
+    				S.Commands.TugLoad(
+    					{
+    						oid: object.Oid,
+    						cargo: o.Oid
+    					}
+    				);
+    			},
+    			
+    			unload: function (object, e)
+    			{
+    				S.Commands.TugUnload(
+    					{
+    						oid: object.Oid
+    					}
+    				);
     			}
     		};
 

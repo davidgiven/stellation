@@ -7,4 +7,6 @@ return
 	Jump = require("GameCommands.Jump"),
 	UnitScrap = require("GameCommands.UnitScrap"),
 	CargoshipLoadUnload = require("GameCommands.CargoshipLoadUnload"),
+	TugUnload = require("GameCommands.TugUnload"),
+	TugLoad = require("GameCommands.TugLoad"),
 }
