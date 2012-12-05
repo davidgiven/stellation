@@ -6,7 +6,7 @@
 	{		
 		/* Replace 'help' elements with their actual representation. */
 		
-		$(s).andSelf().find("help").each(
+		$(s).findAndSelf("help").each(
 			function ()
 			{
 				var element = this;
@@ -34,7 +34,7 @@
 		
 		/* Menu buttons. */
 		
-		$(s).andSelf().find("menubutton").each(
+		$(s).findAndSelf("menubutton").each(
 			function()
 			{
 				var element = this;
@@ -96,7 +96,7 @@
 
 		/* Add hover controls to anything which asks for it. */
 		
-		$(s).andSelf().find("[class~=needs-ui-state-hover]").each(
+		$(s).findAndSelf("[class~=needs-ui-state-hover]").each(
     		function ()
     		{
     			$(this).hover(
@@ -113,7 +113,7 @@
 		
 		/* Add pane style to anything which is a pane. */
 		
-		$(s).andSelf().find("[class~=pane]").each(
+		$(s).findAndSelf("[class~=pane]").each(
 			function()
 			{
 				$(this).addClass("ui-dialog ui-widget-content ui-corner-all");
@@ -122,7 +122,7 @@
 
 		/* All buttons become, er, buttons. */
 		
-		$(s).andSelf().find("input[type=button]").each(
+		$(s).findAndSelf("input[type=button]").each(
 			function ()
 			{
 				$(this).button();
@@ -131,7 +131,7 @@
 		
 		/* Popup menus. */
 		
-		$(s).andSelf().find("[class~=menu]").menu(
+		$(s).findAndSelf("[class~=menu]").menu(
 			{
 				position:
 				{
@@ -144,6 +144,70 @@
 					submenu: "ui-icon-triangle-1-s"
 				}
 			}
+		);
+		
+		/* Drag-and-drop senders. */
+		
+		$(s).findAndSelf("*[s_drag]").each(
+			function (_, node)
+			{
+				var scope = $(node).attr("s_drag");
+				$(node).draggable(
+        			{
+        				helper:
+        					function(event)
+        					{
+        						var t = $("<div class='drag-unit'><table/></div>");
+        						t.find("table").append($(node).clone());
+        						t.appendTo("#page");
+        						t.data("object", object);
+        						return t;
+        					},
+        					
+    					cursorAt:
+    					{
+    				        left: -5,
+    				        bottom: 5
+    					},
+    					
+    					cursor: "move",
+    					distance: 10,
+    					delay: 100,
+    					scope: scope,
+    					revert: "invalid"
+        			}
+        		);
+			}
+		);
+
+		/* Drag-and-drop receivers. */
+		
+		$(s).findAndSelf("droparea").each(
+			function()
+    		{
+    			var element = this;
+    			
+    			var newnode = $("<div class='droparea ui-corner-all'><div class='droplabel'/></div>");
+    			$(element).replaceWith(newnode);
+    			
+    			newnode.find(".droplabel").text($(element).attr("label"));
+    			
+    			newnode.droppable(
+    				{
+    					scope: $(element).attr("scope"),
+    				    hoverClass: 'hover',
+    				    tolerance: 'pointer',
+    				    
+    				    drop:
+    				    	function (event, ui)
+    				    	{
+    				    		var o = ui.helper.data("object");
+    							var event = $(element).attr("s_drop");
+    							events[event](object, newnode, o); 
+    				    	}
+    				}
+    			);
+    		}
 		);
 	};
 }

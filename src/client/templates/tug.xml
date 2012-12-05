@@ -6,12 +6,54 @@
 		</span>
 		<span s_attr="showCargo"/>
 	</template>
-		
+	
+	<template id="details_unloaded">
+		<tr>
+			<td colspan="9">
+				<h1>Cargo controls</h1>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Cargo:
+			</th>
+			<td>
+				nothing
+			</td>
+		</tr>
+	</template>
+	
 	<template id="details">
 		<tr>
 			<td colspan="9">
 				<h1>Cargo controls</h1>
 			</td>
 		</tr>
+		<tr>
+			<th>
+				Cargo:
+			</th>
+			<td s_attr="showCargo"/>
+		</tr>
+		<tr>
+			<th>
+				Cargo mass:
+			</th>
+			<td>
+				<span s_attr="showCargoMass"/>
+			</td>
+		</tr>
+		<tr>
+			<th/>
+			<td class="tugcontrols"/>
+		</tr>
 	</template>
+	
+	<template id="controls_loaded">
+		<input type="button" s_link="unload" value="Unload"/>				
+	</template>
+	
+	<template id="controls_unloaded">
+		<droparea label="Drop a unit here to load" scope="fixed" s_drop="load"/>
+	</template>	
 </templates>

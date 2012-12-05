@@ -27,7 +27,8 @@
 					$.each(object.Contents,
 						function (o)
 						{
-    						var e = $("<tr/>");
+    						var e = $("<tr s_drag='ship'/>");
+    						S.Markup(e, object);
     						$(element).append(e);
     						o.createSummary(e);
 						}
