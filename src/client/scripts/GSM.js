@@ -39,7 +39,7 @@
         
         Register: function ()
         {
-            console.log("register");
+            S.RegisterPage.Show();
         },
 
 		Game: function ()
