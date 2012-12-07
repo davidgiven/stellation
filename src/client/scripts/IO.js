@@ -16,6 +16,7 @@
 				s += "="+message.gcmd;
 			console.log(s);
 			
+			S.ShowLoading();
 			$.ajax(S.CGI,
 					{
 						data: "data=" + $.toJSON(message),
@@ -24,6 +25,7 @@
 						
 						success: function (data, status)
 						{
+							S.HideLoading();
 							console.log("< " + data.tag + " " + data.result);
 							if (success_cb)
 								success_cb(data);

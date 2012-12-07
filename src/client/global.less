@@ -1,4 +1,4 @@
-HTML, BODY, #page
+HTML, BODY
 {
 	font-family: 'Dosis', sans-serif;
 	margin: 0;
@@ -49,18 +49,45 @@ INPUT[type="number"]
 	text-align: center;
 }
 
-#loading
+#page
 {
+	top: 0;
+	left: 0;
 	width: 100%;
 	height: 100%;
-	
-	TD
-	{
-		width: 100%;
-		vertical-align: middle;
-	}
+	overflow: hidden;
+	position: absolute;
 }
 
+#loading
+{
+	background-color: rgba(64, 64, 64, 0.7);
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 99999;
+
+	TABLE
+	{
+		width: 100%;
+		height: 100%;
+		
+		TD
+		{
+			width: 100%;
+			vertical-align: middle;
+			
+			IMG
+			{
+				padding: 24px;
+				background-color: black;
+				border: 1px solid #aaaaaa;
+			}
+		}
+	}
+}
 
 .ui-widget
 {
@@ -97,6 +124,8 @@ INPUT[type="number"]
 #terminal
 {
 	position: absolute;
+	top: 0;
+	left: 0;
 	width: 100%;
 	font-family: 'Dosis', monospace;
 	z-index: 100000;

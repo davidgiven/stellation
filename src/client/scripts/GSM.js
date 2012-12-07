@@ -14,6 +14,7 @@
 					S.GamePage.Preload(
 						function()
 						{
+							S.HideLoading();
 							S.GSM.Login();
 						}
 					);
