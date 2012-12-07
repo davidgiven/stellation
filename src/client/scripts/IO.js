@@ -4,6 +4,13 @@
 	var authcookie;
 	var tag = 0;
 	
+	var servermessages =
+	{
+		AuthenticationFailure: "That username or password is not recognised.",
+		InsufficientResources: "Insufficient resources are avzilable.",
+		PlayerExists: "That username is already taken."
+	};
+	
 	S.IO =
 	{
 		RPC: function(message, success_cb)
@@ -29,6 +36,9 @@
 							console.log("< " + data.tag + " " + data.result);
 							if (success_cb)
 								success_cb(data);
+							
+							if (data.result !== "OK")
+								S.IO.ServerError(data);
 						}
 					}
 				);
@@ -66,6 +76,14 @@
     					success_cb(data);
 				}
 			);
+		},
+		
+		ServerError: function (message)
+		{
+			var s = servermessages[message.result];
+			if (!s)
+				s = message.result;
+			S.Dialogue(s);
 		}
 	};
 }

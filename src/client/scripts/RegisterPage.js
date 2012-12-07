@@ -4,7 +4,7 @@
 
 	var fail = function (message)
 	{
-		console.log(message);
+		S.Dialogue(message);
 	};
 	
     var attempt_registration_cb = function()
