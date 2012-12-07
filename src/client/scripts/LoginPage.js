@@ -4,13 +4,6 @@
 
     var attempt_login_cb = function()
     {
-        $("#page input").each(
-            function (a, b)
-            {
-                b.disabled = true;
-            }
-        );
-        
         var email = $("#email").prop("value");
         var password = $("#password").prop("value");
         
@@ -21,13 +14,6 @@
             },
             function (msg)
             {
-                $("#page input").each(
-                        function (a, b)
-                        {
-                            b.enabled = true;
-                        }
-                    );
-                    
             	if (msg.result == "OK")
             	{
             		S.IO.SetCookie(msg.cookie);

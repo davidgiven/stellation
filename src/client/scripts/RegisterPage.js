@@ -9,13 +9,6 @@
 	
     var attempt_registration_cb = function()
     {
-//        $("#page input").each(
-//            function (a, b)
-//            {
-//                b.disabled = true;
-//            }
-//        );
-        
     	var playername = $("#playername").prop("value");
     	var empirename = $("#empirename").prop("value");
         var email = $("#email").prop("value");
