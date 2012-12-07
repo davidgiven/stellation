@@ -1,81 +1,90 @@
 <!DOCTYPE HTML>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset="UTF-8">
-<title>Stellation 4</title>
-
-<script>
-
-	// mock console for IE
-	if (!window.console) console = {};
-	if (!('log' in console)) {
-		console._msg = [];
-		console.log = function (msg) {
-			var _msg = this._msg;
-			_msg.push([].join.call(arguments, ' '));
-			clearTimeout(this._timeout);
-			this._timeout = setTimeout(function () {
-				alert(_msg.join('\n'));
-			}, 100);
-		};
-	}
-
-</script>
-<link rel="stylesheet" type="text/css" href="//yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css"/>
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Dosis:200,500,800"/>
-<link rel="stylesheet/less" type="text/css" href="global.less"/>
-<link rel="stylesheet" type="text/css" href="scripts/libraries/jquery.terminal.css"/>
-<link rel="stylesheet" type="text/css" href="//cdn.leafletjs.com/leaflet-0.4.5/leaflet.css"/>
-<!--[if lte IE 8]>
-<link rel="stylesheet" type="text/css" href="//cdn.leafletjs.com/leaflet-0.4.5/leaflet.ie.css"/>
-<![endif]-->
-<link rel="stylesheet" type="text/css" href="scripts/libraries/leaflet.label.css"/>
-<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/dark-hive/jquery-ui.css"/>
-<script src="scripts/libraries/less-1.3.1.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
-<script src="scripts/libraries/jquery.json-2.3.min.js"></script>
-<script src="scripts/libraries/jquery.terminal-0.4.21.min.js"></script>
-<script src="scripts/libraries/jquery.mousewheel-min.js"></script>
-<script src="//cdn.leafletjs.com/leaflet-0.4.5/leaflet.js"></script>
-<script src="scripts/libraries/leaflet.label.js"></script>
-<script charset="UTF-8" src="scripts/utils/addons.js"></script>
-<script charset="UTF-8" src="scripts/main.js"></script>
-<script charset="UTF-8" src="scripts/utils/CallbackSet.js"></script>
-<script charset="UTF-8" src="scripts/utils/PreloadImages.js"></script>
-<script charset="UTF-8" src="scripts/utils/Markup.js"></script>
-<script charset="UTF-8" src="scripts/ObjectSet.js"></script>
-<script charset="UTF-8" src="scripts/GSM.js"></script>
-<script charset="UTF-8" src="scripts/Database.js"></script>
-<script charset="UTF-8" src="scripts/IO.js"></script>
-<script charset="UTF-8" src="scripts/LoginPage.js"></script>
-<script charset="UTF-8" src="scripts/RegisterPage.js"></script>
-<script charset="UTF-8" src="scripts/Terminal.js"></script>
-<script charset="UTF-8" src="scripts/Commands.js"></script>
-<script charset="UTF-8" src="scripts/GamePage.js"></script>
-<script charset="UTF-8" src="scripts/Monitor.js"></script>
-<script charset="UTF-8" src="scripts/classes/SObject.js"></script>
-<script charset="UTF-8" src="scripts/classes/SPlayer.js"></script>
-<script charset="UTF-8" src="scripts/classes/SStar.js"></script>
-<script charset="UTF-8" src="scripts/classes/SFleet.js"></script>
-<script charset="UTF-8" src="scripts/classes/SUnit.js"></script>
-<script charset="UTF-8" src="scripts/classes/SFixed.js"></script>
-<script charset="UTF-8" src="scripts/classes/SShip.js"></script>
-<script charset="UTF-8" src="scripts/classes/SJumpship.js"></script>
-<script charset="UTF-8" src="scripts/classes/SCargoship.js"></script>
-<script charset="UTF-8" src="scripts/classes/STug.js"></script>
-<script charset="UTF-8" src="scripts/classes/SMessageBuoy.js"></script>
-<script charset="UTF-8" src="scripts/monitors/indexpane.js"></script>
-<script charset="UTF-8" src="scripts/monitors/miscellaneous.js"></script>
-<script charset="UTF-8" src="scripts/monitors/clock.js"></script>
-
-<script type="text/javascript">
-	$(document).ready(S.main);
-</script>
-
-</head>
-<body>
-<div id="terminal"></div>
-<div id="page">Loading!</div>
-</body>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset="UTF-8">
+		<title>Stellation 4</title>
+	
+		<script>
+		
+			// mock console for IE
+			if (!window.console) console = {};
+			if (!('log' in console)) {
+				console._msg = [];
+				console.log = function (msg) {
+					var _msg = this._msg;
+					_msg.push([].join.call(arguments, ' '));
+					clearTimeout(this._timeout);
+					this._timeout = setTimeout(function () {
+						alert(_msg.join('\n'));
+					}, 100);
+				};
+			}
+		
+		</script>
+		<link rel="stylesheet" type="text/css" href="//yui.yahooapis.com/3.3.0/build/cssreset/reset-min.css"/>
+		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Dosis:200,500,800"/>
+		<link rel="stylesheet/less" type="text/css" href="global.less"/>
+		<link rel="stylesheet" type="text/css" href="scripts/libraries/jquery.terminal.css"/>
+		<link rel="stylesheet" type="text/css" href="//cdn.leafletjs.com/leaflet-0.4.5/leaflet.css"/>
+		<!--[if lte IE 8]>
+		<link rel="stylesheet" type="text/css" href="//cdn.leafletjs.com/leaflet-0.4.5/leaflet.ie.css"/>
+		<![endif]-->
+		<link rel="stylesheet" type="text/css" href="scripts/libraries/leaflet.label.css"/>
+		<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/dark-hive/jquery-ui.css"/>
+		<script src="scripts/libraries/less-1.3.1.min.js"></script>
+		
+	</head>
+	<body>
+		<div id="terminal"></div>
+		<div id="page">
+			<table id="loading">
+				<tr>
+					<td class="centre">
+						<img src="res/wait.gif"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.min.js"></script>
+		<script src="scripts/libraries/jquery.json-2.3.min.js"></script>
+		<script src="scripts/libraries/jquery.terminal-0.4.21.min.js"></script>
+		<script src="scripts/libraries/jquery.mousewheel-min.js"></script>
+		<script src="//cdn.leafletjs.com/leaflet-0.4.5/leaflet.js"></script>
+		<script src="scripts/libraries/leaflet.label.js"></script>
+		<script charset="UTF-8" src="scripts/utils/addons.js"></script>
+		<script charset="UTF-8" src="scripts/main.js"></script>
+		<script charset="UTF-8" src="scripts/utils/CallbackSet.js"></script>
+		<script charset="UTF-8" src="scripts/utils/PreloadImages.js"></script>
+		<script charset="UTF-8" src="scripts/utils/Markup.js"></script>
+		<script charset="UTF-8" src="scripts/ObjectSet.js"></script>
+		<script charset="UTF-8" src="scripts/GSM.js"></script>
+		<script charset="UTF-8" src="scripts/Database.js"></script>
+		<script charset="UTF-8" src="scripts/IO.js"></script>
+		<script charset="UTF-8" src="scripts/LoginPage.js"></script>
+		<script charset="UTF-8" src="scripts/RegisterPage.js"></script>
+		<script charset="UTF-8" src="scripts/Terminal.js"></script>
+		<script charset="UTF-8" src="scripts/Commands.js"></script>
+		<script charset="UTF-8" src="scripts/GamePage.js"></script>
+		<script charset="UTF-8" src="scripts/Monitor.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SObject.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SPlayer.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SStar.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SFleet.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SUnit.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SFixed.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SShip.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SJumpship.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SCargoship.js"></script>
+		<script charset="UTF-8" src="scripts/classes/STug.js"></script>
+		<script charset="UTF-8" src="scripts/classes/SMessageBuoy.js"></script>
+		<script charset="UTF-8" src="scripts/monitors/indexpane.js"></script>
+		<script charset="UTF-8" src="scripts/monitors/miscellaneous.js"></script>
+		<script charset="UTF-8" src="scripts/monitors/clock.js"></script>
+	
+		<script>
+			$(window).load(S.main);
+		</script>
+	</body>
 </html>
