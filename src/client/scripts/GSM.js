@@ -11,13 +11,8 @@
 			S.IO.GetStatics(
 				function()
 				{
-					S.GamePage.Preload(
-						function()
-						{
-							S.HideLoading();
-							S.GSM.Login();
-						}
-					);
+					S.HideLoading();
+					S.GSM.Login();
 				}
 			);
         },

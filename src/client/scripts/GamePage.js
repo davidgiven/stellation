@@ -7,21 +7,19 @@
 	var graticule_layer;
 	var star_layer_group;
 	
-	var star_images = [];
-	var star_images_filenames =
+	var star_images =
 		[
-		 	"res/star1.png",
-		 	"res/star2.png",
-		 	"res/star3.png",
-		 	"res/star4.png",
-		 	"res/star5.png",
-		 	"res/star6.png",
-		 	"res/star7.png",
-		 	"res/star8.png",
-		 	"res/star9.png",
+		 	S.Images.Star1,
+		 	S.Images.Star2,
+		 	S.Images.Star3,
+		 	S.Images.Star4,
+		 	S.Images.Star5,
+		 	S.Images.Star6,
+		 	S.Images.Star7,
+		 	S.Images.Star8,
+		 	S.Images.Star9,
 		];
 	
-	var crosshairs_image;
 	var crosshairs_marker;
 	
 	var any_star_changed_pending = false;
@@ -243,22 +241,6 @@
 	
     S.GamePage =
     {
-    	Preload: function (cb)
-    	{
-    		S.PreloadImages(star_images_filenames, star_images,
-    			function()
-    			{
-    				S.PreloadImage("res/crosshairs.png",
-    					function (img)
-    					{
-    						crosshairs_image = img;
-    						cb();
-    					}
-    				);
-    			}
-    		);
-    	},
-    	
         Show: function ()
         {
             $("#page").load("game.html",
@@ -320,7 +302,7 @@
 	    					clickable: false,
 	    					icon: L.icon(
     							{
-    								iconUrl: "res/crosshairs.png",
+    								iconUrl: S.Images.Crosshairs.src,
     			    				iconSize: [32, 32],
     			    				iconAnchor: [16, 16]
     							}
