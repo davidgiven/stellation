@@ -4,6 +4,10 @@
 		<a href="#" s_attr="Name" s_link="clicked"/>
 	</template>
 	
+	<template id="index.other">
+		<a href="#" s_attr="Name" s_link="clicked"/>
+	</template>
+	
 	<template id="summary">
 		<tr>
 			<td class="heading" colspan="9">
@@ -12,6 +16,20 @@
 		</tr>
 	</template>
 	
+	<template id="summary.other">
+		<tr>
+			<td class="heading" colspan="9">
+				<h1><a href="#" s_attr="Name" s_link="details"/></h1>
+			</td>
+		</tr>
+	</template>
+	
+	<template id="mass_help">
+		<p>
+			The total mass of this fleet.
+		</p>
+	</template>
+
 	<template id="details.invisible">
 		<tr>
 			<td colspan="2">
@@ -27,6 +45,42 @@
 		</tr>
 	</template>
 	
+	<template id="details.other">
+		<tr>
+			<td colspan="2">
+				<h1>
+					<span s_attr="Name"/> (#<span s_attr="Oid"/>)
+				</h1>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Total mass
+				<help template="fleet.mass_help"/>
+			</th>
+			<td>
+				<span s_attr="Mass"/> tonnes
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Owner
+				<help>
+					<p>
+						This fleet is owned by someone else.
+					</p>
+				</help>
+			</th>
+			<td s_attr="showOwner"/>
+		</tr>
+		<tr>
+			<td colspan="2">
+				For the contents of this fleet, see the <a href="#"
+				s_link="show_summary">star summary page</a>.
+			</td>
+		</tr>			
+	</template>
+	
 	<template id="details">
 		<tr>
 			<td colspan="2">
@@ -38,7 +92,7 @@
 		<tr>
 			<th>
 				Total mass
-				<help template="unit.mass_help"/>
+				<help template="fleet.mass_help"/>
 			</th>
 			<td>
 				<span s_attr="Mass"/> tonnes
@@ -153,4 +207,6 @@
 			</td>
 		</tr>
 	</template>
+	
+	
 </templates>

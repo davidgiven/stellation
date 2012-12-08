@@ -8,6 +8,14 @@
 		</span>
 	</template>
 		
+	<template id="cargo.other">
+		<span>
+			<span s_attr="CargoM.i"/> metal,
+			<span s_attr="CargoA.i"/> antimatter,
+			<span s_attr="CargoO.i"/> organic
+		</span>
+	</template>
+		
 	<template id="resources">
 		<th>
 			Available

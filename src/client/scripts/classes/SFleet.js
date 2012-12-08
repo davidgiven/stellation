@@ -4,6 +4,11 @@
 
     S.Classes.SFleet =
     {	
+    	useOtherTemplates: function ()
+    	{
+    		return true;
+    	},
+    
     	createSummary: function (element)
     	{
         	S.TemplatedMonitor(this, element, "fleet.summary",

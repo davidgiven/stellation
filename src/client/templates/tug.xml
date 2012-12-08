@@ -7,6 +7,13 @@
 		<span s_attr="showCargo"/>
 	</template>
 	
+	<template id="cargo.other">
+		<span>
+			carrying:
+		</span>
+		<span s_attr="showCargo"/>
+	</template>
+	
 	<template id="details_unloaded">
 		<tr>
 			<td colspan="9">

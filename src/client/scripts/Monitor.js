@@ -26,6 +26,8 @@
     	var f = function(element)
     	{
     		var e = $(element).find("[id='"+id+"']");
+    		if (!e.length)
+    			e = null;
     		cb(e);
     	}
     	
@@ -107,26 +109,45 @@
 	{
     	if (typeof(template) == "string")
     	{
-			if (object && !S.Player.cansee(object))
-				template += ".invisible";
-    		
-    		var dot = template.indexOf(".");
-    		if (dot == -1)
-    			template = document.getElementById(template);
-    		else
+    		var trytemplate = function (name, failed)
     		{
-    			var left = template.substring(0, dot);
-    			var right = template.substring(dot+1);
-    			
-    			loadtemplate(left, right,
-    				function (e)
-    				{
-    					S.ExpandTemplate(object, element, e, events);
-    				}
-    			);
-    			return;
+        		var dot = name.indexOf(".");
+        		if (dot == -1)
+        		{
+        			var e = document.getElementById(name);
+        			if (e)
+        				S.ExpandTemplate(object, element, e, events);
+        			else if (failed)
+        				failed();
+        		}
+        		else
+        		{
+        			var left = name.substring(0, dot);
+        			var right = name.substring(dot+1);
+        			
+        			loadtemplate(left, right,
+        				function (e)
+        				{
+        					if (e)
+            					S.ExpandTemplate(object, element, e, events);
+        					else if (failed)
+        						failed();
+        				}
+        			);
+        		}
+    		};
+    		
+    		if (object)
+    		{
+    			if (!S.Player.cansee(object))
+    				return trytemplate(template + ".invisible");
+    			else if (object.useOtherTemplates() && !object.isPlayerOwned())
+    				return trytemplate(template + ".other");
     		}
+    		
+    		return trytemplate(template);	
     	}
+    	
 		var tdom = $(template).contents().clone();
 		
 		/* Expand any attribute references. Don't add them just yet or else

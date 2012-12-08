@@ -4,6 +4,16 @@
 
     S.Classes.SObject =
     {
+    	isPlayerOwned: function ()
+    	{
+    		return (this.Owner === S.Player);
+    	},
+    	
+    	useOtherTemplates: function ()
+    	{
+    		return false;
+    	},
+    
     	showName: function (o)
     	{
     		return "#"+o.Oid;

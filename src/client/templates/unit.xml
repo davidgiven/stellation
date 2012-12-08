@@ -35,6 +35,71 @@
 		</tr>
 	</template>
 	
+	
+	<template id="details.other">
+		<tr>
+			<td colspan="9">
+				<h1>
+					<span s_attr="Name"/> (#<span s_attr="Oid"/>)
+					<div class="fright">
+						<help s_attr="Description"/>
+						<menubutton>
+							<ul>
+								<li><a href="#" s_link="unitscrap">Scrap unit</a></li>
+							</ul>
+						</menubutton>
+					</div>
+				</h1>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Location
+				<help>
+					The star system this ship is located within.
+				</help>
+			</th>
+			<td colspan="9">
+				<span s_attr="starName"/>
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Owner
+				<help>
+					<p>
+						This unit is owned by someone else.
+					</p>
+				</help>
+			</th>
+			<td s_attr="showOwner"/>
+		</tr>
+		<tr>
+			<th>
+				Current mass
+				<help>
+					<p>
+						The mass of the ship including any cargo or add-on
+						modules. This governs how difficult it is to move the
+						fleet and also controls how big a target it is.
+					</p>
+				</help>
+			</th>
+			<td colspan="9">
+				<span s_attr="Mass"/> tonnes
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Damage
+				<help template="unit.damage_help"/>
+			</th>
+			<td colspan="9">
+				<span s_attr="Damage"/> / <span s_attr="MaxDamage"/>
+			</td>
+		</tr>
+	</template>
+
 	<template id="details">
 		<tr>
 			<td colspan="9">

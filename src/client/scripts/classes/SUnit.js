@@ -4,6 +4,11 @@
 
     S.Classes.SUnit =
     {	
+    	useOtherTemplates: function ()
+    	{
+    		return true;
+    	},
+    
     	showSummaryDetail: function ()
     	{
     		return "";
