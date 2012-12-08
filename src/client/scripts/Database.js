@@ -27,6 +27,7 @@
 	
 	var typemapper =
 	{
+		boolean: function(o) { return o; },
 		number: function(o) { return o; },
 		string: function(o) { return o; },
 		object: function(o) { return find_object(o); },

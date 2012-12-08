@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xmlns="http://www.w3.org/1999/xhtml">
+	<template id="details">
+		<tr>
+			<th>
+				Status:
+				<help>
+					<p>
+						This unit can be either <b>deployed</b>, when it is
+						running and consuming resources, or <b>mothballed</b>,
+						when it is not running. When starved, this unit will
+						automatically shut down.
+					</p>
+				</help>
+			</th>
+			<td s_attr="showDeployed"/>
+		</tr>
+		<tr>
+			<th/>
+			<td class="deployableControls"/>
+		</tr>
+	</template>
+	
+	<template id="whendeployed">
+		<input type="button" s_link="mothball" value="Mothball"/>		
+	</template>
+	
+	<template id="whenmothballed">
+		<input type="button" s_link="deploy" value="Deploy"/>		
+	</template>
+</templates>

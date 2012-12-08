@@ -9,4 +9,6 @@ return
 	CargoshipLoadUnload = require("GameCommands.CargoshipLoadUnload"),
 	TugUnload = require("GameCommands.TugUnload"),
 	TugLoad = require("GameCommands.TugLoad"),
+	DeployableDeploy = require("GameCommands.DeployableDeploy"),
+	DeployableMothball = require("GameCommands.DeployableMothball"),
 }

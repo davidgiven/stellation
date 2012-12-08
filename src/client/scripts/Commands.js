@@ -67,6 +67,18 @@
     		parameters: ["oid"]
     	},
     	
+    	DeployableDeploy:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid"]
+    	},
+    	
+    	DeployableMothball:
+    	{
+    		gamecommand: true,
+    		parameters: ["oid"]
+    	},
+    	
     	help:
     	{
     		parameters: [],

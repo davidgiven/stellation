@@ -45,6 +45,9 @@ classes =
 	SFixed = require("Classes.SFixed"),
 	SMessageBuoy = require("Classes.SMessageBuoy"),
 	SMessage = require("Classes.SMessage"),
+	SDeployable = require("Classes.SDeployable"),
+	SRefinery = require("Classes.SRefinery"),
+	SAntimatterDistillery = require("Classes.SAntimatterDistillery")
 }
 setmetatable(classes, mt)
 

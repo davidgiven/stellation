@@ -66,5 +66,16 @@ return
 			star.Debris = star.Debris + self.Mass
 			self:Destroy()
 		end,
+		
+		-- Checks to make sure that this object is in direct orbit around a
+		-- star (and returns the star).
+		
+		CheckInOrbit = function (self)
+			local star = self.Location
+			if not star:IsA("SStar") then
+				error({ result = "NotInOrbit" })
+			end
+			return star
+		end,
 	}
 }

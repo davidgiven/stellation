@@ -282,6 +282,33 @@ local NumberType =
 	jstype = "number"
 }
 
+local BooleanType =
+{
+	Set = function (tablename, oid, value)
+		local v = value and 1 or 0
+		
+		SQL(
+			"INSERT OR REPLACE INTO "..tablename.." (oid, value) VALUES (?, ?)"
+			):bind(oid, v):step()
+	end,
+	
+	Get = function (tablename, oid)
+		local row = SQL(
+			"SELECT value FROM "..tablename.." WHERE oid=?"
+			):bind(oid):step()
+		if not row then
+			return false
+		else
+			return (tonumber(row[1]) == 1)
+		end
+	end,
+		
+	name = "BooleanType",
+	isaggregate = false,	
+	sqltype = "INTEGER",
+	jstype = "boolean"
+}
+
 local cache = {}
 local function typeinstance(type, scope)
 	local key = type.name .. "\n" .. scope
@@ -324,5 +351,9 @@ return
 	
 	Number = function (scope)
 		return typeinstance(NumberType, scope)
+	end,
+	
+	Boolean = function (scope)
+		return typeinstance(BooleanType, scope)
 	end
 }

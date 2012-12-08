@@ -8,7 +8,8 @@
 	{
 		AuthenticationFailure: "That username or password is not recognised.",
 		InsufficientResources: "Insufficient resources are avzilable.",
-		PlayerExists: "That username is already taken."
+		PlayerExists: "That username is already taken.",
+		UnitDeployed: "You can't do that with a deployed unit. Mothball it first."
 	};
 	
 	S.IO =

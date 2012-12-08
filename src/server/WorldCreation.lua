@@ -125,7 +125,7 @@ return
 		cs.CargoA = 100000.0
 		cs.CargoO = 100000.0
 		
-		fleet:Create("STug")
+		fleet:Create("STug"):Create("SAntimatterDistillery")
 		
 		Database.SQL("INSERT INTO players VALUES (?, ?)")
 			:bind(email, player.Oid):step()

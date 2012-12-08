@@ -18,6 +18,14 @@ return function (player, msg)
 	cargo:CheckClass("SFixed")
 	cargo:CheckManipulatableBy(player)
 	
+	if cargo:IsA("SDeployable") then
+		if cargo.Deployed then
+			return {
+				result = "UnitDeployed"
+			}
+		end
+	end
+	
 	Log.G("loading tug ", tug.Oid)
 	if tug:FindCargo() then
 		return {
