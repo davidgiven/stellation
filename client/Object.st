@@ -1,7 +1,11 @@
-Object extend [
-	nilOp [ ]
-	+ a [ ]
-	oneOp: a [ ]
-	twoOp: a and: b [ ]
+Behavior extend [
+	new [
+		^ <<< LT.makeRawObject(_self) >>>
+	]
+
+	init [
+	]
 ]
+
+thing := 7
 

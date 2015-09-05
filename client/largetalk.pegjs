@@ -9,12 +9,12 @@ toplevel
 	= cd:class_definition
 		{ return cd; }
 	/ ss:statements
-		{ return ss; }
+		{ return { type: 'statements', body: ss }; }
 
 class_definition
-	= c:expression EXTEND OPEN_SQ b:class_body CLOSE_SQ
+	= c:identifier EXTEND OPEN_SQ b:class_body CLOSE_SQ
 		{ return { type: 'extend', class: c, body: b }; }
-	/ c:expression SUBCLASS i:identifier OPEN_SQ b:class_body CLOSE_SQ
+	/ c:identifier SUBCLASS i:identifier OPEN_SQ b:class_body CLOSE_SQ
 		{ return { type: 'subclass', class: c, name: i, body: b }; }
 
 class_body
@@ -22,16 +22,26 @@ class_body
 		{ return es; }
 
 class_body_element
-	= instance_variables
+	= variables
 	/ method_definition
 
-instance_variables
+variables
 	= BAR ids:identifier* BAR
-		{ return { type: 'instance_variables', identifiers: ids }; }
+		{ return { type: 'variables', identifiers: ids }; }
 
 method_definition
-	= p:pattern OPEN_SQ b:class_body CLOSE_SQ
+	= p:pattern OPEN_SQ b:method_body CLOSE_SQ
 		{ return { type: 'method', pattern: p, body: b }; }
+
+method_body
+	= v:variables? ss:statements?
+		{
+			if (!ss)
+				ss = [];
+			if (v)
+				ss.unshift(v);
+			return ss;
+		}
 
 pattern
 	= id:identifier !':'
@@ -54,13 +64,18 @@ pattern_element
 		{ return { type: 'pattern_element', name: w+":", var: v }; }
 
 statements
-	= left:statement
-		{ return [left]; }
-	/ left:statement DOT right:statements
+	= left:statement DOT right:statements
 		{ right.unshift(left); return right; }
+	/ left:statement
+		{ return [left]; }
 
 statement
-	= expression
+	= id:identifier ASSIGN e:expression
+		{ return { type: 'assign', name: id, expression: e }; }
+	/ CARET e:expression
+		{ return { type: 'return', expression: e }; }
+	/ e:expression
+		{ return { type: 'call', expression: e }; }
 
 word
 	= first:[A-Za-z_$] last:[A-Za-z0-9_$]*
@@ -75,14 +90,47 @@ operator
 		{ return { type: 'identifier', name: s.join("") }; }
 
 expression
-	= id:identifier
+	= NIL
+		{ return { type: 'javascript', body: 'null' }; }
+	/ SELF
+		{ return { type: 'javascript', body: '_self' }; }
+	/ TRUE
+		{ return { type: 'javascript', body: 'true' }; }
+	/ FALSE
+		{ return { type: 'javascript', body: 'false' }; }
+	/ JLEFT b:(!JRIGHT .)* JRIGHT
+		{
+			var f = [];
+			for (var i=0; i<b.length; i++) {
+				f.push(b[i][1]);
+			}
+			return { type: 'javascript', body: f.join("") };
+		}
+	/ _? m:'-'? base:([0-9]+ 'r')? num:[0-9a-zA-Z]+ _?
+		{
+			var b = 10;
+			if (base)
+				b = base[0].join("");
+			var s = num.join("");
+			var n = parseInt(s, b) * (m ? -1 : 1);
+			return { type: 'javascript', body: n };
+		}
+	/ id:identifier
 		{ return id; }
 
+ASSIGN = _? ':=' _?
 BAR = _? '|' _?
+CARET = _? '^' _?
 CLOSE_SQ = _? ']' _?
 DOT = _? '.' _?
 EXTEND = _? 'extend' _?
+FALSE = _? 'false' _?
+NIL = _? 'nil' _?
 OPEN_SQ = _? '[' _?
+SELF = _? 'self' _?
 SUBCLASS = _? 'subclass:' _?
+TRUE = _? 'true' _?
+JLEFT = _? '<<<' _?
+JRIGHT = _? '>>>' _?
 
 _ = [ \t\r\n]+
