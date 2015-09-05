@@ -21,7 +21,17 @@
 	/* =================================================================== */
 
 	function compile(source) {
-		var ast = grammar.parse(source);
+		var ast;
+		try {
+			ast = grammar.parse(source);
+		} catch (e) {
+			if (e.name == "SyntaxError") {
+				e.message = e.location.start.line + "." +
+					e.location.start.column + ":" +
+					e.message;
+			}
+			throw e;
+		}
 		console.log(ast);
 	}
 
@@ -52,7 +62,9 @@
 		if (!grammar_element) return;
 		if (!grammar_element._st_src != "") return;
 		if (!grammar) {
-			grammar = PEG.buildParser(grammar_element._st_src);
+			grammar = PEG.buildParser(grammar_element._st_src, {
+				trace: true
+			});
 		}
 
 		/* Consume any scripts that have finished loading (being careful to
