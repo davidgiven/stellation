@@ -1,11 +1,24 @@
 Behavior extend [
 	new [
-		^ <<< LT.makeRawObject(_self) >>>
+		^ <<< LT.makeObject(this) >>>
 	]
 
 	init [
 	]
 ]
 
-thing := 7
+Class extend [
+	inspect [
+		<<< console.log(this._st_class._st_name); >>>
+	]
+]
+
+Object extend [
+	inspect [
+		<<< console.log("a " + this._st_class._st_name); >>>
+	]
+]
+
+o := Object new.
+o inspect
 

@@ -75,7 +75,7 @@ statement
 	/ CARET e:expression
 		{ return { type: 'return', expression: e }; }
 	/ e:expression
-		{ return { type: 'call', expression: e }; }
+		{ return { type: 'expression', expression: e }; }
 
 word
 	= first:[A-Za-z_$] last:[A-Za-z0-9_$]*
@@ -90,6 +90,36 @@ operator
 		{ return { type: 'identifier', name: s.join("") }; }
 
 expression
+	= keyword_method_call
+	/ operator_method_call
+	/ unary_method_call
+	/ leaf
+
+keyword_method_call
+	= r:operator_method_call ms:method_element*
+		{
+			var name = [];
+			var args = [];
+			for (var i=0; i<ms.length; i++) {
+				name.push(ms[i].name);
+				args.push(ms[i].args);
+			}
+			return { type: 'call', name: name.join(""), args: args };
+		}
+
+method_element
+	= _? w:word ':' a:operator_method_call
+		{ return { type: 'method_element', name: w+":", arg: a }; }
+
+operator_method_call
+	= r:unary_method_call op:operator a:unary_method_call
+		{ return { type: 'call', name: op, receiver: r, args: [a] }; }
+
+unary_method_call
+	= r:leaf id:identifier
+		{ return { type: 'call', name: id, receiver: r, args: [] }; }
+
+leaf
 	= NIL
 		{ return { type: 'javascript', body: 'null' }; }
 	/ SELF
@@ -106,14 +136,17 @@ expression
 			}
 			return { type: 'javascript', body: f.join("") };
 		}
-	/ _? m:'-'? base:([0-9]+ 'r')? num:[0-9a-zA-Z]+ _?
+	/ _? m:'-'? base:[0-9]+ 'r' num:[0-9a-zA-Z]+ _?
 		{
-			var b = 10;
-			if (base)
-				b = base[0].join("");
+			var b = base.join("");
 			var s = num.join("");
 			var n = parseInt(s, b) * (m ? -1 : 1);
 			return { type: 'javascript', body: n };
+		}
+	/ _? m:'-'? num:[0-9]+ _?
+		{
+			var s = num.join("");
+			return { type: 'javascript', body: s|0 };
 		}
 	/ id:identifier
 		{ return id; }
