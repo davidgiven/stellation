@@ -6,10 +6,8 @@ start
 	= toplevel*
 
 toplevel
-	= cd:class_definition
-		{ return cd; }
-	/ ss:statements
-		{ return { type: 'statements', body: ss }; }
+	= class_definition
+	/ block
 
 class_definition
 	= c:identifier EXTEND OPEN_SQ b:class_body CLOSE_SQ
@@ -62,6 +60,10 @@ pattern
 pattern_element
 	= _? w:word ':' v:identifier
 		{ return { type: 'pattern_element', name: w+":", var: v }; }
+
+block
+	= OPEN_SQ b:method_body CLOSE_SQ
+		{ return { type: 'block', body: b }; }
 
 statements
 	= left:statement DOT right:statements
@@ -116,14 +118,19 @@ operator_method_call
 		{ return { type: 'call', name: op, receiver: r, args: [a] }; }
 
 unary_method_call
-	= r:leaf id:identifier
-		{ return { type: 'call', name: id, receiver: r, args: [] }; }
+	= r:leaf id:identifier ids:identifier*
+		{ 
+			var o = { type: 'call', name: id, receiver: r, args: [] };
+			for (var i=0; i<ids.length; i++)
+				o = { type: 'call', name: ids[i], receiver: o, args: [] };
+			return o;
+		}
 
 leaf
 	= NIL
 		{ return { type: 'javascript', body: 'null' }; }
 	/ SELF
-		{ return { type: 'javascript', body: '_self' }; }
+		{ return { type: 'javascript', body: 'this' }; }
 	/ TRUE
 		{ return { type: 'javascript', body: 'true' }; }
 	/ FALSE
@@ -148,8 +155,21 @@ leaf
 			var s = num.join("");
 			return { type: 'javascript', body: s|0 };
 		}
-	/ id:identifier
-		{ return id; }
+	/ string
+	/ identifier
+
+string
+	= _? ss:string_segment+ _?
+		{ return { type: 'string', value: ss.join("'") }; }
+
+string_segment
+	= "'" ss:(!"'" .)* "'"
+		{
+			var f = [];
+			for (var i=0; i<ss.length; i++)
+				f.push(ss[i][1]);
+			return f.join("");
+		}
 
 ASSIGN = _? ':=' _?
 BAR = _? '|' _?
