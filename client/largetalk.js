@@ -35,7 +35,8 @@
 			_st_vars: {},
 			_st_super: superklass,
 			_st_methods: superklass ? Object.create(superklass._st_methods) : {},
-			_st_name: name
+			_st_name: name,
+			_st_ivars: {}
 		};
 	}
 
@@ -92,13 +93,24 @@
 		return o;
 	};
 
-	LT.methodCall = function(receiver, name, args) {
+	var primitive_table = {
+		string: "String",
+		number: "Number"
+	};
+
+	LT.findMethod = function(receiver, name) {
 		var c = receiver._st_class;
 		if (!c) {
-			throw new Error("Can't call methods on "+c+" yet");
+			c = primitive_table[typeof(receiver)];
+			if (!c)
+				throw new Error("Can't call methods on " + typeof(receiver) +" yet");
+			if (typeof(c) !== "object") {
+				c = system_dictionary["$" + c];
+				primitive_table[typeof(receiver)] = c;
+			}
 		}
 
-		return c._st_methods[name].apply(receiver, args);
+		return c._st_methods[name];
 	}
 
 	LT.makeSubclass = function(superklass, name) {
@@ -118,7 +130,7 @@
 	/*                              COMPILER                               */
 	/* =================================================================== */
 
-	function compile_expr(node) {
+	function compile_expr(context, node) {
 		switch (node.type) {
 			case "javascript":
 				return node.body;
@@ -128,17 +140,23 @@
 
 			case "call":
 			{
+				var t = context.temporaries++;
 				var f = [];
-				f.push("LT.methodCall(");
-				f.push(compile_expr(node.receiver));
+				f.push("(t");
+				f.push(t);
+				f.push(" = (");
+				f.push(compile_expr(context, node.receiver));
+				f.push("), LT.findMethod(t");
+				f.push(t);
 				f.push(",");
-				f.push("'" + node.name.name + "'");
-				f.push(",[");
+				f.push("'" + node.name + "'");
+				f.push(")(t");
+				f.push(t);
 				for (var i=0; i<node.args.length; i++) {
-					f.push(compile_expr(node.args[i]));
 					f.push(",");
+					f.push(compile_expr(context, node.args[i]));
 				}
-				f.push("])");
+				f.push("))");
 				return f.join("");
 			}
 
@@ -152,6 +170,10 @@
 
 	function compile_block(node) {
 		var f = [];
+		var maxtemporaries = 0;
+		var context = {
+			temporaries: 0
+		};
 
 		for (var i=0; i<node.body.length; i++) {
 			var n = node.body[i];
@@ -164,21 +186,29 @@
 					break;
 
 				case "return":
-					f.push("retval.value = " + compile_expr(n.expression) + ";");
+					f.push("retval.value = " + compile_expr(context, n.expression) + ";");
 					f.push("throw retval;");
 					break;
 
 				case "assign":
-					f.push("$" + n.name.name + " = " + compile_expr(n.expression) + ";");
+					f.push("$" + n.name.name + " = " + compile_expr(context, n.expression) + ";");
 					break;
 
 				case "expression":
-					f.push(compile_expr(n.expression) + ";");
+					f.push(compile_expr(context, n.expression) + ";");
 					break;
 
 				default:
 					throw new Error("Unknown method body node " + n.type);
 			}
+
+			maxtemporaries = Math.max(context.temporaries);
+			context.temporaries = 0;
+		}
+
+		if (maxtemporaries > 0) {
+			for (var i=0; i<maxtemporaries; i++)
+				f.unshift("var t" + i + ";");
 		}
 
 		return f;
@@ -188,14 +218,15 @@
 		var vars = node.pattern.vars.map(
 			function (v) { return "$" + v.name; }
 		);
+		vars.unshift("self");
 
 		var f = [];
 		f.push("with (LT.systemDictionary) {");
 		f.push("return (function(" + vars.join(",") + ") {");
-		f.push("var retval = {value: this};");
+		f.push("var retval = {value: self};");
 		f.push("try {");
 
-		f.push("var vars = this._st_vars;");
+		f.push("var vars = self._st_vars;");
 		f.push("with (vars ? vars[" + klass._st_number + "] : {}) {");
 		f = f.concat(compile_block(node));
 		f.push("}");
@@ -216,6 +247,26 @@
 		};
 	}
 
+	function compile_jmethod(klass, node) {
+		var vars = node.pattern.vars.map(
+			function (v) { return "$" + v.name; }
+		);
+		vars.unshift("self");
+
+		var f = [];
+		f.push("return (function(" + vars.join(",") + ") {");
+		f.push(node.body.body);
+		f.push("});");
+
+		var cf = new Function(f.join("\n"));
+		var ccf = cf();
+
+		return {
+			name: node.pattern.name,
+			callable: ccf
+		};
+	}
+
 	function compile_class_body(klass, nodes) {
 		for (var i=0; i<nodes.length; i++) {
 			var node = nodes[i];
@@ -226,8 +277,18 @@
 					klass._st_methods[m.name] = m.callable;
 					break;
 
+				case "jmethod":
+					var m = compile_jmethod(klass, node);
+					klass._st_methods[m.name] = m.callable;
+					break;
+
+				case "variables":
+					for (var j=0; j<node.identifiers.length; j++)
+						klass._st_ivars["$" + node.identifiers[j].name] = true;
+					break;
+
 				default:
-					throw new Error("Unsupport class body node " + node.type);
+					throw new Error("Unsupported class body node " + node.type);
 			}
 		}
 	}
@@ -260,7 +321,7 @@
 				if (!klass)
 					throw new Error("Undefined LT class '" + node.class.name + "'");
 
-				var subklass = LT.methodCall(klass, "subclass:", [node.name.name]);
+				var subklass = LT.findMethod(klass, "subclass:")(klass, node.name.name);
 				compile_class_body(subklass, node.body);
 			}
 	};
@@ -285,7 +346,6 @@
 			}
 			throw e;
 		}
-		console.log(ast);
 
 		for (var i=0; i<ast.length; i++)
 			compile_toplevel(ast[i]);
@@ -330,6 +390,7 @@
 			if (!element) break;
 			if (!element._st_src) break;
 
+			console.log("Compiling " + element.src);
 			compile(element._st_src);
 
 			largetalk_elements.shift();

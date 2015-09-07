@@ -30,6 +30,8 @@ variables
 method_definition
 	= p:pattern OPEN_SQ b:method_body CLOSE_SQ
 		{ return { type: 'method', pattern: p, body: b }; }
+	/ p:pattern j:javascript
+		{ return { type: 'jmethod', pattern: p, body: j }; }
 
 method_body
 	= v:variables? ss:statements?
@@ -42,7 +44,7 @@ method_body
 		}
 
 pattern
-	= id:identifier !':'
+	= id:identifier
 		{ return { type: 'pattern', name: id.name, vars: [] }; }
 	/ op:operator v:identifier
 		{ return { type: 'pattern', name: op.name, vars: [v] }; }
@@ -84,7 +86,7 @@ word
 		{ return first + last.join(""); }
 
 identifier
-	= _? w:word _?
+	= _? w:word !':' _?
 		{ return { type: 'identifier', name: w }; }
 
 operator
@@ -93,21 +95,19 @@ operator
 
 expression
 	= keyword_method_call
-	/ operator_method_call
-	/ unary_method_call
-	/ leaf
 
 keyword_method_call
-	= r:operator_method_call ms:method_element*
+	= r:operator_method_call ms:method_element+
 		{
 			var name = [];
 			var args = [];
 			for (var i=0; i<ms.length; i++) {
 				name.push(ms[i].name);
-				args.push(ms[i].args);
+				args.push(ms[i].arg);
 			}
-			return { type: 'call', name: name.join(""), args: args };
+			return { type: 'call', name: name.join(""), receiver: r, args: args };
 		}
+	/ operator_method_call
 
 method_element
 	= _? w:word ':' a:operator_method_call
@@ -115,34 +115,28 @@ method_element
 
 operator_method_call
 	= r:unary_method_call op:operator a:unary_method_call
-		{ return { type: 'call', name: op, receiver: r, args: [a] }; }
+		{ return { type: 'call', name: op.name, receiver: r, args: [a] }; }
+	/ unary_method_call
 
 unary_method_call
 	= r:leaf id:identifier ids:identifier*
 		{ 
-			var o = { type: 'call', name: id, receiver: r, args: [] };
+			var o = { type: 'call', name: id.name, receiver: r, args: [] };
 			for (var i=0; i<ids.length; i++)
-				o = { type: 'call', name: ids[i], receiver: o, args: [] };
+				o = { type: 'call', name: ids[i].name, receiver: o, args: [] };
 			return o;
 		}
+	/ leaf
 
 leaf
 	= NIL
 		{ return { type: 'javascript', body: 'null' }; }
 	/ SELF
-		{ return { type: 'javascript', body: 'this' }; }
+		{ return { type: 'javascript', body: 'self' }; }
 	/ TRUE
 		{ return { type: 'javascript', body: 'true' }; }
 	/ FALSE
 		{ return { type: 'javascript', body: 'false' }; }
-	/ JLEFT b:(!JRIGHT .)* JRIGHT
-		{
-			var f = [];
-			for (var i=0; i<b.length; i++) {
-				f.push(b[i][1]);
-			}
-			return { type: 'javascript', body: f.join("") };
-		}
 	/ _? m:'-'? base:[0-9]+ 'r' num:[0-9a-zA-Z]+ _?
 		{
 			var b = base.join("");
@@ -155,8 +149,21 @@ leaf
 			var s = num.join("");
 			return { type: 'javascript', body: s|0 };
 		}
+	/ OPEN_PAREN e:expression CLOSE_PAREN
+		{ return e; }
+	/ javascript
 	/ string
 	/ identifier
+
+javascript
+	= JLEFT b:(!JRIGHT .)* JRIGHT
+		{
+			var f = [];
+			for (var i=0; i<b.length; i++) {
+				f.push(b[i][1]);
+			}
+			return { type: 'javascript', body: f.join("") };
+		}
 
 string
 	= _? ss:string_segment+ _?
@@ -174,16 +181,18 @@ string_segment
 ASSIGN = _? ':=' _?
 BAR = _? '|' _?
 CARET = _? '^' _?
+CLOSE_PAREN = _? ')' _?
 CLOSE_SQ = _? ']' _?
 DOT = _? '.' _?
 EXTEND = _? 'extend' _?
 FALSE = _? 'false' _?
+JLEFT = _? '<<<' _?
+JRIGHT = _? '>>>' _?
 NIL = _? 'nil' _?
+OPEN_PAREN = _? '(' _?
 OPEN_SQ = _? '[' _?
 SELF = _? 'self' _?
 SUBCLASS = _? 'subclass:' _?
 TRUE = _? 'true' _?
-JLEFT = _? '<<<' _?
-JRIGHT = _? '>>>' _?
 
 _ = [ \t\r\n]+
