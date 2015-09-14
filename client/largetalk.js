@@ -26,9 +26,6 @@
 
 	var serial_number = 0;
 
-	var system_dictionary = {};
-	LT.systemDictionary = system_dictionary;
-
 	function make_raw_class(name, superklass) {
 		return {
 			_st_number: serial_number++,
@@ -41,9 +38,9 @@
 	}
 
 	function make_named_class(name, superklassname) {
-		var superklass = superklassname ? system_dictionary["$" + superklassname] : null;
+		var superklass = superklassname ? window["$" + superklassname] : null;
 		var o = make_raw_class(name, superklass);
-		system_dictionary["$" + name] = o;
+		window["$" + name] = o;
 		return o;
 	}
 
@@ -62,7 +59,7 @@
 	}
 
 	function assign_metaclass(name) {
-		var object = system_dictionary["$" + name];
+		var object = window["$" + name];
 		var superklass = object._st_super;
 		if (superklass)
 			superklass = superklass._st_class;
@@ -105,7 +102,7 @@
 			if (!c)
 				throw new Error("Can't call methods on " + typeof(receiver) +" yet");
 			if (typeof(c) !== "object") {
-				c = system_dictionary["$" + c];
+				c = window["$" + c];
 				primitive_table[typeof(receiver)] = c;
 			}
 		}
@@ -115,7 +112,7 @@
 
 	LT.makeSubclass = function(superklass, name) {
 		var klass = make_raw_class(name, superklass);
-		system_dictionary["$" + name] = klass;
+		window["$" + name] = klass;
 
 		var metaklass = make_raw_class(name + " class", superklass._st_class);
 		klass._st_class = metaklass;
@@ -221,7 +218,6 @@
 		vars.unshift("self");
 
 		var f = [];
-		f.push("with (LT.systemDictionary) {");
 		f.push("return (function(" + vars.join(",") + ") {");
 		f.push("var retval = {value: self};");
 		f.push("try {");
@@ -236,7 +232,6 @@
 		f.push("}");
 		f.push("return retval.value;");
 		f.push("});");
-		f.push("}");
 
 		var cf = new Function(f.join("\n"));
 		var ccf = cf();
@@ -297,10 +292,8 @@
 		block:
 			function(node) {
 				var f = [];
-				f.push("with (LT.systemDictionary) {");
 				f.push("var retval = null;");
 				f = f.concat(compile_block(node));
-				f.push("}");
 
 				var cf = new Function(f.join("\n"));
 				cf.call(null);
@@ -308,7 +301,7 @@
 
 		extend:
 			function(node) {
-				var klass = system_dictionary["$" + node.class.name];
+				var klass = window["$" + node.class.name];
 				if (!klass)
 					throw new Error("Undefined LT class '" + node.class.name + "'");
 
@@ -317,7 +310,7 @@
 
 		subclass:
 			function(node) {
-				var klass = system_dictionary["$" + node.class.name];
+				var klass = window["$" + node.class.name];
 				if (!klass)
 					throw new Error("Undefined LT class '" + node.class.name + "'");
 
