@@ -29,7 +29,6 @@
 	function make_raw_class(name, superklass) {
 		return {
 			_st_number: serial_number++,
-			_st_vars: {},
 			_st_super: superklass,
 			_st_methods: superklass ? Object.create(superklass._st_methods) : {},
 			_st_name: name,
@@ -50,14 +49,6 @@
 	make_named_class("Class", "ClassDescription");
 	var _Metaklass = make_named_class("Metaclass", "ClassDescription");
 
-	function makevars(o) {
-		var c = o._st_class;
-		while (c) {
-			o._st_vars[c._st_number] = {};
-			c = c._st_super;
-		}
-	}
-
 	function assign_metaclass(name) {
 		var object = window["$" + name];
 		var superklass = object._st_super;
@@ -68,10 +59,7 @@
 
 		var metaklass = make_raw_class(name + " class", superklass);
 		object._st_class = metaklass;
-		makevars(object);
-
 		metaklass._st_class = _Metaklass;
-		makevars(metaklass);
 	}
 
 	assign_metaclass("Object");
@@ -83,10 +71,8 @@
 	LT.makeObject = function(superklass) {
 		var o = {
 			_st_number: serial_number++,
-			_st_vars: {},
 			_st_class: superklass
 		};
-		makevars(o);
 		return o;
 	};
 
@@ -117,9 +103,6 @@
 		var metaklass = make_raw_class(name + " class", superklass._st_class);
 		klass._st_class = metaklass;
 		metaklass._st_class = _Metaklass;
-
-		makevars(klass);
-		makevars(metaklass);
 		return klass;
 	}
 
@@ -172,6 +155,16 @@
 		}
 	}
 			
+	function compile_ref(context, node) {
+		var v = context.varmap[node.name];
+		if (!v)
+			v = "$" + node.name;
+
+		var f = [];
+		pushs(f, node, v, node.name);
+		return f;
+	}
+
 	function compile_expr(context, node) {
 		switch (node.type) {
 			case "javascript":
@@ -182,11 +175,7 @@
 			}
 
 			case "identifier":
-			{
-				var f = [];
-				pushs(f, node, "$" + node.name, node.name);
-				return f;
-			}
+				return compile_ref(context, node);
 
 			case "call":
 			{
@@ -219,22 +208,28 @@
 		}
 	}
 
-	function compile_block(node) {
+	function compile_block(varmap, node) {
 		var f = [];
 		var maxtemporaries = 0;
 		var context = {
-			temporaries: 0
+			temporaries: 0,
+			varmap: varmap
 		};
 
 		for (var i=0; i<node.body.length; i++) {
 			var n = node.body[i];
 			switch (n.type) {
 				case "variables":
+				{
+					var newvarmap = Object.create(context.varmap);
 					for (var j=0; j<n.identifiers.length; j++) {
 						var id = n.identifiers[j];
 						pushs(f, id, "var $" + id.name + " = null;", id.name);
+						newvarmap[id.name] = "$" + id.name;
 					}
+					context.varmap = newvarmap;
 					break;
+				}
 
 				case "return":
 					f.push("retval.value = ");
@@ -244,7 +239,8 @@
 					break;
 
 				case "assign":
-					pushs(f, n, "$" + n.name.name + " = ", n.name.name);
+					f.push(compile_ref(context, n.name));
+					f.push("=");
 					f.push(compile_expr(context, n.expression));
 					f.push(";");
 					break;
@@ -271,14 +267,14 @@
 	}
 
 	function compile_method(klass, node) {
+		var varmap = {};
 		var vars = node.pattern.vars.map(
-			function (v) {
-				var f = [];
-				pushs(f, v, "$" + v.name, v.name);
-				return f;
-			}
+			function (v) { return "$" + v.name; }
 		);
 		vars.unshift("self");
+
+		for (var v in klass._st_ivars)
+			varmap[v] = "self." + v + "$" + klass._st_number;
 
 		var f = [];
 		f.push("return (function(");
@@ -287,10 +283,7 @@
 		f.push("var retval = {value: self};");
 		f.push("try {");
 
-		f.push("var vars = self._st_vars;");
-		f.push("with (vars ? vars[" + klass._st_number + "] : {}) {");
-		f.push(compile_block(node));
-		f.push("}");
+		f.push(compile_block(varmap, node));
 
 		f.push("} catch (e) {");
 		f.push("if (e !== retval) throw e;");
@@ -350,7 +343,7 @@
 
 				case "variables":
 					for (var j=0; j<node.identifiers.length; j++)
-						klass._st_ivars["$" + node.identifiers[j].name] = true;
+						klass._st_ivars[node.identifiers[j].name] = true;
 					break;
 
 				default:
@@ -364,7 +357,7 @@
 			function(node) {
 				var f = [];
 				f.push("var retval = null;");
-				f.push(compile_block(node));
+				f.push(compile_block({}, node));
 
 				var cf = new Function(flatten(f));
 				cf.call(null);
