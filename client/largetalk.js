@@ -130,35 +130,32 @@
 	function compile_expr(context, node) {
 		switch (node.type) {
 			case "javascript":
-				return node.body;
+				return [node.body];
 
 			case "identifier":
-				return "$" + node.name;
+				return ["$" + node.name];
 
 			case "call":
 			{
 				var t = context.temporaries++;
 				var f = [];
-				f.push("(t");
-				f.push(t);
+				f.push("(t" + t);
 				f.push(" = (");
-				f.push(compile_expr(context, node.receiver));
-				f.push("), LT.findMethod(t");
-				f.push(t);
+				f = f.concat(compile_expr(context, node.receiver));
+				f.push("), LT.findMethod(t" + t);
 				f.push(",");
 				f.push("'" + node.name + "'");
-				f.push(")(t");
-				f.push(t);
+				f.push(")(t" + t);
 				for (var i=0; i<node.args.length; i++) {
 					f.push(",");
-					f.push(compile_expr(context, node.args[i]));
+					f = f.concat(compile_expr(context, node.args[i]));
 				}
 				f.push("))");
-				return f.join("");
+				return f;
 			}
 
 			case "string":
-				return JSON.stringify(node.value);
+				return [JSON.stringify(node.value)];
 				
 			default:
 				throw new Error("Unknown expression node " + node.type);
@@ -183,16 +180,21 @@
 					break;
 
 				case "return":
-					f.push("retval.value = " + compile_expr(context, n.expression) + ";");
+					f.push("retval.value = ");
+					f = f.concat(compile_expr(context, n.expression));
+					f.push(";");
 					f.push("throw retval;");
 					break;
 
 				case "assign":
-					f.push("$" + n.name.name + " = " + compile_expr(context, n.expression) + ";");
+					f.push("$" + n.name.name + " = ");
+					f = f.concat(compile_expr(context, n.expression));
+					f.push(";");
 					break;
 
 				case "expression":
-					f.push(compile_expr(context, n.expression) + ";");
+					f = f.concat(compile_expr(context, n.expression));
+					f.push(";");
 					break;
 
 				default:
@@ -233,7 +235,7 @@
 		f.push("return retval.value;");
 		f.push("});");
 
-		var cf = new Function(f.join("\n"));
+		var cf = new Function(f.join(" "));
 		var ccf = cf();
 
 		return {
@@ -253,7 +255,7 @@
 		f.push(node.body.body);
 		f.push("});");
 
-		var cf = new Function(f.join("\n"));
+		var cf = new Function(f.join(" "));
 		var ccf = cf();
 
 		return {
@@ -295,7 +297,7 @@
 				f.push("var retval = null;");
 				f = f.concat(compile_block(node));
 
-				var cf = new Function(f.join("\n"));
+				var cf = new Function(f.join(" "));
 				cf.call(null);
 			},
 
