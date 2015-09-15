@@ -11,9 +11,9 @@ toplevel
 
 class_definition
 	= c:identifier EXTEND OPEN_SQ b:class_body CLOSE_SQ
-		{ return { type: 'extend', class: c, body: b }; }
+		{ return { location: location(), type: 'extend', class: c, body: b }; }
 	/ c:identifier SUBCLASS i:identifier OPEN_SQ b:class_body CLOSE_SQ
-		{ return { type: 'subclass', class: c, name: i, body: b }; }
+		{ return { location: location(), type: 'subclass', class: c, name: i, body: b }; }
 
 class_body
 	= es:class_body_element*
@@ -25,13 +25,13 @@ class_body_element
 
 variables
 	= BAR ids:identifier* BAR
-		{ return { type: 'variables', identifiers: ids }; }
+		{ return { location: location(), type: 'variables', identifiers: ids }; }
 
 method_definition
 	= p:pattern OPEN_SQ b:method_body CLOSE_SQ
-		{ return { type: 'method', pattern: p, body: b }; }
+		{ return { location: location(), type: 'method', pattern: p, body: b }; }
 	/ p:pattern j:javascript
-		{ return { type: 'jmethod', pattern: p, body: j }; }
+		{ return { location: location(), type: 'jmethod', pattern: p, body: j }; }
 
 method_body
 	= v:variables? ss:statements?
@@ -45,9 +45,9 @@ method_body
 
 pattern
 	= id:identifier
-		{ return { type: 'pattern', name: id.name, vars: [] }; }
+		{ return { location: location(), type: 'pattern', name: id.name, vars: [] }; }
 	/ op:operator v:identifier
-		{ return { type: 'pattern', name: op.name, vars: [v] }; }
+		{ return { location: location(), type: 'pattern', name: op.name, vars: [v] }; }
 	/ ps:pattern_element*
 		{
 			var name = [];
@@ -56,16 +56,16 @@ pattern
 				name.push(ps[i].name);
 				vars.push(ps[i].var);
 			}
-			return { type: 'pattern', name: name.join(""), vars: vars };
+			return { location: location(), type: 'pattern', name: name.join(""), vars: vars };
 		}
 
 pattern_element
 	= _? w:word ':' v:identifier
-		{ return { type: 'pattern_element', name: w+":", var: v }; }
+		{ return { location: location(), type: 'pattern_element', name: w+":", var: v }; }
 
 block
 	= OPEN_SQ b:method_body CLOSE_SQ
-		{ return { type: 'block', body: b }; }
+		{ return { location: location(), type: 'block', body: b }; }
 
 statements
 	= left:statement DOT right:statements
@@ -75,11 +75,11 @@ statements
 
 statement
 	= id:identifier ASSIGN e:expression
-		{ return { type: 'assign', name: id, expression: e }; }
+		{ return { location: location(), type: 'assign', name: id, expression: e }; }
 	/ CARET e:expression
-		{ return { type: 'return', expression: e }; }
+		{ return { location: location(), type: 'return', expression: e }; }
 	/ e:expression
-		{ return { type: 'expression', expression: e }; }
+		{ return { location: location(), type: 'expression', expression: e }; }
 
 word
 	= first:[A-Za-z_$] last:[A-Za-z0-9_$]*
@@ -87,11 +87,11 @@ word
 
 identifier
 	= _? w:word !':' _?
-		{ return { type: 'identifier', name: w }; }
+		{ return { location: location(), type: 'identifier', name: w }; }
 
 operator
 	= _? s:[-~!@%&*+=|\<>,?/]+ _?
-		{ return { type: 'identifier', name: s.join("") }; }
+		{ return { location: location(), type: 'identifier', name: s.join("") }; }
 
 expression
 	= keyword_method_call
@@ -105,49 +105,49 @@ keyword_method_call
 				name.push(ms[i].name);
 				args.push(ms[i].arg);
 			}
-			return { type: 'call', name: name.join(""), receiver: r, args: args };
+			return { location: location(), type: 'call', name: name.join(""), receiver: r, args: args };
 		}
 	/ operator_method_call
 
 method_element
 	= _? w:word ':' a:operator_method_call
-		{ return { type: 'method_element', name: w+":", arg: a }; }
+		{ return { location: location(), type: 'method_element', name: w+":", arg: a }; }
 
 operator_method_call
 	= r:unary_method_call op:operator a:unary_method_call
-		{ return { type: 'call', name: op.name, receiver: r, args: [a] }; }
+		{ return { location: location(), type: 'call', name: op.name, receiver: r, args: [a] }; }
 	/ unary_method_call
 
 unary_method_call
 	= r:leaf id:identifier ids:identifier*
 		{ 
-			var o = { type: 'call', name: id.name, receiver: r, args: [] };
+			var o = { location: location(), type: 'call', name: id.name, receiver: r, args: [] };
 			for (var i=0; i<ids.length; i++)
-				o = { type: 'call', name: ids[i].name, receiver: o, args: [] };
+				o = { location: location(), type: 'call', name: ids[i].name, receiver: o, args: [] };
 			return o;
 		}
 	/ leaf
 
 leaf
 	= NIL
-		{ return { type: 'javascript', body: 'null' }; }
+		{ return { location: location(), type: 'javascript', body: 'null' }; }
 	/ SELF
-		{ return { type: 'javascript', body: 'self' }; }
+		{ return { location: location(), type: 'javascript', body: 'self' }; }
 	/ TRUE
-		{ return { type: 'javascript', body: 'true' }; }
+		{ return { location: location(), type: 'javascript', body: 'true' }; }
 	/ FALSE
-		{ return { type: 'javascript', body: 'false' }; }
+		{ return { location: location(), type: 'javascript', body: 'false' }; }
 	/ _? m:'-'? base:[0-9]+ 'r' num:[0-9a-zA-Z]+ _?
 		{
 			var b = base.join("");
 			var s = num.join("");
 			var n = parseInt(s, b) * (m ? -1 : 1);
-			return { type: 'javascript', body: n };
+			return { location: location(), type: 'javascript', body: n };
 		}
 	/ _? m:'-'? num:[0-9]+ _?
 		{
 			var s = num.join("");
-			return { type: 'javascript', body: s|0 };
+			return { location: location(), type: 'javascript', body: s|0 };
 		}
 	/ OPEN_PAREN e:expression CLOSE_PAREN
 		{ return e; }
@@ -162,12 +162,12 @@ javascript
 			for (var i=0; i<b.length; i++) {
 				f.push(b[i][1]);
 			}
-			return { type: 'javascript', body: f.join("") };
+			return { location: location(), type: 'javascript', body: f.join("") };
 		}
 
 string
 	= _? ss:string_segment+ _?
-		{ return { type: 'string', value: ss.join("'") }; }
+		{ return { location: location(), type: 'string', value: ss.join("'") }; }
 
 string_segment
 	= "'" ss:(!"'" .)* "'"

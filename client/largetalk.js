@@ -127,29 +127,66 @@
 	/*                              COMPILER                               */
 	/* =================================================================== */
 
-	function flattena(n) {
-		var f = [];
-		for (var i=0; i<n.length; i++) {
-			var v = n[i];
-			if (v instanceof Array)
-				f = f.concat(flattena(v));
-			else
-				f.push(v);
-		}
-		return f;
-	}
-
 	function flatten(n) {
+		var f = [];
+		var lineno = 0;
+
+		function flattena(n) {
+			for (var i=0; i<n.length; i++) {
+				var v = n[i];
+				if (v instanceof Array)
+					flattena(v);
+				else if (v.location) {
+					if (v.location.start.line > lineno) {
+						lineno = v.location.start.line;
+						f.push("\n");
+					}
+					f.push(v.string);
+				} else
+					f.push(v);
+			}
+			return f;
+		}
+
 		return flattena(n).join(" ");
 	}
 
+	function pushs(f, n, s, o) {
+		var a = {
+			location: n.location,
+			string: s
+		};
+		if (o)
+			a.original = o;
+
+		f.push(a);
+	}
+
+	function pushss(f, ss, c) {
+		if (ss.length > 0) {
+			f.push(ss[0]);
+			for (var i=1; i<ss.length; i++) {
+				f.push(c);
+				f.push(ss[i]);
+			}
+		}
+	}
+			
 	function compile_expr(context, node) {
 		switch (node.type) {
 			case "javascript":
-				return [node.body];
+			{
+				var f = [];
+				pushs(f, node, node.body);
+				return f;
+			}
 
 			case "identifier":
-				return ["$" + node.name];
+			{
+				var f = [];
+				pushs(f, node, "$" + node.name, node.name);
+				return f;
+			}
 
 			case "call":
 			{
@@ -160,7 +197,7 @@
 				f.push(compile_expr(context, node.receiver));
 				f.push("), LT.findMethod(t" + t);
 				f.push(",");
-				f.push("'" + node.name + "'");
+				pushs(f, node, "'" + node.name + "'", node.name);
 				f.push(")(t" + t);
 				for (var i=0; i<node.args.length; i++) {
 					f.push(",");
@@ -171,7 +208,11 @@
 			}
 
 			case "string":
-				return [JSON.stringify(node.value)];
+			{
+				var f = [];
+				pushs(f, node, JSON.stringify(node.value));
+				return f;
+			}
 				
 			default:
 				throw new Error("Unknown expression node " + node.type);
@@ -191,7 +232,7 @@
 				case "variables":
 					for (var j=0; j<n.identifiers.length; j++) {
 						var id = n.identifiers[j];
-						f.push("var $" + id.name + " = null;");
+						pushs(f, id, "var $" + id.name + " = null;", id.name);
 					}
 					break;
 
@@ -203,7 +244,7 @@
 					break;
 
 				case "assign":
-					f.push("$" + n.name.name + " = ");
+					pushs(f, n, "$" + n.name.name + " = ", n.name.name);
 					f.push(compile_expr(context, n.expression));
 					f.push(";");
 					break;
@@ -231,12 +272,18 @@
 
 	function compile_method(klass, node) {
 		var vars = node.pattern.vars.map(
-			function (v) { return "$" + v.name; }
+			function (v) {
+				var f = [];
+				pushs(f, v, "$" + v.name, v.name);
+				return f;
+			}
 		);
 		vars.unshift("self");
 
 		var f = [];
-		f.push("return (function(" + vars.join(",") + ") {");
+		f.push("return (function(");
+		pushss(f, vars, ",");
+		f.push(") {");
 		f.push("var retval = {value: self};");
 		f.push("try {");
 
@@ -262,12 +309,18 @@
 
 	function compile_jmethod(klass, node) {
 		var vars = node.pattern.vars.map(
-			function (v) { return "$" + v.name; }
+			function (v) {
+				var f = [];
+				pushs(f, v, "$" + v.name, v.name);
+				return f;
+			}
 		);
 		vars.unshift("self");
 
 		var f = [];
-		f.push("return (function(" + vars.join(",") + ") {");
+		f.push("return (function(");
+		pushss(f, vars, ",");
+		f.push(") {");
 		f.push(node.body.body);
 		f.push("});");
 
