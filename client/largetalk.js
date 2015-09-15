@@ -368,6 +368,8 @@
 				var klass = window["$" + node.class.name];
 				if (!klass)
 					throw new Error("Undefined LT class '" + node.class.name + "'");
+				if (node.class.type == "classidentifier")
+					klass = klass._st_class;
 
 				compile_class_body(klass, node.body);
 			},

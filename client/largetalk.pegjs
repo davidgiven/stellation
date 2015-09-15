@@ -10,7 +10,9 @@ toplevel
 	/ block
 
 class_definition
-	= c:identifier EXTEND OPEN_SQ b:class_body CLOSE_SQ
+	= c:classidentifier EXTEND OPEN_SQ b:class_body CLOSE_SQ
+		{ return { location: location(), type: 'extend', class: c, body: b }; }
+	/ c:identifier EXTEND OPEN_SQ b:class_body CLOSE_SQ
 		{ return { location: location(), type: 'extend', class: c, body: b }; }
 	/ c:identifier SUBCLASS i:identifier OPEN_SQ b:class_body CLOSE_SQ
 		{ return { location: location(), type: 'subclass', class: c, name: i, body: b }; }
@@ -88,6 +90,10 @@ word
 identifier
 	= _? w:word !':' _?
 		{ return { location: location(), type: 'identifier', name: w }; }
+
+classidentifier
+	= id:identifier CLASS
+		{ return { location: location(), type: 'classidentifier', name: id.name }; }
 
 operator
 	= _? s:[-~!@%&*+=|\<>,?/]+ _?
@@ -181,6 +187,7 @@ string_segment
 ASSIGN = _? ':=' _?
 BAR = _? '|' _?
 CARET = _? '^' _?
+CLASS = _? 'class' _?
 CLOSE_PAREN = _? ')' _?
 CLOSE_SQ = _? ']' _?
 DOT = _? '.' _?
