@@ -127,6 +127,22 @@
 	/*                              COMPILER                               */
 	/* =================================================================== */
 
+	function flattena(n) {
+		var f = [];
+		for (var i=0; i<n.length; i++) {
+			var v = n[i];
+			if (v instanceof Array)
+				f = f.concat(flattena(v));
+			else
+				f.push(v);
+		}
+		return f;
+	}
+
+	function flatten(n) {
+		return flattena(n).join(" ");
+	}
+
 	function compile_expr(context, node) {
 		switch (node.type) {
 			case "javascript":
@@ -141,14 +157,14 @@
 				var f = [];
 				f.push("(t" + t);
 				f.push(" = (");
-				f = f.concat(compile_expr(context, node.receiver));
+				f.push(compile_expr(context, node.receiver));
 				f.push("), LT.findMethod(t" + t);
 				f.push(",");
 				f.push("'" + node.name + "'");
 				f.push(")(t" + t);
 				for (var i=0; i<node.args.length; i++) {
 					f.push(",");
-					f = f.concat(compile_expr(context, node.args[i]));
+					f.push(compile_expr(context, node.args[i]));
 				}
 				f.push("))");
 				return f;
@@ -181,19 +197,19 @@
 
 				case "return":
 					f.push("retval.value = ");
-					f = f.concat(compile_expr(context, n.expression));
+					f.push(compile_expr(context, n.expression));
 					f.push(";");
 					f.push("throw retval;");
 					break;
 
 				case "assign":
 					f.push("$" + n.name.name + " = ");
-					f = f.concat(compile_expr(context, n.expression));
+					f.push(compile_expr(context, n.expression));
 					f.push(";");
 					break;
 
 				case "expression":
-					f = f.concat(compile_expr(context, n.expression));
+					f.push(compile_expr(context, n.expression));
 					f.push(";");
 					break;
 
@@ -226,7 +242,7 @@
 
 		f.push("var vars = self._st_vars;");
 		f.push("with (vars ? vars[" + klass._st_number + "] : {}) {");
-		f = f.concat(compile_block(node));
+		f.push(compile_block(node));
 		f.push("}");
 
 		f.push("} catch (e) {");
@@ -235,7 +251,7 @@
 		f.push("return retval.value;");
 		f.push("});");
 
-		var cf = new Function(f.join(" "));
+		var cf = new Function(flatten(f));
 		var ccf = cf();
 
 		return {
@@ -255,7 +271,7 @@
 		f.push(node.body.body);
 		f.push("});");
 
-		var cf = new Function(f.join(" "));
+		var cf = new Function(flatten(f));
 		var ccf = cf();
 
 		return {
@@ -295,9 +311,9 @@
 			function(node) {
 				var f = [];
 				f.push("var retval = null;");
-				f = f.concat(compile_block(node));
+				f.push(compile_block(node));
 
-				var cf = new Function(f.join(" "));
+				var cf = new Function(flatten(f));
 				cf.call(null);
 			},
 
