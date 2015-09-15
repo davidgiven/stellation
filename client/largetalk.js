@@ -78,7 +78,9 @@
 
 	var primitive_table = {
 		string: "String",
-		number: "Number"
+		number: "Number",
+		boolean: "Boolean",
+		function: "BlockClosure"
 	};
 
 	LT.findMethod = function(receiver, name) {
@@ -93,7 +95,11 @@
 			}
 		}
 
-		return c._st_methods[name];
+		var m = c._st_methods[name];
+		if (m)
+			return m;
+
+		throw new Error("Unknown method " + c._st_name + ">>" + name);
 	}
 
 	LT.makeSubclass = function(superklass, name) {
@@ -120,10 +126,6 @@
 				if (v instanceof Array)
 					flattena(v);
 				else if (v.location) {
-					if (v.location.start.line > lineno) {
-						lineno = v.location.start.line;
-						f.push("\n");
-					}
 					f.push(v.string);
 				} else
 					f.push(v);
@@ -203,20 +205,21 @@
 				return f;
 			}
 				
+			case "block":
+				return compile_block(context, node);
+
 			default:
 				throw new Error("Unknown expression node " + node.type);
 		}
 	}
 
-	function compile_block(varmap, node) {
+	function compile_raw_block(context, node) {
 		var f = [];
 		var maxtemporaries = 0;
-		var context = {
-			temporaries: 0,
-			varmap: varmap
-		};
+		context.temporaries = 0;
 
 		for (var i=0; i<node.body.length; i++) {
+			var last = (i == node.body.length-1);
 			var n = node.body[i];
 			switch (n.type) {
 				case "variables":
@@ -232,13 +235,21 @@
 				}
 
 				case "return":
-					f.push("retval.value = ");
-					f.push(compile_expr(context, n.expression));
-					f.push(";");
-					f.push("throw retval;");
+					if (context.block) {
+						f.push("retval.value = ");
+						f.push(compile_expr(context, n.expression));
+						f.push(";");
+						f.push("throw retval;");
+					} else {
+						f.push("return");
+						f.push(compile_expr(context, n.expression));
+						f.push(";");
+					}
 					break;
 
 				case "assign":
+					if (context.block && last)
+						f.push("return");
 					f.push(compile_ref(context, n.name));
 					f.push("=");
 					f.push(compile_expr(context, n.expression));
@@ -246,6 +257,8 @@
 					break;
 
 				case "expression":
+					if (context.block && last)
+						f.push("return");
 					f.push(compile_expr(context, n.expression));
 					f.push(";");
 					break;
@@ -266,6 +279,33 @@
 		return f;
 	}
 
+	function compile_block(context, node) {
+		var newvarmap = Object.create(context.varmap);
+		var vars = [];
+
+		if (node.parameters) {
+			for (var i=0; i<node.parameters.length; i++) {
+				var v = node.parameters[i].name;
+				newvarmap[v] = "$" + v;
+				vars.push("$" + v);
+			}
+		}
+
+		var f = [];
+		f.push("(function(");
+		pushss(f, vars, ",");
+		f.push(") {");
+
+		var context = {
+			varmap: newvarmap,
+			block: true
+		};
+		f.push(compile_raw_block(context, node));
+
+		f.push("})");
+		return f;
+	}
+
 	function compile_method(klass, node) {
 		var varmap = {};
 		var vars = node.pattern.vars.map(
@@ -283,7 +323,11 @@
 		f.push("var retval = {value: self};");
 		f.push("try {");
 
-		f.push(compile_block(varmap, node));
+		var context = {
+			varmap: varmap,
+			block: false
+		};
+		f.push(compile_raw_block(context, node));
 
 		f.push("} catch (e) {");
 		f.push("if (e !== retval) throw e;");
@@ -357,7 +401,12 @@
 			function(node) {
 				var f = [];
 				f.push("var retval = null;");
-				f.push(compile_block({}, node));
+
+				var context = {
+					varmap: {},
+					block: true
+				};
+				f.push(compile_raw_block(context, node));
 
 				var cf = new Function(flatten(f));
 				cf.call(null);

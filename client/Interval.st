@@ -42,5 +42,21 @@ Interval extend [
 	increment [
 		^ step
 	]
+
+	do: block [
+		| i c |
+		i := start.
+
+		(step > 0) ifTrue: [
+			c := [i <= end]
+		] ifFalse: [
+			c := [i >= end]
+		].
+
+		c whileTrue: [
+			block value: i.
+			i := i + step
+		]
+	]
 ]
 

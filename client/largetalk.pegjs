@@ -25,23 +25,34 @@ class_body_element
 	= variables
 	/ method_definition
 
-variables
-	= BAR ids:identifier* BAR
-		{ return { location: location(), type: 'variables', identifiers: ids }; }
-
 method_definition
-	= p:pattern OPEN_SQ b:method_body CLOSE_SQ
-		{ return { location: location(), type: 'method', pattern: p, body: b }; }
+	= p:pattern OPEN_SQ v:variables? b:method_body CLOSE_SQ
+		{
+			if (v)
+				b.unshift(v);
+			return { location: location(), type: 'method', pattern: p, body: b };
+		}
 	/ p:pattern j:javascript
 		{ return { location: location(), type: 'jmethod', pattern: p, body: j }; }
 
+variables
+	= BAR ids:identifier+ BAR
+		{ return { location: location(), type: 'variables', identifiers: ids }; }
+
+parameters_or_variables
+	= ps:parameter+ BAR vs:identifier+ BAR
+		{ return { location: location(), type: 'parameters_variables', parameters: ps, variables: vs }; }
+	/ BAR vs:identifier+ BAR
+		{ return { location: location(), type: 'parameters_variables', variables: vs }; }
+	/ ps:parameter+ BAR
+		{ return { location: location(), type: 'parameters_variables', parameters: ps }; }
+
+
 method_body
-	= v:variables? ss:statements?
+	= ss:statements?
 		{
 			if (!ss)
-				ss = [];
-			if (v)
-				ss.unshift(v);
+				return [];
 			return ss;
 		}
 
@@ -66,8 +77,14 @@ pattern_element
 		{ return { location: location(), type: 'pattern_element', name: w+":", var: v }; }
 
 block
-	= OPEN_SQ b:method_body CLOSE_SQ
-		{ return { location: location(), type: 'block', body: b }; }
+	= OPEN_SQ p:parameters_or_variables? b:method_body CLOSE_SQ
+		{
+			if (!p)
+				p = {};
+			if (p.variables)
+				b.unshift({ type: 'variables', identifiers: p.variables });
+			return { location: location(), type: 'block', parameters: p.parameters, body: b };
+		}
 
 statements
 	= left:statement DOT right:statements
@@ -91,12 +108,16 @@ identifier
 	= _? w:word !':' _?
 		{ return { location: location(), type: 'identifier', name: w }; }
 
+parameter
+	= _? ':' w:word _?
+		{ return { location: location(), type: 'identifier', name: w }; }
+
 classidentifier
 	= id:identifier CLASS
 		{ return { location: location(), type: 'classidentifier', name: id.name }; }
 
 operator
-	= _? s:[-~!@%&*+=|\<>,?/]+ _?
+	= _? s:[-~!@%&*+=|\\<>,?/]+ _?
 		{ return { location: location(), type: 'identifier', name: s.join("") }; }
 
 expression
@@ -153,10 +174,13 @@ leaf
 	/ _? m:'-'? num:[0-9]+ _?
 		{
 			var s = num.join("");
+			if (m)
+				s = -s;
 			return { location: location(), type: 'javascript', body: s|0 };
 		}
 	/ OPEN_PAREN e:expression CLOSE_PAREN
 		{ return e; }
+	/ block
 	/ javascript
 	/ string
 	/ identifier

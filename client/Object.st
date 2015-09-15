@@ -17,6 +17,10 @@ String                 subclass: LiteralString []
 Object                 subclass: Magnitude []
 Magnitude              subclass: Number []
 
+Object                 subclass: Boolean []
+
+Object                 subclass: BlockClosure []
+
 Object extend [
 	class [
 		^ <<< self._st_class >>>
