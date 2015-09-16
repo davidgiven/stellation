@@ -484,7 +484,7 @@
 		/* Don't do ANYTHING until the grammar has loaded. */
 
 		if (!grammar_element) return;
-		if (!grammar_element._st_src != "") return;
+		if (grammar_element._st_src == null) return;
 		if (!grammar) {
 			grammar = PEG.buildParser(grammar_element._st_src, {
 			});
@@ -496,7 +496,7 @@
 		for (;;) {
 			var element = largetalk_elements[0];
 			if (!element) break;
-			if (!element._st_src) break;
+			if (element._st_src == null) break;
 
 			console.log("Compiling " + element.src);
 			compile(element._st_src);
