@@ -6,59 +6,56 @@ Behavior extend [
 	]
 ]
 
+Object                 subclass: UndefinedObject []
+
 Object                 subclass: Iterable []
 Iterable               subclass: Collection []
 Collection             subclass: SequenceableCollection []
 SequenceableCollection subclass: ArrayedCollection []
 ArrayedCollection      subclass: CharacterArray []
+ArrayedCollection      subclass: Array []
 CharacterArray         subclass: String []
 String                 subclass: LiteralString []
 
 Object                 subclass: Magnitude []
 Magnitude              subclass: Number []
 
-Object                 subclass: Boolean []
-
 Object                 subclass: BlockClosure []
 
 Object extend [
-	class [
-		^ <<< self._st_class >>>
-	]
+	class        [ ^ <<< self._st_class >>> ]
+	hash         [ ^ <<< self._st_number >>> ]
+	printString  [ ^ ('an instance of ', self class toString) ]
 
-	hash [
-		^ <<< self._st_number >>>
-	]
+	isNil        [ ^ false ]
+
+	= other      [ ^ self == other ]
+	~= other     [ ^ self ~~ other ]
+	== other     [ ^ <<< self === $other >>> ]
+	~~ other     [ ^ <<< self !== $other >>> ]
 
 	print [
-		<<< console.log(self) >>>
+		| s |
+		s := self printString.
+		<<< console.log($s) >>>
 	]
+
+	inspect      [ self print ]
+	ifNil: block [ self isNil ifTrue: block ]
+
 ]
 
-String extend [
-	hash [
-		^ self
-	]
+UndefinedObject extend [
+	isNil        [ ^ true ]
+	printString  [ ^ 'nil' ]
 ]
 
 Behavior extend [
-	new [
-		^ <<< LT.makeObject(self) >>>
-	]
-
-	init [
-	]
+	new          [ ^ <<< LT.makeObject(self) >>> ]
+	init         [ ]
 ]
 
 Class extend [
-	inspect [
-		<<< console.log(self._st_class._st_name) >>>
-	]
-]
-
-Object extend [
-	inspect [
-		<<< console.log("a " + self._st_class._st_name) >>>
-	]
+	printString <<< return self._st_class._st_name; >>>
 ]
 

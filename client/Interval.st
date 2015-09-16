@@ -1,13 +1,8 @@
 ArrayedCollection subclass: Interval []
 
 Interval class extend [
-	from: s to: e [
-		^ Interval new initFrom: s to: e by: 1
-	]
-
-	from: s to: e by: b [
-		^ Interval new initFrom: s to: e by: b
-	]
+	from: s to: e       [ ^ Interval new initFrom: s to: e by: 1 ]
+	from: s to: e by: b [ ^ Interval new initFrom: s to: e by: b ]
 ]
 
 Interval extend [
@@ -23,25 +18,11 @@ Interval extend [
 		step := b
 	]
 
-	at: i [
-		^ start + (i * step)
-	]
-
-	reverse [
-		^ Interval from: end to: start by: (step negate)
-	]
-
-	first [
-		^ start
-	]
-
-	last [
-		^ end
-	]
-
-	increment [
-		^ step
-	]
+	at: i     [ ^ start + (i * step) ]
+	reverse   [ ^ Interval from: end to: start by: (step negate) ]
+	first     [ ^ start ]
+	last      [ ^ end ]
+	increment [ ^ step ]
 
 	do: block [
 		| i c |

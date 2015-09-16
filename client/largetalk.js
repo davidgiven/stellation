@@ -26,6 +26,10 @@
 
 	var serial_number = 0;
 
+	function set(object, name, value) {
+		Object.defineProperty(object, name, { value: value, enumerable: false });
+	}
+
 	function make_raw_class(name, superklass) {
 		return {
 			_st_number: serial_number++,
@@ -68,31 +72,57 @@
 	assign_metaclass("Class");
 	assign_metaclass("Metaclass");
 
-	LT.makeObject = function(superklass) {
-		var o = {
-			_st_number: serial_number++,
-			_st_class: superklass
-		};
+	LT.makeObject = function(superklass, o) {
+		if (!o)
+			o = {};
+
+		set(o, "_st_number", serial_number++);
+		set(o, "_st_class", superklass);
 		return o;
 	};
 
 	var primitive_table = {
-		string: "String",
-		number: "Number",
-		boolean: "Boolean",
-		function: "BlockClosure"
+		string: function(o) { return $LiteralString; },
+		number: function(o) { return $Number; },
+		boolean: function(o) { return $Boolean; },
+		function: function(o) { return $BlockClosure; },
+		undefined: function(o) { return $UndefinedObject; },
+
+		object:
+			function(o) {
+				var c = (o instanceof Array) ? $Array : $JavascriptObject;
+
+				set(o, "_st_number", serial_number++);
+				set(o, "_st_class", c);
+				return c;
+			}
 	};
 
 	LT.findMethod = function(receiver, name) {
-		var c = receiver._st_class;
-		if (!c) {
-			c = primitive_table[typeof(receiver)];
-			if (!c)
-				throw new Error("Can't call methods on " + typeof(receiver) +" yet");
-			if (typeof(c) !== "object") {
-				c = window["$" + c];
-				primitive_table[typeof(receiver)] = c;
-			}
+		var c;
+		switch (receiver) {
+			case null:
+			case undefined:
+				c = $UndefinedObject;
+				break;
+
+			case true:
+				c = $True;
+				break;
+
+			case false:
+				c = $False;
+				break;
+
+			default:
+				c = receiver._st_class;
+				if (!c) {
+					c = primitive_table[typeof(receiver)];
+					if (!c)
+						throw new Error("Can't call methods on " + typeof(receiver) +" yet");
+					c = c();
+				}
+				break;
 		}
 
 		var m = c._st_methods[name];
@@ -125,7 +155,7 @@
 				var v = n[i];
 				if (v instanceof Array)
 					flattena(v);
-				else if (v.location) {
+				else if (v instanceof Object) {
 					f.push(v.string);
 				} else
 					f.push(v);

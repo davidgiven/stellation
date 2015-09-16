@@ -1,18 +1,16 @@
-Boolean extend [
-	ifTrue: block [
-		<<< if (self) LT.findMethod($block, "value")($block) >>>
-	]
+Object subclass: Boolean []
 
-	ifTrue: block [
-		<<< if (!self) LT.findMethod($block, "value")($block) >>>
-	]
+Boolean subclass: True [
+	ifTrue: block                         [ ^ block value ]
+	ifFalse: block                        [ ]
+	ifTrue: trueBlock ifFalse: falseBlock [ ^ trueBlock value ]
+	printString                           [ ^ 'true' ]
+]
 
-	ifTrue: trueBlock ifFalse: falseBlock [
-		<<< if (self) {
-		        LT.findMethod($trueBlock, "value")($trueBlock) 
-			} else {
-				LT.findMethod($falseBlock, "value")($falseBlock)
-			} >>>
-	]
+Boolean subclass: False [
+	ifTrue: block                         [ ]
+	ifFalse: block                        [ ^ block value ]
+	ifTrue: trueBlock ifFalse: falseBlock [ ^ falseBlock value ]
+	printString                           [ ^ 'false' ]
 ]
 

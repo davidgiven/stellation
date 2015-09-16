@@ -6,12 +6,7 @@ BlockClosure extend [
 		<<< while ($v_value(self)) { $o_value($other); } >>>
 	]
 
-	value [
-		^ <<< self() >>>
-	]
-
-	value: a1 [
-		^ <<< self($a1) >>>
-	]
+	value     [ ^ <<< self() >>> ]
+	value: a1 [ ^ <<< self($a1) >>> ]
 ]
 

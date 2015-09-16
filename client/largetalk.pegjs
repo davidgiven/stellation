@@ -141,8 +141,13 @@ method_element
 		{ return { location: location(), type: 'method_element', name: w+":", arg: a }; }
 
 operator_method_call
-	= r:unary_method_call op:operator a:unary_method_call
-		{ return { location: location(), type: 'call', name: op.name, receiver: r, args: [a] }; }
+	= r:unary_method_call ops:(operator unary_method_call)+
+		{
+			var o = r;
+			for (var i=0; i<ops.length; i++)
+				o = { type: 'call', name: ops[i][0].name, receiver: o, args: [ops[i][1]] };
+			return o;
+		}
 	/ unary_method_call
 
 unary_method_call
@@ -211,19 +216,19 @@ string_segment
 ASSIGN = _? ':=' _?
 BAR = _? '|' _?
 CARET = _? '^' _?
-CLASS = _? 'class' _?
+CLASS = _? 'class' !word _?
 CLOSE_PAREN = _? ')' _?
 CLOSE_SQ = _? ']' _?
 DOT = _? '.' _?
-EXTEND = _? 'extend' _?
-FALSE = _? 'false' _?
+EXTEND = _? 'extend' !word _?
+FALSE = _? 'false' !word _?
 JLEFT = _? '<<<' _?
 JRIGHT = _? '>>>' _?
-NIL = _? 'nil' _?
+NIL = _? 'nil' !word _?
 OPEN_PAREN = _? '(' _?
 OPEN_SQ = _? '[' _?
-SELF = _? 'self' _?
+SELF = _? 'self' !word _?
 SUBCLASS = _? 'subclass:' _?
-TRUE = _? 'true' _?
+TRUE = _? 'true' !word _?
 
 _ = [ \t\r\n]+
