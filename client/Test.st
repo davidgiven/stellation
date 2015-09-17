@@ -44,11 +44,7 @@ Test class extend [
 	]
 
 	add: block [
-		| t |
-		self setup.
-		t := Test new init: block.
-		tests add: t.
-		^t
+		^ self add: nil doing: block
 	]
 
 	add: name doing: block [

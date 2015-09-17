@@ -20,6 +20,5 @@ Array extend [
 	boundsCheck: i [
 		<<< if (($i < 0) || ($i >= self.length)) throw new Error("out of bounds array access"); >>>
 	]
-
 ]
 

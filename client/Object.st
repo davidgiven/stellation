@@ -25,14 +25,15 @@ Object                 subclass: BlockClosure []
 Object extend [
 	class        [ ^ <<< self._st_class >>> ]
 	hash         [ ^ <<< self._st_number >>> ]
-	printString  [ ^ ('an instance of ', self class toString) ]
+	printString  [ ^ ('an instance of ', self class) ]
+	asString     [ ^ self printString ]
 
 	isNil        [ ^ false ]
 
 	= other      [ ^ self == other ]
-	~= other     [ ^ self ~~ other ]
+	~= other     [ ^ (self = other) not ]
 	== other     [ ^ <<< self === $other >>> ]
-	~~ other     [ ^ <<< self !== $other >>> ]
+	~~ other     [ ^ (self == other) not ]
 
 	print [
 		| s |
@@ -43,6 +44,16 @@ Object extend [
 	inspect      [ self print ]
 	ifNil: block [ self isNil ifTrue: block ]
 
+	doesNotUnderstand: n with: a [
+		^ self doesNotUnderstand: (Message selector: n arguments: a)
+	]
+
+	doesNotUnderstand: m [
+		| s |
+		s := ('Unknown method ', (self class), '>>', (m selector)).
+		s print.
+		<<< debugger >>>
+	]
 ]
 
 UndefinedObject extend [
@@ -53,9 +64,9 @@ UndefinedObject extend [
 Behavior extend [
 	new          [ ^ <<< LT.makeObject(self) >>> ]
 	init         [ ]
+	printString  <<< return self._st_name; >>>
 ]
 
 Class extend [
-	printString <<< return self._st_class._st_name; >>>
 ]
 

@@ -20,6 +20,12 @@
 		return Array.prototype.slice.call(o);
 	}
 
+	/* Converts a string into a valid Javascript identifier. */
+
+	function valid(s) {
+		return s.replace(/[^A-Za-z0-9_]/g, "_");
+	}
+
 	/* =================================================================== */
 	/*                           STANDARD LIBRARY                          */
 	/* =================================================================== */
@@ -98,38 +104,45 @@
 			}
 	};
 
+	function doesNotUnderstand(receiver, klass, name) {
+		return function() {
+			var args = Array.prototype.slice.call(arguments, 1);
+			return klass._st_methods["doesNotUnderstand:with:"](receiver, name, args);
+		};
+	}
+
 	LT.findMethod = function(receiver, name) {
-		var c;
+		var klass;
 		switch (receiver) {
 			case null:
 			case undefined:
-				c = $UndefinedObject;
+				klass = $UndefinedObject;
 				break;
 
 			case true:
-				c = $True;
+				klass = $True;
 				break;
 
 			case false:
-				c = $False;
+				klass = $False;
 				break;
 
 			default:
-				c = receiver._st_class;
-				if (!c) {
-					c = primitive_table[typeof(receiver)];
-					if (!c)
+				klass = receiver._st_class;
+				if (!klass) {
+					var fn = primitive_table[typeof(receiver)];
+					if (!fn)
 						throw new Error("Can't call methods on " + typeof(receiver) +" yet");
-					c = c();
+					klass = fn(receiver);
 				}
 				break;
 		}
 
-		var m = c._st_methods[name];
+		var m = klass._st_methods[name];
 		if (m)
 			return m;
 
-		throw new Error("Unknown method " + c._st_name + ">>" + name);
+		return doesNotUnderstand(receiver, klass, name);
 	}
 
 	LT.makeSubclass = function(superklass, name) {
@@ -197,20 +210,21 @@
 		return f;
 	}
 
-	function compile_expr(context, node) {
-		switch (node.type) {
-			case "javascript":
-			{
+	var expression_nodes = {
+		javascript:
+			function (context, node) {
 				var f = [];
 				pushs(f, node, node.body);
 				return f;
-			}
+			},
 
-			case "identifier":
+		identifier:
+			function (context, node) {
 				return compile_ref(context, node);
+			},
 
-			case "call":
-			{
+		call:
+			function (context, node) {
 				var t = context.temporaries++;
 				var f = [];
 				f.push("(t" + t);
@@ -226,22 +240,85 @@
 				}
 				f.push("))");
 				return f;
-			}
+			},
 
-			case "string":
-			{
+		string:
+			function (context, node) {
 				var f = [];
 				pushs(f, node, JSON.stringify(node.value));
 				return f;
-			}
-				
-			case "block":
+			},
+			
+		block:
+			function (context, node) {
 				return compile_block(context, node);
+			},
 
-			default:
-				throw new Error("Unknown expression node " + node.type);
-		}
+		code_array:
+			function (context, node) {
+				var f = [];
+				f.push("[");
+				for (var i=0; i<node.values.length; i++) {
+					f.push(compile_expr(context, node.values[i]));
+					f.push(",");
+				}
+				f.push("]");
+				return f;
+			}
+	};
+
+	function compile_expr(context, node) {
+		var c = expression_nodes[node.type];
+		if (!c)
+			throw new Error("Unknown expression node " + node.type);
+
+		return c(context, node);
 	}
+
+	var raw_block_nodes = {
+		variables:
+			function (context, f, node) {
+				var newvarmap = Object.create(context.varmap);
+				for (var j=0; j<node.identifiers.length; j++) {
+					var id = node.identifiers[j];
+					pushs(f, id, "var $" + id.name + " = null;", id.name);
+					newvarmap[id.name] = "$" + id.name;
+				}
+				context.varmap = newvarmap;
+			},
+
+		return:
+			function (context, f, node) {
+				if (context.block) {
+					f.push("retval.value = ");
+					f.push(compile_expr(context, node.expression));
+					f.push(";");
+					f.push("throw retval;");
+				} else {
+					f.push("return");
+					f.push(compile_expr(context, node.expression));
+					f.push(";");
+				}
+			},
+
+		assign:
+			function (context, f, node) {
+				if (context.block && context.last)
+					f.push("return");
+				f.push(compile_ref(context, node.name));
+				f.push("=");
+				f.push(compile_expr(context, node.expression));
+				f.push(";");
+			},
+
+		expression:
+			function (context, f, node) {
+				if (context.block && context.last)
+					f.push("return");
+				f.push(compile_expr(context, node.expression));
+				f.push(";");
+			},
+	};
 
 	function compile_raw_block(context, node) {
 		var f = [];
@@ -249,53 +326,13 @@
 		context.temporaries = 0;
 
 		for (var i=0; i<node.body.length; i++) {
-			var last = (i == node.body.length-1);
+			context.last = (i == node.body.length-1);
 			var n = node.body[i];
-			switch (n.type) {
-				case "variables":
-				{
-					var newvarmap = Object.create(context.varmap);
-					for (var j=0; j<n.identifiers.length; j++) {
-						var id = n.identifiers[j];
-						pushs(f, id, "var $" + id.name + " = null;", id.name);
-						newvarmap[id.name] = "$" + id.name;
-					}
-					context.varmap = newvarmap;
-					break;
-				}
+			var c = raw_block_nodes[n.type];
+			if (!c)
+				throw new Error("Unknown method body node " + n.type);
 
-				case "return":
-					if (context.block) {
-						f.push("retval.value = ");
-						f.push(compile_expr(context, n.expression));
-						f.push(";");
-						f.push("throw retval;");
-					} else {
-						f.push("return");
-						f.push(compile_expr(context, n.expression));
-						f.push(";");
-					}
-					break;
-
-				case "assign":
-					if (context.block && last)
-						f.push("return");
-					f.push(compile_ref(context, n.name));
-					f.push("=");
-					f.push(compile_expr(context, n.expression));
-					f.push(";");
-					break;
-
-				case "expression":
-					if (context.block && last)
-						f.push("return");
-					f.push(compile_expr(context, n.expression));
-					f.push(";");
-					break;
-
-				default:
-					throw new Error("Unknown method body node " + n.type);
-			}
+			c(context, f, n);
 
 			maxtemporaries = Math.max(context.temporaries);
 			context.temporaries = 0;
@@ -347,7 +384,9 @@
 			varmap[v] = "self." + v + "$" + klass._st_number;
 
 		var f = [];
-		f.push("return (function(");
+		f.push("return (function");
+		f.push(valid(klass._st_name) + "__" + valid(node.pattern.name));
+		f.push("(");
 		pushss(f, vars, ",");
 		f.push(") {");
 		f.push("var retval = {value: self};");

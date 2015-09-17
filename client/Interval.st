@@ -23,6 +23,11 @@ Interval extend [
 	first     [ ^ start ]
 	last      [ ^ end ]
 	increment [ ^ step ]
+	keys      [ ^ self ]
+
+	= o [
+		^ (start = o first) & (end = o last) & (step = o increment)
+	]
 
 	do: block [
 		| i c |

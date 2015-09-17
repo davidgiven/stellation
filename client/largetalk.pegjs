@@ -160,6 +160,22 @@ unary_method_call
 		}
 	/ leaf
 
+dot_expression
+	= DOT e:expression
+		{ return e; }
+
+code_array_literal
+	= OPEN_C f:(expression dot_expression*)? CLOSE_C
+		{
+			if (!f)
+				return { location: location(), type: 'code_array', values: [] };
+
+			var es = f[1];
+			es.unshift(f[0]);
+
+			return { location: location(), type: 'code_array', values: es };
+		}
+
 leaf
 	= NIL
 		{ return { location: location(), type: 'javascript', body: 'null' }; }
@@ -185,6 +201,7 @@ leaf
 		}
 	/ OPEN_PAREN e:expression CLOSE_PAREN
 		{ return e; }
+	/ code_array_literal
 	/ block
 	/ javascript
 	/ string
@@ -217,6 +234,7 @@ ASSIGN = _? ':=' _?
 BAR = _? '|' _?
 CARET = _? '^' _?
 CLASS = _? 'class' !word _?
+CLOSE_C = _? '}' _?
 CLOSE_PAREN = _? ')' _?
 CLOSE_SQ = _? ']' _?
 DOT = _? '.' _?
@@ -225,6 +243,7 @@ FALSE = _? 'false' !word _?
 JLEFT = _? '<<<' _?
 JRIGHT = _? '>>>' _?
 NIL = _? 'nil' !word _?
+OPEN_C = _? '{' _?
 OPEN_PAREN = _? '(' _?
 OPEN_SQ = _? '[' _?
 SELF = _? 'self' !word _?
