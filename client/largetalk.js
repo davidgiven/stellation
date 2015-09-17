@@ -294,6 +294,7 @@
 					f.push(compile_expr(context, node.expression));
 					f.push(";");
 					f.push("throw retval;");
+					context.hasreturn = true;
 				} else {
 					f.push("return");
 					f.push(compile_expr(context, node.expression));
@@ -363,11 +364,14 @@
 		pushss(f, vars, ",");
 		f.push(") {");
 
-		var context = {
+		var newcontext = {
 			varmap: newvarmap,
-			block: true
+			block: true,
+			hasreturn: false
 		};
-		f.push(compile_raw_block(context, node));
+		f.push(compile_raw_block(newcontext, node));
+		if (newcontext.hasreturn)
+			context.hasreturn = true;
 
 		f.push("})");
 		return f;
@@ -389,19 +393,26 @@
 		f.push("(");
 		pushss(f, vars, ",");
 		f.push(") {");
-		f.push("var retval = {value: self};");
-		f.push("try {");
 
 		var context = {
 			varmap: varmap,
-			block: false
+			block: false,
+			hasreturn: false
 		};
-		f.push(compile_raw_block(context, node));
+		var fc = compile_raw_block(context, node);
 
-		f.push("} catch (e) {");
-		f.push("if (e !== retval) throw e;");
-		f.push("}");
-		f.push("return retval.value;");
+		if (context.hasreturn) {
+			f.push("var retval = {value: self};");
+			f.push("try {");
+			f.push(fc);
+			f.push("} catch (e) {");
+			f.push("if (e !== retval) throw e;");
+			f.push("}");
+			f.push("return retval.value;");
+		} else {
+			f.push(fc);
+			f.push("return self;");
+		}
 		f.push("});");
 
 		var cf = new Function(flatten(f));
@@ -469,11 +480,10 @@
 		block:
 			function(node) {
 				var f = [];
-				f.push("var retval = null;");
-
 				var context = {
 					varmap: {},
-					block: true
+					block: true,
+					hasreturn: false
 				};
 				f.push(compile_raw_block(context, node));
 
