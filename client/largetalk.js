@@ -241,7 +241,7 @@
 				if (issuper)
 					f.push("LT.findSuperMethod(klass, ");
 				else
-					f.push("LT.findMethod(");
+					f.push("findMethod(");
 				f.push("t" + t);
 				f.push(",");
 				pushs(f, node, "'" + node.name + "'", node.name);
@@ -427,8 +427,8 @@
 		}
 		f.push("});");
 
-		var cf = new Function("klass", flatten(f));
-		var ccf = cf(klass);
+		var cf = new Function("klass", "findMethod", flatten(f));
+		var ccf = cf(klass, LT.findMethod);
 
 		return {
 			name: node.pattern.name,
@@ -453,8 +453,8 @@
 		f.push(node.body.body);
 		f.push("});");
 
-		var cf = new Function(flatten(f));
-		var ccf = cf();
+		var cf = new Function("findMethod", flatten(f));
+		var ccf = cf(LT.findMethod);
 
 		return {
 			name: node.pattern.name,
@@ -501,8 +501,8 @@
 				};
 				f.push(compile_raw_block(context, node));
 
-				var cf = new Function(flatten(f));
-				cf.call(null);
+				var cf = new Function("findMethod", flatten(f));
+				cf.call(null, LT.findMethod);
 			},
 
 		extend:
