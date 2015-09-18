@@ -57,7 +57,7 @@ Test class extend [
 
 	fail: message [
 		printedHeader ifFalse: [
-			('Failed: ', current name) print.
+			('Failed: ', current name) displayNl.
 			printedHeader := true
 		].
 		message print.
@@ -65,7 +65,7 @@ Test class extend [
 	]
 
 	runAll [
-		'Running tests' print.
+		'Running tests' displayNl.
 		tests do: [ :t |
 			current := t.
 			printedHeader := false.
@@ -73,9 +73,9 @@ Test class extend [
 		].
 		
 		failed ifTrue: [
-			'Tests failed!' print
+			'Tests failed!' displayNl
 		] ifFalse: [
-			'Tests passed' print
+			'Tests passed' displayNl
 		]
 	]
 ]

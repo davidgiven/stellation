@@ -111,33 +111,7 @@
 		};
 	}
 
-	LT.findMethod = function(receiver, name) {
-		var klass;
-		switch (receiver) {
-			case null:
-			case undefined:
-				klass = $UndefinedObject;
-				break;
-
-			case true:
-				klass = $True;
-				break;
-
-			case false:
-				klass = $False;
-				break;
-
-			default:
-				klass = receiver._st_class;
-				if (!klass) {
-					var fn = primitive_table[typeof(receiver)];
-					if (!fn)
-						throw new Error("Can't call methods on " + typeof(receiver) +" yet");
-					klass = fn(receiver);
-				}
-				break;
-		}
-
+	LT.findSuperMethod = function(receiver, klass, name) {
 		var m = klass._st_methods[name];
 		if (m)
 			return m;
@@ -145,6 +119,31 @@
 		return doesNotUnderstand(receiver, klass, name);
 	}
 
+	LT.classOf = function(receiver) {
+		switch (receiver) {
+			case null:
+			case undefined: return $UndefinedObject;
+			case true:      return $True;
+			case false:     return $False;
+
+			default:
+				var klass = receiver._st_class;
+				if (!klass) {
+					var fn = primitive_table[typeof(receiver)];
+					if (!fn)
+						throw new Error("Can't call methods on " + typeof(receiver) +" yet");
+					return fn(receiver);
+				}
+				return klass;
+		}
+	}
+
+	LT.findMethod = function(receiver, name) {
+		var klass = LT.classOf(receiver);
+		return LT.findSuperMethod(receiver, klass, name);
+	}
+
+	
 	LT.makeSubclass = function(superklass, name) {
 		var klass = make_raw_class(name, superklass);
 		window["$" + name] = klass;
@@ -218,6 +217,13 @@
 				return f;
 			},
 
+		super:
+			function (context, node) {
+				var f = [];
+				pushs(f, node, "self");
+				return f;
+			},
+
 		identifier:
 			function (context, node) {
 				return compile_ref(context, node);
@@ -225,12 +231,18 @@
 
 		call:
 			function (context, node) {
+				var issuper = (node.receiver.type == "super");
 				var t = context.temporaries++;
 				var f = [];
 				f.push("(t" + t);
 				f.push(" = (");
 				f.push(compile_expr(context, node.receiver));
-				f.push("), LT.findMethod(t" + t);
+				f.push("),");
+				if (issuper)
+					f.push("LT.findSuperMethod(klass, ");
+				else
+					f.push("LT.findMethod(");
+				f.push("t" + t);
 				f.push(",");
 				pushs(f, node, "'" + node.name + "'", node.name);
 				f.push(")(t" + t);
@@ -415,8 +427,8 @@
 		}
 		f.push("});");
 
-		var cf = new Function(flatten(f));
-		var ccf = cf();
+		var cf = new Function("klass", flatten(f));
+		var ccf = cf(klass);
 
 		return {
 			name: node.pattern.name,
@@ -480,6 +492,8 @@
 		block:
 			function(node) {
 				var f = [];
+				f.push("var klass = null;");
+
 				var context = {
 					varmap: {},
 					block: true,

@@ -1,4 +1,5 @@
 [
-	Test runAll
+	Test runAll.
+	Test binarytrees
 ]
 

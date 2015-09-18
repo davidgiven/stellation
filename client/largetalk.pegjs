@@ -185,6 +185,8 @@ leaf
 		{ return { location: location(), type: 'javascript', body: 'true' }; }
 	/ FALSE
 		{ return { location: location(), type: 'javascript', body: 'false' }; }
+	/ SUPER
+		{ return { location: location(), type: 'super' }; }
 	/ _? m:'-'? base:[0-9]+ 'r' num:[0-9a-zA-Z]+ _?
 		{
 			var b = base.join("");
@@ -248,6 +250,10 @@ OPEN_PAREN = _? '(' _?
 OPEN_SQ = _? '[' _?
 SELF = _? 'self' !word _?
 SUBCLASS = _? 'subclass:' _?
+SUPER = _? 'super' _?
 TRUE = _? 'true' !word _?
 
-_ = [ \t\r\n]+
+_
+	= [ \t\r\n]+ _*
+	/ '"' [^"]* '"' _*
+

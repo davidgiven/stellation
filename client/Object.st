@@ -23,7 +23,7 @@ Magnitude              subclass: Number []
 Object                 subclass: BlockClosure []
 
 Object extend [
-	class        [ ^ <<< self._st_class >>> ]
+	class        [ ^ <<< LT.classOf(self) >>> ]
 	hash         [ ^ <<< self._st_number >>> ]
 	printString  [ ^ ('an instance of ', self class) ]
 	asString     [ ^ self printString ]
@@ -35,12 +35,13 @@ Object extend [
 	== other     [ ^ <<< self === $other >>> ]
 	~~ other     [ ^ (self == other) not ]
 
-	print [
+	displayNl [
 		| s |
-		s := self printString.
+		s := self asString.
 		<<< console.log($s) >>>
 	]
 
+	printNl      [ self printString displayNl ]
 	inspect      [ self print ]
 	ifNil: block [ self isNil ifTrue: block ]
 
