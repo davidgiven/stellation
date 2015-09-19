@@ -104,6 +104,13 @@
 			}
 	};
 
+	function get_class_of_primitive(receiver) {
+		var fn = primitive_table[typeof(receiver)];
+		if (!fn)
+			throw new Error("Can't call methods on " + typeof(receiver) +" yet");
+		return fn(receiver);
+	}
+
 	function doesNotUnderstand(receiver, klass, name) {
 		return function() {
 			var args = Array.prototype.slice.call(arguments, 1);
@@ -111,34 +118,22 @@
 		};
 	}
 
-	LT.findSuperMethod = function(receiver, klass, name) {
-		var m = klass._st_methods[name];
-		if (m)
-			return m;
-
-		return doesNotUnderstand(receiver, klass, name);
+	LT.findSuperMethod = function findSuperMethod(receiver, klass, name) {
+		return klass._st_methods[name] || doesNotUnderstand(receiver, klass, name);
 	}
 
-	LT.classOf = function(receiver) {
+	LT.classOf = function classOf(receiver) {
 		switch (receiver) {
 			case null:
 			case undefined: return $UndefinedObject;
 			case true:      return $True;
 			case false:     return $False;
 
-			default:
-				var klass = receiver._st_class;
-				if (!klass) {
-					var fn = primitive_table[typeof(receiver)];
-					if (!fn)
-						throw new Error("Can't call methods on " + typeof(receiver) +" yet");
-					return fn(receiver);
-				}
-				return klass;
+			default:		return receiver._st_class || get_class_of_primitive(receiver);
 		}
 	}
 
-	LT.findMethod = function(receiver, name) {
+	LT.findMethod = function findMethod(receiver, name) {
 		var klass = LT.classOf(receiver);
 		return LT.findSuperMethod(receiver, klass, name);
 	}

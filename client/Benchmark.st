@@ -82,7 +82,7 @@ Test class extend [
 	binarytrees [
 	   | s e |
 	   s := Time millisecondClock.
-	   self binarytrees: 10.
+	   self binarytrees: 12.
 	   e := Time millisecondClock.
 	   ('time taken: ', (e-s) asString, ' ms') displayNl
 	]

@@ -51,9 +51,9 @@ Object extend [
 
 	doesNotUnderstand: m [
 		| s |
+		<<< (function() { debugger })() >>>.
 		s := ('Unknown method ', (self class), '>>', (m selector)).
-		s print.
-		<<< debugger >>>
+		s print
 	]
 ]
 
