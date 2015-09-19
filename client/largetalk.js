@@ -283,72 +283,87 @@
 	}
 
 	var raw_block_nodes = {
-		variables:
-			function (context, f, node) {
-				var newvarmap = Object.create(context.varmap);
-				for (var j=0; j<node.identifiers.length; j++) {
-					var id = node.identifiers[j];
-					pushs(f, id, "var $" + id.name + " = null;", id.name);
-					newvarmap[id.name] = "$" + id.name;
-				}
-				context.varmap = newvarmap;
-			},
-
 		return:
-			function (context, f, node) {
-				if (context.block) {
-					f.push("retval.value = ");
-					f.push(compile_expr(context, node.expression));
-					f.push(";");
-					f.push("throw retval;");
-					context.hasreturn = true;
-				} else {
-					f.push("return");
-					f.push(compile_expr(context, node.expression));
-					f.push(";");
-				}
+			function (context, node) {
+				/* This node is always last in a dot chain. */
+				context.methodreturn = true;
+				return compile_expr(context, node.expression);
 			},
 
 		assign:
-			function (context, f, node) {
-				if (context.block && context.last)
-					f.push("return");
+			function (context, node) {
+				var f = [];
 				f.push(compile_ref(context, node.name));
 				f.push("=");
 				f.push(compile_expr(context, node.expression));
-				f.push(";");
+				return f;
 			},
 
 		expression:
-			function (context, f, node) {
-				if (context.block && context.last)
-					f.push("return");
-				f.push(compile_expr(context, node.expression));
-				f.push(";");
+			function (context, node) {
+				return compile_expr(context, node.expression);
 			},
+
+		dot:
+			function (context, node) {
+				var f = [];
+				f.push("(");
+				f.push(compile_raw_block_node(context, node.left));
+				f.push(",");
+				f.push(compile_raw_block_node(context, node.right));
+				f.push(")");
+				return f;
+			}
 	};
+
+	function compile_raw_block_node(context, node) {
+		var c = raw_block_nodes[node.type];
+		if (!c)
+			throw new Error("Unknown method body node " + node.type);
+
+		return c(context, node);
+	}
 
 	function compile_raw_block(context, node) {
 		var f = [];
 		var maxtemporaries = 0;
 		context.temporaries = 0;
+		context.methodreturn = false;
 
-		for (var i=0; i<node.body.length; i++) {
-			context.last = (i == node.body.length-1);
-			var n = node.body[i];
-			var c = raw_block_nodes[n.type];
-			if (!c)
-				throw new Error("Unknown method body node " + n.type);
-
-			c(context, f, n);
-
-			maxtemporaries = Math.max(context.temporaries);
-			context.temporaries = 0;
+		if (node.variables) {
+			var newvarmap = Object.create(context.varmap);
+			for (var j=0; j<node.variables.identifiers.length; j++) {
+				var id = node.variables.identifiers[j];
+				pushs(f, id, "var $" + id.name + " = null;\n", id.name);
+				newvarmap[id.name] = "$" + id.name;
+			}
+			context.varmap = newvarmap;
 		}
+
+		var v = compile_raw_block_node(context, node.body);
 
 		if (maxtemporaries > 0) {
 			for (var i=0; i<maxtemporaries; i++)
-				f.unshift("var t" + i + ";");
+				f.push("var t" + i + ";\n");
+		}
+
+		if (context.methodreturn) {
+			if (context.block) {
+				f.push("retval.value = ");
+				f.push(v);
+				f.push(";\n");
+				f.push("throw retval;\n");
+				context.hasreturn = true;
+			} else {
+				f.push("return");
+				f.push(v);
+				f.push(";\n");
+			}
+		} else {
+			if (context.block)
+				f.push("return");
+			f.push(v);
+			f.push(";\n");
 		}
 
 		return f;
@@ -369,7 +384,7 @@
 		var f = [];
 		f.push("(function(");
 		pushss(f, vars, ",");
-		f.push(") {");
+		f.push(") {\n");
 
 		var newcontext = {
 			varmap: newvarmap,
@@ -380,7 +395,7 @@
 		if (newcontext.hasreturn)
 			context.hasreturn = true;
 
-		f.push("})");
+		f.push("\n})");
 		return f;
 	}
 
@@ -399,7 +414,7 @@
 		f.push(valid(klass._st_name) + "__" + valid(node.pattern.name));
 		f.push("(");
 		pushss(f, vars, ",");
-		f.push(") {");
+		f.push(") {\n");
 
 		var context = {
 			varmap: varmap,
@@ -409,18 +424,18 @@
 		var fc = compile_raw_block(context, node);
 
 		if (context.hasreturn) {
-			f.push("var retval = {value: self};");
-			f.push("try {");
+			f.push("var retval = {value: self};\n");
+			f.push("try {\n");
 			f.push(fc);
-			f.push("} catch (e) {");
-			f.push("if (e !== retval) throw e;");
-			f.push("}");
-			f.push("return retval.value;");
+			f.push("\n} catch (e) {\n");
+			f.push("if (e !== retval) throw e;\n");
+			f.push("\n}\n");
+			f.push("return retval.value;\n");
 		} else {
 			f.push(fc);
-			f.push("return self;");
+			f.push("\nreturn self;\n");
 		}
-		f.push("});");
+		f.push("});\n");
 
 		var cf = new Function("klass", "findMethod", flatten(f));
 		var ccf = cf(klass, LT.findMethod);

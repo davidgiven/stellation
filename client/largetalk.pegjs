@@ -26,12 +26,8 @@ class_body_element
 	/ method_definition
 
 method_definition
-	= p:pattern OPEN_SQ v:variables? b:method_body CLOSE_SQ
-		{
-			if (v)
-				b.unshift(v);
-			return { location: location(), type: 'method', pattern: p, body: b };
-		}
+	= p:pattern OPEN_SQ v:variables? b:statements CLOSE_SQ
+		{ return { location: location(), type: 'method', pattern: p, variables: v, body: b }; }
 	/ p:pattern j:javascript
 		{ return { location: location(), type: 'jmethod', pattern: p, body: j }; }
 
@@ -47,14 +43,6 @@ parameters_or_variables
 	/ ps:parameter+ BAR
 		{ return { location: location(), type: 'parameters_variables', parameters: ps }; }
 
-
-method_body
-	= ss:statements?
-		{
-			if (!ss)
-				return [];
-			return ss;
-		}
 
 pattern
 	= id:identifier
@@ -77,26 +65,43 @@ pattern_element
 		{ return { location: location(), type: 'pattern_element', name: w+":", var: v }; }
 
 block
-	= OPEN_SQ p:parameters_or_variables? b:method_body CLOSE_SQ
+	= OPEN_SQ p:parameters_or_variables? b:statements CLOSE_SQ
 		{
 			if (!p)
 				p = {};
 			if (p.variables)
-				b.unshift({ type: 'variables', identifiers: p.variables });
+				b.variables = p.variables;
 			return { location: location(), type: 'block', parameters: p.parameters, body: b };
 		}
 
 statements
-	= left:statement DOT right:statements
-		{ right.unshift(left); return right; }
-	/ left:statement
-		{ return [left]; }
+	= c:compound_statement_element* t:terminating_statement
+		{
+			if (!c || (c.length == 0))
+				return t;
+
+			var o = c[0];
+			for (var i=1; i<c.length; i++)
+				o = { type: 'dot', left: o, right: c[i] };
+
+			return { type: 'dot', left: o, right: t };
+		}
+	/ _?
+		{ return { type: 'expression', expression:
+					{ type: 'javascript', body: 'null' }}; }
+
+compound_statement_element
+	= s:statement DOT
+		{ return s; }
+
+terminating_statement
+	= statement
+	/ CARET e:expression
+		{ return { location: location(), type: 'return', expression: e }; }
 
 statement
 	= id:identifier ASSIGN e:expression
 		{ return { location: location(), type: 'assign', name: id, expression: e }; }
-	/ CARET e:expression
-		{ return { location: location(), type: 'return', expression: e }; }
 	/ e:expression
 		{ return { location: location(), type: 'expression', expression: e }; }
 
