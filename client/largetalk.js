@@ -149,6 +149,17 @@
 		return klass;
 	}
 
+	LT.toBoolean = function(o) {
+		switch (o) {
+			case true:
+			case false:
+				return o;
+
+			default:
+				throw new Error("ifTrue:ifFalse: not supported on non-booleans yet");
+		}
+	}
+
 	/* =================================================================== */
 	/*                              COMPILER                               */
 	/* =================================================================== */
@@ -204,6 +215,28 @@
 		return f;
 	}
 
+	function optimised_method_call(context, f, node) {
+		if ((node.name == "ifTrue:ifFalse:") &&
+		    (node.args.length == 2) &&
+			(node.args[0].type == 'block') &&
+			(node.args[0].parameters.length == 0) &&
+			(node.args[0].body.variables.length == 0) &&
+			(node.args[1].type == 'block') &&
+			(node.args[1].parameters.length == 0) &&
+			(node.args[1].body.variables.length == 0)) {
+
+			f.push("(LT.toBoolean(");
+			f.push(compile_expr(context, node.receiver));
+			f.push(") ? (function(){");
+			f.push(compile_headerless_block(context, node.args[0]));
+			f.push("})() : (function(){");
+			f.push(compile_headerless_block(context, node.args[1]));
+			f.push("})())");
+			return true;
+		}
+		return false;
+	}
+
 	var expression_nodes = {
 		javascript:
 			function (context, node) {
@@ -229,23 +262,26 @@
 				var issuper = (node.receiver.type == "super");
 				var t = context.temporaries++;
 				var f = [];
-				f.push("(t" + t);
-				f.push(" = (");
-				f.push(compile_expr(context, node.receiver));
-				f.push("),");
-				if (issuper)
-					f.push("LT.findSuperMethod(klass, ");
-				else
-					f.push("findMethod(");
-				f.push("t" + t);
-				f.push(",");
-				pushs(f, node, "'" + node.name + "'", node.name);
-				f.push(")(t" + t);
-				for (var i=0; i<node.args.length; i++) {
+
+				if (issuper || !optimised_method_call(context, f, node)) {
+					f.push("(t" + t);
+					f.push(" = (");
+					f.push(compile_expr(context, node.receiver));
+					f.push("),");
+					if (issuper)
+						f.push("LT.findSuperMethod(klass, ");
+					else
+						f.push("findMethod(");
+					f.push("t" + t);
 					f.push(",");
-					f.push(compile_expr(context, node.args[i]));
+					pushs(f, node, "'" + node.name + "'", node.name);
+					f.push(")(t" + t);
+					for (var i=0; i<node.args.length; i++) {
+						f.push(",");
+						f.push(compile_expr(context, node.args[i]));
+					}
+					f.push("))");
 				}
-				f.push("))");
 				return f;
 			},
 
@@ -326,7 +362,6 @@
 
 	function compile_raw_block(context, node) {
 		var f = [];
-		var maxtemporaries = 0;
 		context.temporaries = 0;
 		context.methodreturn = false;
 
@@ -342,10 +377,8 @@
 
 		var v = compile_raw_block_node(context, node.body);
 
-		if (maxtemporaries > 0) {
-			for (var i=0; i<maxtemporaries; i++)
-				f.push("var t" + i + ";\n");
-		}
+		for (var i=0; i<context.temporaries; i++)
+			f.push("var t" + i + ";\n");
 
 		if (context.methodreturn) {
 			if (context.block) {
@@ -369,6 +402,18 @@
 		return f;
 	}
 
+	function compile_headerless_block(context, node) {
+		var newcontext = {
+			varmap: Object.create(context.varmap),
+			block: true,
+			hasreturn: false
+		};
+		var f = compile_raw_block(newcontext, node);
+		if (newcontext.hasreturn)
+			context.hasreturn = true;
+		return f;
+	}
+
 	function compile_block(context, node) {
 		var newvarmap = Object.create(context.varmap);
 		var vars = [];
@@ -386,12 +431,11 @@
 		pushss(f, vars, ",");
 		f.push(") {\n");
 
+		
 		var newcontext = {
-			varmap: newvarmap,
-			block: true,
-			hasreturn: false
+			varmap: newvarmap
 		};
-		f.push(compile_raw_block(newcontext, node));
+		f.push(compile_headerless_block(newcontext, node));
 		if (newcontext.hasreturn)
 			context.hasreturn = true;
 

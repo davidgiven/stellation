@@ -39,9 +39,9 @@ parameters_or_variables
 	= ps:parameter+ BAR vs:identifier+ BAR
 		{ return { location: location(), type: 'parameters_variables', parameters: ps, variables: vs }; }
 	/ BAR vs:identifier+ BAR
-		{ return { location: location(), type: 'parameters_variables', variables: vs }; }
+		{ return { location: location(), type: 'parameters_variables', parameters: [], variables: vs }; }
 	/ ps:parameter+ BAR
-		{ return { location: location(), type: 'parameters_variables', parameters: ps }; }
+		{ return { location: location(), type: 'parameters_variables', parameters: ps, variables: [] }; }
 
 
 pattern
@@ -68,9 +68,8 @@ block
 	= OPEN_SQ p:parameters_or_variables? b:statements CLOSE_SQ
 		{
 			if (!p)
-				p = {};
-			if (p.variables)
-				b.variables = p.variables;
+				p = { variables: [], parameters: [] };
+			b.variables = p.variables;
 			return { location: location(), type: 'block', parameters: p.parameters, body: b };
 		}
 
