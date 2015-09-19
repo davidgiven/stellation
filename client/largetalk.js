@@ -150,14 +150,10 @@
 	}
 
 	LT.toBoolean = function(o) {
-		switch (o) {
-			case true:
-			case false:
-				return o;
+		if ((o === true) || (o === false))
+			return o;
 
-			default:
-				throw new Error("ifTrue:ifFalse: not supported on non-booleans yet");
-		}
+		throw new Error("ifTrue:ifFalse: not supported on non-booleans yet");
 	}
 
 	/* =================================================================== */
@@ -216,14 +212,17 @@
 	}
 
 	function optimised_method_call(context, f, node) {
+		var node0block = (node.args.length >= 1) && 
+			(node.args[0].type == 'block') &&
+			(node.args[0].parameters.length == 0);
+
+		var node1block = (node.args.length >= 2) && 
+			(node.args[1].type == 'block') &&
+			(node.args[1].parameters.length == 0);
+
 		if ((node.name == "ifTrue:ifFalse:") &&
 		    (node.args.length == 2) &&
-			(node.args[0].type == 'block') &&
-			(node.args[0].parameters.length == 0) &&
-			(node.args[0].body.variables.length == 0) &&
-			(node.args[1].type == 'block') &&
-			(node.args[1].parameters.length == 0) &&
-			(node.args[1].body.variables.length == 0)) {
+			node0block && node1block) {
 
 			f.push("(LT.toBoolean(");
 			f.push(compile_expr(context, node.receiver));
@@ -232,6 +231,41 @@
 			f.push("})() : (function(){");
 			f.push(compile_headerless_block(context, node.args[1]));
 			f.push("})())");
+			return true;
+		}
+		if ((node.name == "ifFalse:ifTrue:") &&
+		    (node.args.length == 2) &&
+			node0block && node1block) {
+
+			f.push("(LT.toBoolean(");
+			f.push(compile_expr(context, node.receiver));
+			f.push(") ? (function(){");
+			f.push(compile_headerless_block(context, node.args[1]));
+			f.push("})() : (function(){");
+			f.push(compile_headerless_block(context, node.args[0]));
+			f.push("})())");
+			return true;
+		}
+		if ((node.name == "ifTrue:") &&
+		    (node.args.length == 2) &&
+			node0block) {
+
+			f.push("(LT.toBoolean(");
+			f.push(compile_expr(context, node.receiver));
+			f.push(") ? (function(){");
+			f.push(compile_headerless_block(context, node.args[0]));
+			f.push("})() : nil)");
+			return true;
+		}
+		if ((node.name == "ifFalse:") &&
+		    (node.args.length == 2) &&
+			node0block) {
+
+			f.push("(!LT.toBoolean(");
+			f.push(compile_expr(context, node.receiver));
+			f.push(") ? (function(){");
+			f.push(compile_headerless_block(context, node.args[0]));
+			f.push("})() : nil)");
 			return true;
 		}
 		return false;
