@@ -3,6 +3,8 @@ wrapper {
 }
 
 buildscript {
+    ext.kotlin_version = '1.2.50'
+
     repositories {
         mavenCentral()
         maven {
@@ -11,13 +13,35 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:+"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
+apply plugin: 'kotlin'
 apply plugin: 'konan'
+
+dependencies {
+    repositories {
+        mavenCentral()
+    }
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+sourceSets {
+    main.kotlin.srcDirs += 'src/server/main'
+    main.kotlin.srcDirs += 'src/server/jvm'
+}
 
 konanArtifacts {
     program('hello') {
         srcDir 'src/server/konan'
+        srcDir 'src/server/main'
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'server.jvm.MainKt'
     }
 }
