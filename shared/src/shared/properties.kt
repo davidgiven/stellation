@@ -1,3 +1,5 @@
+package shared
+
 import kotlin.reflect.KProperty
 
 enum class Scope {

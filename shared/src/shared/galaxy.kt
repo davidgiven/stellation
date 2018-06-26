@@ -1,3 +1,5 @@
+package shared
+
 open class SGalaxy : SThing() {
     val stars: Aggregate<SStar>
         get() = aggregate(STARS)

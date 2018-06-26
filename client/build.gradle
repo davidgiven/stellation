@@ -1,0 +1,14 @@
+apply plugin: 'kotlin-platform-js'
+
+sourceCompatibility = 1.8
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    expectedBy project(":shared")
+}
+
+sourceSets {
+    main.kotlin.srcDirs += 'src'
+}
+
+
