@@ -31,12 +31,14 @@ dependencies {
 sourceSets {
     main.kotlin.srcDirs += 'src/server/main'
     main.kotlin.srcDirs += 'src/server/jvm'
+    main.kotlin.srcDirs += 'src/shared'
 }
 
 konanArtifacts {
     program('hello') {
         srcDir 'src/server/konan'
         srcDir 'src/server/main'
+        srcDir 'src/shared'
     }
 }
 

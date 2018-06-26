@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3fee3779-e4d1-48c2-8d99-6190d70a7f26" name="Default" comment="">
-      <change afterPath="/.big/@big/nonshared/stellation/src/server/jvm/main.kt" afterDir="false" />
-      <change afterPath="/.big/@big/nonshared/stellation/src/server/main/main.kt" afterDir="false" />
+      <change afterPath="/.big/@big/nonshared/stellation/src/server/main/properties.kt" afterDir="false" />
+      <change afterPath="/.big/@big/nonshared/stellation/src/shared/galaxy.kt" afterDir="false" />
+      <change afterPath="/.big/@big/nonshared/stellation/src/shared/model.kt" afterDir="false" />
+      <change afterPath="/.big/@big/nonshared/stellation/src/shared/properties.kt" afterDir="false" />
       <change beforePath="/.big/@big/nonshared/stellation/.idea/workspace.xml" beforeDir="false" afterPath="/.big/@big/nonshared/stellation/.idea/workspace.xml" afterDir="false" />
       <change beforePath="/.big/@big/nonshared/stellation/build.gradle" beforeDir="false" afterPath="/.big/@big/nonshared/stellation/build.gradle" afterDir="false" />
-      <change beforePath="/.big/@big/nonshared/stellation/src/server/konan/hello.kt" beforeDir="false" afterPath="/.big/@big/nonshared/stellation/src/server/konan/main.kt" afterDir="false" />
-      <change beforePath="/.big/@big/nonshared/stellation/src/server/konan/logging.kt" beforeDir="false" />
+      <change beforePath="/.big/@big/nonshared/stellation/src/server/main/main.kt" beforeDir="false" afterPath="/.big/@big/nonshared/stellation/src/server/main/main.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
@@ -84,17 +85,17 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" selection-start-line="19" selection-end-line="19" />
+            <state relative-caret-position="450">
+              <caret line="30" selection-start-line="30" selection-end-line="30" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file:///.big/@big/nonshared/stellation/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="548">
-              <caret line="44" column="51" selection-start-line="44" selection-start-column="51" selection-end-line="44" selection-end-column="51" />
+            <state relative-caret-position="309">
+              <caret line="35" selection-start-line="35" selection-end-line="35" />
             </state>
           </provider>
         </entry>
@@ -102,8 +103,22 @@
       <file leaf-file-name="main.kt" pinned="false" current-in-tab="false">
         <entry file="file:///.big/@big/nonshared/stellation/src/server/main/main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+            <state relative-caret-position="30">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="properties.kt" pinned="false" current-in-tab="false">
+        <entry file="file:///.big/@big/nonshared/stellation/src/server/main/properties.kt">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="Standard.kt" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.2.50/d3189b4b8c72c7f3a327e3c21dca8dbcba267359/kotlin-stdlib-common-1.2.50-sources.jar!/kotlin/util/Standard.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="29" column="18" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -116,35 +131,35 @@
       <file leaf-file-name="main.kt" pinned="false" current-in-tab="false">
         <entry file="file:///.big/@big/nonshared/stellation/src/server/jvm/main.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hello.kt" pinned="false" current-in-tab="false">
-        <entry file="file:///.big/@big/nonshared/stellation6/src/server/konan/hello.kt">
-          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="45">
-              <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
+              <caret line="3" column="14" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="logging.kt" pinned="false" current-in-tab="false">
-        <entry file="file:///.big/@big/nonshared/stellation6/src/server/konan/logging.kt">
+      <file leaf-file-name="model.kt" pinned="false" current-in-tab="false">
+        <entry file="file:///.big/@big/nonshared/stellation/src/shared/model.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+            <state relative-caret-position="-240">
+              <caret line="11" column="34" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file:///.big/@big/nonshared/stellation6/build.gradle">
+      <file leaf-file-name="galaxy.kt" pinned="false" current-in-tab="true">
+        <entry file="file:///.big/@big/nonshared/stellation/src/shared/galaxy.kt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="180">
+              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="properties.kt" pinned="false" current-in-tab="false">
+        <entry file="file:///.big/@big/nonshared/stellation/src/shared/properties.kt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="255">
+              <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
             </state>
           </provider>
         </entry>
@@ -162,7 +177,7 @@
   <component name="GradleLocalSettings">
     <option name="myGradleHomes">
       <map>
-        <entry key="$PROJECT_DIR$" value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7" />
+        <entry key="$PROJECT_DIR$" value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7" />
       </map>
     </option>
     <option name="myGradleVersions">
@@ -388,11 +403,11 @@
     <option name="modificationStamps">
       <map>
         <entry key="/.big/@big/nonshared/stellation/.gradle" value="0" />
-        <entry key="/.big/@big/nonshared/stellation/build.gradle" value="3578722719" />
+        <entry key="/.big/@big/nonshared/stellation/build.gradle" value="185984582" />
         <entry key="/.big/@big/nonshared/stellation6/.gradle" value="0" />
         <entry key="/.big/@big/nonshared/stellation6/build.gradle" value="3076673982" />
         <entry key="/.big/@big/nonshared/stellation6/settings.gradle" value="2316317154" />
-        <entry key="$PROJECT_DIR$" value="3059932304000" />
+        <entry key="$PROJECT_DIR$" value="3060004405000" />
         <entry key="$PROJECT_DIR$/untitled/gradle/wrapper/gradle-wrapper.properties" value="1741342742" />
       </map>
     </option>
@@ -458,81 +473,81 @@
               <option name="name" value="stellation" />
               <option name="projectBuildClasspath">
                 <list>
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-kotlin-dsl-0.16.3.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-kotlin-dsl-tooling-builders-0.16.3.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-kotlin-dsl-tooling-models-0.16.3.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-launcher-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-runtime-api-info-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-tooling-api-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-wrapper-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-installation-beacon-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-core-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-jvm-services-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-core-api-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-build-cache-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-logging-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-process-services-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-resources-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-persistent-cache-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-native-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-model-groovy-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-model-core-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-base-services-groovy-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-messaging-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-base-services-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-build-option-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-cli-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-docs-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/groovy-all-2.4.12.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/ant-1.9.9.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/ant-launcher-1.9.9.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-announce-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-antlr-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-code-quality-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-osgi-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-signing-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ide-native-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-native-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-native-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-plugin-development-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-maven-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ide-play-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ide-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-scala-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-build-comparison-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ear-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-play-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-javascript-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ivy-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-jacoco-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-build-init-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-plugins-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-tooling-api-builders-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-test-kit-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-composite-builds-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-groovy-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-scala-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-junit-platform-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-jvm-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-java-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-jvm-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-jvm-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-native-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-diagnostics-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-base-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-reporting-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-publish-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-base-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-plugin-use-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-s3-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-gcs-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-build-cache-http-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-dependency-management-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-http-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-sftp-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-workers-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-version-control-4.7.jar" />
-                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/ivy-2.2.0.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-kotlin-dsl-0.16.3.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-kotlin-dsl-tooling-builders-0.16.3.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-kotlin-dsl-tooling-models-0.16.3.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-launcher-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-runtime-api-info-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-tooling-api-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-wrapper-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-installation-beacon-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-core-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-jvm-services-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-core-api-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-build-cache-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-logging-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-process-services-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-resources-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-persistent-cache-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-native-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-model-groovy-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-model-core-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-base-services-groovy-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-messaging-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-base-services-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-build-option-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-cli-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/gradle-docs-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/groovy-all-2.4.12.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/ant-1.9.9.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/ant-launcher-1.9.9.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-announce-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-antlr-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-code-quality-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-osgi-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-signing-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ide-native-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-native-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-native-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-plugin-development-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-maven-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ide-play-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ide-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-scala-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-build-comparison-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ear-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-play-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-javascript-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-ivy-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-jacoco-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-build-init-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-plugins-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-tooling-api-builders-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-test-kit-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-composite-builds-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-groovy-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-scala-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-junit-platform-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-jvm-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-java-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-language-jvm-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-jvm-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-native-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-diagnostics-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-testing-base-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-reporting-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-publish-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-platform-base-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-plugin-use-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-s3-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-gcs-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-build-cache-http-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-dependency-management-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-http-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-resources-sftp-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-workers-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/gradle-version-control-4.7.jar" />
+                  <option value="$USER_HOME$/.gradle/wrapper/dists/gradle-4.7-bin/73xux3q4721jgr4pjvqf9o30/gradle-4.7/lib/plugins/ivy-2.2.0.jar" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/java" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/groovy" />
                 </list>
@@ -564,14 +579,18 @@
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="/.big/@big/nonshared/stellation/src/server/jvm/main/kt.java" />
         <option value="/.big/@big/nonshared/stellation/src/server/jvm/main.kt" />
-        <option value="/.big/@big/nonshared/stellation/src/server/main/main.kt" />
         <option value="/.big/@big/nonshared/stellation/build.gradle" />
+        <option value="/.big/@big/nonshared/stellation/src/server/main/main.kt" />
+        <option value="/.big/@big/nonshared/stellation/src/server/main/properties.kt" />
+        <option value="/.big/@big/nonshared/stellation/src/shared/model.kt" />
+        <option value="/.big/@big/nonshared/stellation/src/shared/properties.kt" />
+        <option value="/.big/@big/nonshared/stellation/src/shared/galaxy.kt" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="4">
-    <option name="x" value="564" />
-    <option name="width" value="1290" />
+    <option name="x" value="498" />
+    <option name="width" value="1356" />
     <option name="height" value="1059" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -583,9 +602,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -597,6 +613,12 @@
               <item name="stellation" type="b2602c69:ProjectViewProjectNode" />
               <item name="stellation" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="stellation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="stellation" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
             </path>
             <path>
               <item name="stellation" type="b2602c69:ProjectViewProjectNode" />
@@ -625,14 +647,32 @@
               <item name="server" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="stellation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="stellation" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="shared" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
+            <path>
+              <item name="stellation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="stellation" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="reference.settings.project.gradle.running" />
   </component>
   <component name="RecentsManager">
@@ -640,6 +680,7 @@
       <recent name="server" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="/.big/@big/nonshared/stellation/src/shared" />
       <recent name="/.big/@big/nonshared/stellation/src/server/jvm" />
       <recent name="/.big/@big/nonshared/stellation6/src/konan" />
       <recent name="/.big/@big/nonshared/stellation6/src/server/common" />
@@ -657,7 +698,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Kotlin.server.jvm.MainKt (1)">
+  <component name="RunManager" selected="Gradle.stellation::.big:@big:nonshared:stellation [build]">
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     </configuration>
@@ -779,8 +820,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Kotlin.server.jvm.MainKt (1)" />
         <item itemvalue="Gradle.stellation::.big:@big:nonshared:stellation [build]" />
+        <item itemvalue="Kotlin.server.jvm.MainKt (1)" />
         <item itemvalue="Kotlin.server.jvm.MainKt" />
         <item itemvalue="Gradle.stellation::.big:@big:nonshared:stellation [compileKonan]" />
         <item itemvalue="Gradle.stellation6::.big:@big:nonshared:stellation6 [compileKonan]" />
@@ -801,24 +842,24 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="564" y="0" width="1290" height="1059" extended-state="4" />
+    <frame x="498" y="0" width="1356" height="1059" extended-state="4" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.4984472" weight="0.32959184" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50621116" side_tool="true" visible="true" weight="0.32857144" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.506647" side_tool="true" visible="true" weight="0.32857144" />
       <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4937888" visible="true" weight="0.32857144" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49335304" visible="true" weight="0.32857144" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26397514" />
-      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.7282609" weight="0.32857144" />
-      <window_info anchor="right" id="Gradle" order="3" visible="true" weight="0.34860247" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2621861" />
+      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.72747415" weight="0.32857144" />
+      <window_info anchor="right" id="Gradle" order="3" visible="true" weight="0.1957164" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -831,12 +872,44 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.4988995" weight="0.32925585" />
+      <window_info anchor="bottom" id="Messages" order="7" sideWeight="0.4984472" weight="0.32959184" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file:///.big/@big/nonshared/stellation/src/server/konan/main.kt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation6/src/server/konan/hello.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="7" selection-start-line="3" selection-start-column="7" selection-end-line="3" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation6/src/server/konan/logging.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation6/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation/src/server/jvm/main.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -1018,39 +1091,64 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="450">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
         </state>
       </provider>
     </entry>
-    <entry file="file:///.big/@big/nonshared/stellation/src/server/konan/logging.kt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="9" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation/src/server/konan/logging.kt" />
     <entry file="file:///.big/@big/nonshared/stellation/src/server/konan/main.kt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file:///.big/@big/nonshared/stellation/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="35" selection-start-line="35" selection-end-line="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.2.50/d3189b4b8c72c7f3a327e3c21dca8dbcba267359/kotlin-stdlib-common-1.2.50-sources.jar!/kotlin/util/Standard.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="29" column="18" selection-start-line="29" selection-start-column="18" selection-end-line="29" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file:///.big/@big/nonshared/stellation/src/server/jvm/main.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        <state relative-caret-position="45">
+          <caret line="3" column="14" selection-start-line="3" selection-start-column="14" selection-end-line="3" selection-end-column="14" />
         </state>
       </provider>
     </entry>
     <entry file="file:///.big/@big/nonshared/stellation/src/server/main/main.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="28" selection-start-line="10" selection-start-column="28" selection-end-line="10" selection-end-column="28" />
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
-    <entry file="file:///.big/@big/nonshared/stellation/build.gradle">
+    <entry file="file:///.big/@big/nonshared/stellation/src/server/main/properties.kt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation/src/shared/model.kt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="548">
-          <caret line="44" column="51" selection-start-line="44" selection-start-column="51" selection-end-line="44" selection-end-column="51" />
+        <state relative-caret-position="-240">
+          <caret line="11" column="34" selection-start-line="11" selection-start-column="34" selection-end-line="11" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation/src/shared/properties.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" lean-forward="true" selection-start-line="17" selection-end-line="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///.big/@big/nonshared/stellation/src/shared/galaxy.kt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
@@ -1064,8 +1162,80 @@
   </component>
   <component name="masterDetails">
     <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Kotlin</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>main|stellation</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
       <state key="ProjectJDKs.UI">
         <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.2.50</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

@@ -1,7 +1,7 @@
 package server.main
 
 interface RuntimeEnvironment {
-    fun log(s: String);
+    fun log(s: String)
 }
 
 var runtimeEnvironment: RuntimeEnvironment? = null;
