@@ -1,3 +1,5 @@
+package shared
+
 interface ObjectRef {
     fun <T> primitive(property: Property<T>): Proxy<T>
     fun <T> aggregate(property: Property<T>): Aggregate<T>

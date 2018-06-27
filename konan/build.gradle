@@ -1,0 +1,17 @@
+apply plugin: 'konan'
+
+dependencies {
+}
+
+konanArtifacts {
+    program('stellation') {
+        //enableOptimizations true
+
+        srcDir 'src'
+        srcDir '../server/src'
+        srcDir '../shared/src'
+
+        enableMultiplatform true
+    }
+}
+
