@@ -1,17 +1,26 @@
 apply plugin: 'konan'
 
 dependencies {
+    expectedBy project(":shared")
 }
 
 konanArtifacts {
+    interop('sqlite3') {
+        defFile 'c_interop/sqlite3.def'
+    }
+
     program('stellation') {
         //enableOptimizations true
+        entryPoint 'server.main'
 
         srcDir 'src'
         srcDir '../server/src'
-        srcDir '../shared/src'
 
         enableMultiplatform true
+
+        libraries {
+            artifact 'sqlite3'
+        }
     }
 }
 

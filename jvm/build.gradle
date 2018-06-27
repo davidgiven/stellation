@@ -1,18 +1,44 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'kotlin-platform-jvm'
 
 sourceCompatibility = 1.8
 
 dependencies {
+    compile "org.xerial:sqlite-jdbc:3.5.9-universal"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     expectedBy project(":server")
     expectedBy project(":shared")
 }
 
 sourceSets {
-    main.kotlin.srcDirs += 'src'
+    main.kotlin.srcDirs += "src"
 }
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Stellation6 server',
+                'Main-Class': 'server.MainKt'
+    }
+}
+
+shadowJar {
+    baseName = "stellation6"
+    configurations = [project.configurations.compile]
+}
+
+build.dependsOn shadowJar
 
