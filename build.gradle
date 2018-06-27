@@ -9,6 +9,7 @@ allprojects {
         ext.kotlin_version = '1.2.50'
 
         repositories {
+            jcenter()
             mavenCentral()
             maven {
                 url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies"
@@ -17,13 +18,16 @@ allprojects {
         dependencies {
             classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:+"
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+            classpath "com.github.jengelman.gradle.plugins:shadow:2.0.4"
         }
     }
 
     dependencies {
         repositories {
             mavenCentral()
+            mavenLocal()
         }
     }
 }
+version '1.0-SNAPSHOT'
 

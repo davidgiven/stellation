@@ -5,6 +5,6 @@ dependencies {
 }
 
 sourceSets {
-    main.kotlin.srcDirs += 'src'
+    main.kotlin.srcDirs = ['src']
 }
 
