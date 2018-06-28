@@ -2,8 +2,18 @@ package utils
 
 const val FILE_OPTION = " <file>"
 
+open class GetoptException(message: String): FatalError(message)
+
+class MissingOptionException(arg: String) : GetoptException(
+        "parameter for option '$arg' is missing (try --help)"
+)
+
+class UnrecognisedOptionException(arg: String) : GetoptException(
+        "unrecognised option '$arg' (try --help)"
+)
+
 private fun unrecognisedArgument(arg: String): (String) -> Int {
-    throw FatalError("unrecognised argument '${arg}' (try --help)")
+    throw UnrecognisedOptionException(arg)
 }
 
 fun getopt(argv: Array<String>, callbacks: Map<String, (String) -> Int>) {
@@ -18,7 +28,7 @@ fun getopt(argv: Array<String>, callbacks: Map<String, (String) -> Int>) {
             val equals = arg.indexOf('=')
             if (equals == -1) {
                 key = arg
-                value = argv.getOrElse(index, { "" })
+                value = argv.getOrElse(index + 1, { "" })
                 consume = true
             } else {
                 key = arg.slice(0..(equals - 1))
@@ -28,7 +38,7 @@ fun getopt(argv: Array<String>, callbacks: Map<String, (String) -> Int>) {
             // -fbar or -f bar
             if (arg.length == 2) {
                 key = arg
-                value = argv.getOrElse(index, { "" })
+                value = argv.getOrElse(index + 1, { "" })
                 consume = true
             } else {
                 key = arg.slice(0..1)
@@ -43,6 +53,9 @@ fun getopt(argv: Array<String>, callbacks: Map<String, (String) -> Int>) {
         val numberConsumed = callback(value)
         if (consume) {
             index += numberConsumed
+            if (index >= argv.size) {
+                throw MissingOptionException(key)
+            }
         }
         index++
     }
