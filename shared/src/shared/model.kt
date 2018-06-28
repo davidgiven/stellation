@@ -1,19 +1,30 @@
 package shared
 
-interface ObjectRef {
-    fun <T> primitive(property: Property<T>): Proxy<T>
-    fun <T> aggregate(property: Property<T>): Aggregate<T>
-    fun <T> create(): T
-}
+import datastore.Aggregate
+import datastore.AggregateProperty
+import datastore.Oid
+import datastore.PrimitiveProperty
+import datastore.Proxy
 
-open class SThing {
-    var obj: ObjectRef? = null
+abstract class SThing {
+    var oid: Oid = -1
 
-    protected fun <T> primitive(property: Property<T>): Proxy<T> = obj!!.primitive(property)
-    protected fun <T> aggregate(property: Property<T>): Aggregate<T> = obj!!.aggregate(property)
-    protected fun <T> create(): T = obj!!.create()
+    protected fun <T> primitive(property: PrimitiveProperty<T>): Proxy<T> = property.get(oid)
+    protected fun <T> aggregate(property: AggregateProperty<T>): Aggregate<T> = property.get(oid)
 
     var kind by primitive(KIND)
+}
+
+fun <T: SThing> T.bind(newOid: Oid): T {
+    check(oid == -1)
+    oid = newOid
+    return this
+}
+
+fun <T: SThing> T.create(): T {
+    check(oid == -1)
+    oid = datastore.createObject(this::class.simpleName!!)
+    return this
 }
 
 open class SUniverse : SThing() {
