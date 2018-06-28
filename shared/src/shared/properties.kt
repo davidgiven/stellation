@@ -18,3 +18,6 @@ val STARS = setProperty<SStar>(Scope.GLOBAL, "stars")
 val XPOS = floatProperty(Scope.LOCAL, "x")
 val YPOS = floatProperty(Scope.LOCAL, "y")
 
+fun initProperties() {
+    // This function exists solely to force the variables above to be created at the right time.
+}

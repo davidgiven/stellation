@@ -1,3 +1,5 @@
+import datastore.initDatabase
+
 fun main(argv: Array<String>) {
-   println("Hello, world!")
+   initDatabase()
 }
