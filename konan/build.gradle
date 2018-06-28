@@ -1,6 +1,7 @@
 apply plugin: 'konan'
 
 dependencies {
+    expectedBy project(":server")
     expectedBy project(":shared")
 }
 
@@ -14,7 +15,6 @@ konanArtifacts {
         entryPoint 'server.main'
 
         srcDir 'src'
-        srcDir '../server/src'
 
         enableMultiplatform true
 
