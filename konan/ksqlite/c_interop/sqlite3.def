@@ -13,11 +13,8 @@ excludedFunctions = sqlite3_mutex_held \
   sqlite3_set_last_insert_rowid \
   sqlite3_stmt_scanstatus \
   sqlite3_stmt_scanstatus_reset \
-  sqlite3_column_database_name \
   sqlite3_column_database_name16 \
-  sqlite3_column_origin_name \
   sqlite3_column_origin_name16 \
-  sqlite3_column_table_name \
   sqlite3_column_table_name16 \
   sqlite3_enable_load_extension \
   sqlite3_load_extension \
