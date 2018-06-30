@@ -1,4 +1,5 @@
 apply plugin: 'kotlin-platform-js'
+apply plugin: 'kotlin-dce-js'
 
 sourceCompatibility = 1.8
 
