@@ -11,10 +11,13 @@ interface SqlValue {
 
 interface SqlStatement {
     fun reset(): SqlStatement
-    fun bindInt(name: String, value: Int?): SqlStatement
-    fun bindReal(name: String, value: Double?): SqlStatement
-    fun bindString(name: String, value: String?): SqlStatement
-    fun execute(): List<Map<String, SqlValue>>
+    fun bindInt(index: Int, value: Int): SqlStatement
+    fun bindReal(index: Int, value: Double): SqlStatement
+    fun bindString(index: Int, value: String): SqlStatement
+    fun executeQuery(): List<Map<String, SqlValue>>
+    fun executeStatement()
+
+    fun executeSimpleQuery(): Map<String, SqlValue> = executeQuery().first()
 }
 
 expect fun openDatabase(filename: String)
@@ -23,5 +26,5 @@ expect fun closeDatabase()
 expect fun sqlStatement(sql: String): SqlStatement
 
 fun executeSql(sql: String) {
-    sqlStatement(sql).execute()
+    sqlStatement(sql).executeStatement()
 }

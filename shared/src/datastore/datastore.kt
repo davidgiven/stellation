@@ -32,11 +32,11 @@ interface Property<T> {
 }
 
 interface PrimitiveProperty<T>: Property<T> {
-    fun get(oid: Oid): Proxy<T>
+    fun get(thing: SThing): Proxy<T>
 }
 
 interface AggregateProperty<T>: Property<T> {
-    fun get(oid: Oid): Aggregate<T>
+    fun get(thing: SThing): Aggregate<T>
 }
 
 expect fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>

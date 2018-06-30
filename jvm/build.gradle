@@ -4,7 +4,7 @@ apply plugin: 'kotlin-platform-jvm'
 sourceCompatibility = 1.8
 
 dependencies {
-    compile "org.xerial:sqlite-jdbc:3.5.9-universal"
+    compile "org.xerial:sqlite-jdbc:3.23.1"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     expectedBy project(":server")
     expectedBy project(":shared")

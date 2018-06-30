@@ -1,8 +1,8 @@
 package datastore
 
-import shared.SUniverse
-import shared.create
+import shared.SThing
 import shared.initProperties
+import kotlin.reflect.KProperty
 
 private var allProperties: Map<String, PropertyImpl<*>> = emptyMap()
 
@@ -22,9 +22,17 @@ private abstract class PrimitivePropertyImpl<T>(scope: Scope, name: String) : Pr
         """)
     }
 
-    override fun get(oid: Oid): Proxy<T> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    open fun getPrimitive(oid: Oid): T = TODO("can't get $name")
+    open fun setPrimitive(oid: Oid, value: T): Unit = TODO("can't set $name")
+
+    override fun get(thing: SThing): Proxy<T> =
+            object : Proxy<T> {
+                override fun setValue(thing: SThing, property: KProperty<*>, value: T) =
+                        setPrimitive(thing.oid, value)
+
+                override fun getValue(thing: SThing, property: KProperty<*>): T =
+                        getPrimitive(thing.oid)
+            }
 }
 
 private abstract class AggregatePropertyImpl<T>(scope: Scope, name: String) : PropertyImpl<T>(scope, name), AggregateProperty<T> {
@@ -43,7 +51,7 @@ private abstract class AggregatePropertyImpl<T>(scope: Scope, name: String) : Pr
         """)
     }
 
-    override fun get(oid: Oid): Aggregate<T> {
+    override fun get(thing: SThing): Aggregate<T> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
@@ -54,19 +62,62 @@ private fun <T : PropertyImpl<*>> addProperty(property: T): T {
     return property
 }
 
+
 actual fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String> =
         addProperty(object : PrimitivePropertyImpl<String>(scope, name) {
             override val sqlType = "TEXT"
+
+            override fun getPrimitive(oid: Oid): String =
+                    sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
+                            .bindInt(1, oid)
+                            .executeSimpleQuery()
+                            .getValue("value")
+                            .getString()
+
+            override fun setPrimitive(oid: Oid, value: String) {
+                sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
+                        .bindInt(1, oid)
+                        .bindString(2, value)
+                        .executeStatement()
+            }
         })
 
 actual fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int> =
         addProperty(object : PrimitivePropertyImpl<Int>(scope, name) {
             override val sqlType = "INTEGER"
+
+            override fun getPrimitive(oid: Oid): Int =
+                    sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
+                            .bindInt(1, oid)
+                            .executeSimpleQuery()
+                            .getValue("value")
+                            .getInt()
+
+            override fun setPrimitive(oid: Oid, value: Int) {
+                sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
+                        .bindInt(1, oid)
+                        .bindInt(2, value)
+                        .executeStatement()
+            }
         })
 
 actual fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double> =
         addProperty(object : PrimitivePropertyImpl<Double>(scope, name) {
             override val sqlType = "REAL"
+
+            override fun getPrimitive(oid: Oid): Double =
+                    sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
+                            .bindInt(1, oid)
+                            .executeSimpleQuery()
+                            .getValue("value")
+                            .getReal()
+
+            override fun setPrimitive(oid: Oid, value: Double) {
+                sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
+                        .bindInt(1, oid)
+                        .bindReal(2, value)
+                        .executeStatement()
+            }
         })
 
 actual fun <T> refProperty(scope: Scope, name: String): PrimitiveProperty<T> =
@@ -80,13 +131,12 @@ actual fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T> =
         })
 
 actual fun createObject(kind: String): Oid {
-    sqlStatement("INSERT INTO prop_kind (oid, kind) VALUES(:oid, :kind)")
-            .bindInt(":oid", null)
-            .bindString(":kind", kind)
-            .execute()
+    sqlStatement("INSERT INTO prop_kind (oid, value) VALUES(NULL, ?)")
+            .bindString(1, kind)
+            .executeStatement()
     return sqlStatement("SELECT last_insert_rowid() AS oid")
-            .execute()
-            .first()["oid"]!!
+            .executeSimpleQuery()
+            .getValue("oid")
             .getInt()
 }
 
@@ -103,14 +153,7 @@ fun withSqlTransaction(callback: () -> Unit) {
 
 fun initialiseDatabase() {
     initProperties()
-    executeSql("PRAGMA auto_vacuum = FULL")
-    executeSql("PRAGMA encoding = \"UTF-8\"")
-    executeSql("PRAGMA synchronous = OFF")
-    executeSql("PRAGMA foreign_keys = ON")
-    executeSql("PRAGMA temp_store = MEMORY")
     withSqlTransaction {
         allProperties.forEach { e -> e.value.createTablesForProperty() }
     }
-
-    val universe = SUniverse().create()
 }

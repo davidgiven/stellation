@@ -9,8 +9,8 @@ import datastore.Proxy
 abstract class SThing {
     var oid: Oid = -1
 
-    protected fun <T> primitive(property: PrimitiveProperty<T>): Proxy<T> = property.get(oid)
-    protected fun <T> aggregate(property: AggregateProperty<T>): Aggregate<T> = property.get(oid)
+    protected fun <T> primitive(property: PrimitiveProperty<T>): Proxy<T> = property.get(this)
+    protected fun <T> aggregate(property: AggregateProperty<T>): Aggregate<T> = property.get(this)
 
     var kind by primitive(KIND)
 }

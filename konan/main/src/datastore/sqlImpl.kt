@@ -47,45 +47,22 @@ private class SqliteStatement : SqlStatement {
         return this
     }
 
-    private fun getParameterIndex(name: String): Int {
-        val index = sqlite3_bind_parameter_index(sqliteStatement, name)
-        if (index == 0) {
-            throw SqlException("Parameter '$name' does not exist in this query")
-        }
-        return index
-    }
-
-    override fun bindInt(name: String, value: Int?): SqliteStatement {
-        val index = getParameterIndex(name)
-        if (value == null) {
-            sqlite3_bind_null(sqliteStatement, index)
-        } else {
-            sqlite3_bind_int(sqliteStatement, index, value)
-        }
+    override fun bindInt(index: Int, value: Int): SqliteStatement {
+        sqlite3_bind_int(sqliteStatement, index, value)
         return this
     }
 
-    override fun bindReal(name: String, value: Double?): SqliteStatement {
-        val index = getParameterIndex(name)
-        if (value == null) {
-            sqlite3_bind_null(sqliteStatement, index)
-        } else {
-            sqlite3_bind_double(sqliteStatement, index, value)
-        }
+    override fun bindReal(index: Int, value: Double): SqliteStatement {
+        sqlite3_bind_double(sqliteStatement, index, value)
         return this
     }
 
-    override fun bindString(name: String, value: String?): SqliteStatement {
-        val index = getParameterIndex(name)
-        if (value == null) {
-            sqlite3_bind_null(sqliteStatement, index)
-        } else {
-            sqlite3_bind_text(sqliteStatement, index, value, -1, (-1L).toCPointer())
-        }
+    override fun bindString(index: Int, value: String): SqliteStatement {
+        sqlite3_bind_text(sqliteStatement, index, value, -1, (-1L).toCPointer())
         return this
     }
 
-    override fun execute(): List<Map<String, SqlValue>> {
+    override fun executeQuery(): List<Map<String, SqlValue>> {
         val columnCount = sqlite3_column_count(sqliteStatement)
         var columnNames = Array<String>(columnCount) { "" }
         for (i in 0..(columnCount - 1)) {
@@ -114,6 +91,13 @@ private class SqliteStatement : SqlStatement {
             reset()
         }
     }
+
+    override fun executeStatement() {
+        val e = sqlite3_step(sqliteStatement)
+        if (e != SQLITE_DONE) {
+            throw SqlException("Statement execution error $e")
+        }
+    }
 }
 
 actual fun openDatabase(filename: String) {
@@ -125,6 +109,11 @@ actual fun openDatabase(filename: String) {
         }
         databaseConnection = dbPtr.value
     }
+
+    executeSql("PRAGMA encoding = \"UTF-8\"")
+    executeSql("PRAGMA synchronous = OFF")
+    executeSql("PRAGMA foreign_keys = ON")
+    executeSql("PRAGMA temp_store = MEMORY")
 }
 
 actual fun closeDatabase() {
