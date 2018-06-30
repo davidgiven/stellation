@@ -20,6 +20,7 @@ private class SqliteValue(unprotectedValue: CPointer<sqlite3_value>?) : SqlValue
     override fun getInt(): Int = sqlite3_value_int(value)
     override fun getReal(): Double = sqlite3_value_double(value)
     override fun getString(): String = sqlite3_value_text(value)!!.toKString()
+    override fun getOid(): Oid? = if (value == null) value else getInt()
 }
 
 private fun getSqliteError() = sqlite3_errmsg(databaseConnection)!!.toKString()
@@ -68,6 +69,15 @@ private class SqliteStatement : SqlStatement {
         return this
     }
 
+    override fun bindOid(index: Int, value: Oid?): SqliteStatement {
+        if (value == null) {
+            sqlite3_bind_null(sqliteStatement, index)
+        } else {
+            sqlite3_bind_int(sqliteStatement, index, value)
+        }
+        return this
+    }
+
     override fun executeQuery(): List<Map<String, SqlValue>> {
         val columnCount = sqlite3_column_count(sqliteStatement)
         var columnNames = Array<String>(columnCount) { "" }
@@ -91,11 +101,7 @@ private class SqliteStatement : SqlStatement {
             }
         }
 
-        try {
-            return generateSequence(::generator).toList()
-        } finally {
-            reset()
-        }
+        return generateSequence(::generator).toList()
     }
 
     override fun executeStatement() {
@@ -136,6 +142,6 @@ actual fun sqlStatement(sql: String): SqlStatement {
         statement = SqliteStatement(sql)
         statementCache += Pair(sql, statement)
     }
-    return statement
+    return statement.reset()
 }
 

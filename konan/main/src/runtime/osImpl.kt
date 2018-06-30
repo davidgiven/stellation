@@ -11,3 +11,5 @@ actual fun exit(status: Int) {
     platform.posix.exit(status)
 }
 
+actual fun nanotime() = kotlin.system.getTimeNanos()
+

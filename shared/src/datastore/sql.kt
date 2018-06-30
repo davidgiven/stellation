@@ -7,6 +7,7 @@ interface SqlValue {
     fun getInt(): Int
     fun getReal(): Double
     fun getString(): String
+    fun getOid(): Oid?
 }
 
 interface SqlStatement {
@@ -14,6 +15,7 @@ interface SqlStatement {
     fun bindInt(index: Int, value: Int): SqlStatement
     fun bindReal(index: Int, value: Double): SqlStatement
     fun bindString(index: Int, value: String): SqlStatement
+    fun bindOid(index: Int, value: Oid?): SqlStatement
     fun executeQuery(): List<Map<String, SqlValue>>
     fun executeStatement()
 

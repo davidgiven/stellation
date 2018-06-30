@@ -1,6 +1,7 @@
 package datastore
 
 import shared.SThing
+import shared.bind
 import shared.initProperties
 import kotlin.reflect.KProperty
 
@@ -16,13 +17,13 @@ private abstract class PrimitivePropertyImpl<T>(scope: Scope, name: String) : Pr
     override fun createTablesForProperty() {
         executeSql("""
             CREATE TABLE IF NOT EXISTS prop_$name (
-                oid INTEGER PRIMARY KEY REFERENCES prop_kind(oid) ON DELETE CASCADE,
+                oid INTEGER PRIMARY KEY REFERENCES objects(oid) ON DELETE CASCADE,
                 value $sqlType
             )
         """)
     }
 
-    abstract val defaultValue: T?
+    abstract val defaultValue: T
 
     open fun getPrimitive(oid: Oid): T? = TODO("can't get $name")
     open fun setPrimitive(oid: Oid, value: T): Unit = TODO("can't set $name")
@@ -33,7 +34,7 @@ private abstract class PrimitivePropertyImpl<T>(scope: Scope, name: String) : Pr
                         setPrimitive(thing.oid, value)
 
                 override fun getValue(thing: SThing, property: KProperty<*>): T =
-                    getPrimitive(thing.oid) ?: defaultValue!!
+                        getPrimitive(thing.oid) ?: defaultValue
             }
 }
 
@@ -41,7 +42,7 @@ private abstract class AggregatePropertyImpl<T>(scope: Scope, name: String) : Pr
     override fun createTablesForProperty() {
         executeSql("""
             CREATE TABLE IF NOT EXISTS prop_$name (
-                oid INTEGER NOT NULL REFERENCES prop_kind(oid) ON DELETE CASCADE,
+                oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
                 value $sqlType
             )
         """)
@@ -125,26 +126,52 @@ actual fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double> 
             }
         })
 
-actual fun <T> refProperty(scope: Scope, name: String): PrimitiveProperty<T> =
-        addProperty(object : PrimitivePropertyImpl<T>(scope, name) {
-            override val sqlType = "INTEGER REFERENCES prop_kind(oid) ON DELETE CASCADE"
+actual fun <T : SThing> refProperty(scope: Scope, name: String, constructor: () -> T): PrimitiveProperty<T?> =
+        addProperty(object : PrimitivePropertyImpl<T?>(scope, name) {
+            override val sqlType = "INTEGER REFERENCES objects(oid) ON DELETE CASCADE"
             override val defaultValue = null
+
+            override fun getPrimitive(oid: Oid): T? {
+                var childOid: Oid? =
+                        sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
+                                .bindInt(1, oid)
+                                .executeSimpleQuery()
+                                ?.get("value")
+                                ?.getOid()
+                if (childOid == null) {
+                    return null
+                } else {
+                    return constructor().bind(childOid)
+                }
+            }
+
+            override fun setPrimitive(oid: Oid, value: T?) =
+                    sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
+                            .bindInt(1, oid)
+                            .bindOid(2, value?.oid)
+                            .executeStatement()
         })
 
 actual fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T> =
         addProperty(object : AggregatePropertyImpl<T>(scope, name) {
-            override val sqlType = "INTEGER NOT NULL REFERENCES prop_kind(oid) ON DELETE CASCADE"
+            override val sqlType = "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE"
         })
 
-actual fun createObject(kind: String): Oid {
-    sqlStatement("INSERT INTO prop_kind (oid, value) VALUES(NULL, ?)")
-            .bindString(1, kind)
+actual fun createObject(): Oid {
+    sqlStatement("INSERT INTO objects (oid) VALUES(NULL)")
             .executeStatement()
     return sqlStatement("SELECT last_insert_rowid() AS oid")
             .executeSimpleQuery()!!
             .getValue("oid")
-            .getInt()
+            .getOid()!!
 }
+
+actual fun doesObjectExist(oid: Oid) =
+        sqlStatement("SELECT * FROM objects WHERE oid = ? LIMIT 1")
+                .bindOid(1, oid)
+                .executeQuery()
+                .isEmpty()
+                .not()
 
 fun withSqlTransaction(callback: () -> Unit) {
     executeSql("BEGIN")
@@ -160,6 +187,11 @@ fun withSqlTransaction(callback: () -> Unit) {
 fun initialiseDatabase() {
     initProperties()
     withSqlTransaction {
+        executeSql( """
+            CREATE TABLE IF NOT EXISTS objects (
+                oid INTEGER PRIMARY KEY AUTOINCREMENT
+            )
+        """)
         allProperties.forEach { e -> e.value.createTablesForProperty() }
     }
 }

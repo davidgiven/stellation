@@ -1,6 +1,7 @@
 package datastore
 
 import shared.SThing
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 typealias Oid = Int
@@ -42,8 +43,9 @@ interface AggregateProperty<T>: Property<T> {
 expect fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>
 expect fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int>
 expect fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double>
-expect fun <T> refProperty(scope: Scope, name: String): PrimitiveProperty<T>
+expect fun <T: SThing> refProperty(scope: Scope, name: String, constructor: () -> T): PrimitiveProperty<T?>
 expect fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T>
 
-expect fun createObject(kind: String): Oid
+expect fun createObject(): Oid
+expect fun doesObjectExist(oid: Oid): Boolean
 

@@ -7,10 +7,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import shared.ObjectNotVisibleException
+import shared.SGalaxy
 import shared.SStar
 import shared.SUniverse
 import shared.bind
 import shared.create
+import kotlin.test.assertTrue
 
 class DatabaseTest {
     @Rule
@@ -32,9 +34,11 @@ class DatabaseTest {
     fun objectCreationTest() {
         val t1 = SUniverse().create()
         assertThat(t1.oid).isEqualTo(1)
+        assertThat(t1.kind).isEqualTo("SUniverse")
 
         val t2 = SStar().create()
         assertThat(t2.oid).isEqualTo(2)
+        assertThat(t2.kind).isEqualTo("SStar")
     }
 
     @Test
@@ -71,5 +75,19 @@ class DatabaseTest {
     fun objectDoesNotExistTest() {
         thrown.expect(ObjectNotVisibleException::class.java)
         SStar().bind(42)
+    }
+
+    @Test
+    fun refTest() {
+        var u = SUniverse().create()
+        var g = SGalaxy().create()
+
+        assertThat(u.oid).isNotEqualTo(g.oid)
+        assertThat(u.galaxy).isNull()
+        u.galaxy = g
+        assertThat(u.galaxy!!.oid).isEqualTo(g.oid)
+
+        u.galaxy = null
+        assertTrue(u.galaxy == null)
     }
 }

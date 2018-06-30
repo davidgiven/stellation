@@ -10,3 +10,7 @@ actual fun println(vararg ss: String) {
 actual fun exit(status: Int) {
     System.exit(status)
 }
+
+actual fun nanotime() = System.nanoTime()
+
+

@@ -7,11 +7,11 @@ open class SGalaxy : SThing() {
         get() = aggregate(STARS)
 
     fun initialiseGalaxy() {
-//        for (i in 0..99) {
-//            val star = SStar().create()
-//            star.name = "Beetleguice"
+        for (i in 0..99) {
+            val star = SStar().create()
+            star.name = create_star_name()
 //            stars.add(star)
-//        }
+        }
     }
 }
 

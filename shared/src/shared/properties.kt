@@ -10,7 +10,7 @@ import datastore.stringProperty
 val ASTEROIDS_M = intProperty(Scope.LOCAL, "asteroids_m")
 val ASTEROIDS_O = intProperty(Scope.LOCAL, "asteroids_o")
 val BRIGHTNESS = floatProperty(Scope.GLOBAL, "brightness")
-val GALAXY = refProperty<SGalaxy>(Scope.GLOBAL, "galaxy")
+val GALAXY = refProperty(Scope.GLOBAL, "galaxy", ::SGalaxy)
 val KIND = stringProperty(Scope.GLOBAL, "kind")
 val NAME = stringProperty(Scope.LOCAL, "name")
 val PLAYERS = setProperty<SPlayer>(Scope.SERVERONLY, "players")

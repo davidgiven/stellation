@@ -5,6 +5,7 @@ import org.sqlite.SQLiteConfig
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
+import java.sql.Types
 
 private var databaseConnection: Connection? = null
 private var statementCache: Map<String, SqliteStatement> = emptyMap()
@@ -15,6 +16,7 @@ private class SqliteValue(val o: String?) : SqlValue {
     override fun getInt(): Int = o!!.toInt()
     override fun getReal(): Double = o!!.toDouble()
     override fun getString(): String = o!!
+    override fun getOid(): Oid? = o?.toInt()
 }
 
 private class SqliteStatement : SqlStatement {
@@ -45,6 +47,15 @@ private class SqliteStatement : SqlStatement {
 
     override fun bindString(index: Int, value: String): SqliteStatement {
         sqliteStatement.setString(index, value)
+        return this
+    }
+
+    override fun bindOid(index: Int, value: Oid?): SqliteStatement {
+        if (value == null) {
+            sqliteStatement.setNull(index, Types.INTEGER)
+        } else {
+            sqliteStatement.setInt(index, value)
+        }
         return this
     }
 

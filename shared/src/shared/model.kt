@@ -5,6 +5,7 @@ import datastore.AggregateProperty
 import datastore.Oid
 import datastore.PrimitiveProperty
 import datastore.Proxy
+import datastore.doesObjectExist
 
 class ObjectNotVisibleException(var oid: Oid) : Exception("object $oid does not exist or is not visible")
 
@@ -19,16 +20,17 @@ abstract class SThing {
 
 fun <T : SThing> T.bind(newOid: Oid): T {
     check(oid == -1)
-    oid = newOid
-    if (kind.isEmpty()) {
-        throw ObjectNotVisibleException(oid)
+    if (!doesObjectExist(newOid)) {
+        throw ObjectNotVisibleException(newOid)
     }
+    oid = newOid
     return this
 }
 
 fun <T : SThing> T.create(): T {
     check(oid == -1)
-    oid = datastore.createObject(this::class.simpleName!!)
+    oid = datastore.createObject()
+    this.kind = this::class.simpleName!!
     return this
 }
 

@@ -1,7 +1,9 @@
 package server
 
+import datastore.closeDatabase
 import datastore.initialiseDatabase
 import datastore.openDatabase
+import datastore.withSqlTransaction
 import utils.getopt
 import runtime.println
 import runtime.exit
@@ -30,7 +32,11 @@ fun main(argv: Array<String>) {
     openDatabase(databaseFilename)
     initialiseDatabase()
 
-    var universe: SUniverse = findOrCreateUniverse()
+    withSqlTransaction {
+        var universe: SUniverse = findOrCreateUniverse()
+    }
+
+    closeDatabase()
 }
 
 private fun findOrCreateUniverse(): SUniverse {

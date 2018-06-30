@@ -10,7 +10,7 @@ open class SUniverse : SThing() {
 
     fun initialiseUniverse() {
         galaxy = SGalaxy().create()
-        galaxy.initialiseGalaxy()
+        galaxy!!.initialiseGalaxy()
     }
 }
 
