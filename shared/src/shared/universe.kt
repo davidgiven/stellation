@@ -1,15 +1,16 @@
 package shared
 
 import datastore.Aggregate
+import datastore.Oid
 
-open class SUniverse : SThing() {
-        var galaxy by primitive(GALAXY)
+open class SUniverse(oid: Oid) : SThing(oid) {
+    var galaxy by primitive(GALAXY)
 
-        val players: Aggregate<SPlayer>
-            get() = aggregate(PLAYERS)
+    val players: Aggregate<SPlayer>
+        get() = aggregate(PLAYERS)
 
     fun initialiseUniverse() {
-        galaxy = SGalaxy().create()
+        galaxy = createObject(SGalaxy::class)
         galaxy!!.initialiseGalaxy()
     }
 }

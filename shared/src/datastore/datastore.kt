@@ -14,17 +14,21 @@ enum class Scope {
 }
 
 interface Aggregate<T> {
-    fun add(item: T)
-    fun remove(item: T)
+    fun add(item: T): Aggregate<T>
+    fun remove(item: T): Aggregate<T>
     fun contains(item: T): Boolean
-    fun getAll(): Array<T>
-    fun getOne(): T
-    fun forEach(action: (T) -> Unit)
+    fun getAll(): List<T>
+    fun getOne(): T?
+
+    fun forEach(action: (T) -> Unit) = getAll().forEach(action)
 }
 
 interface Proxy<T> {
-    operator fun getValue(thing: SThing, property: KProperty<*>): T
-    operator fun setValue(thing: SThing, property: KProperty<*>, value: T)
+    fun get(): T
+    fun set(value: T)
+
+    operator fun getValue(thing: SThing, property: KProperty<*>): T = get()
+    operator fun setValue(thing: SThing, property: KProperty<*>, value: T) = set(value)
 }
 
 interface Property<T> {
@@ -33,18 +37,18 @@ interface Property<T> {
 }
 
 interface PrimitiveProperty<T>: Property<T> {
-    fun get(thing: SThing): Proxy<T>
+    fun get(oid: Oid): Proxy<T>
 }
 
 interface AggregateProperty<T>: Property<T> {
-    fun get(thing: SThing): Aggregate<T>
+    fun get(oid: Oid): Aggregate<T>
 }
 
 expect fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>
 expect fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int>
 expect fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double>
-expect fun <T: SThing> refProperty(scope: Scope, name: String, constructor: () -> T): PrimitiveProperty<T?>
-expect fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T>
+expect fun <T: SThing> refProperty(scope: Scope, name: String, klass: KClass<T>): PrimitiveProperty<T?>
+expect fun <T: SThing> setProperty(scope: Scope, name: String, klass: KClass<T>): AggregateProperty<T>
 
 expect fun createObject(): Oid
 expect fun doesObjectExist(oid: Oid): Boolean
