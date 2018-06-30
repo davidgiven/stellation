@@ -17,7 +17,7 @@ interface SqlStatement {
     fun executeQuery(): List<Map<String, SqlValue>>
     fun executeStatement()
 
-    fun executeSimpleQuery(): Map<String, SqlValue> = executeQuery().first()
+    fun executeSimpleQuery(): Map<String, SqlValue>? = executeQuery().firstOrNull()
 }
 
 expect fun openDatabase(filename: String)

@@ -3,13 +3,20 @@ package datastore
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
+import shared.ObjectNotVisibleException
 import shared.SStar
 import shared.SUniverse
 import shared.bind
 import shared.create
 
 class DatabaseTest {
+    @Rule
+    @JvmField
+    val thrown = ExpectedException.none()
+
     @Before
     fun setup() {
         openDatabase(":memory:")
@@ -58,5 +65,11 @@ class DatabaseTest {
         assertThat(s2.name).isEqualTo("Foo")
         assertThat(s2.brightness).isEqualTo(7.6)
         assertThat(s2.asteroidsM).isEqualTo(42)
+    }
+
+    @Test
+    fun objectDoesNotExistTest() {
+        thrown.expect(ObjectNotVisibleException::class.java)
+        SStar().bind(42)
     }
 }

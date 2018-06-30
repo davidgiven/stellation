@@ -22,7 +22,9 @@ private abstract class PrimitivePropertyImpl<T>(scope: Scope, name: String) : Pr
         """)
     }
 
-    open fun getPrimitive(oid: Oid): T = TODO("can't get $name")
+    abstract val defaultValue: T?
+
+    open fun getPrimitive(oid: Oid): T? = TODO("can't get $name")
     open fun setPrimitive(oid: Oid, value: T): Unit = TODO("can't set $name")
 
     override fun get(thing: SThing): Proxy<T> =
@@ -31,7 +33,7 @@ private abstract class PrimitivePropertyImpl<T>(scope: Scope, name: String) : Pr
                         setPrimitive(thing.oid, value)
 
                 override fun getValue(thing: SThing, property: KProperty<*>): T =
-                        getPrimitive(thing.oid)
+                    getPrimitive(thing.oid) ?: defaultValue!!
             }
 }
 
@@ -66,13 +68,14 @@ private fun <T : PropertyImpl<*>> addProperty(property: T): T {
 actual fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String> =
         addProperty(object : PrimitivePropertyImpl<String>(scope, name) {
             override val sqlType = "TEXT"
+            override val defaultValue = ""
 
-            override fun getPrimitive(oid: Oid): String =
+            override fun getPrimitive(oid: Oid): String? =
                     sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
                             .bindInt(1, oid)
                             .executeSimpleQuery()
-                            .getValue("value")
-                            .getString()
+                            ?.get("value")
+                            ?.getString()
 
             override fun setPrimitive(oid: Oid, value: String) {
                 sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
@@ -85,13 +88,14 @@ actual fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>
 actual fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int> =
         addProperty(object : PrimitivePropertyImpl<Int>(scope, name) {
             override val sqlType = "INTEGER"
+            override val defaultValue = 0
 
-            override fun getPrimitive(oid: Oid): Int =
+            override fun getPrimitive(oid: Oid): Int? =
                     sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
                             .bindInt(1, oid)
                             .executeSimpleQuery()
-                            .getValue("value")
-                            .getInt()
+                            ?.get("value")
+                            ?.getInt()
 
             override fun setPrimitive(oid: Oid, value: Int) {
                 sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
@@ -104,13 +108,14 @@ actual fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int> =
 actual fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double> =
         addProperty(object : PrimitivePropertyImpl<Double>(scope, name) {
             override val sqlType = "REAL"
+            override val defaultValue = 0.0
 
-            override fun getPrimitive(oid: Oid): Double =
+            override fun getPrimitive(oid: Oid): Double? =
                     sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
                             .bindInt(1, oid)
                             .executeSimpleQuery()
-                            .getValue("value")
-                            .getReal()
+                            ?.get("value")
+                            ?.getReal()
 
             override fun setPrimitive(oid: Oid, value: Double) {
                 sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
@@ -123,6 +128,7 @@ actual fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double> 
 actual fun <T> refProperty(scope: Scope, name: String): PrimitiveProperty<T> =
         addProperty(object : PrimitivePropertyImpl<T>(scope, name) {
             override val sqlType = "INTEGER REFERENCES prop_kind(oid) ON DELETE CASCADE"
+            override val defaultValue = null
         })
 
 actual fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T> =
@@ -135,7 +141,7 @@ actual fun createObject(kind: String): Oid {
             .bindString(1, kind)
             .executeStatement()
     return sqlStatement("SELECT last_insert_rowid() AS oid")
-            .executeSimpleQuery()
+            .executeSimpleQuery()!!
             .getValue("oid")
             .getInt()
 }

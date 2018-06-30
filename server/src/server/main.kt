@@ -5,8 +5,11 @@ import datastore.openDatabase
 import utils.getopt
 import runtime.println
 import runtime.exit
+import shared.ObjectNotVisibleException
 import shared.SUniverse
 import shared.bind
+import shared.create
+import utils.log
 
 private var databaseFilename = "stellation.sqlite"
 
@@ -26,4 +29,18 @@ fun main(argv: Array<String>) {
 
     openDatabase(databaseFilename)
     initialiseDatabase()
+
+    var universe: SUniverse = findOrCreateUniverse()
+}
+
+private fun findOrCreateUniverse(): SUniverse {
+    try {
+        return SUniverse().bind(1)
+    } catch (_: ObjectNotVisibleException) {
+        log("creating new universe")
+        var universe = SUniverse().create()
+        check(universe.oid == 1)
+        universe.initialiseUniverse()
+        return universe
+    }
 }

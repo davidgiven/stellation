@@ -6,6 +6,8 @@ import datastore.Oid
 import datastore.PrimitiveProperty
 import datastore.Proxy
 
+class ObjectNotVisibleException(var oid: Oid) : Exception("object $oid does not exist or is not visible")
+
 abstract class SThing {
     var oid: Oid = -1
 
@@ -15,23 +17,19 @@ abstract class SThing {
     var kind by primitive(KIND)
 }
 
-fun <T: SThing> T.bind(newOid: Oid): T {
+fun <T : SThing> T.bind(newOid: Oid): T {
     check(oid == -1)
     oid = newOid
+    if (kind.isEmpty()) {
+        throw ObjectNotVisibleException(oid)
+    }
     return this
 }
 
-fun <T: SThing> T.create(): T {
+fun <T : SThing> T.create(): T {
     check(oid == -1)
     oid = datastore.createObject(this::class.simpleName!!)
     return this
-}
-
-open class SUniverse : SThing() {
-    var galaxy by primitive(GALAXY)
-
-    val players: Aggregate<SPlayer>
-        get() = aggregate(PLAYERS)
 }
 
 open class SStar : SThing() {

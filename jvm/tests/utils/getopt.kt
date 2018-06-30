@@ -7,7 +7,7 @@ import kotlin.test.Test
 
 class GetoptTest {
     @Rule @JvmField
-    val thrown: ExpectedException = ExpectedException.none()
+    val thrown = ExpectedException.none()
 
     private var results: Array<Pair<String, String>> = emptyArray()
 
