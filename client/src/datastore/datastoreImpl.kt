@@ -8,5 +8,5 @@ actual fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double> 
 actual fun <T> refProperty(scope: Scope, name: String): PrimitiveProperty<T> = TODO("unimplemented")
 actual fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T> = TODO("unimplemented")
 
-actual fun createObject(kind: String): Oid = TODO("unimplemented")
+actual fun createObject(kind: String): Oid = UNIMPLEMENTED()
 

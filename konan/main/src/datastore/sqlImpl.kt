@@ -9,7 +9,13 @@ import kotlinx.cinterop.*
 private var databaseConnection: CPointer<sqlite3>? = null
 private var statementCache: Map<String, SqliteStatement> = emptyMap()
 
-private class SqliteValue(val value: CPointer<sqlite3_value>?) : SqlValue {
+private class SqliteValue(unprotectedValue: CPointer<sqlite3_value>?) : SqlValue {
+    val value = sqlite3_value_dup(unprotectedValue)
+
+    protected fun finalize() {
+        sqlite3_value_free(value)
+    }
+
     override fun isNull() = (value == null)
     override fun getInt(): Int = sqlite3_value_int(value)
     override fun getReal(): Double = sqlite3_value_double(value)
@@ -66,7 +72,7 @@ private class SqliteStatement : SqlStatement {
         val columnCount = sqlite3_column_count(sqliteStatement)
         var columnNames = Array<String>(columnCount) { "" }
         for (i in 0..(columnCount - 1)) {
-            columnNames[i] = sqlite3_column_origin_name(sqliteStatement, i)!!.toKString()
+            columnNames[i] = sqlite3_column_name(sqliteStatement, i)!!.toKString()
         }
 
         fun generator(): Map<String, SqlValue>? {
