@@ -1,7 +1,6 @@
 include 'server'
 include 'client'
 include 'shared'
-include 'konan/ksqlite'
 include 'konan/main'
 include 'jvm'
 rootProject.name = 'stellation'

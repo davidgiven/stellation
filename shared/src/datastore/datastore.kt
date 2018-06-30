@@ -47,7 +47,3 @@ expect fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T>
 
 expect fun createObject(kind: String): Oid
 
-expect fun openDatabase(filename: String)
-expect fun executeSql(sql: String)
-
-

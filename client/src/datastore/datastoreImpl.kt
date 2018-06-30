@@ -1,6 +1,6 @@
 package datastore
 
-import shared.initProperties
+import utils.UNIMPLEMENTED
 
 actual fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String> = TODO("unimplemented")
 actual fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int> = TODO("unimplemented")
@@ -9,17 +9,4 @@ actual fun <T> refProperty(scope: Scope, name: String): PrimitiveProperty<T> = T
 actual fun <T> setProperty(scope: Scope, name: String): AggregateProperty<T> = TODO("unimplemented")
 
 actual fun createObject(kind: String): Oid = TODO("unimplemented")
-
-actual fun openDatabase(filename: String) {
-    TODO("unimplemented")
-}
-
-actual fun executeSql(sql: String) {
-    TODO("unimplemented")
-}
-
-fun initDatabase() {
-    initProperties()
-}
-
 

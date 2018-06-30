@@ -30,7 +30,5 @@ allprojects {
     }
 }
 
-ext.konanKsqliteProject = project(":konan/ksqlite")
-
 version '1.0-SNAPSHOT'
 
