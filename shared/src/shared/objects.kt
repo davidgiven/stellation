@@ -21,6 +21,16 @@ inline fun <reified T : SThing> registerClass(noinline constructor: (Oid) -> T) 
 }
 
 abstract class SThing(val oid: Oid) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other)
+            return true
+        if ((other == null) || (other !is SThing))
+            return false
+        return oid == this.oid
+    }
+
+    override fun hashCode(): Int = oid
+
     protected fun <T> primitive(property: PrimitiveProperty<T>): Proxy<T> = property.get(oid)
     protected fun <T> aggregate(property: AggregateProperty<T>): Aggregate<T> = property.get(oid)
 

@@ -13,14 +13,17 @@ enum class Scope {
     GLOBAL,
 }
 
-interface Aggregate<T> {
+interface Aggregate<T>: Iterable<T> {
     fun add(item: T): Aggregate<T>
     fun remove(item: T): Aggregate<T>
-    fun contains(item: T): Boolean
+    operator fun contains(item: T): Boolean
     fun getAll(): List<T>
     fun getOne(): T?
 
     fun forEach(action: (T) -> Unit) = getAll().forEach(action)
+    operator fun plusAssign(item: T) { add(item) }
+    operator fun minusAssign(item: T) { remove(item) }
+    override fun iterator(): Iterator<T> = getAll().iterator()
 }
 
 interface Proxy<T> {
@@ -36,19 +39,19 @@ interface Property<T> {
     val name: String
 }
 
-interface PrimitiveProperty<T>: Property<T> {
+interface PrimitiveProperty<T> : Property<T> {
     fun get(oid: Oid): Proxy<T>
 }
 
-interface AggregateProperty<T>: Property<T> {
+interface AggregateProperty<T> : Property<T> {
     fun get(oid: Oid): Aggregate<T>
 }
 
 expect fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>
 expect fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int>
 expect fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double>
-expect fun <T: SThing> refProperty(scope: Scope, name: String, klass: KClass<T>): PrimitiveProperty<T?>
-expect fun <T: SThing> setProperty(scope: Scope, name: String, klass: KClass<T>): AggregateProperty<T>
+expect fun <T : SThing> refProperty(scope: Scope, name: String, klass: KClass<T>): PrimitiveProperty<T?>
+expect fun <T : SThing> setProperty(scope: Scope, name: String, klass: KClass<T>): AggregateProperty<T>
 
 expect fun createObject(): Oid
 expect fun doesObjectExist(oid: Oid): Boolean

@@ -64,15 +64,23 @@ class DatabaseTest {
 
     @Test
     fun objectSaveAndLoadTest() {
-        var s1 = createObject(SStar::class)
+        val s1 = createObject(SStar::class)
         s1.name = "Foo"
         s1.brightness = 7.6
         s1.asteroidsM = 42
 
-        var s2 = s1.oid.load(SStar::class)
+        val s2 = s1.oid.load(SStar::class)
         assertThat(s2.name).isEqualTo("Foo")
         assertThat(s2.brightness).isEqualTo(7.6)
         assertThat(s2.asteroidsM).isEqualTo(42)
+    }
+
+    @Test
+    fun objectEqualityTest() {
+        val s1 = createObject(SStar::class)
+        val s2 = s1.oid.load(SStar::class)
+
+        assertThat(s1).isEqualTo(s2)
     }
 
     @Test
@@ -109,5 +117,43 @@ class DatabaseTest {
 
         var m = createObject(SModule::class)
         m.oid.load(SFactory::class)
+    }
+
+    @Test
+    fun addItemsToSetTest() {
+        var g = createObject(SGalaxy::class)
+        var stars = Array(5) { createObject(SStar::class) }
+        stars.forEach { g.stars += it }
+
+        assertThat(g.stars).containsExactlyElementsIn(stars)
+    }
+
+    @Test
+    fun removeItemsFromSetTest() {
+        var g = createObject(SGalaxy::class)
+        var stars = Array(5) { createObject(SStar::class) }
+        stars.forEach { g.stars += it }
+
+        g.stars -= stars[2]
+
+        assertThat(g.stars).containsExactly(stars[0], stars[1], stars[3], stars[4])
+    }
+
+    @Test
+    fun getItemFromSetTest() {
+        var g = createObject(SGalaxy::class)
+        var stars = List(5) { createObject(SStar::class) }
+        stars.forEach { g.stars += it }
+
+        while (true) {
+            var s = g.stars.getOne()
+            s ?: break
+
+            assertThat(s).isIn(stars)
+            g.stars -= s
+            stars -= s
+        }
+
+        assertThat(stars).isEmpty()
     }
 }
