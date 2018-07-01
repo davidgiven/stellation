@@ -16,11 +16,19 @@ enum class Scope {
 interface Aggregate<T> : Iterable<T> {
     fun add(item: T): Aggregate<T>
     fun remove(item: T): Aggregate<T>
+    fun clear(): Aggregate<T>
     operator fun contains(item: T): Boolean
     fun getAll(): List<T>
     fun getOne(): T?
 
     fun forEach(action: (T) -> Unit) = getAll().forEach(action)
+    override fun iterator(): Iterator<T> = getAll().iterator()
+
+    fun addAll(iterable: Iterable<T>): Aggregate<T> {
+        iterable.forEach { add(it) }
+        return this
+    }
+
     operator fun plusAssign(item: T) {
         add(item)
     }
@@ -28,8 +36,6 @@ interface Aggregate<T> : Iterable<T> {
     operator fun minusAssign(item: T) {
         remove(item)
     }
-
-    override fun iterator(): Iterator<T> = getAll().iterator()
 }
 
 interface Proxy<T> {

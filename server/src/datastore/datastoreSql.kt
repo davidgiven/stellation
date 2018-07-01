@@ -168,6 +168,13 @@ actual fun <T : SThing> setProperty(scope: Scope, name: String, klass: KClass<T>
                             return this
                         }
 
+                        override fun clear(): Aggregate<T> {
+                            sqlStatement("DELETE FROM prop_$name WHERE oid = ?")
+                                    .bindInt(1, oid)
+                                    .executeStatement()
+                            return this
+                        }
+
                         override fun contains(item: T): Boolean =
                                 sqlStatement(
                                         "SELECT COUNT(*) AS count FROM prop_$name WHERE oid = ? AND value = ? LIMIT 1")

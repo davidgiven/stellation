@@ -156,4 +156,15 @@ class DatabaseTest {
 
         assertThat(stars).isEmpty()
     }
+
+    @Test
+    fun clearSetTest() {
+        var g = createObject(SGalaxy::class)
+        var stars = List(5) { createObject(SStar::class) }
+        stars.forEach { g.stars += it }
+
+        g.stars.clear()
+
+        assertThat(g.stars).isEmpty()
+    }
 }
