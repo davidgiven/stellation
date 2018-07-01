@@ -1,7 +1,6 @@
 package datastore
 
 import shared.SThing
-import shared.initClasses
 import shared.initProperties
 import shared.load
 import kotlin.reflect.KClass
@@ -235,7 +234,6 @@ fun withSqlTransaction(callback: () -> Unit) {
 
 fun initialiseDatabase() {
     initProperties()
-    initClasses()
     withSqlTransaction {
         executeSql(
                 """

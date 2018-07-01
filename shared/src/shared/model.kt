@@ -11,11 +11,6 @@ open class SStar(oid: Oid) : SThing(oid) {
     var asteroidsO by primitive(ASTEROIDS_O)
 }
 
-open class SPlayer(oid: Oid) : SThing(oid) {
-    var name by primitive(NAME)
-}
-
-
 open class SShip(oid: Oid) : SThing(oid) {
     var name by primitive(NAME)
 }

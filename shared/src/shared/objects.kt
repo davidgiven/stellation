@@ -14,11 +14,24 @@ class ObjectNotVisibleException(val oid: Oid)
 class DatabaseTypeMismatchException(val oid: Oid, val kind: String, val desired: String)
     : Exception("expected $oid to be a $desired, but it was a $kind")
 
-var classes: Map<String, (Oid) -> SThing> = emptyMap()
+private typealias ClassMap = Map<String, (Oid) -> SThing>
 
-inline fun <reified T : SThing> registerClass(noinline constructor: (Oid) -> T) {
-    classes += Pair(T::class.simpleName!!, constructor)
-}
+var classes: ClassMap = emptyMap<String, (Oid) -> SThing>()
+        .registerClass(::SCargo)
+        .registerClass(::SFactory)
+        .registerClass(::SGalaxy)
+        .registerClass(::SJumpdrive)
+        .registerClass(::SModule)
+        .registerClass(::SPlayer)
+        .registerClass(::SRAMCannon)
+        .registerClass(::SShip)
+        .registerClass(::SStar)
+        .registerClass(::STank)
+        .registerClass(::SUniverse)
+        .registerClass(::SWeapon)
+
+inline fun <reified T : SThing> ClassMap.registerClass(noinline constructor: (Oid) -> T): ClassMap =
+        this + Pair(T::class.simpleName!!, constructor)
 
 abstract class SThing(val oid: Oid) {
     override fun equals(other: Any?): Boolean {
@@ -58,19 +71,4 @@ fun <T : SThing> createObject(klass: KClass<T>): T {
 }
 
 fun <T : SThing> Oid.load(klass: KClass<T>): T = loadObject(this, klass)
-
-fun initClasses() {
-    registerClass(::SCargo)
-    registerClass(::SFactory)
-    registerClass(::SGalaxy)
-    registerClass(::SJumpdrive)
-    registerClass(::SModule)
-    registerClass(::SPlayer)
-    registerClass(::SRAMCannon)
-    registerClass(::SShip)
-    registerClass(::SStar)
-    registerClass(::STank)
-    registerClass(::SUniverse)
-    registerClass(::SWeapon)
-}
 
