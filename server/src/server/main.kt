@@ -4,13 +4,13 @@ import datastore.closeDatabase
 import datastore.initialiseDatabase
 import datastore.openDatabase
 import datastore.withSqlTransaction
-import utils.getopt
-import runtime.println
 import runtime.exit
+import runtime.println
 import shared.ObjectNotVisibleException
 import shared.SUniverse
 import shared.createObject
 import shared.loadObject
+import utils.getopt
 import utils.log
 
 private var databaseFilename = "stellation.sqlite"

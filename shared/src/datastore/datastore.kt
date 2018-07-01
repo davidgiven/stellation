@@ -13,7 +13,7 @@ enum class Scope {
     GLOBAL,
 }
 
-interface Aggregate<T>: Iterable<T> {
+interface Aggregate<T> : Iterable<T> {
     fun add(item: T): Aggregate<T>
     fun remove(item: T): Aggregate<T>
     operator fun contains(item: T): Boolean
@@ -21,8 +21,14 @@ interface Aggregate<T>: Iterable<T> {
     fun getOne(): T?
 
     fun forEach(action: (T) -> Unit) = getAll().forEach(action)
-    operator fun plusAssign(item: T) { add(item) }
-    operator fun minusAssign(item: T) { remove(item) }
+    operator fun plusAssign(item: T) {
+        add(item)
+    }
+
+    operator fun minusAssign(item: T) {
+        remove(item)
+    }
+
     override fun iterator(): Iterator<T> = getAll().iterator()
 }
 

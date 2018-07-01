@@ -1,6 +1,6 @@
 package datastore
 
-class SqlException(message: String): Exception(message)
+class SqlException(message: String) : Exception(message)
 
 interface SqlValue {
     fun isNull(): Boolean

@@ -89,14 +89,14 @@ private class SqliteStatement : SqlStatement {
             val e = sqlite3_step(sqliteStatement)
             when (e) {
                 SQLITE_DONE -> return null
-                SQLITE_ROW -> {
+                SQLITE_ROW  -> {
                     var data: Map<String, SqlValue> = emptyMap()
                     for (i in 0..(columnCount - 1)) {
                         data += Pair(columnNames[i], SqliteValue(sqlite3_column_value(sqliteStatement, i)))
                     }
                     return data
                 }
-                else ->
+                else        ->
                     throw SqlException("Cursor error $e")
             }
         }

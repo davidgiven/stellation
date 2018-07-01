@@ -2,7 +2,7 @@ package utils
 
 const val FILE_OPTION = " <file>"
 
-open class GetoptException(message: String): FatalError(message)
+open class GetoptException(message: String) : FatalError(message)
 
 class MissingOptionException(arg: String) : GetoptException(
         "parameter for option '$arg' is missing (try --help)"
