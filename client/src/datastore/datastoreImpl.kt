@@ -14,5 +14,6 @@ actual fun <T : SThing> setProperty(scope: Scope, name: String, klass: KClass<T>
         UNIMPLEMENTED()
 
 actual fun createObject(): Oid = UNIMPLEMENTED()
+actual fun destroyObject(oid: Oid): Unit = UNIMPLEMENTED()
 actual fun doesObjectExist(oid: Oid): Boolean = UNIMPLEMENTED()
 

@@ -209,6 +209,12 @@ actual fun createObject(): Oid {
             .getOid()!!
 }
 
+actual fun destroyObject(oid: Oid) {
+    sqlStatement("DELETE FROM objects WHERE oid = ?")
+            .bindInt(1, oid)
+            .executeStatement()
+}
+
 actual fun doesObjectExist(oid: Oid) =
         sqlStatement("SELECT COUNT(*) AS count FROM objects WHERE oid = ? LIMIT 1")
                 .bindOid(1, oid)

@@ -66,5 +66,6 @@ expect fun <T : SThing> refProperty(scope: Scope, name: String, klass: KClass<T>
 expect fun <T : SThing> setProperty(scope: Scope, name: String, klass: KClass<T>): AggregateProperty<T>
 
 expect fun createObject(): Oid
+expect fun destroyObject(oid: Oid)
 expect fun doesObjectExist(oid: Oid): Boolean
 

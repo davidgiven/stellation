@@ -167,4 +167,17 @@ class DatabaseTest {
 
         assertThat(g.stars).isEmpty()
     }
+
+    @Test
+    fun destroyObjectsTest() {
+        var g = createObject(SGalaxy::class)
+        var stars = List(5) { createObject(SStar::class) }
+        stars.forEach { g.stars += it }
+
+        val oid = stars[2].oid
+        destroyObject(oid)
+
+        assertThat( doesObjectExist(oid)).isFalse()
+        assertThat(g.stars).containsExactly(stars[0], stars[1], stars[3], stars[4])
+    }
 }
