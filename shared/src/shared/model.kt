@@ -16,6 +16,8 @@ open class SShip(oid: Oid) : SThing(oid) {
 }
 
 open class SModule(oid: Oid) : SThing(oid) {
+    var width by primitive(WIDTH)
+    var height by primitive(HEIGHT)
 }
 
 open class SJumpdrive(oid: Oid) : SModule(oid) {

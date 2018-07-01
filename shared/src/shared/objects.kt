@@ -19,6 +19,7 @@ private typealias ClassMap = Map<String, (Oid) -> SThing>
 var classes: ClassMap = emptyMap<String, (Oid) -> SThing>()
         .registerClass(::SCargo)
         .registerClass(::SFactory)
+        .registerClass(::SFrame)
         .registerClass(::SGalaxy)
         .registerClass(::SJumpdrive)
         .registerClass(::SModule)
