@@ -1,17 +1,16 @@
 package server
 
 import datastore.closeDatabase
+import datastore.doesObjectExist
 import datastore.initialiseDatabase
 import datastore.openDatabase
 import datastore.withSqlTransaction
+import model.SUniverse
+import model.createNewUniverse
+import model.loadObject
 import runtime.exit
 import runtime.println
-import model.ObjectNotVisibleException
-import model.SUniverse
-import model.createObject
-import model.loadObject
 import utils.getopt
-import utils.log
 
 private var databaseFilename = "stellation.sqlite"
 
@@ -39,14 +38,5 @@ fun main(argv: Array<String>) {
     closeDatabase()
 }
 
-private fun findOrCreateUniverse(): SUniverse {
-    try {
-        return loadObject(1, SUniverse::class)
-    } catch (_: ObjectNotVisibleException) {
-        log("creating new universe")
-        var universe = createObject(SUniverse::class)
-        check(universe.oid == 1)
-        universe.initialiseUniverse()
-        return universe
-    }
-}
+private fun findOrCreateUniverse(): SUniverse =
+        if (doesObjectExist(1)) loadObject(1, SUniverse::class) else createNewUniverse()

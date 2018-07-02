@@ -2,18 +2,14 @@ package model
 
 import datastore.Aggregate
 import datastore.Oid
-import shared.create_star_name
 
 open class SGalaxy(oid: Oid) : SThing(oid) {
+    companion object {
+        val RADIUS = 30
+        val NUMBER_OF_STARS = 200
+    }
+
     val stars: Aggregate<SStar>
         get() = aggregate(STARS)
-
-    fun initialiseGalaxy() {
-        for (i in 0..99) {
-            val star = createObject(SStar::class)
-            star.name = create_star_name()
-            stars.add(star)
-        }
-    }
 }
 
