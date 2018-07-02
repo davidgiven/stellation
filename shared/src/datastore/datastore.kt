@@ -38,12 +38,18 @@ interface Aggregate<T> : Iterable<T> {
     }
 }
 
-interface Proxy<T> {
+interface VarProxy<T> {
     fun get(): T
     fun set(value: T)
 
     operator fun getValue(thing: SThing, property: KProperty<*>): T = get()
     operator fun setValue(thing: SThing, property: KProperty<*>, value: T) = set(value)
+}
+
+interface ValProxy<T> {
+    fun get(): T
+
+    operator fun getValue(thing: SThing, property: KProperty<*>): T = get()
 }
 
 interface Property<T> {
@@ -52,11 +58,11 @@ interface Property<T> {
 }
 
 interface PrimitiveProperty<T> : Property<T> {
-    fun get(oid: Oid): Proxy<T>
+    fun get(oid: Oid): VarProxy<T>
 }
 
 interface AggregateProperty<T> : Property<T> {
-    fun get(oid: Oid): Aggregate<T>
+    fun get(oid: Oid): ValProxy<Aggregate<T>>
 }
 
 expect fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>

@@ -30,8 +30,8 @@ private abstract class PrimitivePropertyImpl<T>(scope: Scope, name: String) : Pr
     open fun getPrimitive(oid: Oid): T? = TODO("can't get $name")
     open fun setPrimitive(oid: Oid, value: T): Unit = TODO("can't set $name")
 
-    override fun get(oid: Oid): Proxy<T> =
-            object : Proxy<T> {
+    override fun get(oid: Oid): VarProxy<T> =
+            object : VarProxy<T> {
                 override fun set(value: T) = setPrimitive(oid, value)
                 override fun get(): T = getPrimitive(oid) ?: defaultValue
             }
@@ -58,6 +58,13 @@ private abstract class AggregatePropertyImpl<T : SThing>(scope: Scope, name: Str
             CREATE INDEX IF NOT EXISTS index_byboth_$name ON prop_$name (oid, value)
         """)
     }
+
+    open fun getPrimitive(oid: Oid): Aggregate<T> = TODO("can't get $name")
+
+    override fun get(oid: Oid): ValProxy<Aggregate<T>> =
+            object : ValProxy<Aggregate<T>> {
+                override fun get(): Aggregate<T> = getPrimitive(oid)
+            }
 }
 
 private fun <T : PropertyImpl<*>> addProperty(property: T): T {
@@ -149,7 +156,7 @@ actual fun <T : SThing> refProperty(scope: Scope, name: String, klass: KClass<T>
 
 actual fun <T : SThing> setProperty(scope: Scope, name: String, klass: KClass<T>): AggregateProperty<T> =
         addProperty(object : AggregatePropertyImpl<T>(scope, name) {
-            override fun get(oid: Oid): Aggregate<T> =
+            override fun getPrimitive(oid: Oid): Aggregate<T> =
                     object : Aggregate<T> {
                         override fun add(item: T): Aggregate<T> {
                             sqlStatement("INSERT OR IGNORE INTO prop_$name (oid, value) VALUES (?, ?)")

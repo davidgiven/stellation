@@ -1,6 +1,5 @@
 package model
 
-import datastore.Aggregate
 import datastore.Oid
 import shared.NameGenerator
 import shared.random
@@ -11,9 +10,7 @@ import kotlin.math.sin
 
 open class SUniverse(oid: Oid) : SThing(oid) {
     var galaxy by primitive(GALAXY)
-
-    val players: Aggregate<SPlayer>
-        get() = aggregate(PLAYERS)
+    val players by aggregate(PLAYERS)
 }
 
 fun createNewUniverse(): SUniverse {

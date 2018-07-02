@@ -9,7 +9,6 @@ open class SGalaxy(oid: Oid) : SThing(oid) {
         val NUMBER_OF_STARS = 200
     }
 
-    val stars: Aggregate<SStar>
-        get() = aggregate(STARS)
+    val stars by aggregate(STARS)
 }
 

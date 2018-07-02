@@ -1,10 +1,8 @@
 package model
 
-import datastore.Aggregate
 import datastore.AggregateProperty
 import datastore.Oid
 import datastore.PrimitiveProperty
-import datastore.Proxy
 import datastore.doesObjectExist
 import kotlin.reflect.KClass
 
@@ -45,10 +43,11 @@ abstract class SThing(val oid: Oid) {
 
     override fun hashCode(): Int = oid
 
-    protected fun <T> primitive(property: PrimitiveProperty<T>): Proxy<T> = property.get(oid)
-    protected fun <T> aggregate(property: AggregateProperty<T>): Aggregate<T> = property.get(oid)
+    protected fun <T> primitive(property: PrimitiveProperty<T>) = property.get(oid)
+    protected fun <T> aggregate(property: AggregateProperty<T>) = property.get(oid)
 
     var kind by primitive(KIND)
+    var owner by primitive(OWNER)
 }
 
 @Suppress("UNCHECKED_CAST")
