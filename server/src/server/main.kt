@@ -6,6 +6,7 @@ import datastore.initialiseDatabase
 import datastore.openDatabase
 import datastore.withSqlTransaction
 import model.SUniverse
+import model.createNewPlayer
 import model.createNewUniverse
 import model.loadObject
 import runtime.exit
