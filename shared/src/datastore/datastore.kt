@@ -1,6 +1,8 @@
 package datastore
 
 import model.SThing
+import kotlin.properties.ReadOnlyProperty
+import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -38,18 +40,18 @@ interface Aggregate<T> : Iterable<T> {
     }
 }
 
-interface VarProxy<T> {
+interface VarProxy<T> : ReadWriteProperty<SThing, T> {
     fun get(): T
     fun set(value: T)
 
-    operator fun getValue(thing: SThing, property: KProperty<*>): T = get()
-    operator fun setValue(thing: SThing, property: KProperty<*>, value: T) = set(value)
+    override operator fun getValue(thisRef: SThing, property: KProperty<*>): T = get()
+    override operator fun setValue(thisRef: SThing, property: KProperty<*>, value: T) = set(value)
 }
 
-interface ValProxy<T> {
+interface ValProxy<T> : ReadOnlyProperty<SThing, T> {
     fun get(): T
 
-    operator fun getValue(thing: SThing, property: KProperty<*>): T = get()
+    override operator fun getValue(thisRef: SThing, property: KProperty<*>): T = get()
 }
 
 interface Property<T> {
