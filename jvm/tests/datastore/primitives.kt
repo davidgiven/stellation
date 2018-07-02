@@ -6,16 +6,16 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
-import shared.DatabaseTypeMismatchException
-import shared.ObjectNotVisibleException
-import shared.SFactory
-import shared.SGalaxy
-import shared.SModule
-import shared.SStar
-import shared.SUniverse
-import shared.createObject
-import shared.load
-import shared.loadObject
+import model.DatabaseTypeMismatchException
+import model.ObjectNotVisibleException
+import model.SFactory
+import model.SGalaxy
+import model.SModule
+import model.SStar
+import model.SUniverse
+import model.createObject
+import model.load
+import model.loadObject
 import kotlin.test.assertTrue
 
 class DatabaseTest {

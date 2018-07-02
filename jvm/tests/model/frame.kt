@@ -1,4 +1,4 @@
-package shared
+package model
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before

@@ -1,8 +1,8 @@
 package datastore
 
-import shared.SThing
-import shared.initProperties
-import shared.load
+import model.SThing
+import model.initProperties
+import model.load
 import kotlin.reflect.KClass
 
 private var allProperties: Map<String, PropertyImpl<*>> = emptyMap()

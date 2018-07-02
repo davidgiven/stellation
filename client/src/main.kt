@@ -1,4 +1,4 @@
-import shared.initProperties
+import model.initProperties
 
 fun main(argv: Array<String>) {
     initProperties()

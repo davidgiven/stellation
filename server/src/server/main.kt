@@ -6,10 +6,10 @@ import datastore.openDatabase
 import datastore.withSqlTransaction
 import runtime.exit
 import runtime.println
-import shared.ObjectNotVisibleException
-import shared.SUniverse
-import shared.createObject
-import shared.loadObject
+import model.ObjectNotVisibleException
+import model.SUniverse
+import model.createObject
+import model.loadObject
 import utils.getopt
 import utils.log
 

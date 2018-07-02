@@ -1,6 +1,6 @@
 package datastore
 
-import shared.SThing
+import model.SThing
 import utils.UNIMPLEMENTED
 import kotlin.reflect.KClass
 

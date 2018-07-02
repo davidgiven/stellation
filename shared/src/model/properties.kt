@@ -1,4 +1,4 @@
-package shared
+package model
 
 import datastore.Scope
 import datastore.floatProperty
@@ -6,6 +6,10 @@ import datastore.intProperty
 import datastore.refProperty
 import datastore.setProperty
 import datastore.stringProperty
+import model.SGalaxy
+import model.SFrame
+import model.SPlayer
+import model.SStar
 
 val ASTEROIDS_M = intProperty(Scope.LOCAL, "asteroids_m")
 val ASTEROIDS_O = intProperty(Scope.LOCAL, "asteroids_o")

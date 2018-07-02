@@ -1,7 +1,8 @@
-package shared
+package model
 
 import datastore.Aggregate
 import datastore.Oid
+import shared.create_star_name
 
 open class SGalaxy(oid: Oid) : SThing(oid) {
     val stars: Aggregate<SStar>
