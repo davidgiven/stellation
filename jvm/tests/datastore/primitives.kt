@@ -16,7 +16,8 @@ import model.SThing
 import model.SUniverse
 import model.createObject
 import model.load
-import model.loadObject
+import model.loadRaw
+import model.loadRawObject
 import kotlin.test.assertTrue
 
 class DatabaseTest {
@@ -70,7 +71,7 @@ class DatabaseTest {
         s1.brightness = 7.6
         s1.asteroidsM = 42
 
-        val s2 = s1.oid.load(SStar::class)
+        val s2 = s1.oid.loadRaw(SStar::class)
         assertThat(s2.name).isEqualTo("Foo")
         assertThat(s2.brightness).isEqualTo(7.6)
         assertThat(s2.asteroidsM).isEqualTo(42)
@@ -79,7 +80,7 @@ class DatabaseTest {
     @Test
     fun objectEqualityTest() {
         val s1 = createObject(SStar::class)
-        val s2 = s1.oid.load(SStar::class)
+        val s2 = s1.oid.loadRaw(SStar::class)
 
         assertThat(s1).isEqualTo(s2)
     }
@@ -87,7 +88,7 @@ class DatabaseTest {
     @Test
     fun objectDoesNotExistTest() {
         thrown.expect(ObjectNotVisibleException::class.java)
-        loadObject(42, SStar::class)
+        loadRawObject(42, SStar::class)
     }
 
     @Test
@@ -107,7 +108,7 @@ class DatabaseTest {
     @Test
     fun downcastTest() {
         var f = createObject(SFactory::class)
-        var m = f.oid.load(SModule::class)
+        var m = f.oid.loadRaw(SModule::class)
 
         assertThat(f.kind).isEqualTo(m.kind)
     }
@@ -117,7 +118,7 @@ class DatabaseTest {
         thrown.expect(DatabaseTypeMismatchException::class.java)
 
         var m = createObject(SModule::class)
-        m.oid.load(SFactory::class)
+        m.oid.loadRaw(SFactory::class)
     }
 
     @Test
@@ -180,5 +181,12 @@ class DatabaseTest {
 
         assertThat( doesObjectExist(oid)).isFalse()
         assertThat(g.contents).containsExactly(contents[0], contents[1], contents[3], contents[4])
+    }
+
+    @Test
+    fun objectCacheTest() {
+        val g1 = createObject(SGalaxy::class)
+        val g2 = g1.oid.load(SGalaxy::class)
+        assertThat(g1).isSameAs(g2)
     }
 }

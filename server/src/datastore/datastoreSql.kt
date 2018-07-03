@@ -3,6 +3,7 @@ package datastore
 import model.SThing
 import model.initProperties
 import model.load
+import model.resetObjectCache
 import kotlin.reflect.KClass
 
 private var allProperties: Map<String, PropertyImpl<*>> = emptyMap()
@@ -241,6 +242,7 @@ fun withSqlTransaction(callback: () -> Unit) {
 
 fun initialiseDatabase() {
     initProperties()
+    resetObjectCache()
     withSqlTransaction {
         executeSql(
                 """

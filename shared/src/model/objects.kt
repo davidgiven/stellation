@@ -34,18 +34,38 @@ var classes: ClassMap = emptyMap<String, (Oid) -> SThing>()
 inline fun <reified T : SThing> ClassMap.registerClass(noinline constructor: (Oid) -> T): ClassMap =
         this + Pair(T::class.simpleName!!, constructor)
 
+private var objectCache = emptyMap<Oid, SThing>()
+
+fun resetObjectCache() {
+    objectCache = emptyMap()
+}
+
 @Suppress("UNCHECKED_CAST")
-fun <T : SThing> loadObject(oid: Oid, klass: KClass<T>): T {
+fun <T : SThing> loadRawObject(oid: Oid, kclass: KClass<T>): T {
     if (!doesObjectExist(oid)) {
         throw ObjectNotVisibleException(oid)
     }
 
     val kind = KIND.get(oid).get()
     val instance: SThing = classes.getValue(kind)(oid)
-    if (klass.isInstance(instance)) {
+    if (kclass.isInstance(instance)) {
         return instance as T
     }
-    throw DatabaseTypeMismatchException(oid, kind, klass.simpleName!!)
+    throw DatabaseTypeMismatchException(oid, kind, kclass.simpleName!!)
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T : SThing> loadObject(oid: Oid, kclass: KClass<T>): T {
+    var instance = objectCache.get(oid)
+    if (instance == null) {
+        instance = loadRawObject(oid, kclass)
+        objectCache += oid to instance
+    }
+
+    if (kclass.isInstance(instance)) {
+        return instance as T
+    }
+    throw DatabaseTypeMismatchException(oid, KIND.get(oid).get(), kclass.simpleName!!)
 }
 
 fun <T : SThing> createObject(klass: KClass<T>): T {
@@ -55,4 +75,4 @@ fun <T : SThing> createObject(klass: KClass<T>): T {
 }
 
 fun <T : SThing> Oid.load(klass: KClass<T>): T = loadObject(this, klass)
-
+fun <T : SThing> Oid.loadRaw(klass: KClass<T>): T = loadRawObject(this, klass)
