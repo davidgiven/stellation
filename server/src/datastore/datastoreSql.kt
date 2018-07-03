@@ -95,6 +95,26 @@ actual fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>
             }
         })
 
+actual fun longProperty(scope: Scope, name: String): PrimitiveProperty<Long> =
+        addProperty(object : PrimitivePropertyImpl<Long>(scope, name) {
+            override val sqlType = "INTEGER"
+            override val defaultValue = 0L
+
+            override fun getPrimitive(oid: Oid): Long? =
+                    sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
+                            .bindInt(1, oid)
+                            .executeSimpleQuery()
+                            ?.get("value")
+                            ?.getLong()
+
+            override fun setPrimitive(oid: Oid, value: Long) {
+                sqlStatement("INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)")
+                        .bindInt(1, oid)
+                        .bindLong(2, value)
+                        .executeStatement()
+            }
+        })
+
 actual fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int> =
         addProperty(object : PrimitivePropertyImpl<Int>(scope, name) {
             override val sqlType = "INTEGER"
@@ -249,6 +269,17 @@ fun initialiseDatabase() {
             CREATE TABLE IF NOT EXISTS objects (
                 oid INTEGER PRIMARY KEY AUTOINCREMENT
             )
+        """)
+        executeSql(
+                """
+            CREATE TABLE IF NOT EXISTS timers (
+                oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                expiry INTEGER
+            )
+        """)
+        executeSql(
+                """
+            CREATE INDEX IF NOT EXISTS timers_by_expiry ON timers (expiry ASC)
         """)
         allProperties.forEach { e -> e.value.createTablesForProperty() }
     }

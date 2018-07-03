@@ -7,7 +7,6 @@ import datastore.refProperty
 import datastore.setProperty
 import datastore.stringProperty
 
-val SHIPS = setProperty(Scope.GLOBAL, "ships", SShip::class)
 val ASTEROIDS_M = intProperty(Scope.LOCAL, "asteroids_m")
 val ASTEROIDS_O = intProperty(Scope.LOCAL, "asteroids_o")
 val BRIGHTNESS = floatProperty(Scope.GLOBAL, "brightness")
@@ -19,10 +18,11 @@ val KIND = stringProperty(Scope.GLOBAL, "kind")
 val LOCATION = refProperty(Scope.LOCAL, "location", SThing::class)
 val NAME = stringProperty(Scope.LOCAL, "name")
 val OWNER = refProperty(Scope.LOCAL, "owner", SPlayer::class)
+val PASSWORD_HASH = stringProperty(Scope.SERVERONLY, "password_hash")
 val PLAYERS = setProperty(Scope.SERVERONLY, "players", SPlayer::class)
+val SHIPS = setProperty(Scope.GLOBAL, "ships", SShip::class)
 val XPOS = floatProperty(Scope.LOCAL, "x")
 val YPOS = floatProperty(Scope.LOCAL, "y")
-var PASSWORD_HASH = stringProperty(Scope.SERVERONLY, "password_hash")
 
 fun initProperties() {
     // This function exists solely to force the variables above to be created at the right time.

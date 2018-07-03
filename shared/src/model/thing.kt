@@ -3,6 +3,7 @@ package model
 import datastore.AggregateProperty
 import datastore.PrimitiveProperty
 import datastore.Oid
+import datastore.setTimer
 
 abstract class SThing(val oid: Oid) {
     override fun equals(other: Any?): Boolean {
@@ -22,6 +23,20 @@ abstract class SThing(val oid: Oid) {
     var owner by primitive(OWNER)
     var location by primitive(LOCATION)
     val contents by aggregate(CONTENTS)
+
+    open fun onTimerExpiry(time: Long) {
+    }
+
+    open fun recomputeTimeout(): Long? {
+        return null
+    }
+
+    fun kickTimer() {
+        val expiry = recomputeTimeout()
+        if (expiry != null) {
+            setTimer(oid, expiry)
+        }
+    }
 }
 
 fun <T: SThing> T.moveTo(destination: SThing): T {

@@ -14,6 +14,7 @@ private class SqliteValue(val o: String?) : SqlValue {
     override fun isNull(): Boolean = (o == null)
 
     override fun getInt(): Int = o!!.toInt()
+    override fun getLong(): Long = o!!.toLong()
     override fun getReal(): Double = o!!.toDouble()
     override fun getString(): String = o!!
     override fun getOid(): Oid? = o?.toInt()
@@ -37,6 +38,11 @@ private class SqliteStatement : SqlStatement {
 
     override fun bindInt(index: Int, value: Int): SqliteStatement {
         sqliteStatement.setInt(index, value)
+        return this
+    }
+
+    override fun bindLong(index: Int, value: Long): SqliteStatement {
+        sqliteStatement.setLong(index, value)
         return this
     }
 

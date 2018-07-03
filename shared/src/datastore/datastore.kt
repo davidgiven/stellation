@@ -69,6 +69,7 @@ interface AggregateProperty<T: SThing> : Property<T> {
 
 expect fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String>
 expect fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int>
+expect fun longProperty(scope: Scope, name: String): PrimitiveProperty<Long>
 expect fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double>
 expect fun <T : SThing> refProperty(scope: Scope, name: String, klass: KClass<T>): PrimitiveProperty<T?>
 expect fun <T : SThing> setProperty(scope: Scope, name: String, klass: KClass<T>): AggregateProperty<T>

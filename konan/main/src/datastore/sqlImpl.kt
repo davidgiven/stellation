@@ -3,9 +3,6 @@ package datastore
 import sqlite3.*
 import kotlinx.cinterop.*
 
-//const var SQLITE_ROW = 100
-//const var SQLITE_DONE = 101
-
 private var databaseConnection: CPointer<sqlite3>? = null
 private var statementCache: Map<String, SqliteStatement> = emptyMap()
 
@@ -18,6 +15,7 @@ private class SqliteValue(unprotectedValue: CPointer<sqlite3_value>?) : SqlValue
 
     override fun isNull() = (value == null)
     override fun getInt(): Int = sqlite3_value_int(value)
+    override fun getLong(): Long = sqlite3_value_int64(value)
     override fun getReal(): Double = sqlite3_value_double(value)
     override fun getString(): String = sqlite3_value_text(value)!!.toKString()
     override fun getOid(): Oid? = if (value == null) value else getInt()
@@ -56,6 +54,11 @@ private class SqliteStatement : SqlStatement {
 
     override fun bindInt(index: Int, value: Int): SqliteStatement {
         sqlite3_bind_int(sqliteStatement, index, value)
+        return this
+    }
+
+    override fun bindLong(index: Int, value: Long): SqliteStatement {
+        sqlite3_bind_int64(sqliteStatement, index, value)
         return this
     }
 

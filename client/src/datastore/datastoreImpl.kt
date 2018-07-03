@@ -6,6 +6,7 @@ import kotlin.reflect.KClass
 
 actual fun stringProperty(scope: Scope, name: String): PrimitiveProperty<String> = TODO("unimplemented")
 actual fun intProperty(scope: Scope, name: String): PrimitiveProperty<Int> = TODO("unimplemented")
+actual fun longProperty(scope: Scope, name: String): PrimitiveProperty<Long> = TODO("unimplemented")
 actual fun floatProperty(scope: Scope, name: String): PrimitiveProperty<Double> = TODO("unimplemented")
 actual fun <T : SThing> refProperty(scope: Scope, name: String, klass: KClass<T>): PrimitiveProperty<T?> =
         UNIMPLEMENTED()

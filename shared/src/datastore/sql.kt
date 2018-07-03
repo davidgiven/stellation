@@ -5,6 +5,7 @@ class SqlException(message: String) : Exception(message)
 interface SqlValue {
     fun isNull(): Boolean
     fun getInt(): Int
+    fun getLong(): Long
     fun getReal(): Double
     fun getString(): String
     fun getOid(): Oid?
@@ -13,6 +14,7 @@ interface SqlValue {
 interface SqlStatement {
     fun reset(): SqlStatement
     fun bindInt(index: Int, value: Int): SqlStatement
+    fun bindLong(index: Int, value: Long): SqlStatement
     fun bindReal(index: Int, value: Double): SqlStatement
     fun bindString(index: Int, value: String): SqlStatement
     fun bindOid(index: Int, value: Oid?): SqlStatement
