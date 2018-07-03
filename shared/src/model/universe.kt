@@ -39,8 +39,12 @@ fun createNewUniverse(): SUniverse {
         star.name = name
         star.x = location.first
         star.y = location.second
-        galaxy.stars += star
+        star.moveTo(galaxy)
     }
+
+    // For test purposes, create a new player.
+
+    createNewPlayer("TestPlayer")
 
     return universe
 }

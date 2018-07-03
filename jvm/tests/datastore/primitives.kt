@@ -12,6 +12,7 @@ import model.SFactory
 import model.SGalaxy
 import model.SModule
 import model.SStar
+import model.SThing
 import model.SUniverse
 import model.createObject
 import model.load
@@ -123,34 +124,34 @@ class DatabaseTest {
     fun addItemsToSetTest() {
         var g = createObject(SGalaxy::class)
         var stars = Array(5) { createObject(SStar::class) }
-        stars.forEach { g.stars += it }
+        stars.forEach { g.contents += it }
 
-        assertThat(g.stars).containsExactlyElementsIn(stars)
+        assertThat(g.contents).containsExactlyElementsIn(stars)
     }
 
     @Test
     fun removeItemsFromSetTest() {
         var g = createObject(SGalaxy::class)
-        var stars = Array(5) { createObject(SStar::class) }
-        stars.forEach { g.stars += it }
+        var contents = Array(5) { createObject(SStar::class) }
+        contents.forEach { g.contents += it }
 
-        g.stars -= stars[2]
+        g.contents -= contents[2]
 
-        assertThat(g.stars).containsExactly(stars[0], stars[1], stars[3], stars[4])
+        assertThat(g.contents).containsExactly(contents[0], contents[1], contents[3], contents[4])
     }
 
     @Test
     fun getItemFromSetTest() {
         var g = createObject(SGalaxy::class)
-        var stars = List(5) { createObject(SStar::class) }
-        stars.forEach { g.stars += it }
+        var stars = List<SThing>(5) { createObject(SStar::class) }
+        stars.forEach { g.contents += it }
 
         while (true) {
-            var s = g.stars.getOne()
+            var s = g.contents.getOne()
             s ?: break
 
             assertThat(s).isIn(stars)
-            g.stars -= s
+            g.contents -= s
             stars -= s
         }
 
@@ -160,24 +161,24 @@ class DatabaseTest {
     @Test
     fun clearSetTest() {
         var g = createObject(SGalaxy::class)
-        var stars = List(5) { createObject(SStar::class) }
-        stars.forEach { g.stars += it }
+        var contents = List(5) { createObject(SStar::class) }
+        contents.forEach { g.contents += it }
 
-        g.stars.clear()
+        g.contents.clear()
 
-        assertThat(g.stars).isEmpty()
+        assertThat(g.contents).isEmpty()
     }
 
     @Test
     fun destroyObjectsTest() {
         var g = createObject(SGalaxy::class)
-        var stars = List(5) { createObject(SStar::class) }
-        stars.forEach { g.stars += it }
+        var contents = List(5) { createObject(SStar::class) }
+        contents.forEach { g.contents += it }
 
-        val oid = stars[2].oid
+        val oid = contents[2].oid
         destroyObject(oid)
 
         assertThat( doesObjectExist(oid)).isFalse()
-        assertThat(g.stars).containsExactly(stars[0], stars[1], stars[3], stars[4])
+        assertThat(g.contents).containsExactly(contents[0], contents[1], contents[3], contents[4])
     }
 }

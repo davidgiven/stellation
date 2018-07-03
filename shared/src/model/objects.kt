@@ -1,8 +1,6 @@
 package model
 
-import datastore.AggregateProperty
 import datastore.Oid
-import datastore.PrimitiveProperty
 import datastore.doesObjectExist
 import kotlin.reflect.KClass
 
@@ -15,14 +13,18 @@ class DatabaseTypeMismatchException(val oid: Oid, val kind: String, val desired:
 private typealias ClassMap = Map<String, (Oid) -> SThing>
 
 var classes: ClassMap = emptyMap<String, (Oid) -> SThing>()
+        .registerClass(::SAntimatterDistillery)
+        .registerClass(::SAsteroidMiner)
         .registerClass(::SCargo)
         .registerClass(::SFactory)
         .registerClass(::SFrame)
         .registerClass(::SGalaxy)
+        .registerClass(::SHydroponicsPlant)
         .registerClass(::SJumpdrive)
         .registerClass(::SModule)
         .registerClass(::SPlayer)
         .registerClass(::SRAMCannon)
+        .registerClass(::SRefinery)
         .registerClass(::SShip)
         .registerClass(::SStar)
         .registerClass(::STank)
@@ -31,24 +33,6 @@ var classes: ClassMap = emptyMap<String, (Oid) -> SThing>()
 
 inline fun <reified T : SThing> ClassMap.registerClass(noinline constructor: (Oid) -> T): ClassMap =
         this + Pair(T::class.simpleName!!, constructor)
-
-abstract class SThing(val oid: Oid) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other)
-            return true
-        if ((other == null) || (other !is SThing))
-            return false
-        return oid == this.oid
-    }
-
-    override fun hashCode(): Int = oid
-
-    protected fun <T> primitive(property: PrimitiveProperty<T>) = property.get(oid)
-    protected fun <T> aggregate(property: AggregateProperty<T>) = property.get(oid)
-
-    var kind by primitive(KIND)
-    var owner by primitive(OWNER)
-}
 
 @Suppress("UNCHECKED_CAST")
 fun <T : SThing> loadObject(oid: Oid, klass: KClass<T>): T {

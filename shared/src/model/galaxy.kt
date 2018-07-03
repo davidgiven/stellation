@@ -8,7 +8,5 @@ open class SGalaxy(oid: Oid) : SThing(oid) {
         val RADIUS = 30
         val NUMBER_OF_STARS = 200
     }
-
-    val stars by aggregate(STARS)
 }
 

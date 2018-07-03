@@ -16,17 +16,31 @@ open class SShip(oid: Oid) : SThing(oid) {
 }
 
 open class SModule(oid: Oid) : SThing(oid) {
-    var width by primitive(WIDTH)
-    var height by primitive(HEIGHT)
+    open val width = 1
+    open val height = 1
 }
 
 open class SJumpdrive(oid: Oid) : SModule(oid) {
+    override val width = 3
+    override val height = 3
 }
 
 open class STank(oid: Oid) : SModule(oid) {
 }
 
 open class SCargo(oid: Oid) : SModule(oid) {
+}
+
+open class SRefinery(oid: Oid) : SModule(oid) {
+}
+
+open class SAntimatterDistillery(oid: Oid): SRefinery(oid) {
+}
+
+open class SAsteroidMiner(oid: Oid): SRefinery(oid) {
+}
+
+open class SHydroponicsPlant(oid: Oid): SRefinery(oid) {
 }
 
 open class SFactory(oid: Oid) : SModule(oid) {

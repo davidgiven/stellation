@@ -15,7 +15,7 @@ enum class Scope {
     GLOBAL,
 }
 
-interface Aggregate<T> : Iterable<T> {
+interface Aggregate<T: SThing> : Iterable<T> {
     fun add(item: T): Aggregate<T>
     fun remove(item: T): Aggregate<T>
     fun clear(): Aggregate<T>
@@ -63,7 +63,7 @@ interface PrimitiveProperty<T> : Property<T> {
     fun get(oid: Oid): VarProxy<T>
 }
 
-interface AggregateProperty<T> : Property<T> {
+interface AggregateProperty<T: SThing> : Property<T> {
     fun get(oid: Oid): ValProxy<Aggregate<T>>
 }
 
