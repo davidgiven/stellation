@@ -3,7 +3,15 @@ apply plugin: 'kotlin-dce-js'
 
 sourceCompatibility = 1.8
 
+compileKotlin2Js {
+    kotlinOptions.metaInfo = false
+    kotlinOptions.sourceMap = true
+    kotlinOptions.sourceMapEmbedSources = "always"
+    kotlinOptions.moduleKind = 'plain'
+}
+
 dependencies {
+    compile "org.jetbrains.kotlinx:kotlinx-html-js:0.6.11"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     expectedBy project(":shared")
 }
@@ -12,3 +20,23 @@ sourceSets {
     main.kotlin.srcDirs += 'src'
 }
 
+task combineModules(type: Exec, dependsOn: runDceKotlinJs) {
+    outputs.dir "$buildDir/js"
+    commandLine "uglifyjs",
+            "$buildDir/kotlin-js-min/main/kotlin.js",
+            "$buildDir/kotlin-js-min/main/kotlinx-html-js.js",
+            "$buildDir/kotlin-js-min/main/client.js",
+            "--in-source-map=$buildDir/kotlin-js-min/main/client.js.map",
+            "--output=build/js/stellation.js",
+            "--source-map=build/js/stellation.js.map",
+            "--compress", "warnings=false",
+            "--beautify"
+}
+
+task createOutputPackage(type: Copy, dependsOn: combineModules) {
+    from "resources"
+    from "$buildDir/js"
+    into "$buildDir/outputPackage"
+}
+
+assemble.dependsOn createOutputPackage
