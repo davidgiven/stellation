@@ -33,9 +33,22 @@ task combineModules(type: Exec, dependsOn: runDceKotlinJs) {
             "--beautify"
 }
 
-task createOutputPackage(type: Copy, dependsOn: combineModules) {
-    from "resources"
+task compileScss(type: Exec) {
+    inputs.files "resources/style.scss"
+    outputs.dir "$buildDir/sass"
+    commandLine "sassc",
+            "--style=nested",
+            "resources/style.scss",
+            "$buildDir/sass/style.css"
+}
+
+task createOutputPackage(type: Copy,
+        dependsOn: [combineModules, compileScss]) {
+    from("resources") {
+        exclude "**/*.scss"
+    }
     from "$buildDir/js"
+    from "$buildDir/sass"
     into "$buildDir/outputPackage"
 }
 
