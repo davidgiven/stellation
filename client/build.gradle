@@ -1,5 +1,5 @@
 apply plugin: 'kotlin-platform-js'
-apply plugin: 'kotlin-dce-js'
+apply plugin: 'com.craigburke.karma'
 
 sourceCompatibility = 1.8
 
@@ -14,19 +14,66 @@ dependencies {
     compile "org.jetbrains.kotlinx:kotlinx-html-js:0.6.11"
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
     expectedBy project(":shared")
+
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
 }
 
 sourceSets {
     main.kotlin.srcDirs += 'src'
+    test.kotlin.srcDirs += 'tests'
 }
 
-task combineModules(type: Exec, dependsOn: runDceKotlinJs) {
+def libDir = "$buildDir/lib"
+def compileOutput = compileKotlin2Js.outputFile
+def testOutput = compileTestKotlin2Js.outputFile
+
+task populateTestNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
+    configurations.testCompile.each {
+        from zipTree(it.absolutePath).matching { include '*.js' }
+    }
+
+    into "$libDir/test"
+}
+
+task populateProdNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
+    configurations.compile.each {
+        from zipTree(it.absolutePath).matching { include '*.js' }
+    }
+
+    into "$libDir/prod"
+}
+
+karma {
+    dependencies(['mocha'])
+
+    frameworks = ['mocha']
+    browsers = ['PhantomJS']
+
+    files = [
+            "$libDir/test/kotlin.js",
+            "$libDir/test/*.js",
+            "$compileOutput",
+            "$testOutput",
+    ]
+}
+
+karmaRun {
+    dependsOn compileTestKotlin2Js
+    dependsOn populateTestNodeModules
+}
+
+test.dependsOn karmaRun
+clean.dependsOn karmaClean
+
+task combineModules(type: Exec, dependsOn: populateProdNodeModules) {
     outputs.dir "$buildDir/js"
+    inputs.files(["$libDir/prod/kotlin.js",
+                  "$libDir/prod/kotlinx-html-js.js",
+    "$compileOutput"])
     commandLine "uglifyjs",
-            "$buildDir/kotlin-js-min/main/kotlin.js",
-            "$buildDir/kotlin-js-min/main/kotlinx-html-js.js",
-            "$buildDir/kotlin-js-min/main/client.js",
-            "--in-source-map=$buildDir/kotlin-js-min/main/client.js.map",
+            "$libDir/prod/kotlin.js",
+            "$libDir/prod/kotlinx-html-js.js",
+            "$compileOutput",
             "--output=build/js/stellation.js",
             "--source-map=build/js/stellation.js.map",
             "--compress", "warnings=false",
