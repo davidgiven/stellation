@@ -1,15 +1,14 @@
 package runtime.jvm
 
-import datastore.Oid
 import datastore.withSqlTransaction
 import interfaces.IContext
 import interfaces.context
 import runtime.jvmkonan.SqlDatastore
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.test.BeforeTest
+import kotlin.test.AfterTest
+import kotlin.test.Test
 
 class DatastoreTest {
     private val database get() = context.database!!
@@ -29,8 +28,9 @@ class DatastoreTest {
             for (t in listOf("INTEGER", "REAL", "TEXT")) {
                 datastore.createProperty(t.toLowerCase(), t)
             }
-            datastore.createProperty("set",
-               "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE")
+            datastore.createProperty(
+                    "set",
+                    "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE")
         }
     }
 

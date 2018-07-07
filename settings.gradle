@@ -1,7 +1,0 @@
-include 'server'
-include 'client'
-include 'shared'
-include 'konan/main'
-include 'jvm'
-rootProject.name = 'stellation'
-
