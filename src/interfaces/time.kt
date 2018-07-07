@@ -1,8 +1,8 @@
 package interfaces
 
-interface Time {
+interface ITime {
     fun nanotime(): Long
 }
 
-fun Time.millitime() = this.nanotime() / 1000L
-fun Time.hourstime() = this.nanotime().toDouble() / 1e6
+fun ITime.millitime() = this.nanotime() / 1000L
+fun ITime.hourstime() = this.nanotime().toDouble() / 1e6 / 3600.0

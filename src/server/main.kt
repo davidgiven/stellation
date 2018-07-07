@@ -1,10 +1,9 @@
 package server
 
-import interfaces.Logger
-import interfaces.Time
+import interfaces.context
+import interfaces.hourstime
 
 fun main(argv: Array<String>) {
-    println("Hello, world!")
+    println("The current time on the server is ${context().time!!.hourstime()}.")
 }
 
-fun test(logger: Logger, time: Time) {}

@@ -1,7 +1,7 @@
 package runtime.jvm
 
-import interfaces.Time
+import interfaces.ITime
 
-class JvmTime : Time {
+class JvmTime : ITime {
     override fun nanotime(): Long = System.nanoTime()
 }
