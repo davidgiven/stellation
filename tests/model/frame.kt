@@ -1,8 +1,8 @@
 package model
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.BeforeTest
+import kotlin.test.assertEquals
 
 class FrameTest {
     private val WIDTH = 5
@@ -14,16 +14,16 @@ class FrameTest {
             "01111").joinToString("")
     private val REP = "$WIDTH#$HEIGHT#$DATA"
 
-    @Before
+    @BeforeTest
     fun before() {
-        assertThat(DATA).hasLength(WIDTH * HEIGHT)
+        assertEquals(WIDTH*HEIGHT, DATA.length)
     }
 
     @Test
     fun createFrame() {
         val frame = Frame(REP)
-        assertThat(frame.width).isEqualTo(WIDTH)
-        assertThat(frame.height).isEqualTo(HEIGHT)
-        assertThat(frame.serialise()).isEqualTo(REP)
+        assertEquals(WIDTH, frame.width)
+        assertEquals(HEIGHT, frame.height)
+        assertEquals(REP, frame.serialise())
     }
 }
