@@ -1,0 +1,25 @@
+load(
+    "//:kotlin.bzl",
+    "kotlin_jvm_lib",
+    "kotlin_js_lib",
+    "kotlin_konan_lib",
+)
+
+package(default_visibility = ["//visibility:public"])
+
+SRCS = glob(["*.kt"])
+
+kotlin_jvm_lib(
+    name = "interfaces_jar",
+    srcs = SRCS,
+)
+
+kotlin_js_lib(
+    name = "interfaces_jsjar",
+    srcs = SRCS,
+)
+
+kotlin_konan_lib(
+    name = "interfaces_klib",
+    srcs = SRCS,
+)

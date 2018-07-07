@@ -2,9 +2,11 @@ def kotlin_jvm_lib(name, srcs=[], deps=[]):
   cmd = ["/home/dg/src/kotlinc/bin/kotlinc-jvm",
          "-d $@"]
   for f in srcs:
-    cmd += [f]
-  for j in deps:
-    cmd += ["-cp $(location %s)" % j]
+    cmd += ["$(location {})".format(f)]
+
+  classpath = ":".join(["$(location {})".format(jar) for jar in deps])
+  if classpath != "":
+    cmd += ["-cp {}".format(classpath)]
 
   native.genrule(
     name = name,
@@ -14,12 +16,18 @@ def kotlin_jvm_lib(name, srcs=[], deps=[]):
     cmd = " ".join(cmd)
   )
 
-def kotlin_jvm_binary(name, deps=[], libs=[], **kwargs):
+def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
   jars = " ".join(["$(location {})".format(dep) for dep in deps])
+
+  kotlin_jvm_lib(
+      name = name + "_main_jar",
+      srcs = srcs,
+      deps = deps
+  )
 
   native.java_import(
       name = name + "_jars",
-      jars = deps
+      jars = deps + [":{}_main_jar".format(name)]
   )
 
   native.java_binary(
@@ -35,11 +43,11 @@ def kotlin_js_lib(name, srcs=[], deps=[], main=False):
          "-meta-info"]
   if not main:
     cmd += ["-main noCall"]
+  cmd += ["$(location {})".format(src) for src in srcs]
 
-  for f in srcs:
-    cmd += [f]
-  for j in deps:
-    cmd += ["-libraries $(location %s)" % j]
+  libraries = ":".join(["$(location {})".format(jar) for jar in deps])
+  if libraries:
+    cmd += ["-libraries {}".format(libraries)]
 
   native.genrule(
     name = name,
@@ -50,24 +58,33 @@ def kotlin_js_lib(name, srcs=[], deps=[], main=False):
       ("&& jar -c --file $@ -C {0}/files .".format(name))
   )
 
-def kotlin_js_binary(name, deps=[]):
+def kotlin_js_binary(name, srcs=[], deps=[]):
+  mainName = "{}_main_jsjar".format(name)
+
+  kotlin_js_lib(
+      name = mainName,
+      srcs = srcs,
+      deps = deps,
+      main = True
+  )
+
+  allDeps = deps + [":{}".format(mainName)]
   native.genrule(
       name = name,
       message = "Linking JS {}".format(name),
-      srcs = deps,
+      srcs = allDeps,
       outs = [name + ".js"],
+      output_to_bindir = 1,
       cmd = " && ".join([
           " ".join([
               "/home/dg/src/kotlinc/bin/kotlin-dce-js",
               "-output-dir $@.files/node_modules",
-          ] + ["$(locations "+d+")" for d in deps]
+          ] + ["$(locations "+d+")" for d in allDeps]
           ),
-          "echo $$(realpath $@.files)",
-          "ls -l $@.files",
           " (cd $@.files && " + " ".join([
               "browserify-lite",
               "--outfile out.js ",
-              "main_jsjar.js",
+              "{}.js".format(mainName),
           ]) + ")",
           "cp $@.files/out.js $@"
       ])
@@ -79,9 +96,9 @@ def kotlin_konan_lib(name, srcs=[], deps=[]):
          "-output $@"]
 
   for f in srcs:
-    cmd += [f]
+    cmd += ["$(location {})".format(f)]
   for j in deps:
-    cmd += ["-library $(location %s)" % j]
+    cmd += ["-library $(location {})".format(j)]
 
   native.genrule(
     name = name,
@@ -91,16 +108,17 @@ def kotlin_konan_lib(name, srcs=[], deps=[]):
     cmd = " ".join(cmd),
   )
 
-def kotlin_konan_binary(name, srcs=[], deps=[]):
+def kotlin_konan_binary(name, srcs=[], deps=[], main="main"):
   cmd = ["/home/dg/src/kotlin-native-linux-0.7.1/bin/kotlinc-native",
          "-produce program",
          "--purge_user_libs",
+         "-entry {}".format(main),
          "-output $@"]
 
   for f in srcs:
-    cmd += [f]
+    cmd += ["$(location {})".format(f)]
   for j in deps:
-    cmd += ["-repo $$(dirname $(location %s)) -library $(location %s)" % (j, j)]
+    cmd += ["-repo $$(dirname $(location {0})) -library $(location {0})".format(j)]
 
   native.genrule(
     name = name,
@@ -108,5 +126,6 @@ def kotlin_konan_binary(name, srcs=[], deps=[]):
     srcs = srcs + deps,
     outs = [name + ".kexe"],
     cmd = " ".join(cmd),
+    output_to_bindir = 1,
   )
 
