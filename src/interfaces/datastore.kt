@@ -8,10 +8,13 @@ interface SetProperty {
     fun clear(): SetProperty
     operator fun contains(item: Oid): Boolean
     fun getAll(): List<Oid>
+    fun getOne(): Oid?
 }
 
 interface IDatastore {
     fun initialiseDatabase()
+
+    fun createProperty(name: String, sqlType: String)
 
     fun createObject(): Oid
     fun destroyObject(oid: Oid)

@@ -11,24 +11,33 @@ class SqlDatastore(val database: IDatabase) : IDatastore {
         database.withSqlTransaction {
             database.executeSql(
                     """
-            CREATE TABLE IF NOT EXISTS objects (
-                oid INTEGER PRIMARY KEY AUTOINCREMENT
+                CREATE TABLE IF NOT EXISTS objects (
+                    oid INTEGER PRIMARY KEY AUTOINCREMENT
             )
-        """)
+            """)
             database.executeSql(
                     """
-            CREATE TABLE IF NOT EXISTS timers (
-                oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
-                expiry INTEGER
+                CREATE TABLE IF NOT EXISTS timers (
+                    oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                    expiry INTEGER
             )
-        """)
+            """)
             database.executeSql(
                     """
-            CREATE INDEX IF NOT EXISTS timers_by_expiry ON timers (expiry ASC)
-        """)
+                CREATE INDEX IF NOT EXISTS timers_by_expiry ON timers (expiry ASC)
+            """)
 //        allProperties.forEach { e -> e.value.createTablesForProperty() }
         }
 
+    }
+
+    override fun createProperty(name: String, sqlType: String) {
+        database.executeSql(
+                """
+             CREATE TABLE IF NOT EXISTS prop_$name (
+                oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                value $sqlType)
+        """)
     }
 
     override fun createObject(): Oid {
@@ -92,7 +101,51 @@ class SqlDatastore(val database: IDatabase) : IDatastore {
     override fun getStringProperty(oid: Oid, name: String): String =
             getStatement(oid, name).executeSimpleQuery()?.get("value")?.getString() ?: ""
 
-    override fun getSetProperty(oid: Oid, name: String): SetProperty {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getSetProperty(oid: Oid, name: String): SetProperty =
+            object : SetProperty {
+                override fun add(item: Oid): SetProperty {
+                    database.sqlStatement("INSERT OR IGNORE INTO prop_$name (oid, value) VALUES (?, ?)")
+                            .bindInt(1, oid)
+                            .bindOid(2, item)
+                            .executeStatement()
+                    return this
+                }
+
+                override fun remove(item: Oid): SetProperty {
+                    database.sqlStatement("DELETE FROM prop_$name WHERE oid = ? AND value = ?")
+                            .bindInt(1, oid)
+                            .bindOid(2, item)
+                            .executeStatement()
+                    return this
+                }
+
+                override fun clear(): SetProperty {
+                    database.sqlStatement("DELETE FROM prop_$name WHERE oid = ?")
+                            .bindInt(1, oid)
+                            .executeStatement()
+                    return this
+                }
+
+                override fun contains(item: Oid): Boolean =
+                        database.sqlStatement(
+                                "SELECT COUNT(*) AS count FROM prop_$name WHERE oid = ? AND value = ? LIMIT 1")
+                                .bindInt(1, oid)
+                                .bindOid(2, item)
+                                .executeSimpleQuery()!!
+                                .getValue("count")
+                                .getInt() != 0
+
+                override fun getAll(): List<Oid> =
+                        database.sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
+                                .bindInt(1, oid)
+                                .executeQuery()
+                                .map { it.getValue("value").getOid()!! }
+
+                override fun getOne(): Oid? =
+                        database.sqlStatement("SELECT value FROM prop_$name WHERE oid = ? LIMIT 1")
+                                .bindInt(1, oid)
+                                .executeSimpleQuery()
+                                ?.getValue("value")
+                                ?.getOid()
+            }
 }
