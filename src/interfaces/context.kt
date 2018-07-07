@@ -1,12 +1,12 @@
 package interfaces
 
-fun context(): IContext = IContext.context
+private var currentContext: IContext? = null
+
+var context: IContext
+    get() = currentContext!!
+    set(c: IContext) { currentContext = c }
 
 open class IContext {
-    companion object {
-        lateinit var context: IContext
-    }
-
     open val logger: ILogger? = null
     open val time: ITime? = null
 }

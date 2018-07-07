@@ -1,10 +1,13 @@
 package runtime.konan
 
 import interfaces.IContext
+import interfaces.ILogger
+import interfaces.ITime
+import interfaces.context
 
 fun initKonanRuntime() {
-    IContext.context = object : IContext() {
-//        override val logger = JvmLogger()
-//        override val time = KonanTime()
+    context = object : IContext() {
+        override val logger: ILogger? = KonanLogger()
+        override val time: ITime? = KonanTime()
     }
 }

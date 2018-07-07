@@ -1,10 +1,13 @@
 package runtime.jvm
 
 import interfaces.IContext
+import interfaces.ILogger
+import interfaces.ITime
+import interfaces.context
 
 fun initJvmRuntime() {
-    IContext.context = object : IContext() {
-        override val logger = JvmLogger()
-        override val time = JvmTime()
+    context = object : IContext() {
+        override val logger: ILogger? = JvmLogger()
+        override val time: ITime? = JvmTime()
     }
 }

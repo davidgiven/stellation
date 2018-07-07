@@ -1,10 +1,13 @@
 package runtime.js
 
 import interfaces.IContext
+import interfaces.ILogger
+import interfaces.ITime
+import interfaces.context
 
 fun initJsRuntime() {
-    IContext.context = object : IContext() {
-        override val logger = JsLogger()
-        override val time = JsTime()
+    context = object : IContext() {
+        override val logger: ILogger? = JsLogger()
+        override val time: ITime? = JsTime()
     }
 }

@@ -55,7 +55,7 @@ def kotlin_js_lib(name, srcs=[], deps=[], main=False):
     srcs = srcs + deps,
     outs = ["%s.jar" % name],
     cmd = " ".join(cmd) +
-      ("&& jar -c --file $@ -C {0}/files .".format(name))
+      ("&& jar cf $@ -C {0}/files .".format(name))
   )
 
 def kotlin_js_binary(name, srcs=[], deps=[]):
@@ -93,6 +93,7 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
 def kotlin_konan_lib(name, srcs=[], deps=[]):
   cmd = ["/home/dg/src/kotlin-native-linux-0.7.1/bin/kotlinc-native",
          "-produce library",
+         "-g",
          "-output $@"]
 
   for f in srcs:
@@ -113,6 +114,7 @@ def kotlin_konan_binary(name, srcs=[], deps=[], main="main"):
          "-produce program",
          "--purge_user_libs",
          "-entry {}".format(main),
+         "-g",
          "-output $@"]
 
   for f in srcs:
