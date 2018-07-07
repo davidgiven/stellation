@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
+<module external.system.id="GRADLE" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
     </content>
     <orderEntry type="jdk" jdkName="1.8 (1)" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -12,6 +13,42 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/bazel-stellation/external/org_xerial_sqlite_jdbc/jar/sqlite-jdbc-3.23.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/bazel-stellation/external/org_jetbrains_kotlin_kotin_test_junit/jar/kotlin-test-junit-1.2.51.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/bazel-stellation/external/org_jetbrains_kotlin_kotin_test/jar/kotlin-test-1.2.51.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/bazel-stellation/external/org_jetbrains_kotlin_kotin_test_annotations_common/jar/kotlin-test-annotations-common-1.2.51.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/bazel-stellation/external/junit_junit/jar/junit-4.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

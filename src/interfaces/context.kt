@@ -12,5 +12,6 @@ open class IContext {
     open val logger: ILogger? = null
     open val time: ITime? = null
     open val database: IDatabase? = null
+    open val datastore: IDatastore? = null
 }
 

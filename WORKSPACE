@@ -53,6 +53,25 @@ maven_jar(
     server = "maven_central",
 )
 
+
+maven_jar(
+    name = "org_jetbrains_kotlin_kotin_test",
+    artifact = "org.jetbrains.kotlin:kotlin-test:%s" % kotlin_version,
+    server = "maven_central",
+)
+
+maven_jar(
+    name = "org_jetbrains_kotlin_kotin_test_annotations_common",
+    artifact = "org.jetbrains.kotlin:kotlin-test-annotations-common:%s" % kotlin_version,
+    server = "maven_central",
+)
+
+maven_jar(
+    name = "org_jetbrains_kotlin_kotin_test_junit",
+    artifact = "org.jetbrains.kotlin:kotlin-test-junit:%s" % kotlin_version,
+    server = "maven_central",
+)
+
 maven_jar(
     name = "org_jetbrains_annotations",
     artifact = "org.jetbrains:annotations:13.0",
@@ -64,3 +83,10 @@ maven_jar(
     artifact = "org.xerial:sqlite-jdbc:3.23.1",
     server = "maven_central",
 )
+
+maven_jar(
+    name = "junit_junit",
+    artifact = "junit:junit:4.12",
+    server = "maven_central"
+)
+

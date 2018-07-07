@@ -22,7 +22,7 @@ def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
   kotlin_jvm_lib(
       name = name + "_main_jar",
       srcs = srcs,
-      deps = deps
+      deps = deps + libs
   )
 
   native.java_import(
@@ -31,6 +31,26 @@ def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
   )
 
   native.java_binary(
+      name = name,
+      runtime_deps = [":{}_jars".format(name)] + libs,
+      **kwargs
+  )
+
+def kotlin_jvm_test(name, srcs=[], deps=[], libs=[], **kwargs):
+  jars = " ".join(["$(location {})".format(dep) for dep in deps])
+
+  kotlin_jvm_lib(
+      name = name + "_main_jar",
+      srcs = srcs,
+      deps = deps + libs
+  )
+
+  native.java_import(
+      name = name + "_jars",
+      jars = deps + [":{}_main_jar".format(name)]
+  )
+
+  native.java_test(
       name = name,
       runtime_deps = [":{}_jars".format(name)] + libs,
       **kwargs
