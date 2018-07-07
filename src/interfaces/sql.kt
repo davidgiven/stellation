@@ -1,5 +1,6 @@
 package datastore
 
+typealias Oid = Int
 class SqlException(message: String) : Exception(message)
 
 interface SqlValue {
@@ -24,11 +25,13 @@ interface SqlStatement {
     fun executeSimpleQuery(): Map<String, SqlValue>? = executeQuery().firstOrNull()
 }
 
-expect fun openDatabase(filename: String)
-expect fun closeDatabase()
+interface IDatabase {
+    fun openDatabase(filename: String)
+    fun closeDatabase()
 
-expect fun sqlStatement(sql: String): SqlStatement
+    fun sqlStatement(sql: String): SqlStatement
 
-fun executeSql(sql: String) {
-    sqlStatement(sql).executeStatement()
+    fun executeSql(sql: String) {
+        sqlStatement(sql).executeStatement()
+    }
 }

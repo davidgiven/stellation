@@ -59,3 +59,8 @@ maven_jar(
     server = "maven_central",
 )
 
+maven_jar(
+    name = "org_xerial_sqlite_jdbc",
+    artifact = "org.xerial:sqlite-jdbc:3.23.1",
+    server = "maven_central",
+)

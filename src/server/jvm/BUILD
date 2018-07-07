@@ -11,6 +11,7 @@ kotlin_jvm_binary(
     srcs = ["main.kt"],
     libs = [
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
+        "@org_xerial_sqlite_jdbc//jar",
     ],
     main_class = "server.jvm.MainKt",
     deps = [

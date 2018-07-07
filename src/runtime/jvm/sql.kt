@@ -1,14 +1,15 @@
-package datastore
+package runtime.jvm
 
+import datastore.IDatabase
+import datastore.Oid
+import datastore.SqlStatement
+import datastore.SqlValue
 import org.sqlite.JDBC
 import org.sqlite.SQLiteConfig
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.Types
-
-private var databaseConnection: Connection? = null
-private var statementCache: Map<String, SqliteStatement> = emptyMap()
 
 private class SqliteValue(val o: String?) : SqlValue {
     override fun isNull(): Boolean = (o == null)
@@ -20,13 +21,7 @@ private class SqliteValue(val o: String?) : SqlValue {
     override fun getOid(): Oid? = o?.toInt()
 }
 
-private class SqliteStatement : SqlStatement {
-    var sqliteStatement: PreparedStatement
-
-    constructor(sql: String) {
-        sqliteStatement = databaseConnection!!.prepareStatement(sql)
-    }
-
+private class SqliteStatement(val sqliteStatement: PreparedStatement) : SqlStatement {
     fun close() {
         sqliteStatement.close()
     }
@@ -95,31 +90,37 @@ private class SqliteStatement : SqlStatement {
     }
 }
 
-actual fun openDatabase(filename: String) {
-    var config = SQLiteConfig()
-    config.setEncoding(SQLiteConfig.Encoding.UTF8)
-    config.setSynchronous(SQLiteConfig.SynchronousMode.OFF)
-    config.enforceForeignKeys(true)
-    config.setTempStore(SQLiteConfig.TempStore.MEMORY)
+class JvmDatabase : IDatabase {
+    private var databaseConnection: Connection? = null
+    private var statementCache: Map<String, SqliteStatement> = emptyMap()
 
-    DriverManager.registerDriver(JDBC())
-    databaseConnection = DriverManager.getConnection("jdbc:sqlite:$filename", config.toProperties())
-    databaseConnection!!.autoCommit = false
-    executeSql("COMMIT") // Why does turning autocommit off leave a transaction open?
-}
+    override fun openDatabase(filename: String) {
+        var config = SQLiteConfig()
+        config.setEncoding(SQLiteConfig.Encoding.UTF8)
+        config.setSynchronous(SQLiteConfig.SynchronousMode.OFF)
+        config.enforceForeignKeys(true)
+        config.setTempStore(SQLiteConfig.TempStore.MEMORY)
 
-actual fun closeDatabase() {
-    statementCache.values.forEach { it.close() }
-    statementCache = emptyMap()
-    databaseConnection!!.close()
-    databaseConnection = null
-}
-
-actual fun sqlStatement(sql: String): SqlStatement {
-    var statement = statementCache.get(sql)
-    if (statement == null) {
-        statement = SqliteStatement(sql)
-        statementCache += Pair(sql, statement)
+        DriverManager.registerDriver(JDBC())
+        databaseConnection = DriverManager.getConnection("jdbc:sqlite:$filename", config.toProperties())
+        databaseConnection!!.autoCommit = false
+        executeSql("COMMIT") // Why does turning autocommit off leave a transaction open?
     }
-    return statement
+
+    override fun closeDatabase() {
+        statementCache.values.forEach { it.close() }
+        statementCache = emptyMap()
+        databaseConnection!!.close()
+        databaseConnection = null
+    }
+
+    override fun sqlStatement(sql: String): SqlStatement {
+        var statement = statementCache.get(sql)
+        if (statement == null) {
+            statement = SqliteStatement(databaseConnection!!.prepareStatement(sql))
+
+            statementCache += Pair(sql, statement)
+        }
+        return statement
+    }
 }
