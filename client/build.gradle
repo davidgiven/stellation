@@ -27,20 +27,21 @@ def libDir = "$buildDir/lib"
 def compileOutput = compileKotlin2Js.outputFile
 def testOutput = compileTestKotlin2Js.outputFile
 
-task populateTestNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
-    configurations.testCompile.each {
-        from zipTree(it.absolutePath).matching { include '*.js' }
-    }
+task populateTestNodeModules(type: Copy, dependsOn: compileTestKotlin2Js) {
+//    configurations.testCompile.each {
+//        from zipTree(it.absolutePath).matching { include '*.js' }
+//    }
 
     into "$libDir/test"
 }
 
-task populateProdNodeModules(type: Copy, dependsOn: compileKotlin2Js) {
-    configurations.compile.each {
-        from zipTree(it.absolutePath).matching { include '*.js' }
-    }
-
-    into "$libDir/prod"
+task populateProdNodeModules(type: Copy) {
+//    configurations.runtime.each {
+//        from zipTree(it.absolutePath).matching { println(it); include '*.js' }
+//    }
+//
+//    into "$libDir/prod"
+    configurations.runtime.each {}
 }
 
 karma {
@@ -69,7 +70,7 @@ task combineModules(type: Exec, dependsOn: populateProdNodeModules) {
     outputs.dir "$buildDir/js"
     inputs.files(["$libDir/prod/kotlin.js",
                   "$libDir/prod/kotlinx-html-js.js",
-    "$compileOutput"])
+                  "$compileOutput"])
     commandLine "uglifyjs",
             "$libDir/prod/kotlin.js",
             "$libDir/prod/kotlinx-html-js.js",
