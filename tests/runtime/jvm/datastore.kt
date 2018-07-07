@@ -1,8 +1,6 @@
 package runtime.jvm
 
-import datastore.IDatabase
 import interfaces.IContext
-import interfaces.IDatastore
 import interfaces.context
 import runtime.jvmkonan.SqlDatastore
 import kotlin.test.AfterTest
@@ -23,6 +21,7 @@ class DatastoreTest {
         }
 
         database.openDatabase(":memory:")
+        datastore.initialiseDatabase()
     }
 
     @AfterTest
@@ -38,4 +37,12 @@ class DatastoreTest {
         var o2 = datastore.createObject()
         assertEquals(2, o2)
     }
+
+//    @Test
+//    fun intSetGetTest() {
+//        var o = datastore.createObject()
+//        datastore.setIntProperty(o, "asteroids_m", 5)
+//        var i = datastore.getIntProperty(o, "asteroids_m")
+//        assertEquals(5, i)
+//    }
 }

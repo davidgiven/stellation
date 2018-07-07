@@ -1,6 +1,7 @@
 package datastore
 
 typealias Oid = Int
+
 class SqlException(message: String) : Exception(message)
 
 interface SqlValue {
@@ -33,5 +34,16 @@ interface IDatabase {
 
     fun executeSql(sql: String) {
         sqlStatement(sql).executeStatement()
+    }
+}
+
+fun IDatabase.withSqlTransaction(callback: () -> Unit) {
+    this.executeSql("BEGIN")
+    try {
+        callback()
+        this.executeSql("COMMIT")
+    } catch (t: Throwable) {
+        this.executeSql("ROLLBACK")
+        throw t
     }
 }

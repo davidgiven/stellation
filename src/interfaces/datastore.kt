@@ -11,6 +11,8 @@ interface SetProperty {
 }
 
 interface IDatastore {
+    fun initialiseDatabase()
+
     fun createObject(): Oid
     fun destroyObject(oid: Oid)
     fun doesObjectExist(oid: Oid): Boolean
