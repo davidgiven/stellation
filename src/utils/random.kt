@@ -1,6 +1,6 @@
-package shared
+package utils
 
-private var state = xorShift64(runtime.nanotime() or -0x35014542)
+private var state = xorShift64(0 or -0x35014542)
 
 fun random(): Int {
     val a = state.toInt() and Int.MAX_VALUE

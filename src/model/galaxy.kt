@@ -1,6 +1,5 @@
 package model
 
-import datastore.Aggregate
 import datastore.Oid
 
 open class SGalaxy(oid: Oid) : SThing(oid) {

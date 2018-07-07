@@ -11,7 +11,9 @@ kotlin_js_binary(
     srcs = ["main.kt"],
     deps = [
         "//src/interfaces:interfaces_jsjar",
+        "//src/model:model_jsjar",
         "//src/runtime/js:runtime_jsjar",
+        "//src/utils:utils_jsjar",
         "@org_jetbrains_kotlin_kotin_stdlib_js//jar",
     ],
 )

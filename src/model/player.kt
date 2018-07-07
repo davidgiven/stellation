@@ -1,6 +1,5 @@
 package model
 
-import datastore.Aggregate
 import datastore.Oid
 import kotlin.reflect.KClass
 
@@ -21,7 +20,7 @@ fun createNewPlayer(name: String): SPlayer {
     ship.owner = player
     player.ships += ship
 
-    fun <T: SModule> addModule(moduleClass: KClass<T>) {
+    fun <T : SModule> addModule(moduleClass: KClass<T>) {
         val module = createObject(moduleClass)
         module.owner = player
         module.moveTo(ship)

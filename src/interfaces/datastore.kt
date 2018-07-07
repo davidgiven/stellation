@@ -20,6 +20,9 @@ interface IDatastore {
     fun destroyObject(oid: Oid)
     fun doesObjectExist(oid: Oid): Boolean
 
+    fun setOidProperty(oid: Oid, name: String, value: Oid?)
+    fun getOidProperty(oid: Oid, name: String): Oid?
+
     fun setIntProperty(oid: Oid, name: String, value: Int)
     fun getIntProperty(oid: Oid, name: String): Int
 

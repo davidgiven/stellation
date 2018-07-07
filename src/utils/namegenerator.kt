@@ -1,4 +1,4 @@
-package shared
+package utils
 
 class NameGenerator {
     private val syllables1 = arrayOf(

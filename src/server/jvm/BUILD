@@ -16,7 +16,9 @@ kotlin_jvm_binary(
     main_class = "server.jvm.MainKt",
     deps = [
         "//src/interfaces:interfaces_jar",
+        "//src/model:model_jar",
         "//src/runtime/jvm:runtime_jar",
         "//src/server:server_jar",
+        "//src/utils:utils_jar",
     ],
 )

@@ -77,6 +77,13 @@ class SqlDatastore(val database: IDatabase) : IDatastore {
                     """)
                     .bindOid(1, oid)
 
+    override fun setOidProperty(oid: Oid, name: String, value: Oid?) {
+        setStatement(oid, name).bindOid(2, value).executeStatement()
+    }
+
+    override fun getOidProperty(oid: Oid, name: String): Oid? =
+            getStatement(oid, name).executeSimpleQuery()?.get("value")?.getOid()
+
     override fun setIntProperty(oid: Oid, name: String, value: Int): Unit =
             setStatement(oid, name).bindInt(2, value).executeStatement()
 

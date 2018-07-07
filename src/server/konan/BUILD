@@ -16,7 +16,9 @@ kotlin_konan_binary(
     main = "server.konan.main",
     deps = [
         "//src/interfaces:interfaces_klib",
+        "//src/model:model_klib",
         "//src/runtime/konan:runtime_klib",
         "//src/server:server_klib",
+        "//src/utils:utils_klib",
     ],
 )

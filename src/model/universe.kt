@@ -1,9 +1,9 @@
 package model
 
 import datastore.Oid
-import shared.NameGenerator
-import shared.random
-import shared.roundBy
+import utils.NameGenerator
+import utils.random
+import utils.roundBy
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin

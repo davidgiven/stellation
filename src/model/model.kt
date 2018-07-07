@@ -34,13 +34,13 @@ open class SCargo(oid: Oid) : SModule(oid) {
 open class SRefinery(oid: Oid) : SModule(oid) {
 }
 
-open class SAntimatterDistillery(oid: Oid): SRefinery(oid) {
+open class SAntimatterDistillery(oid: Oid) : SRefinery(oid) {
 }
 
-open class SAsteroidMiner(oid: Oid): SRefinery(oid) {
+open class SAsteroidMiner(oid: Oid) : SRefinery(oid) {
 }
 
-open class SHydroponicsPlant(oid: Oid): SRefinery(oid) {
+open class SHydroponicsPlant(oid: Oid) : SRefinery(oid) {
 }
 
 open class SFactory(oid: Oid) : SModule(oid) {
