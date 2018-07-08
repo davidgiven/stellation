@@ -9,7 +9,7 @@ package(default_visibility = ["//visibility:public"])
 kotlin_jvm_test(
     name = "DatastoreTest",
     size = "small",
-    srcs = ["datastore.kt"],
+    srcs = ["sqldatastore.kt"],
     libs = [
         "@junit_junit//jar",
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
@@ -18,7 +18,7 @@ kotlin_jvm_test(
         "@org_jetbrains_kotlin_kotin_test_junit//jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
-    test_class = "runtime.jvm.DatastoreTest",
+    test_class = "runtime.shared.DatastoreTest",
     deps = [
         "//src/interfaces:interfaces_jar",
         "//src/runtime/jvm:runtime_jar",

@@ -1,9 +1,9 @@
-package runtime.jvm
+package runtime.shared
 
 import datastore.withSqlTransaction
 import interfaces.IContext
 import interfaces.context
-import runtime.shared.SqlDatastore
+import runtime.jvm.JvmDatabase
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.BeforeTest
@@ -13,7 +13,6 @@ import kotlin.test.Test
 class DatastoreTest {
     private val database get() = context.database!!
     private val datastore get() = context.datastore!!
-
 
     @BeforeTest
     fun setup() {
