@@ -53,9 +53,17 @@ interface ValProxy<T> : ReadOnlyProperty<SThing, T> {
     override operator fun getValue(thisRef: SThing, property: KProperty<*>): T = get()
 }
 
-open class Property(val scope: Scope, val name: String)
+var allProperties: Set<Property> = emptySet()
 
-open class PrimitiveProperty<T>(scope: Scope, name: String) : Property(scope, name) {
+abstract class Property(val scope: Scope, val name: String) {
+    init {
+        allProperties += this
+    }
+
+    abstract val sqlType: String
+}
+
+abstract class PrimitiveProperty<T>(scope: Scope, name: String) : Property(scope, name) {
     protected open fun getPrimitive(oid: Oid): T = TODO("get get $name yet")
     protected open fun setPrimitive(oid: Oid, value: T): Unit = TODO("can't set $name yet")
 
@@ -67,6 +75,8 @@ open class PrimitiveProperty<T>(scope: Scope, name: String) : Property(scope, na
 }
 
 open class IntProperty(scope: Scope, name: String) : PrimitiveProperty<Int>(scope, name) {
+    override val sqlType = "INTEGER"
+
     override fun getPrimitive(oid: Oid) =
             context.datastore!!.getIntProperty(oid, name)
 
@@ -75,6 +85,8 @@ open class IntProperty(scope: Scope, name: String) : PrimitiveProperty<Int>(scop
 }
 
 open class LongProperty(scope: Scope, name: String) : PrimitiveProperty<Long>(scope, name) {
+    override val sqlType = "INTEGER"
+
     override fun getPrimitive(oid: Oid) =
             context.datastore!!.getLongProperty(oid, name)
 
@@ -83,6 +95,8 @@ open class LongProperty(scope: Scope, name: String) : PrimitiveProperty<Long>(sc
 }
 
 open class RealProperty(scope: Scope, name: String) : PrimitiveProperty<Double>(scope, name) {
+    override val sqlType = "REAL"
+
     override fun getPrimitive(oid: Oid) =
             context.datastore!!.getRealProperty(oid, name)
 
@@ -91,6 +105,8 @@ open class RealProperty(scope: Scope, name: String) : PrimitiveProperty<Double>(
 }
 
 open class StringProperty(scope: Scope, name: String) : PrimitiveProperty<String>(scope, name) {
+    override val sqlType = "TEXT"
+
     override fun getPrimitive(oid: Oid) =
             context.datastore!!.getStringProperty(oid, name)
 
@@ -100,6 +116,8 @@ open class StringProperty(scope: Scope, name: String) : PrimitiveProperty<String
 
 open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) :
         PrimitiveProperty<T?>(scope, name) {
+    override val sqlType = "INTEGER REFERENCES objects(oid) ON DELETE CASCADE"
+
     override fun getPrimitive(oid: Oid) =
             context.datastore!!.getOidProperty(oid, name)?.load(kclass)
 
@@ -108,6 +126,8 @@ open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
 }
 
 open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) : Property(scope, name) {
+    override val sqlType = "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE"
+
     fun get(oid: Oid): ValProxy<Aggregate<T>> =
             object : ValProxy<Aggregate<T>> {
                 override fun get(): Aggregate<T> =
@@ -158,6 +178,3 @@ val SHIPS = SetProperty(Scope.GLOBAL, "ships", SShip::class)
 val XPOS = RealProperty(Scope.LOCAL, "x")
 val YPOS = RealProperty(Scope.LOCAL, "y")
 
-fun initProperties() {
-    // This function exists solely to force the variables above to be created at the right time.
-}

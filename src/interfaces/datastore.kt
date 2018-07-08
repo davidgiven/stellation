@@ -1,6 +1,6 @@
 package interfaces
 
-import datastore.Oid
+typealias Oid = Int
 
 interface SetProperty {
     fun add(item: Oid): SetProperty
