@@ -119,6 +119,7 @@ def kotlin_konan_lib(name, srcs=[], deps=[]):
   for f in srcs:
     cmd += ["$(location {})".format(f)]
   for j in deps:
+    cmd += ["-repo $$(dirname $(location {}))".format(j)]
     cmd += ["-library $(location {})".format(j)]
 
   native.genrule(
@@ -140,7 +141,8 @@ def kotlin_konan_binary(name, srcs=[], deps=[], main="main"):
   for f in srcs:
     cmd += ["$(location {})".format(f)]
   for j in deps:
-    cmd += ["-repo $$(dirname $(location {0})) -library $(location {0})".format(j)]
+    cmd += ["-repo $$(dirname $(location {}))".format(j)]
+    cmd += ["-library $(location {})".format(j)]
 
   native.genrule(
     name = name,
