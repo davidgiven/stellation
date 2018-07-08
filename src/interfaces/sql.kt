@@ -1,6 +1,4 @@
-package datastore
-
-typealias Oid = Int
+package interfaces
 
 class SqlException(message: String) : Exception(message)
 

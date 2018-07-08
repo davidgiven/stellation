@@ -1,6 +1,6 @@
 package model
 
-import datastore.Oid
+import interfaces.Oid
 
 enum class Location {
     EMPTY,

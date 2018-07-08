@@ -1,6 +1,6 @@
 package runtime.shared
 
-import datastore.IDatabase
+import interfaces.IDatabase
 import interfaces.IDatastore
 import utils.get
 import kotlin.test.Test

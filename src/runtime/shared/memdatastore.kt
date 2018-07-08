@@ -1,7 +1,7 @@
 package runtime.shared
 
-import datastore.Oid
 import interfaces.IDatastore
+import interfaces.Oid
 import interfaces.SetProperty
 
 class BadDatastoreTypeException : RuntimeException("type mismatch on datastore access")

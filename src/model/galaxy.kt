@@ -1,6 +1,6 @@
 package model
 
-import datastore.Oid
+import interfaces.Oid
 
 open class SGalaxy(oid: Oid) : SThing(oid) {
     companion object {

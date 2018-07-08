@@ -1,7 +1,7 @@
 package model
 
-import kotlin.test.Test
 import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class FrameTest {
@@ -16,7 +16,7 @@ class FrameTest {
 
     @BeforeTest
     fun before() {
-        assertEquals(WIDTH*HEIGHT, DATA.length)
+        assertEquals(WIDTH * HEIGHT, DATA.length)
     }
 
     @Test

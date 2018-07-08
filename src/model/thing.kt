@@ -1,6 +1,6 @@
 package model
 
-import datastore.Oid
+import interfaces.Oid
 
 abstract class SThing(val oid: Oid) {
     override fun equals(other: Any?): Boolean {

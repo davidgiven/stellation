@@ -1,7 +1,7 @@
 package model
 
-import datastore.Oid
 import interfaces.IDatastore
+import interfaces.Oid
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass

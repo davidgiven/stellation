@@ -2,7 +2,7 @@ package utils
 
 import kotlin.reflect.KClass
 
-class InjectomaticException(message: String): RuntimeException(message)
+class InjectomaticException(message: String) : RuntimeException(message)
 
 var injectomatic_bindings: Map<KClass<*>, Any?> = emptyMap()
 

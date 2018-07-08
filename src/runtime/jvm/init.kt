@@ -1,6 +1,6 @@
 package runtime.jvm
 
-import datastore.IDatabase
+import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.ILogger
 import interfaces.ITime

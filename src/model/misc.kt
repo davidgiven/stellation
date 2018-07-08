@@ -1,6 +1,6 @@
 package model
 
-import datastore.Oid
+import interfaces.Oid
 
 open class SStar(oid: Oid) : SThing(oid) {
     var name by primitive(NAME)

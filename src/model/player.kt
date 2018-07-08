@@ -1,6 +1,6 @@
 package model
 
-import datastore.Oid
+import interfaces.Oid
 import kotlin.reflect.KClass
 
 open class SPlayer(oid: Oid) : SThing(oid) {

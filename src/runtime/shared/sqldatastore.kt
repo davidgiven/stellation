@@ -1,10 +1,10 @@
 package runtime.shared
 
-import datastore.IDatabase
-import datastore.Oid
-import datastore.withSqlTransaction
+import interfaces.IDatabase
 import interfaces.IDatastore
+import interfaces.Oid
 import interfaces.SetProperty
+import interfaces.withSqlTransaction
 
 class SqlDatastore(val database: IDatabase) : IDatastore {
     override fun initialiseDatabase() {

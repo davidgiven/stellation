@@ -9,5 +9,5 @@ fun ILogger.log(vararg messages: String) {
     for (s in messages) {
         sb.append(s)
     }
-    this.println("Log: " + sb)
+    this.println("Log: $sb")
 }

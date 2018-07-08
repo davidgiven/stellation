@@ -1,9 +1,9 @@
 package runtime.jvm
 
-import datastore.IDatabase
-import datastore.Oid
-import datastore.SqlStatement
-import datastore.SqlValue
+import interfaces.IDatabase
+import interfaces.Oid
+import interfaces.SqlStatement
+import interfaces.SqlValue
 import org.sqlite.JDBC
 import org.sqlite.SQLiteConfig
 import java.sql.Connection

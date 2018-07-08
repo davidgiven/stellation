@@ -1,6 +1,6 @@
 package model
 
-import datastore.Oid
+import interfaces.Oid
 import utils.NameGenerator
 import utils.random
 import utils.roundBy

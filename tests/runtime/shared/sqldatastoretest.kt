@@ -1,8 +1,8 @@
 package runtime.shared
 
-import datastore.IDatabase
-import datastore.withSqlTransaction
+import interfaces.IDatabase
 import interfaces.IDatastore
+import interfaces.withSqlTransaction
 import runtime.jvm.JvmDatabase
 import utils.bind
 import utils.resetBindingsForTest

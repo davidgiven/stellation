@@ -1,6 +1,6 @@
 package model
 
-import datastore.IDatabase
+import interfaces.IDatabase
 import interfaces.IDatastore
 import runtime.jvm.JvmDatabase
 import runtime.shared.SqlDatastore
@@ -18,6 +18,7 @@ class ObjectsTest {
     fun setup() {
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore(database))
+        bind(Model(datastore))
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()
