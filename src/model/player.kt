@@ -3,14 +3,14 @@ package model
 import interfaces.Oid
 import kotlin.reflect.KClass
 
-open class SPlayer(oid: Oid) : SThing(oid) {
+open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
     var name by primitive(NAME)
     var password_hash by primitive(PASSWORD_HASH)
     val frames by aggregate(FRAMES)
     val ships by aggregate(SHIPS)
 }
 
-fun createNewPlayer(name: String): SPlayer {
+fun Model.createNewPlayer(name: String): SPlayer {
     val player = createObject(SPlayer::class)
     player.name = name
     player.password_hash = "<password hash here>"

@@ -2,7 +2,7 @@ package model
 
 import interfaces.Oid
 
-abstract class SThing(val oid: Oid) {
+abstract class SThing(val model: Model, val oid: Oid) {
     override fun equals(other: Any?): Boolean {
         if (this === other)
             return true
@@ -13,8 +13,8 @@ abstract class SThing(val oid: Oid) {
 
     override fun hashCode(): Int = oid
 
-    protected fun <T> primitive(property: PrimitiveProperty<T>) = property.get(oid)
-    protected fun <T : SThing> aggregate(property: SetProperty<T>) = property.get(oid)
+    protected fun <T> primitive(property: PrimitiveProperty<T>) = property.get(model, oid)
+    protected fun <T : SThing> aggregate(property: SetProperty<T>) = property.get(model, oid)
 
     var kind by primitive(KIND)
     var owner by primitive(OWNER)

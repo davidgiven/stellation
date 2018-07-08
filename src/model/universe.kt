@@ -8,12 +8,12 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
-open class SUniverse(oid: Oid) : SThing(oid) {
+open class SUniverse(model: Model, oid: Oid) : SThing(model, oid) {
     var galaxy by primitive(GALAXY)
     val players by aggregate(PLAYERS)
 }
 
-fun createNewUniverse(): SUniverse {
+fun Model.createNewUniverse(): SUniverse {
     val universe = createObject(SUniverse::class)
     check(universe.oid == 1)
 

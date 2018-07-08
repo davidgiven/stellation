@@ -62,7 +62,7 @@ class Frame {
             }
 }
 
-open class SFrame(oid: Oid) : SThing(oid) {
+open class SFrame(model: Model, oid: Oid) : SThing(model, oid) {
     var name by primitive(NAME)
     var data by primitive(DATA)
 

@@ -66,53 +66,53 @@ abstract class Property(val scope: Scope, val name: String) {
 }
 
 abstract class PrimitiveProperty<T>(scope: Scope, name: String) : Property(scope, name) {
-    protected open fun getPrimitive(oid: Oid): T = TODO("get get $name yet")
-    protected open fun setPrimitive(oid: Oid, value: T): Unit = TODO("can't set $name yet")
+    protected open fun getPrimitive(model: Model, oid: Oid): T = TODO("get get $name yet")
+    protected open fun setPrimitive(model: Model, oid: Oid, value: T): Unit = TODO("can't set $name yet")
 
-    fun get(oid: Oid): VarProxy<T> =
+    fun get(model: Model, oid: Oid): VarProxy<T> =
             object : VarProxy<T> {
-                override fun get(): T = getPrimitive(oid)
-                override fun set(value: T) = setPrimitive(oid, value)
+                override fun get(): T = getPrimitive(model, oid)
+                override fun set(value: T) = setPrimitive(model, oid, value)
             }
 }
 
 open class IntProperty(scope: Scope, name: String) : PrimitiveProperty<Int>(scope, name) {
     override val sqlType = "INTEGER"
 
-    override fun getPrimitive(oid: Oid) =
+    override fun getPrimitive(model: Model, oid: Oid) =
             datastore.getIntProperty(oid, name)
 
-    override fun setPrimitive(oid: Oid, value: Int) =
+    override fun setPrimitive(model: Model, oid: Oid, value: Int) =
             datastore.setIntProperty(oid, name, value)
 }
 
 open class LongProperty(scope: Scope, name: String) : PrimitiveProperty<Long>(scope, name) {
     override val sqlType = "INTEGER"
 
-    override fun getPrimitive(oid: Oid) =
+    override fun getPrimitive(model: Model, oid: Oid) =
             datastore.getLongProperty(oid, name)
 
-    override fun setPrimitive(oid: Oid, value: Long) =
+    override fun setPrimitive(model: Model, oid: Oid, value: Long) =
             datastore.setLongProperty(oid, name, value)
 }
 
 open class RealProperty(scope: Scope, name: String) : PrimitiveProperty<Double>(scope, name) {
     override val sqlType = "REAL"
 
-    override fun getPrimitive(oid: Oid) =
+    override fun getPrimitive(model: Model, oid: Oid) =
             datastore.getRealProperty(oid, name)
 
-    override fun setPrimitive(oid: Oid, value: Double) =
+    override fun setPrimitive(model: Model, oid: Oid, value: Double) =
             datastore.setRealProperty(oid, name, value)
 }
 
 open class StringProperty(scope: Scope, name: String) : PrimitiveProperty<String>(scope, name) {
     override val sqlType = "TEXT"
 
-    override fun getPrimitive(oid: Oid) =
+    override fun getPrimitive(model: Model, oid: Oid) =
             datastore.getStringProperty(oid, name)
 
-    override fun setPrimitive(oid: Oid, value: String) =
+    override fun setPrimitive(model: Model, oid: Oid, value: String) =
             datastore.setStringProperty(oid, name, value)
 }
 
@@ -120,17 +120,17 @@ open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
         PrimitiveProperty<T?>(scope, name) {
     override val sqlType = "INTEGER REFERENCES objects(oid) ON DELETE CASCADE"
 
-    override fun getPrimitive(oid: Oid) =
-            datastore.getOidProperty(oid, name)?.load(kclass)
+    override fun getPrimitive(model: Model, oid: Oid) =
+            datastore.getOidProperty(oid, name)?.load(model, kclass)
 
-    override fun setPrimitive(oid: Oid, value: T?) =
+    override fun setPrimitive(model: Model, oid: Oid, value: T?) =
             datastore.setOidProperty(oid, name, value?.oid)
 }
 
 open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) : Property(scope, name) {
     override val sqlType = "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE"
 
-    fun get(oid: Oid): ValProxy<Aggregate<T>> =
+    fun get(model: Model, oid: Oid): ValProxy<Aggregate<T>> =
             object : ValProxy<Aggregate<T>> {
                 override fun get(): Aggregate<T> =
                         object : Aggregate<T> {
@@ -156,9 +156,9 @@ open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
                             override fun contains(item: T): Boolean = set.contains(item.oid)
 
                             override fun getAll(): List<T> =
-                                    set.getAll().map { it.load(kclass) }
+                                    set.getAll().map { it.load(model, kclass) }
 
-                            override fun getOne(): T? = set.getOne()?.load(kclass)
+                            override fun getOne(): T? = set.getOne()?.load(model, kclass)
                         }
             }
 }

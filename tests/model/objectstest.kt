@@ -2,6 +2,7 @@ package model
 
 import interfaces.IDatabase
 import interfaces.IDatastore
+import interfaces.withSqlTransaction
 import runtime.jvm.JvmDatabase
 import runtime.shared.SqlDatastore
 import utils.bind
@@ -13,6 +14,7 @@ import kotlin.test.Test
 class ObjectsTest {
     private val database get() = get<IDatabase>()
     private val datastore get() = get<IDatastore>()
+    private val model get() = get<Model>()
 
     @BeforeTest
     fun setup() {
@@ -22,6 +24,7 @@ class ObjectsTest {
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()
+        database.withSqlTransaction { model.initialiseProperties() }
     }
 
     @AfterTest
@@ -30,6 +33,7 @@ class ObjectsTest {
     }
 
     @Test
-    fun emptyTest() {
+    fun objectCreationTest() {
+        val universe = model.createObject(SUniverse::class)
     }
 }
