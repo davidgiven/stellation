@@ -1,4 +1,4 @@
-package runtime.jvmkonan
+package runtime.shared
 
 import datastore.IDatabase
 import datastore.Oid

@@ -22,6 +22,6 @@ kotlin_jvm_test(
     deps = [
         "//src/interfaces:interfaces_jar",
         "//src/runtime/jvm:runtime_jar",
-        "//src/runtime/jvmkonan:jvmkonan_jar",
+        "//src/runtime/shared:shared_jar",
     ],
 )

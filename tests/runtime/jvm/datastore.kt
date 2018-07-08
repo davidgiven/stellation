@@ -3,7 +3,7 @@ package runtime.jvm
 import datastore.withSqlTransaction
 import interfaces.IContext
 import interfaces.context
-import runtime.jvmkonan.SqlDatastore
+import runtime.shared.SqlDatastore
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.BeforeTest

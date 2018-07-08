@@ -10,7 +10,7 @@ kotlin_jvm_lib(
     srcs = glob(["*.kt"]),
     deps = [
         "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvmkonan:jvmkonan_jar",
+        "//src/runtime/shared:shared_jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
 )

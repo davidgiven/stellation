@@ -6,7 +6,7 @@ import interfaces.IDatastore
 import interfaces.ILogger
 import interfaces.ITime
 import interfaces.context
-import runtime.jvmkonan.SqlDatastore
+import runtime.shared.SqlDatastore
 
 fun initJvmRuntime() {
     context = object : IContext() {
