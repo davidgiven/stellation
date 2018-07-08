@@ -1,42 +1,13 @@
 package runtime.shared
 
-import datastore.withSqlTransaction
-import interfaces.IContext
 import interfaces.context
-import runtime.jvm.JvmDatabase
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.test.BeforeTest
-import kotlin.test.AfterTest
-import kotlin.test.Test
 
-class DatastoreTest {
-    private val database get() = context.database!!
-    private val datastore get() = context.datastore!!
-
-    @BeforeTest
-    fun setup() {
-        context = object : IContext() {
-            override val database = JvmDatabase()
-            override val datastore = SqlDatastore(database)
-        }
-
-        database.openDatabase(":memory:")
-        datastore.initialiseDatabase()
-        database.withSqlTransaction {
-            for (t in listOf("INTEGER", "REAL", "TEXT")) {
-                datastore.createProperty(t.toLowerCase(), t)
-            }
-            datastore.createProperty(
-                    "set",
-                    "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE")
-        }
-    }
-
-    @AfterTest
-    fun teardown() {
-        context.database!!.closeDatabase()
-    }
+abstract class AbstractDatastoreTest {
+    protected val database get() = context.database!!
+    protected val datastore get() = context.datastore!!
 
     @Test
     fun objectCreationTest() {
@@ -122,5 +93,16 @@ class DatastoreTest {
         p.clear()
 
         assertEquals(0, p.getAll().size)
+    }
+
+    @Test
+    fun multipleSetReferencesShareData() {
+        val o = datastore.createObject()
+        val p1 = datastore.getSetProperty(o, "set")
+        val p2 = datastore.getSetProperty(o, "set")
+        var c = List(5) { datastore.createObject() }
+        c.forEach { p1.add(it) }
+
+        assertEquals(p1.getAll(), p2.getAll())
     }
 }
