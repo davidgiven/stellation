@@ -1,6 +1,5 @@
 package model
 
-import interfaces.IDatastore
 import interfaces.Oid
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
@@ -39,19 +38,8 @@ interface Aggregate<T : SThing> : Iterable<T> {
     }
 }
 
-interface VarProxy<T> : ReadWriteProperty<SThing, T> {
-    fun get(): T
-    fun set(value: T)
-
-    override operator fun getValue(thisRef: SThing, property: KProperty<*>): T = get()
-    override operator fun setValue(thisRef: SThing, property: KProperty<*>, value: T) = set(value)
-}
-
-interface ValProxy<T> : ReadOnlyProperty<SThing, T> {
-    fun get(): T
-
-    override operator fun getValue(thisRef: SThing, property: KProperty<*>): T = get()
-}
+interface VarProxy<T> : ReadWriteProperty<SThing, T>
+interface ValProxy<T> : ReadOnlyProperty<SThing, T>
 
 var allProperties: Set<Property> = emptySet()
 
@@ -61,59 +49,59 @@ abstract class Property(val scope: Scope, val name: String) {
     }
 
     abstract val sqlType: String
-
-    protected val datastore: IDatastore get() = utils.get()
 }
 
-abstract class PrimitiveProperty<T>(scope: Scope, name: String) : Property(scope, name) {
+abstract class PrimitiveProperty<T>(scope: Scope, name: String)
+    : Property(scope, name), VarProxy<T> {
     protected open fun getPrimitive(model: Model, oid: Oid): T = TODO("get get $name yet")
     protected open fun setPrimitive(model: Model, oid: Oid, value: T): Unit = TODO("can't set $name yet")
 
-    fun get(model: Model, oid: Oid): VarProxy<T> =
-            object : VarProxy<T> {
-                override fun get(): T = getPrimitive(model, oid)
-                override fun set(value: T) = setPrimitive(model, oid, value)
-            }
+    override fun getValue(thisRef: SThing, property: KProperty<*>): T =
+            getPrimitive(thisRef.model, thisRef.oid)
+
+    override fun setValue(thisRef: SThing, property: KProperty<*>, value: T) {
+        setPrimitive(thisRef.model, thisRef.oid, value)
+    }
 }
 
 open class IntProperty(scope: Scope, name: String) : PrimitiveProperty<Int>(scope, name) {
     override val sqlType = "INTEGER"
 
     override fun getPrimitive(model: Model, oid: Oid) =
-            datastore.getIntProperty(oid, name)
+            model.datastore.getIntProperty(oid, name)
 
     override fun setPrimitive(model: Model, oid: Oid, value: Int) =
-            datastore.setIntProperty(oid, name, value)
+            model.datastore.setIntProperty(oid, name, value)
 }
 
 open class LongProperty(scope: Scope, name: String) : PrimitiveProperty<Long>(scope, name) {
     override val sqlType = "INTEGER"
 
     override fun getPrimitive(model: Model, oid: Oid) =
-            datastore.getLongProperty(oid, name)
+            model.datastore.getLongProperty(oid, name)
 
     override fun setPrimitive(model: Model, oid: Oid, value: Long) =
-            datastore.setLongProperty(oid, name, value)
+            model.datastore.setLongProperty(oid, name, value)
 }
 
 open class RealProperty(scope: Scope, name: String) : PrimitiveProperty<Double>(scope, name) {
     override val sqlType = "REAL"
 
     override fun getPrimitive(model: Model, oid: Oid) =
-            datastore.getRealProperty(oid, name)
+            model.datastore.getRealProperty(oid, name)
 
     override fun setPrimitive(model: Model, oid: Oid, value: Double) =
-            datastore.setRealProperty(oid, name, value)
+            model.datastore.setRealProperty(oid, name, value)
 }
 
 open class StringProperty(scope: Scope, name: String) : PrimitiveProperty<String>(scope, name) {
     override val sqlType = "TEXT"
 
     override fun getPrimitive(model: Model, oid: Oid) =
-            datastore.getStringProperty(oid, name)
+            model.datastore.getStringProperty(oid, name)
 
     override fun setPrimitive(model: Model, oid: Oid, value: String) =
-            datastore.setStringProperty(oid, name, value)
+            model.datastore.setStringProperty(oid, name, value)
 }
 
 open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) :
@@ -121,46 +109,45 @@ open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
     override val sqlType = "INTEGER REFERENCES objects(oid) ON DELETE CASCADE"
 
     override fun getPrimitive(model: Model, oid: Oid) =
-            datastore.getOidProperty(oid, name)?.load(model, kclass)
+            model.datastore.getOidProperty(oid, name)?.load(model, kclass)
 
     override fun setPrimitive(model: Model, oid: Oid, value: T?) =
-            datastore.setOidProperty(oid, name, value?.oid)
+            model.datastore.setOidProperty(oid, name, value?.oid)
 }
 
-open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) : Property(scope, name) {
+open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>)
+    : Property(scope, name), ValProxy<Aggregate<T>> {
     override val sqlType = "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE"
 
-    fun get(model: Model, oid: Oid): ValProxy<Aggregate<T>> =
-            object : ValProxy<Aggregate<T>> {
-                override fun get(): Aggregate<T> =
-                        object : Aggregate<T> {
-                            // We do this here to ensure that the context is dereferenced every
-                            // time the aggregate is fetched.
-                            val set = datastore.getSetProperty(oid, name)
+    override fun getValue(thisRef: SThing, property: KProperty<*>): Aggregate<T> {
+        val model = thisRef.model
+        val oid = thisRef.oid
+        val set = model.datastore.getSetProperty(oid, name)
 
-                            override fun add(item: T): Aggregate<T> {
-                                set.add(item.oid)
-                                return this
-                            }
-
-                            override fun remove(item: T): Aggregate<T> {
-                                set.remove(item.oid)
-                                return this
-                            }
-
-                            override fun clear(): Aggregate<T> {
-                                set.clear()
-                                return this
-                            }
-
-                            override fun contains(item: T): Boolean = set.contains(item.oid)
-
-                            override fun getAll(): List<T> =
-                                    set.getAll().map { it.load(model, kclass) }
-
-                            override fun getOne(): T? = set.getOne()?.load(model, kclass)
-                        }
+        return object : Aggregate<T> {
+            override fun add(item: T): Aggregate<T> {
+                set.add(item.oid)
+                return this
             }
+
+            override fun remove(item: T): Aggregate<T> {
+                set.remove(item.oid)
+                return this
+            }
+
+            override fun clear(): Aggregate<T> {
+                set.clear()
+                return this
+            }
+
+            override fun contains(item: T): Boolean = set.contains(item.oid)
+
+            override fun getAll(): List<T> =
+                    set.getAll().map { it.load(model, kclass) }
+
+            override fun getOne(): T? = set.getOne()?.load(model, kclass)
+        }
+    }
 }
 
 val ASTEROIDS_M = IntProperty(Scope.LOCAL, "asteroids_m")

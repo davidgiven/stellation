@@ -13,13 +13,10 @@ abstract class SThing(val model: Model, val oid: Oid) {
 
     override fun hashCode(): Int = oid
 
-    protected fun <T> primitive(property: PrimitiveProperty<T>) = property.get(model, oid)
-    protected fun <T : SThing> aggregate(property: SetProperty<T>) = property.get(model, oid)
-
-    var kind by primitive(KIND)
-    var owner by primitive(OWNER)
-    var location by primitive(LOCATION)
-    val contents by aggregate(CONTENTS)
+    var kind by KIND
+    var owner by OWNER
+    var location by LOCATION
+    val contents by CONTENTS
 
     open fun onTimerExpiry(time: Long) {
     }

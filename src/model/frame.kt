@@ -63,8 +63,8 @@ class Frame {
 }
 
 open class SFrame(model: Model, oid: Oid) : SThing(model, oid) {
-    var name by primitive(NAME)
-    var data by primitive(DATA)
+    var name by NAME
+    var data by DATA
 
     val frame: Frame
         get() = Frame(data)

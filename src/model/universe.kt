@@ -9,8 +9,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 open class SUniverse(model: Model, oid: Oid) : SThing(model, oid) {
-    var galaxy by primitive(GALAXY)
-    val players by aggregate(PLAYERS)
+    var galaxy by GALAXY
+    val players by PLAYERS
 }
 
 fun Model.createNewUniverse(): SUniverse {

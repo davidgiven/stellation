@@ -3,16 +3,16 @@ package model
 import interfaces.Oid
 
 open class SStar(model: Model, oid: Oid) : SThing(model, oid) {
-    var name by primitive(NAME)
-    var x by primitive(XPOS)
-    var y by primitive(YPOS)
-    var brightness by primitive(BRIGHTNESS)
-    var asteroidsM by primitive(ASTEROIDS_M)
-    var asteroidsO by primitive(ASTEROIDS_O)
+    var name by NAME
+    var x by XPOS
+    var y by YPOS
+    var brightness by BRIGHTNESS
+    var asteroidsM by ASTEROIDS_M
+    var asteroidsO by ASTEROIDS_O
 }
 
 open class SShip(model: Model, oid: Oid) : SThing(model, oid) {
-    var name by primitive(NAME)
+    var name by NAME
 }
 
 open class SModule(model: Model, oid: Oid) : SThing(model, oid) {

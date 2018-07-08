@@ -48,7 +48,7 @@ class Model(val datastore: IDatastore = get()) {
             throw ObjectNotVisibleException(oid)
         }
 
-        val kind = KIND.get(this, oid).get()
+        val kind = datastore.getStringProperty(oid, KIND.name)
         val instance: SThing = classConstructors.getValue(kind)(this, oid)
         if (kclass.isInstance(instance)) {
             return instance as T
@@ -67,12 +67,13 @@ class Model(val datastore: IDatastore = get()) {
         if (kclass.isInstance(instance)) {
             return instance as T
         }
-        throw DatabaseTypeMismatchException(oid, KIND.get(this, oid).get(), kclass.simpleName!!)
+        throw DatabaseTypeMismatchException(
+                oid, datastore.getStringProperty(oid, KIND.name), kclass.simpleName!!)
     }
 
     fun <T : SThing> createObject(klass: KClass<T>): T {
         val oid = datastore.createObject()
-        KIND.get(this, oid).set(klass.simpleName!!)
+        datastore.setStringProperty(oid, KIND.name, klass.simpleName!!)
         return loadObject(oid, klass)
     }
 }
