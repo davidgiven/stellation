@@ -1,15 +1,17 @@
 package utils
 
-import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.rules.ExpectedException
 import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class GetoptTest {
     @Rule @JvmField
     val thrown = ExpectedException.none()
 
-    private var results: Array<Pair<String, String>> = emptyArray()
+    private var results: List<Pair<String, String>> = emptyList()
 
     private val callbacks: Map<String, (String) -> Int> = mapOf(
             "-v" to { _ -> results += Pair("-v", ""); 0 },
@@ -22,72 +24,84 @@ class GetoptTest {
     @Test
     fun empty() {
         getopt(emptyArray(), callbacks)
-        assertThat(results.asList()).isEmpty()
+        assertTrue(results.isEmpty())
     }
 
     @Test
     fun shortFlag() {
         getopt(arrayOf("-v"), callbacks)
-        assertThat(results.asList()).containsExactly(Pair("-v", ""))
+        assertEquals(listOf(Pair("-v", "")), results)
     }
 
     @Test
     fun longFlag() {
         getopt(arrayOf("--verbose"), callbacks)
-        assertThat(results.asList()).containsExactly(Pair("--verbose", ""))
+        assertEquals(listOf(Pair("--verbose", "")), results)
     }
 
     @Test
     fun shortWithInlineParameter() {
         getopt(arrayOf("-fFNORD", "-v"), callbacks)
-        assertThat(results.asList()).containsExactly(Pair("-f", "FNORD"), Pair("-v", ""))
+        assertEquals(listOf(Pair("-f", "FNORD"), Pair("-v", "")), results)
     }
 
     @Test
     fun shortWithOutOfLineParameter() {
         getopt(arrayOf("-f", "FNORD", "-v"), callbacks)
-        assertThat(results.asList()).containsExactly(Pair("-f", "FNORD"), Pair("-v", ""))
+        assertEquals(listOf(Pair("-f", "FNORD"), Pair("-v", "")), results)
     }
 
     @Test
     fun longWithInlineParameter() {
         getopt(arrayOf("--file=FNORD", "--verbose"), callbacks)
-        assertThat(results.asList()).containsExactly(Pair("--file", "FNORD"), Pair("--verbose", ""))
+        assertEquals(listOf(Pair("--file", "FNORD"), Pair("--verbose", "")), results)
     }
 
     @Test
     fun longWithOutOfLineParameter() {
         getopt(arrayOf("--file", "FNORD", "--verbose"), callbacks)
-        assertThat(results.asList()).containsExactly(Pair("--file", "FNORD"), Pair("--verbose", ""))
+        assertEquals(listOf(Pair("--file", "FNORD"), Pair("--verbose", "")), results)
     }
 
     @Test
     fun withFile() {
         getopt(arrayOf("FNORD", "--verbose"), callbacks)
-        assertThat(results.asList()).containsExactly(Pair(FILE_OPTION, "FNORD"), Pair("--verbose", ""))
+        assertEquals(listOf(Pair(FILE_OPTION, "FNORD"), Pair("--verbose", "")), results)
     }
 
     @Test
     fun missingShortParameter() {
-        thrown.expect(MissingOptionException::class.java)
-        getopt(arrayOf("-f"), callbacks)
+        try {
+            getopt(arrayOf("-f"), callbacks)
+            fail("exception not thrown")
+        } catch (_: MissingOptionException) {
+        }
     }
 
     @Test
     fun missingLongParameter() {
-        thrown.expect(MissingOptionException::class.java)
-        getopt(arrayOf("--file"), callbacks)
+        try {
+            getopt(arrayOf("--file"), callbacks)
+            fail("exception not thrown")
+        } catch (_: MissingOptionException) {
+        }
     }
 
     @Test
     fun invalidShortParameter() {
-        thrown.expect(UnrecognisedOptionException::class.java)
-        getopt(arrayOf("-x"), callbacks)
+        try {
+            getopt(arrayOf("-x"), callbacks)
+            fail("exception not thrown")
+        } catch (_: UnrecognisedOptionException) {
+        }
     }
 
     @Test
     fun invalidLongParameter() {
-        thrown.expect(UnrecognisedOptionException::class.java)
-        getopt(arrayOf("--xxx"), callbacks)
+        try {
+            getopt(arrayOf("--xxx"), callbacks)
+            fail("exception not thrown")
+        } catch (_: UnrecognisedOptionException) {
+        }
     }
 }
