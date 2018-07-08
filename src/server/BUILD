@@ -13,6 +13,7 @@ kotlin_jvm_lib(
     srcs = SRCS,
     deps = [
         "//src/interfaces:interfaces_jar",
+        "//src/utils:utils_jar",
     ],
 )
 
@@ -21,5 +22,6 @@ kotlin_konan_lib(
     srcs = SRCS,
     deps = [
         "//src/interfaces:interfaces_klib",
+        "//src/utils:utils_klib",
     ],
 )

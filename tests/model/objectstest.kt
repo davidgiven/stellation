@@ -1,24 +1,23 @@
 package model
 
-import datastore.withSqlTransaction
-import interfaces.IContext
-import interfaces.context
+import datastore.IDatabase
+import interfaces.IDatastore
 import runtime.jvm.JvmDatabase
 import runtime.shared.SqlDatastore
+import utils.bind
+import utils.get
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
 class ObjectsTest {
-    private val database get() = context.database!!
-    private val datastore get() = context.datastore!!
+    private val database get() = get<IDatabase>()
+    private val datastore get() = get<IDatastore>()
 
     @BeforeTest
     fun setup() {
-        context = object : IContext() {
-            override val database = JvmDatabase()
-            override val datastore = SqlDatastore(database)
-        }
+        bind<IDatabase>(JvmDatabase())
+        bind<IDatastore>(SqlDatastore(database))
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()

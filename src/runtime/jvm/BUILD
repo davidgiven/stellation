@@ -11,6 +11,7 @@ kotlin_jvm_lib(
     deps = [
         "//src/interfaces:interfaces_jar",
         "//src/runtime/shared:shared_jar",
+        "//src/utils:utils_jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
 )

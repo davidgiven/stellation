@@ -1,19 +1,20 @@
 package runtime.shared
 
+import datastore.IDatabase
 import datastore.withSqlTransaction
-import interfaces.IContext
-import interfaces.context
+import interfaces.IDatastore
 import runtime.jvm.JvmDatabase
+import utils.bind
+import utils.resetBindingsForTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
 class SqlDatastoreTest : AbstractDatastoreTest() {
     @BeforeTest
     fun setup() {
-        context = object : IContext() {
-            override val database = JvmDatabase()
-            override val datastore = SqlDatastore(database)
-        }
+        resetBindingsForTest()
+        bind<IDatabase>(JvmDatabase())
+        bind<IDatastore>(SqlDatastore(database))
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()
@@ -29,6 +30,6 @@ class SqlDatastoreTest : AbstractDatastoreTest() {
 
     @AfterTest
     fun teardown() {
-        context.database!!.closeDatabase()
+        database.closeDatabase()
     }
 }

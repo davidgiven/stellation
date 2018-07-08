@@ -1,7 +1,7 @@
 package model
 
 import datastore.Oid
-import interfaces.context
+import interfaces.IDatastore
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
@@ -61,6 +61,8 @@ abstract class Property(val scope: Scope, val name: String) {
     }
 
     abstract val sqlType: String
+
+    protected val datastore: IDatastore get() = utils.get()
 }
 
 abstract class PrimitiveProperty<T>(scope: Scope, name: String) : Property(scope, name) {
@@ -78,40 +80,40 @@ open class IntProperty(scope: Scope, name: String) : PrimitiveProperty<Int>(scop
     override val sqlType = "INTEGER"
 
     override fun getPrimitive(oid: Oid) =
-            context.datastore!!.getIntProperty(oid, name)
+            datastore.getIntProperty(oid, name)
 
     override fun setPrimitive(oid: Oid, value: Int) =
-            context.datastore!!.setIntProperty(oid, name, value)
+            datastore.setIntProperty(oid, name, value)
 }
 
 open class LongProperty(scope: Scope, name: String) : PrimitiveProperty<Long>(scope, name) {
     override val sqlType = "INTEGER"
 
     override fun getPrimitive(oid: Oid) =
-            context.datastore!!.getLongProperty(oid, name)
+            datastore.getLongProperty(oid, name)
 
     override fun setPrimitive(oid: Oid, value: Long) =
-            context.datastore!!.setLongProperty(oid, name, value)
+            datastore.setLongProperty(oid, name, value)
 }
 
 open class RealProperty(scope: Scope, name: String) : PrimitiveProperty<Double>(scope, name) {
     override val sqlType = "REAL"
 
     override fun getPrimitive(oid: Oid) =
-            context.datastore!!.getRealProperty(oid, name)
+            datastore.getRealProperty(oid, name)
 
     override fun setPrimitive(oid: Oid, value: Double) =
-            context.datastore!!.setRealProperty(oid, name, value)
+            datastore.setRealProperty(oid, name, value)
 }
 
 open class StringProperty(scope: Scope, name: String) : PrimitiveProperty<String>(scope, name) {
     override val sqlType = "TEXT"
 
     override fun getPrimitive(oid: Oid) =
-            context.datastore!!.getStringProperty(oid, name)
+            datastore.getStringProperty(oid, name)
 
     override fun setPrimitive(oid: Oid, value: String) =
-            context.datastore!!.setStringProperty(oid, name, value)
+            datastore.setStringProperty(oid, name, value)
 }
 
 open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) :
@@ -119,10 +121,10 @@ open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
     override val sqlType = "INTEGER REFERENCES objects(oid) ON DELETE CASCADE"
 
     override fun getPrimitive(oid: Oid) =
-            context.datastore!!.getOidProperty(oid, name)?.load(kclass)
+            datastore.getOidProperty(oid, name)?.load(kclass)
 
     override fun setPrimitive(oid: Oid, value: T?) =
-            context.datastore!!.setOidProperty(oid, name, value?.oid)
+            datastore.setOidProperty(oid, name, value?.oid)
 }
 
 open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) : Property(scope, name) {
@@ -134,7 +136,7 @@ open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
                         object : Aggregate<T> {
                             // We do this here to ensure that the context is dereferenced every
                             // time the aggregate is fetched.
-                            val set = context.datastore!!.getSetProperty(oid, name)
+                            val set = datastore.getSetProperty(oid, name)
 
                             override fun add(item: T): Aggregate<T> {
                                 set.add(item.oid)

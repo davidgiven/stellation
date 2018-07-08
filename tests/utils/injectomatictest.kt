@@ -29,7 +29,7 @@ class InjectomaticTest {
     @Test
     fun complexTest() {
         var list = Subclass()
-        bind(list, Superclass::class)
+        bind<Superclass>(list)
 
         assertSame(list, get<Superclass>())
     }

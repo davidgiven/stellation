@@ -31,6 +31,7 @@ kotlin_jvm_test(
         "@junit_junit//jar",
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
         "@org_jetbrains_kotlin_kotin_test//jar",
+        "@org_jetbrains_kotlin_kotin_reflect//jar",
         "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
         "@org_jetbrains_kotlin_kotin_test_junit//jar",
         "@org_xerial_sqlite_jdbc//jar",
@@ -41,5 +42,6 @@ kotlin_jvm_test(
         "//src/model:model_jar",
         "//src/runtime/jvm:runtime_jar",
         "//src/runtime/shared:shared_jar",
+        "//src/utils:utils_jar",
     ],
 )

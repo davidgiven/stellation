@@ -10,5 +10,6 @@ kotlin_js_lib(
     srcs = glob(["*.kt"]),
     deps = [
         "//src/interfaces:interfaces_jsjar",
+        "//src/utils:utils_jsjar",
     ],
 )

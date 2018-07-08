@@ -19,6 +19,7 @@ kotlin_jvm_test(
         "@org_jetbrains_kotlin_kotin_test//jar",
         "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
         "@org_jetbrains_kotlin_kotin_test_junit//jar",
+        "@org_jetbrains_kotlin_kotin_reflect//jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
     test_class = "runtime.shared.SqlDatastoreTest",
@@ -26,6 +27,7 @@ kotlin_jvm_test(
         "//src/interfaces:interfaces_jar",
         "//src/runtime/jvm:runtime_jar",
         "//src/runtime/shared:shared_jar",
+        "//src/utils:utils_jar",
     ],
 )
 
@@ -42,6 +44,7 @@ kotlin_jvm_test(
         "@org_jetbrains_kotlin_kotin_test//jar",
         "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
         "@org_jetbrains_kotlin_kotin_test_junit//jar",
+        "@org_jetbrains_kotlin_kotin_reflect//jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
     test_class = "runtime.shared.InMemoryDatastoreTest",
@@ -49,5 +52,6 @@ kotlin_jvm_test(
         "//src/interfaces:interfaces_jar",
         "//src/runtime/jvm:runtime_jar",
         "//src/runtime/shared:shared_jar",
+        "//src/utils:utils_jar",
     ],
 )

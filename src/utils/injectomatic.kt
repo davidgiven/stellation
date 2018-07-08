@@ -22,13 +22,12 @@ fun checkBindingExists(kclass: KClass<*>) {
     }
 }
 
-fun <T> bind(o: T, kclass: KClass<*>): T {
+inline fun <reified T> bind(o: T): T {
+    val kclass = T::class
     checkBindingDoesNotExist(kclass)
     injectomatic_bindings += kclass to o
     return o
 }
-
-inline fun <reified T> bind(o: T): T = bind(o, T::class)
 
 inline fun <reified T> get(): T {
     val kclass = T::class

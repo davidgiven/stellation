@@ -1,7 +1,8 @@
 package model
 
 import datastore.Oid
-import interfaces.context
+import interfaces.IDatastore
+import utils.get
 import kotlin.reflect.KClass
 
 class ObjectNotVisibleException(val oid: Oid)
@@ -42,7 +43,8 @@ fun resetObjectCache() {
 
 @Suppress("UNCHECKED_CAST")
 fun <T : SThing> loadRawObject(oid: Oid, kclass: KClass<T>): T {
-    if (!context.datastore!!.doesObjectExist(oid)) {
+    val datastore = get<IDatastore>()
+    if (datastore.doesObjectExist(oid)) {
         throw ObjectNotVisibleException(oid)
     }
 
@@ -69,7 +71,8 @@ fun <T : SThing> loadObject(oid: Oid, kclass: KClass<T>): T {
 }
 
 fun <T : SThing> createObject(klass: KClass<T>): T {
-    val oid = context.datastore!!.createObject()
+    val datastore = get<IDatastore>()
+    val oid = datastore.createObject()
     KIND.get(oid).set(klass.simpleName!!)
     return oid.load(klass)
 }

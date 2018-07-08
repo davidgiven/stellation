@@ -1,13 +1,15 @@
 package runtime.shared
 
-import interfaces.context
+import datastore.IDatabase
+import interfaces.IDatastore
+import utils.get
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 abstract class AbstractDatastoreTest {
-    protected val database get() = context.database!!
-    protected val datastore get() = context.datastore!!
+    protected val database get() = get<IDatabase>()
+    protected val datastore get() = get<IDatastore>()
 
     @Test
     fun objectCreationTest() {
