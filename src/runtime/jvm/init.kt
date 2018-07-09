@@ -10,6 +10,5 @@ import utils.bind
 fun initJvmRuntime() {
     bind<ILogger>(JvmLogger())
     bind<ITime>(JvmTime())
-    val database = bind<IDatabase>(JvmDatabase())
-    bind<IDatastore>(SqlDatastore(database))
+    bind<IDatabase>(JvmDatabase())
 }

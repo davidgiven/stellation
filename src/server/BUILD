@@ -14,6 +14,7 @@ kotlin_jvm_lib(
     deps = [
         "//src/interfaces:interfaces_jar",
         "//src/model:model_jar",
+        "//src/runtime/shared:shared_jar",
         "//src/utils:utils_jar",
     ],
 )
@@ -24,6 +25,7 @@ kotlin_konan_lib(
     deps = [
         "//src/interfaces:interfaces_klib",
         "//src/model:model_klib",
+        "//src/runtime/shared:shared_klib",
         "//src/utils:utils_klib",
     ],
 )

@@ -114,6 +114,7 @@ def kotlin_konan_lib(name, srcs=[], deps=[]):
   cmd = ["/home/dg/src/kotlin-native-linux-0.7.1/bin/kotlinc-native",
          "-produce library",
          "-g",
+         "--disable devirtualization",
          "-output $@"]
 
   for f in srcs:
@@ -136,6 +137,7 @@ def kotlin_konan_binary(name, srcs=[], deps=[], main="main"):
          "--purge_user_libs",
          "-entry {}".format(main),
          "-g",
+         "--disable devirtualization",
          "-output $@"]
 
   for f in srcs:
@@ -153,3 +155,15 @@ def kotlin_konan_binary(name, srcs=[], deps=[], main="main"):
     output_to_bindir = 1,
   )
 
+def kotlin_konan_cinterop(name, src, libname):
+  native.genrule(
+    name = name,
+    message = "Generating Konan cinterop {}".format(name),
+    srcs = [src],
+    outs = [libname + ".klib"],
+    cmd = " ".join([
+        "/home/dg/src/kotlin-native-linux-0.7.1/bin/cinterop",
+        "-def $<",
+        "-o $@",
+    ])
+  )

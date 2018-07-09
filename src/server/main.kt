@@ -8,6 +8,7 @@ import model.ObjectNotVisibleException
 import model.SUniverse
 import model.createNewUniverse
 import model.Timers
+import runtime.shared.SqlDatastore
 import utils.bind
 import utils.get
 import utils.getopt
@@ -30,7 +31,7 @@ fun main(argv: Array<String>) {
     ))
 
     val database = get<IDatabase>()
-    val datastore = get<IDatastore>()
+    val datastore = bind<IDatastore>(SqlDatastore(database))
     database.openDatabase(databaseFilename)
     datastore.initialiseDatabase()
     val model = bind(Model())

@@ -18,6 +18,7 @@ kotlin_konan_binary(
         "//src/interfaces:interfaces_klib",
         "//src/model:model_klib",
         "//src/runtime/konan:runtime_klib",
+        "//src/runtime/konan:sqlite3_klib",
         "//src/runtime/shared:shared_klib",
         "//src/server:server_klib",
         "//src/utils:utils_klib",

@@ -1,10 +1,16 @@
-package datastore
+package runtime.konan
 
+import interfaces.IDatabase
+import interfaces.Oid
+import interfaces.SqlException
+import interfaces.SqlStatement
+import interfaces.SqlValue
 import sqlite3.*
 import kotlinx.cinterop.*
 
-private var databaseConnection: CPointer<sqlite3>? = null
-private var statementCache: Map<String, SqliteStatement> = emptyMap()
+private typealias SqliteConnection = CPointer<sqlite3>
+
+private fun SqliteConnection.getSqliteError() = sqlite3_errmsg(this)!!.toKString()
 
 private class SqliteValue(unprotectedValue: CPointer<sqlite3_value>?) : SqlValue {
     val value = sqlite3_value_dup(unprotectedValue)
@@ -21,18 +27,18 @@ private class SqliteValue(unprotectedValue: CPointer<sqlite3_value>?) : SqlValue
     override fun getOid(): Oid? = if (value == null) value else getInt()
 }
 
-private fun getSqliteError() = sqlite3_errmsg(databaseConnection)!!.toKString()
-
-private class SqliteStatement : SqlStatement {
+private class SqliteStatement(val databaseConnection: SqliteConnection, val sql: String)
+        : SqlStatement {
     var sqliteStatement: CPointer<sqlite3_stmt>? = null
 
-    constructor(sql: String) {
+    init {
         memScoped {
             val tailPtr = alloc<CPointerVar<ByteVar>>()
             val stmtPtr = alloc<CPointerVar<sqlite3_stmt>>()
 
             if (sqlite3_prepare_v2(databaseConnection, sql, -1, stmtPtr.ptr, tailPtr.ptr) != 0) {
-                throw SqlException("Could not prepare statement: ${getSqliteError()}: '${sql}'")
+                throw SqlException(
+                        "Could not prepare statement: ${databaseConnection.getSqliteError()}: '${sql}'")
             }
             val tail = tailPtr.value!!.toKString()
             if (!tail.isEmpty()) {
@@ -115,36 +121,40 @@ private class SqliteStatement : SqlStatement {
     }
 }
 
-actual fun openDatabase(filename: String) {
-    check(databaseConnection == null)
-    memScoped {
-        val dbPtr = alloc<CPointerVar<sqlite3>>()
-        if (sqlite3_open(filename, dbPtr.ptr) != 0) {
-            throw SqlException("Cannot open db: ${sqlite3_errmsg(dbPtr.value)}")
+class KonanDatabase : IDatabase {
+    private var databaseConnection: SqliteConnection? = null
+    private var statementCache: Map<String, SqliteStatement> = emptyMap()
+
+    override fun openDatabase(filename: String) {
+        check(databaseConnection == null)
+        memScoped {
+            val dbPtr = alloc<CPointerVar<sqlite3>>()
+            if (sqlite3_open(filename, dbPtr.ptr) != 0) {
+                throw SqlException("Cannot open db: ${sqlite3_errmsg(dbPtr.value)}")
+            }
+            databaseConnection = dbPtr.value
         }
-        databaseConnection = dbPtr.value
+
+        executeSql("PRAGMA encoding = \"UTF-8\"")
+        executeSql("PRAGMA synchronous = OFF")
+        executeSql("PRAGMA foreign_keys = ON")
+        executeSql("PRAGMA temp_store = MEMORY")
     }
 
-    executeSql("PRAGMA encoding = \"UTF-8\"")
-    executeSql("PRAGMA synchronous = OFF")
-    executeSql("PRAGMA foreign_keys = ON")
-    executeSql("PRAGMA temp_store = MEMORY")
-}
-
-actual fun closeDatabase() {
-    check(databaseConnection != null)
-    statementCache.values.forEach { it.close() }
-    statementCache = emptyMap()
-    sqlite3_close_v2(databaseConnection)
-    databaseConnection = null
-}
-
-actual fun sqlStatement(sql: String): SqlStatement {
-    var statement = statementCache.get(sql)
-    if (statement == null) {
-        statement = SqliteStatement(sql)
-        statementCache += Pair(sql, statement)
+    override fun closeDatabase() {
+        check(databaseConnection != null)
+        statementCache.values.forEach { it.close() }
+        statementCache = emptyMap()
+        sqlite3_close_v2(databaseConnection)
+        databaseConnection = null
     }
-    return statement.reset()
-}
 
+    override fun sqlStatement(sql: String): SqlStatement {
+        var statement = statementCache.get(sql)
+        if (statement == null) {
+            statement = SqliteStatement(databaseConnection!!, sql)
+            statementCache += Pair(sql, statement)
+        }
+        return statement.reset()
+    }
+}
