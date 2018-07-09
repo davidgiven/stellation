@@ -6,19 +6,14 @@ import interfaces.withSqlTransaction
 import runtime.jvm.JvmDatabase
 import runtime.shared.SqlDatastore
 import utils.bind
-import utils.get
+import utils.resetBindingsForTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
-class ObjectsTest {
-    private val database get() = get<IDatabase>()
-    private val datastore get() = get<IDatastore>()
-    private val model get() = get<Model>()
-
+class SqlObjectsTest : AbstractObjectsTest() {
     @BeforeTest
     fun setup() {
+        resetBindingsForTest()
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore(database))
         bind(Model(datastore))
@@ -33,12 +28,5 @@ class ObjectsTest {
     fun teardown() {
         database.executeSql("COMMIT")
         database.closeDatabase()
-    }
-
-    @Test
-    fun objectCreationTest() {
-        val universe = model.createObject(SUniverse::class)
-        assertEquals(1, universe.oid)
-        assertEquals("SUniverse", universe.kind)
     }
 }

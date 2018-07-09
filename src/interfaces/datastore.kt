@@ -14,7 +14,7 @@ interface SetProperty {
 interface IDatastore {
     fun initialiseDatabase()
 
-    fun createProperty(name: String, sqlType: String)
+    fun createProperty(name: String, sqlType: String, isAggregate: Boolean)
 
     fun createObject(): Oid
     fun destroyObject(oid: Oid)

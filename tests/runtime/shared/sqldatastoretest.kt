@@ -18,14 +18,7 @@ class SqlDatastoreTest : AbstractDatastoreTest() {
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()
-        database.withSqlTransaction {
-            for (t in listOf("INTEGER", "REAL", "TEXT")) {
-                datastore.createProperty(t.toLowerCase(), t)
-            }
-            datastore.createProperty(
-                    "set",
-                    "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE")
-        }
+        database.withSqlTransaction { createProperties() }
     }
 
     @AfterTest

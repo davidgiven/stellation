@@ -52,7 +52,7 @@ class InMemoryDatastore : IDatastore {
         properties = emptySet()
     }
 
-    override fun createProperty(name: String, sqlType: String) {
+    override fun createProperty(name: String, sqlType: String, isAggregate: Boolean) {
         properties += name
     }
 

@@ -49,6 +49,7 @@ abstract class Property(val scope: Scope, val name: String) {
     }
 
     abstract val sqlType: String
+    abstract val isAggregate: Boolean
 }
 
 abstract class PrimitiveProperty<T>(scope: Scope, name: String)
@@ -62,6 +63,8 @@ abstract class PrimitiveProperty<T>(scope: Scope, name: String)
     override fun setValue(thisRef: SThing, property: KProperty<*>, value: T) {
         setPrimitive(thisRef.model, thisRef.oid, value)
     }
+
+    override val isAggregate = false
 }
 
 open class IntProperty(scope: Scope, name: String) : PrimitiveProperty<Int>(scope, name) {
@@ -118,6 +121,7 @@ open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
 open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>)
     : Property(scope, name), ValProxy<Aggregate<T>> {
     override val sqlType = "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE"
+    override val isAggregate = true
 
     override fun getValue(thisRef: SThing, property: KProperty<*>): Aggregate<T> {
         val model = thisRef.model

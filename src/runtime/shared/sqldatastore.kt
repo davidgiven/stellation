@@ -18,7 +18,7 @@ class SqlDatastore(val database: IDatabase) : IDatastore {
             database.executeSql(
                     """
                 CREATE TABLE IF NOT EXISTS timers (
-                    oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                    oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
                     expiry INTEGER
             )
             """)
@@ -31,13 +31,22 @@ class SqlDatastore(val database: IDatabase) : IDatastore {
 
     }
 
-    override fun createProperty(name: String, sqlType: String) {
-        database.executeSql(
-                """
-             CREATE TABLE IF NOT EXISTS prop_$name (
-                oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
-                value $sqlType)
-        """)
+    override fun createProperty(name: String, sqlType: String, isAggregate: Boolean) {
+        if (!isAggregate) {
+            database.executeSql(
+                    """
+                 CREATE TABLE IF NOT EXISTS prop_$name (
+                    oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                    value $sqlType)
+            """)
+        } else {
+            database.executeSql(
+                    """
+                 CREATE TABLE IF NOT EXISTS prop_$name (
+                    oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                    value $sqlType)
+            """)
+        }
     }
 
     override fun createObject(): Oid {

@@ -24,9 +24,12 @@ kotlin_jvm_test(
 )
 
 kotlin_jvm_test(
-    name = "ObjectsTest",
+    name = "SqlObjectsTest",
     size = "small",
-    srcs = ["objectstest.kt"],
+    srcs = [
+        "abstractobjectstest.kt",
+        "sqlobjectstest.kt",
+    ],
     libs = [
         "@junit_junit//jar",
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
@@ -36,7 +39,32 @@ kotlin_jvm_test(
         "@org_jetbrains_kotlin_kotin_test_junit//jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
-    test_class = "model.ObjectsTest",
+    test_class = "model.SqlObjectsTest",
+    deps = [
+        "//src/interfaces:interfaces_jar",
+        "//src/model:model_jar",
+        "//src/runtime/jvm:runtime_jar",
+        "//src/runtime/shared:shared_jar",
+        "//src/utils:utils_jar",
+    ],
+)
+
+kotlin_jvm_test(
+    name = "InMemoryObjectsTest",
+    size = "small",
+    srcs = [
+        "abstractobjectstest.kt",
+        "memobjectstest.kt",
+    ],
+    libs = [
+        "@junit_junit//jar",
+        "@org_jetbrains_kotlin_kotin_stdlib//jar",
+        "@org_jetbrains_kotlin_kotin_test//jar",
+        "@org_jetbrains_kotlin_kotin_reflect//jar",
+        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
+        "@org_jetbrains_kotlin_kotin_test_junit//jar",
+    ],
+    test_class = "model.InMemoryObjectsTest",
     deps = [
         "//src/interfaces:interfaces_jar",
         "//src/model:model_jar",

@@ -1,16 +1,23 @@
-package runtime.shared
+package model
 
 import interfaces.IDatastore
+import runtime.shared.InMemoryDatastore
 import utils.bind
 import utils.resetBindingsForTest
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 
-class InMemoryDatastoreTest : AbstractDatastoreTest() {
+class InMemoryObjectsTest : AbstractObjectsTest() {
     @BeforeTest
     fun setup() {
         resetBindingsForTest()
         bind<IDatastore>(InMemoryDatastore())
+        bind(Model(datastore))
+
         datastore.initialiseDatabase()
-        createProperties()
+    }
+
+    @AfterTest
+    fun teardown() {
     }
 }

@@ -11,6 +11,20 @@ abstract class AbstractDatastoreTest {
     protected val database get() = get<IDatabase>()
     protected val datastore get() = get<IDatastore>()
 
+    protected fun createProperties() {
+        for (t in listOf("INTEGER", "REAL", "TEXT")) {
+            datastore.createProperty(t.toLowerCase(), t, false)
+        }
+        datastore.createProperty(
+                "oid",
+                "INTEGER REFERENCES objects(oid) ON DELETE CASCADE",
+                false)
+        datastore.createProperty(
+                "set",
+                "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE",
+                true)
+    }
+
     @Test
     fun objectCreationTest() {
         var o1 = datastore.createObject()
@@ -106,5 +120,15 @@ abstract class AbstractDatastoreTest {
         c.forEach { p1.add(it) }
 
         assertEquals(p1.getAll(), p2.getAll())
+    }
+
+    @Test
+    fun oidNulls() {
+        var o = datastore.createObject()
+        assertEquals(null, datastore.getOidProperty(o, "oid"))
+        datastore.setOidProperty(o, "oid", o)
+        assertEquals(o, datastore.getOidProperty(o, "oid"))
+        datastore.setOidProperty(o, "oid", null)
+        assertEquals(null, datastore.getOidProperty(o, "oid"))
     }
 }

@@ -39,7 +39,7 @@ class Model(val datastore: IDatastore = get()) {
             this + Pair(T::class.simpleName!!, constructor)
 
     fun initialiseProperties() {
-        allProperties.forEach { datastore.createProperty(it.name, it.sqlType) }
+        allProperties.forEach { datastore.createProperty(it.name, it.sqlType, it.isAggregate) }
     }
 
     @Suppress("UNCHECKED_CAST")
