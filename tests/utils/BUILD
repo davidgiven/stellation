@@ -40,3 +40,21 @@ kotlin_jvm_test(
         "//src/utils:utils_jar",
     ],
 )
+
+kotlin_jvm_test(
+    name = "MiscTest",
+    size = "small",
+    srcs = ["misctest.kt"],
+    libs = [
+        "@junit_junit//jar",
+        "@org_jetbrains_kotlin_kotin_stdlib//jar",
+        "@org_jetbrains_kotlin_kotin_test//jar",
+        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
+        "@org_jetbrains_kotlin_kotin_test_junit//jar",
+        "@org_jetbrains_kotlin_kotin_reflect//jar",
+    ],
+    test_class = "utils.MiscTest",
+    deps = [
+        "//src/utils:utils_jar",
+    ],
+)
