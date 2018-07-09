@@ -11,6 +11,7 @@ kotlin_jvm_binary(
     srcs = ["main.kt"],
     libs = [
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
+        "@org_jetbrains_kotlin_kotin_reflect//jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
     main_class = "server.jvm.MainKt",
@@ -18,6 +19,7 @@ kotlin_jvm_binary(
         "//src/interfaces:interfaces_jar",
         "//src/model:model_jar",
         "//src/runtime/jvm:runtime_jar",
+        "//src/runtime/shared:shared_jar",
         "//src/server:server_jar",
         "//src/utils:utils_jar",
     ],

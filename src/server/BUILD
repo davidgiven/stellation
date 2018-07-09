@@ -22,8 +22,8 @@ kotlin_konan_lib(
     name = "server_klib",
     srcs = SRCS,
     deps = [
+        "//src/interfaces:interfaces_klib",
         "//src/model:model_klib",
         "//src/utils:utils_klib",
-        "//src/interfaces:interfaces_klib",
     ],
 )

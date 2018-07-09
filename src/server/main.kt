@@ -31,13 +31,13 @@ fun main(argv: Array<String>) {
     val database = get<IDatabase>()
     val datastore = get<IDatastore>()
     database.openDatabase(databaseFilename)
+    datastore.initialiseDatabase()
     val model = bind(Model())
+
     database.withSqlTransaction {
-        datastore.initialiseDatabase()
         model.initialiseProperties()
         bind(findOrCreateUniverse(model))
     }
-
 
     database.closeDatabase()
 }
