@@ -7,6 +7,7 @@ import model.Model
 import model.ObjectNotVisibleException
 import model.SUniverse
 import model.createNewUniverse
+import model.Timers
 import utils.bind
 import utils.get
 import utils.getopt
@@ -33,6 +34,7 @@ fun main(argv: Array<String>) {
     database.openDatabase(databaseFilename)
     datastore.initialiseDatabase()
     val model = bind(Model())
+    bind(Timers())
 
     database.withSqlTransaction {
         model.initialiseProperties()
