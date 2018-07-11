@@ -1,6 +1,14 @@
+$primary-colour: rgb(10, 255, 10);
+$shadow: 1px;
+
 @font-face {
     font-family: "CommodorePet2Y";
     src: url("COMMODORE_PET_2y.woff") format('woff');
+}
+
+@font-face {
+    font-family: "CommodorePet";
+    src: url("COMMODORE_PET.woff2") format('woff2');
 }
 
 body {
@@ -8,19 +16,24 @@ body {
     background-color: #000;
     font-size: 16px;
     line-height: 120%;
-    color: #00ff77;
-    text-shadow: 0px 0px 2px rgba(10, 255, 10, .8);
+    color: $primary-colour;
+    text-shadow: 0px 0px $shadow fade-out($primary-colour, .2);
 
 	.highlight {
 		color: white;
-		text-shadow: 0px 0px 2px rgba(255, 255, 255, .8);
+		text-shadow: 0px 0px $shadow rgba(255, 255, 255, .8);
+	}
+
+	.wide {
+		font-family: "CommodorePet", "arial";
 	}
 
 	.box {
 		width: 3em;
 		padding: 0.5em;
-		border: 1px solid #00ff77;
-        box-shadow: 0 0 2px 1px rgba(10, 255, 10, .8);
+		border: 1px solid $primary-colour;
+        box-shadow: 0 0 $shadow ($shadow/2) fade-out($primary-colour, .2),
+			inset 0 0 $shadow ($shadow/2) fade-out($primary-colour, .2);
 	}
 
 	button {
@@ -33,7 +46,8 @@ body {
 	}
 
 	button:hover {
-		background-color: white;
+		background: white;
+		color: black;
 	}
 
 	button:before {
