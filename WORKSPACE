@@ -5,6 +5,11 @@ maven_server(
     url = "http://central.maven.org/maven2/",
 )
 
+maven_server(
+    name = "jcenter",
+    url = "http://jcenter.bintray.com",
+)
+
 maven_jar(
     name = "org_jetbrains_kotlin_kotin_stdlib_js",
     artifact = "org.jetbrains.kotlin:kotlin-stdlib-js:%s" % kotlin_version,
@@ -70,6 +75,36 @@ maven_jar(
     name = "org_jetbrains_kotlin_kotin_test_junit",
     artifact = "org.jetbrains.kotlin:kotlin-test-junit:%s" % kotlin_version,
     server = "maven_central",
+)
+
+maven_jar(
+    name = "org_jetbrains_kotlinx_kotlinx_coroutines_core",
+    artifact = "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.23.4",
+    server = "maven_central",
+)
+
+maven_jar(
+    name = "org_jetbrains_kotlinx_kotlinx_coroutines_core_js",
+    artifact = "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:0.23.4",
+    server = "maven_central",
+)
+
+maven_jar(
+    name = "org_jetbrains_kotlinx_atomicfu_js",
+    artifact = "org.jetbrains.kotlinx:atomicfu-js:0.10.3",
+    server = "maven_central",
+)
+
+maven_jar(
+	name = "org_jetbrains_kotlinx_kotlinx_html_js",
+	artifact = "org.jetbrains.kotlinx:kotlinx-html-js:0.6.11",
+	server = "jcenter",
+)
+
+maven_jar(
+	name = "org_jetbrains_kotlinx_kotlinx_html_jvm",
+	artifact = "org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.11",
+	server = "jcenter",
 )
 
 maven_jar(

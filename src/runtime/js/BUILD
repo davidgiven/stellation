@@ -11,6 +11,7 @@ kotlin_js_lib(
     deps = [
         "//src/interfaces:interfaces_jsjar",
         "//src/runtime/shared:shared_jsjar",
+        "//src/ui:ui_jsjar",
         "//src/utils:utils_jsjar",
     ],
 )

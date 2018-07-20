@@ -1,5 +1,6 @@
 def kotlin_jvm_lib(name, srcs=[], deps=[]):
   cmd = ["/home/dg/src/kotlinc/bin/kotlinc-jvm",
+         "-Xcoroutines=enable",
          "-d $@"]
   for f in srcs:
     cmd += ["$(location {})".format(f)]
@@ -58,6 +59,7 @@ def kotlin_jvm_test(name, srcs=[], deps=[], libs=[], **kwargs):
 
 def kotlin_js_lib(name, srcs=[], deps=[], main=False):
   cmd = ["/home/dg/src/kotlinc/bin/kotlinc-js",
+         "-Xcoroutines=enable",
          "-module-kind commonjs",
          "-output {0}/files/{0}.js".format(name),
          "-meta-info"]
@@ -112,6 +114,7 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
 
 def kotlin_konan_lib(name, srcs=[], deps=[]):
   cmd = ["/home/dg/src/kotlin-native-linux-0.7.1/bin/kotlinc-native",
+         "-Xcoroutines=enable",
          "-produce library",
          "-g",
          "--disable devirtualization",
