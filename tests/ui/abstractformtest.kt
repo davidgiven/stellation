@@ -38,7 +38,7 @@ class TestForm(ui: IUi) : AbstractForm<String>(ui) {
 
 class AbstractFormTest {
     val ui = JvmStubUi()
-    val form = TestForm(ui)
+    val form = TestForm(ui).show()
 
     @Test
     fun simplePost() {

@@ -2,6 +2,7 @@ package ui
 
 import interfaces.IUi
 import interfaces.IUiElement
+import utils.get
 
 data class LoginData(
         val canceled: Boolean,
@@ -9,7 +10,7 @@ data class LoginData(
         val password: String? = null
 )
 
-class LoginForm(ui: IUi) : AbstractForm<LoginData>(ui) {
+class LoginForm(ui: IUi = get()) : AbstractForm<LoginData>(ui) {
     lateinit var emailInput: IUiElement
     lateinit var passwordInput: IUiElement
     lateinit var okButton: IUiElement
@@ -21,14 +22,22 @@ class LoginForm(ui: IUi) : AbstractForm<LoginData>(ui) {
 
     override fun createUserInterface(div: IUiElement) {
         div.addVBox {
-            addText("p", "Email address")
-            emailInput = addElement("input") {
-                set("type", "text")
+            addText("p",
+            """If you're an existing user, enter your email address and
+                | password to log in.""".trimMargin())
+
+            addElement("label") {
+                addText("p", "Email address:")
+                emailInput = addElement("input") {
+                    set("type", "text")
+                }
             }
 
-            addText("p", "Password")
-            passwordInput = addElement("input") {
-                set("type", "text")
+            addElement("label") {
+                addText("p", "Password:")
+                passwordInput = addElement("input") {
+                    set("type", "text")
+                }
             }
         }
     }

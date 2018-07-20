@@ -3,40 +3,40 @@ package ui
 import interfaces.IUi
 import interfaces.IUiElement
 import kotlinx.coroutines.experimental.channels.Channel
-import utils.get
 
 data class YesNoButtons(val yesButton: IUiElement, val noButton: IUiElement)
 
-abstract class AbstractForm<T>(val ui: IUi = get()) {
+abstract class AbstractForm<T>(val ui: IUi) {
     val data = Channel<T>(1)
     var finished: Boolean = false
 
-    val element = create()
+    var element: IUiElement? = null
 
     abstract fun createTitlebar(div: IUiElement)
     abstract fun createUserInterface(div: IUiElement)
     abstract fun createButtonBox(div: IUiElement)
 
-    fun create() =
-            ui.newModal {
-                classes = setOf("form")
+    fun create() {
+        element = ui.newModal {
+            classes = setOf("form")
 
 
-                addElement("div") {
-                    classes = setOf("titlebar")
-                    createTitlebar(this)
-                }
-
-                addElement("body") {
-                    classes = setOf("body")
-                    createUserInterface(this)
-                }
-
-                addElement("buttonbox") {
-                    classes = setOf("buttonbox")
-                    createButtonBox(this)
-                }
+            addElement("div") {
+                classes = setOf("titlebar")
+                createTitlebar(this)
             }
+
+            addElement("div") {
+                classes = setOf("body")
+                createUserInterface(this)
+            }
+
+            addElement("div") {
+                classes = setOf("buttonbox")
+                createButtonBox(this)
+            }
+        }
+    }
 
     suspend fun post(value: T) {
         data.send(value)
@@ -65,3 +65,7 @@ abstract class AbstractForm<T>(val ui: IUi = get()) {
     }
 }
 
+fun <T : AbstractForm<*>> T.show(): T {
+    create()
+    return this
+}
