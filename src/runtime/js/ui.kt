@@ -4,6 +4,8 @@ import interfaces.IUi
 import interfaces.IUiElement
 import interfaces.IUiNode
 import interfaces.IUiText
+import interfaces.UiElementConstructor
+import interfaces.UiTextConstructor
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 import org.w3c.dom.events.KeyboardEvent
@@ -50,6 +52,10 @@ class JsUi : IUi {
         }
 
         override fun get(name: String) = element!!.getProperty(name).toString()
+
+        override fun scrollIntoView() {
+            element!!.scrollIntoView()
+        }
     }
 
     class JsUiText(element: HTMLElement? = null) : IUiText, JsUiNode(element) {
@@ -61,18 +67,19 @@ class JsUi : IUi {
     }
 
     class JsUiElement(element: HTMLElement? = null) : IUiElement, JsUiNode(element) {
-        override fun addElement(tag: String, id: String?, init: IUiElement.() -> Unit): IUiElement {
+        override fun addElement(tag: String, id: String?, init: UiElementConstructor): IUiElement {
             val e = JsUiElement()
             e.create(tag, id)
-            init(e)
+            e.init()
             appendChild(e)
             return e
         }
 
-        override fun addText(tag: String, id: String?, text: String): IUiText {
+        override fun addText(tag: String, id: String?, text: String, init: UiTextConstructor): IUiText {
             val t = JsUiText()
             t.create(tag, id)
             t.text = text
+            t.init()
             appendChild(t)
             return t
         }
@@ -127,7 +134,7 @@ class JsUi : IUi {
     override fun newModal(init: IUiElement.() -> Unit): IUiElement {
         val element = JsUiElement()
         element.create("div", null)
-        init(element)
+        element.init()
         document.body!!.appendChild(element.element!!)
         return element
     }

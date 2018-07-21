@@ -17,7 +17,7 @@ class LoginForm(ui: IUi = get()) : AbstractForm<LoginData>(ui) {
     lateinit var cancelButton: IUiElement
 
     override fun createTitlebar(div: IUiElement) {
-        div.addText("p", "Titlebar")
+        div.addText("span", "Titlebar")
     }
 
     override fun createUserInterface(div: IUiElement) {

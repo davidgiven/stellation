@@ -1,7 +1,7 @@
 package ui
 
-import interfaces.IUiElement
 import interfaces.IUi
+import interfaces.IUiElement
 import utils.get
 
 typealias ConsoleCommandCallback = (String) -> Unit
@@ -11,29 +11,44 @@ class ConsoleWindow(ui: IUi = get(), val callback: ConsoleCommandCallback) : Abs
     lateinit var textInput: IUiElement
 
     override fun createTitlebar(div: IUiElement) {
-        div.addText("div", "Console")
+        div.addText("span", "Console")
     }
 
     override fun createUserInterface(div: IUiElement) {
         div.classes += "console"
 
-        div.addVBox {
-            linesBox = div.addVBox {
-            }
-            textInput = div.addElement("input") {
-                set("type", "text")
+        div.addElement("label") {
+            classes += setOf("expand")
 
-                onActivate {
-                    val value = textInput["value"]!!
-                    textInput["value"] = ""
-                    callback(value)
+            linesBox = addElement("div") {
+                classes += setOf("lines")
+            }
+
+            addHBox {
+                addText("div", ">") {
+                    classes += "prompt"
                 }
+
+                textInput = addElement("input") {
+                    set("type", "text")
+
+                    onActivate {
+                        val value = textInput["value"]!!
+                        textInput["value"] = ""
+                        callback(value)
+                    }
+                }
+            }
+
+            addElement("div") {
+                classes += "expand"
             }
         }
     }
 
     fun print(s: String) {
         linesBox.addText("div", s).classes
+        textInput.scrollIntoView()
     }
 }
 

@@ -11,16 +11,21 @@ abstract class AbstractWindow(val ui: IUi) {
 
     open fun create() {
         element = ui.newModal {
-            classes = setOf("form")
-
+            classes = setOf("window", "vbox")
 
             addElement("div") {
                 classes = setOf("titlebar")
-                createTitlebar(this)
+                addHBox {
+                    createTitlebar(this)
+
+                    addElement("span") {
+                        classes = setOf("expand", "textured")
+                    }
+                }
             }
 
             addElement("div") {
-                classes = setOf("body")
+                classes = setOf("body", "expand", "vbox")
                 createUserInterface(this)
             }
         }

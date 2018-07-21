@@ -34,6 +34,19 @@ $bigshadow: 3px;
 		inset 0 0 $shadow ($shadow/2) fade-out($primary-colour, .2);
 }
 
+%border-bottom {
+    border: none;
+    background: linear-gradient(to bottom,
+        #000000 0%,
+        #000000 85%,
+        $primary-colour 90%,
+        $primary-colour 95%,
+        #000000 100%);
+    background-size: 8pt 16pt;
+    background-position-y: bottom;
+    background-repeat: repeat-x;
+}
+
 .thickbox {
 	border: 2px solid $primary-colour;
 }
@@ -53,6 +66,7 @@ $bigshadow: 3px;
 body {
 	@extend %text;
 	margin: 3em;
+	box-sizing: border-box;
 
 	.highlight {
 		color: white;
@@ -82,20 +96,11 @@ body {
 	}
 
 	input[type="text"] {
-		@extend %text;
-		border: none;
-		background: linear-gradient(to bottom,
-			#000000 0%,
-			#000000 85%,
-			$primary-colour 90%,
-			$primary-colour 95%,
-			#000000 100%);
-		background-size: 8pt 16pt;
-		background-position-y: bottom;
-		background-repeat: repeat-x;
+		@extend %text, %border-bottom;
 	}
 }
 
+/*
 body:before {
 	content: '';
 	pointer-events: none;
@@ -108,6 +113,7 @@ body:before {
 		fade-out($primary-colour, 0.85) 0%,
 		rgba(255,255,255,0) 100%);
 }
+*/
 
 body:after {
 	content: '';
@@ -135,3 +141,60 @@ body:after {
 	to { color: unset; }
 }
 
+.hbox, .vbox {
+    display: flex;
+    align-items: stretch;
+}
+
+.hbox { flex-direction: row; }
+.vbox { flex-direction: column; }
+.expand { flex-grow: 999; }
+
+.window {
+    @extend .box;
+    padding: 0;
+    background-color: black;
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    width: 10em;
+    height: 10em;
+
+    .titlebar {
+        @extend %border-bottom;
+        padding: 0.3em;
+        font-weight: bold;
+        cursor: move;
+
+        .textured {
+            background-color: red;
+            margin-left: 0.5em;
+            background: linear-gradient(#060 50%, #000 50%);
+            background-size: 100% 4px;
+            background-repeat: repeat-y;
+        }
+    }
+
+    .body {
+        padding: 0.5em;
+    }
+}
+
+.window .console {
+    overflow-y: scroll;
+
+    .lines {
+        @extend .slowadd;
+    }
+
+    .prompt {
+        width: 1em;
+    }
+
+    input {
+        border: none;
+        background: none;
+        width: 100%;
+        padding-left: 2px;
+    }
+}

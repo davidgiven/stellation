@@ -16,7 +16,7 @@ class Console {
     fun println(s: String) = window.print(s)
 
     fun execute(command: String) {
-        window.print("Got command: ${command}")
+        window.print("> ${command}")
     }
 
     private fun onCommand(command: String) {

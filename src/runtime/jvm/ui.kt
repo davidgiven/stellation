@@ -4,6 +4,8 @@ import interfaces.IUi
 import interfaces.IUiElement
 import interfaces.IUiNode
 import interfaces.IUiText
+import interfaces.UiElementConstructor
+import interfaces.UiTextConstructor
 
 class JvmStubUi: IUi {
     abstract class JvmUiNode(override val tag: String, override val id: String?): IUiNode {
@@ -21,6 +23,8 @@ class JvmStubUi: IUi {
         }
 
         override fun get(name: String) = attributes.get(name)
+
+        override fun scrollIntoView() {}
     }
 
     class JvmUiText(tag: String, id: String? = null, override var text: String) : IUiText, JvmUiNode(tag, id)
@@ -28,15 +32,16 @@ class JvmStubUi: IUi {
     class JvmUiElement(tag: String, id: String? = null): IUiElement, JvmUiNode(tag, id) {
         private var onActivateCallback: (() -> Unit)? = null
 
-        override fun addElement(tag: String, id: String?, init: IUiElement.() -> Unit): IUiElement {
+        override fun addElement(tag: String, id: String?, init: UiElementConstructor): IUiElement {
             val e = JvmUiElement(tag, id)
-            init(e)
+            e.init()
             appendChild(e)
             return e
         }
 
-        override fun addText(tag: String, id: String?, text: String): IUiText {
+        override fun addText(tag: String, id: String?, text: String, init: UiTextConstructor): IUiText {
             val t = JvmUiText(tag, id, text)
+            t.init()
             appendChild(t)
             return t
         }
@@ -63,7 +68,7 @@ class JvmStubUi: IUi {
 
     override fun newModal(init: IUiElement.() -> Unit): IUiElement {
         val element = JvmUiElement("div")
-        init(element)
+        element.init()
         return element
     }
 }

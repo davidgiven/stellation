@@ -1,6 +1,7 @@
 package interfaces
 
-typealias UiConstructor = IUiElement.() -> Unit
+typealias UiElementConstructor = IUiElement.() -> Unit
+typealias UiTextConstructor = IUiText.() -> Unit
 
 interface IUiNode {
     val tag: String
@@ -12,6 +13,8 @@ interface IUiNode {
     operator fun get(name: String): String?
 
     fun clear(name: String) = set(name, null)
+
+    fun scrollIntoView()
 }
 
 interface IUiText : IUiNode {
@@ -21,18 +24,23 @@ interface IUiText : IUiNode {
 interface IUiElement : IUiNode {
     fun onActivate(callback: () -> Unit)
 
-    fun addElement(tag: String, id: String?, init: UiConstructor = {}): IUiElement
-    fun addElement(tag: String, init: UiConstructor = {}): IUiElement = addElement(tag, null, init)
+    fun addElement(tag: String, id: String?, init: UiElementConstructor = {}): IUiElement
+    fun addElement(tag: String, init: UiElementConstructor = {}): IUiElement = addElement(tag, null, init)
 
-    fun addText(tag: String, id: String?, text: String): IUiText
-    fun addText(tag: String, text: String): IUiText = addText(tag, null, text)
+    fun addText(tag: String, id: String?, text: String, init: UiTextConstructor = {}): IUiText
+    fun addText(tag: String, text: String, init: UiTextConstructor = {}): IUiText = addText(tag, null, text, init)
 
     fun appendChild(child: IUiNode): IUiElement
     fun removeChild(child: IUiNode): IUiElement
     fun activate()
 
-    fun addVBox(init: UiConstructor) = addElement("div") {
+    fun addVBox(init: UiElementConstructor) = addElement("div") {
         classes = setOf("vbox")
+        init(this)
+    }
+
+    fun addHBox(init: UiElementConstructor) = addElement("div") {
+        classes = setOf("hbox")
         init(this)
     }
 }

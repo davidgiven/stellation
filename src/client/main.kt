@@ -20,13 +20,6 @@ fun main(argv: Array<String>) {
 
         document.body!!.removeChildren()
         val console = Console().show()
-
-        Job {
-            for (i in 0..10) {
-                console.println("I can do it ${i} times!")
-                suspend()
-            }
-        }
     }
     kickScheduler()
 }

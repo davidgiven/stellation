@@ -17,15 +17,17 @@ class CoreUiTest {
         var child0: IUiNode? = null
         var child1: IUiNode? = null
         var child2: IUiNode? = null
+        var child3: IUiNode? = null
 
         val top = ui.newModal {
             child0 = addElement("child0")
             child1 = addElement("child1") {
                 child2 = addElement("child2")
             }
+            child3 = addElement("child3")
         }
 
-        assertEquals(listOf(child0!!, child1!!), top.children)
+        assertEquals(listOf(child0!!, child1!!, child3!!), top.children)
         assertEquals(listOf(child2!!), child1!!.children)
     }
 
