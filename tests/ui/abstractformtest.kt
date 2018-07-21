@@ -14,6 +14,8 @@ class TestForm(ui: IUi) : AbstractForm<String>(ui) {
     lateinit var okButton: IUiElement
     lateinit var cancelButton: IUiElement
 
+    override val mainClass: String = "mainClass"
+
     override fun createTitlebar(div: IUiElement) {
         div.addText("p", "Titlebar")
     }

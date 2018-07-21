@@ -4,11 +4,12 @@ import interfaces.IUi
 import interfaces.IUiElement
 import interfaces.IUiNode
 import interfaces.IUiText
+import interfaces.UiDragCallbacks
 import interfaces.UiElementConstructor
 import interfaces.UiTextConstructor
 
-class JvmStubUi: IUi {
-    abstract class JvmUiNode(override val tag: String, override val id: String?): IUiNode {
+class JvmStubUi : IUi {
+    abstract class JvmUiNode(override val tag: String, override val id: String?) : IUiNode {
         override var children: List<IUiNode> = emptyList()
         override var classes: Set<String> = emptySet()
 
@@ -25,11 +26,16 @@ class JvmStubUi: IUi {
         override fun get(name: String) = attributes.get(name)
 
         override fun scrollIntoView() {}
+        override fun getPosition(): Pair<Int, Int> = Pair(0, 0)
+        override fun setPosition(x: Int, y: Int) {}
+        override fun getSize(): Pair<Int, Int> = Pair(0, 0)
+        override fun setSize(x: Int, y: Int) {}
+        override fun onDrag(callbacks: UiDragCallbacks) {}
     }
 
     class JvmUiText(tag: String, id: String? = null, override var text: String) : IUiText, JvmUiNode(tag, id)
 
-    class JvmUiElement(tag: String, id: String? = null): IUiElement, JvmUiNode(tag, id) {
+    class JvmUiElement(tag: String, id: String? = null) : IUiElement, JvmUiNode(tag, id) {
         private var onActivateCallback: (() -> Unit)? = null
 
         override fun addElement(tag: String, id: String?, init: UiElementConstructor): IUiElement {

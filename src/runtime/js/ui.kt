@@ -4,12 +4,15 @@ import interfaces.IUi
 import interfaces.IUiElement
 import interfaces.IUiNode
 import interfaces.IUiText
+import interfaces.UiDragCallbacks
 import interfaces.UiElementConstructor
 import interfaces.UiTextConstructor
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
 import org.w3c.dom.events.KeyboardEvent
+import org.w3c.dom.events.MouseEvent
 import kotlin.browser.document
+import kotlin.browser.window
 
 class JsUi : IUi {
     abstract class JsUiNode(var element: HTMLElement? = null) : IUiNode {
@@ -55,6 +58,59 @@ class JsUi : IUi {
 
         override fun scrollIntoView() {
             element!!.scrollIntoView()
+        }
+
+//        override fun getPosition() = Pair(element!!.offsetLeft, element!!.offsetTop)
+        override fun getPosition(): Pair<Int, Int> {
+            val computed = window.getComputedStyle(element!!.parentElement!!)
+            return Pair(
+                    element!!.offsetLeft - fromPixels(computed.borderLeftWidth),
+                    element!!.offsetTop - fromPixels(computed.borderTopWidth))
+        }
+
+        override fun setPosition(x: Int, y: Int) {
+            element!!.style.left = "${x}px"
+            element!!.style.top = "${y}px"
+        }
+
+        override fun getSize() = Pair(element!!.clientWidth, element!!.clientHeight)
+
+        override fun setSize(x: Int, y: Int) {
+            element!!.style.width = "${x}px"
+            element!!.style.height = "${y}px"
+        }
+
+        override fun onDrag(callbacks: UiDragCallbacks) {
+            element!!.onmousedown = {
+                run {
+                    val me = it as MouseEvent
+                    me.preventDefault()
+                    callbacks.onStart(me.clientX, me.clientY)
+                    kickScheduler()
+                }
+
+                document.onmousemove = {
+                    val me = it as MouseEvent
+                    me.preventDefault()
+                    callbacks.onMove(me.clientX, me.clientY)
+                    kickScheduler()
+
+                    false
+                }
+
+                document.onmouseup = {
+                    val me = it as MouseEvent
+                    me.preventDefault()
+                    callbacks.onEnd(me.clientX, me.clientY)
+                    document.onmousemove = null
+                    document.onmouseup = null
+                    kickScheduler()
+
+                    false
+                }
+
+                false
+            }
         }
     }
 
@@ -120,7 +176,7 @@ class JsUi : IUi {
                     addReturn()
                 }
 
-                "INPUT" -> {
+                "INPUT"  -> {
                     addReturn()
                 }
             }
@@ -143,8 +199,9 @@ class JsUi : IUi {
 fun HTMLElement.getProperty(name: String): dynamic =
         this.asDynamic()[name]
 
-fun <T: HTMLElement> T.setProperty(name: String, value: dynamic): T {
+fun <T : HTMLElement> T.setProperty(name: String, value: dynamic): T {
     this.asDynamic()[name] = value
     return this
 }
 
+private fun fromPixels(s: String): Int = s.removeSuffix("px").toInt()

@@ -3,6 +3,12 @@ package interfaces
 typealias UiElementConstructor = IUiElement.() -> Unit
 typealias UiTextConstructor = IUiText.() -> Unit
 
+interface UiDragCallbacks {
+    fun onStart(x: Int, y: Int)
+    fun onMove(x: Int, y: Int)
+    fun onEnd(x: Int, y: Int)
+}
+
 interface IUiNode {
     val tag: String
     val id: String?
@@ -15,6 +21,12 @@ interface IUiNode {
     fun clear(name: String) = set(name, null)
 
     fun scrollIntoView()
+    fun getPosition(): Pair<Int, Int>
+    fun setPosition(x: Int, y: Int)
+    fun getSize(): Pair<Int, Int>
+    fun setSize(x: Int, y: Int)
+
+    fun onDrag(callbacks: UiDragCallbacks)
 }
 
 interface IUiText : IUiNode {

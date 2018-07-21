@@ -16,6 +16,8 @@ class LoginForm(ui: IUi = get()) : AbstractForm<LoginData>(ui) {
     lateinit var okButton: IUiElement
     lateinit var cancelButton: IUiElement
 
+    override val mainClass = "loginWindow"
+
     override fun createTitlebar(div: IUiElement) {
         div.addText("span", "Titlebar")
     }
