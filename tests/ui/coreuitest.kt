@@ -3,8 +3,9 @@ package ui
 import interfaces.IUiElement
 import interfaces.IUiNode
 import interfaces.IUiText
-import kotlinx.coroutines.experimental.runBlocking
 import runtime.jvm.JvmStubUi
+import utils.hasRunnableJobs
+import utils.schedule
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -104,9 +105,8 @@ class CoreUiTest {
         }
 
         assertEquals(false, activated)
-        runBlocking {
-            child0!!.activate()
-        }
+        child0!!.activate()
+        runRunnableJobs()
         assertEquals(true, activated)
     }
 
@@ -144,5 +144,11 @@ class CoreUiTest {
         val top = ui.newModal {}
 
         assertEquals(null, top["foo"])
+    }
+
+    private fun runRunnableJobs() {
+        while (hasRunnableJobs()) {
+            schedule()
+        }
     }
 }

@@ -1,19 +1,27 @@
 package client
 
-import kotlinx.coroutines.experimental.launch
 import ui.ConsoleWindow
 import ui.show
+import utils.Job
 import utils.get
 
 class Console {
-    val window = ConsoleWindow(get(), { launch { onCommand(it) } })
+    val window = ConsoleWindow(get(), ::onCommand)
 
     fun show(): Console {
         window.show()
         return this
     }
 
-    suspend fun onCommand(command: String) {
+    fun println(s: String) = window.print(s)
+
+    fun execute(command: String) {
         window.print("Got command: ${command}")
+    }
+
+    private fun onCommand(command: String) {
+        Job {
+            execute(command)
+        }
     }
 }

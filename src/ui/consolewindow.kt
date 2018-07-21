@@ -22,6 +22,10 @@ class ConsoleWindow(ui: IUi = get(), val callback: ConsoleCommandCallback) : Abs
             }
             textInput = div.addElement("input") {
                 set("type", "text")
+
+                onActivate {
+                    callback(textInput["value"]!!)
+                }
             }
         }
     }

@@ -2,12 +2,12 @@ package ui
 
 import interfaces.IUi
 import interfaces.IUiElement
-import kotlinx.coroutines.experimental.channels.Channel
+import utils.Mailbox
 
 data class YesNoButtons(val yesButton: IUiElement, val noButton: IUiElement)
 
 abstract class AbstractForm<T>(ui: IUi) : AbstractWindow(ui) {
-    val data = Channel<T>(1)
+    val mailbox = Mailbox<T>()
     var finished: Boolean = false
 
     abstract fun createButtonBox(div: IUiElement)
@@ -21,11 +21,11 @@ abstract class AbstractForm<T>(ui: IUi) : AbstractWindow(ui) {
         }
     }
 
-    suspend fun post(value: T) {
-        data.send(value)
+    fun post(value: T) {
+        mailbox.post(value)
     }
 
-    suspend fun execute(): T = data.receive()
+    suspend fun execute(): T = mailbox.wait()
 
     fun createOkButtonBox(div: IUiElement) =
             div.addElement("button") {

@@ -4,9 +4,9 @@ import interfaces.IUi
 import interfaces.IUiElement
 import interfaces.IUiNode
 import interfaces.IUiText
-import kotlinx.coroutines.experimental.launch
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
+import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.document
 
 class JsUi : IUi {
@@ -92,11 +92,38 @@ class JsUi : IUi {
             return this
         }
 
-        override fun onActivate(callback: suspend () -> Unit) {
-            element!!.onclick = { launch { callback() } }
+        override fun onActivate(callback: () -> Unit) {
+            var wrappedCallback = {
+                callback()
+                kickScheduler()
+            }
+
+            fun addClick() {
+                element!!.onclick = { wrappedCallback() }
+            }
+
+            fun addReturn() {
+                element!!.onkeyup = {
+                    var k = it as KeyboardEvent
+                    if ((document.activeElement == element!!) && (k.keyCode == 13)) {
+                        wrappedCallback()
+                    }
+                }
+            }
+
+            when (tag) {
+                "BUTTON" -> {
+                    addClick()
+                    addReturn()
+                }
+
+                "INPUT" -> {
+                    addReturn()
+                }
+            }
         }
 
-        override suspend fun activate() {
+        override fun activate() {
             element!!.click()
         }
     }

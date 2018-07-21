@@ -22,6 +22,7 @@ kotlin_jvm_test(
     deps = [
         "//src/interfaces:interfaces_jar",
         "//src/runtime/jvm:runtime_jar",
+        "//src/utils:utils_jar",
     ],
 )
 
@@ -42,5 +43,6 @@ kotlin_jvm_test(
         "//src/interfaces:interfaces_jar",
         "//src/runtime/jvm:runtime_jar",
         "//src/ui:ui_jar",
+        "//src/utils:utils_jar",
     ],
 )

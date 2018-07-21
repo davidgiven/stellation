@@ -15,7 +15,6 @@ kotlin_js_binary(
         "//src/utils:utils_jsjar",
         "@org_jetbrains_kotlin_kotin_stdlib_js//jar",
         "@org_jetbrains_kotlinx_atomicfu_js//jar",
-        "@org_jetbrains_kotlinx_kotlinx_coroutines_core//jar",
         "@org_jetbrains_kotlinx_kotlinx_coroutines_core_js//jar",
     ],
 )

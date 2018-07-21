@@ -19,7 +19,7 @@ interface IUiText : IUiNode {
 }
 
 interface IUiElement : IUiNode {
-    fun onActivate(callback: suspend () -> Unit)
+    fun onActivate(callback: () -> Unit)
 
     fun addElement(tag: String, id: String?, init: UiConstructor = {}): IUiElement
     fun addElement(tag: String, init: UiConstructor = {}): IUiElement = addElement(tag, null, init)
@@ -29,7 +29,7 @@ interface IUiElement : IUiNode {
 
     fun appendChild(child: IUiNode): IUiElement
     fun removeChild(child: IUiNode): IUiElement
-    suspend fun activate()
+    fun activate()
 
     fun addVBox(init: UiConstructor) = addElement("div") {
         classes = setOf("vbox")

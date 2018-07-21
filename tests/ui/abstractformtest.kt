@@ -2,10 +2,11 @@ package ui
 
 import interfaces.IUi
 import interfaces.IUiElement
-import kotlinx.coroutines.experimental.launch
-import kotlinx.coroutines.experimental.runBlocking
-import kotlinx.coroutines.experimental.yield
 import runtime.jvm.JvmStubUi
+import utils.Job
+import utils.hasRunnableJobs
+import utils.schedule
+import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -39,51 +40,53 @@ class TestForm(ui: IUi) : AbstractForm<String>(ui) {
 class AbstractFormTest {
     val ui = JvmStubUi()
     val form = TestForm(ui).show()
+    var testRan = false
+
+    @AfterTest
+    fun teardown() {
+        runRunnableJobs()
+        assertEquals(true, testRan)
+    }
 
     @Test
     fun simplePost() {
-        runBlocking {
+        Job {
             form.post("fnord")
             assertEquals("fnord", form.execute())
+            testRan = true
         }
     }
 
     @Test
     fun okButtonPressedFirst() {
-        runBlocking {
-            form.okButton.activate()
+        form.okButton.activate()
+        Job {
             assertEquals("ok", form.execute())
+            testRan = true
         }
     }
 
     @Test
     fun cancelButtonPressedFirst() {
-        runBlocking {
-            form.cancelButton.activate()
+        form.cancelButton.activate()
+        Job {
             assertEquals("cancel", form.execute())
+            testRan = true
         }
     }
 
     @Test
     fun okButtonPressedLast() {
-        var state = 0
-        var result = ""
-
-        runBlocking {
-            var waitTask = launch {
-                assertEquals(0, state++)
-                result = form.execute()
-                assertEquals(2, state++)
-            }
-
-            yield()
-
-            assertEquals(1, state++)
-            form.okButton.activate()
-            waitTask.join()
-            assertEquals(3, state++)
+        Job {
+            assertEquals("ok", form.execute())
+            testRan = true
         }
+        form.okButton.activate()
+    }
 
-        assertEquals("ok", result)
+    private fun runRunnableJobs() {
+        while (hasRunnableJobs()) {
+            schedule()
+        }
     }
 }

@@ -26,7 +26,7 @@ class JvmStubUi: IUi {
     class JvmUiText(tag: String, id: String? = null, override var text: String) : IUiText, JvmUiNode(tag, id)
 
     class JvmUiElement(tag: String, id: String? = null): IUiElement, JvmUiNode(tag, id) {
-        private var onActivateCallback: (suspend () -> Unit)? = null
+        private var onActivateCallback: (() -> Unit)? = null
 
         override fun addElement(tag: String, id: String?, init: IUiElement.() -> Unit): IUiElement {
             val e = JvmUiElement(tag, id)
@@ -52,11 +52,11 @@ class JvmStubUi: IUi {
             return this
         }
 
-        override fun onActivate(callback: suspend () -> Unit) {
+        override fun onActivate(callback: () -> Unit) {
             onActivateCallback = callback
         }
 
-        override suspend fun activate() {
+        override fun activate() {
             onActivateCallback!!()
         }
     }

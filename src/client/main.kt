@@ -2,10 +2,11 @@ package client
 
 import interfaces.ITime
 import interfaces.hourstime
-import kotlinx.coroutines.experimental.async
 import model.Model
 import org.w3c.dom.Element
 import runtime.js.initJsRuntime
+import runtime.js.kickScheduler
+import utils.Job
 import utils.bind
 import utils.get
 import kotlin.browser.document
@@ -14,21 +15,20 @@ fun main(argv: Array<String>) {
     initJsRuntime()
     bind(Model())
 
-    async {
+    Job {
         println("The current time is ${get<ITime>().hourstime()}.")
 
         document.body!!.removeChildren()
         val console = Console().show()
 
-//            val newElement = document.getElementById("email") as Element
-//            val d: Document = document
-//            d.getElementById("new")!!.append {
-//                p {
-//                    +"Some text! ${d.URL}"
-//                }
-//            }
-//            delay(1000)
+        Job {
+            for (i in 0..10) {
+                console.println("I can do it ${i} times!")
+                suspend()
+            }
+        }
     }
+    kickScheduler()
 }
 
 fun Element.removeChildren(): Element {
