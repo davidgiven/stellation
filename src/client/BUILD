@@ -5,7 +5,7 @@ package(default_visibility = ["//visibility:public"])
 
 kotlin_js_binary(
     name = "client_js",
-    srcs = ["main.kt"],
+    srcs = glob(["*.kt"]),
     deps = [
         "//src/interfaces:interfaces_jsjar",
         "//src/model:model_jsjar",
@@ -17,8 +17,6 @@ kotlin_js_binary(
         "@org_jetbrains_kotlinx_atomicfu_js//jar",
         "@org_jetbrains_kotlinx_kotlinx_coroutines_core//jar",
         "@org_jetbrains_kotlinx_kotlinx_coroutines_core_js//jar",
-        "@org_jetbrains_kotlinx_kotlinx_html_js//jar",
-        "@org_jetbrains_kotlinx_kotlinx_html_jvm//jar",
     ],
 )
 
@@ -30,10 +28,10 @@ genrule(
         "uglifyjs",
         "$<",
         "-o $@",
-        "--compress warnings=false",
+        #        "--compress warnings=false",
         "--beautify",
-        #"--mangle",
-        #"--mangle-props=2",
+        #        "--mangle",
+        #        "--mangle-props=2",
     ]),
 )
 

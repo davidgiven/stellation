@@ -6,35 +6,18 @@ import kotlinx.coroutines.experimental.channels.Channel
 
 data class YesNoButtons(val yesButton: IUiElement, val noButton: IUiElement)
 
-abstract class AbstractForm<T>(val ui: IUi) {
+abstract class AbstractForm<T>(ui: IUi) : AbstractWindow(ui) {
     val data = Channel<T>(1)
     var finished: Boolean = false
 
-    var element: IUiElement? = null
-
-    abstract fun createTitlebar(div: IUiElement)
-    abstract fun createUserInterface(div: IUiElement)
     abstract fun createButtonBox(div: IUiElement)
 
-    fun create() {
-        element = ui.newModal {
-            classes = setOf("form")
-
-
-            addElement("div") {
-                classes = setOf("titlebar")
-                createTitlebar(this)
-            }
-
-            addElement("div") {
-                classes = setOf("body")
-                createUserInterface(this)
-            }
-
-            addElement("div") {
-                classes = setOf("buttonbox")
-                createButtonBox(this)
-            }
+    override fun create() {
+        super.create()
+        element.classes += "form"
+        element.addElement("div") {
+            classes = setOf("buttonbox")
+            createButtonBox(this)
         }
     }
 
@@ -63,9 +46,4 @@ abstract class AbstractForm<T>(val ui: IUi) {
 
         return YesNoButtons(yesButton, noButton)
     }
-}
-
-fun <T : AbstractForm<*>> T.show(): T {
-    create()
-    return this
 }
