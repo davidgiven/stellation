@@ -24,7 +24,9 @@ class ConsoleWindow(ui: IUi = get(), val callback: ConsoleCommandCallback) : Abs
                 set("type", "text")
 
                 onActivate {
-                    callback(textInput["value"]!!)
+                    val value = textInput["value"]!!
+                    textInput["value"] = ""
+                    callback(value)
                 }
             }
         }

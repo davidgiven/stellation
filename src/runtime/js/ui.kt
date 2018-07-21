@@ -46,14 +46,10 @@ class JsUi : IUi {
             }
 
         override fun set(name: String, value: String?) {
-            if (value == null) {
-                element!!.removeAttribute(name)
-            } else {
-                element!!.setAttribute(name, value)
-            }
+            element!!.setProperty(name, value)
         }
 
-        override fun get(name: String) = element!!.getAttribute(name)
+        override fun get(name: String) = element!!.getProperty(name).toString()
     }
 
     class JsUiText(element: HTMLElement? = null) : IUiText, JsUiNode(element) {
@@ -136,3 +132,12 @@ class JsUi : IUi {
         return element
     }
 }
+
+fun HTMLElement.getProperty(name: String): dynamic =
+        this.asDynamic()[name]
+
+fun <T: HTMLElement> T.setProperty(name: String, value: dynamic): T {
+    this.asDynamic()[name] = value
+    return this
+}
+
