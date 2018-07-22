@@ -5,21 +5,20 @@ import model.Model
 import model.SUniverse
 import utils.get
 
-class BadCgiException(s: String) : Exception("Bad CGI request: $s")
+open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
 
 class CgiRequest(val environment: IEnvironment = get()) {
-    val contentLength: Int
-    val body: String
+    var parameters: Map<String, String> = emptyMap()
 
     init {
         if (environment.getenv("REQUEST_METHOD") != "POST") {
             throw BadCgiException("request is not POST")
         }
 
-        contentLength = environment.getenv("CONTENT_LENGTH")?.toInt()
+        val contentLength = environment.getenv("CONTENT_LENGTH")?.toInt()
             ?: throw BadCgiException("missing content length")
 
-        body = environment.readStdin(contentLength)
+        val body = environment.readStdin(contentLength)
     }
 }
 
@@ -48,7 +47,7 @@ fun serveCgi() {
         var request = CgiRequest()
         var response = CgiResponse()
         response.headers += "Content-type" to "text/plain; charset=utf-8"
-        response.println(request.body)
+        response.println("Hello, world!")
         response.write()
     } catch (e: Exception) {
         kotlin.io.println("Content-type: text/plain; charset=utf-8")

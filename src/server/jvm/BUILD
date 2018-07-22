@@ -19,6 +19,7 @@ kotlin_jvm_binary(
         "//src/interfaces:interfaces_jar",
         "//src/model:model_jar",
         "//src/runtime/jvm:runtime_jar",
+        "//src/runtime/jvmhacks:hacks_jar",
         "//src/runtime/shared:shared_jar",
         "//src/server:server_jar",
         "//src/utils:utils_jar",

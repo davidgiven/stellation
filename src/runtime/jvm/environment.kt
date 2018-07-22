@@ -1,28 +1,32 @@
 package runtime.jvm
 
 import interfaces.IEnvironment
-import java.nio.ByteBuffer
-import java.nio.channels.Channels
-import java.nio.charset.StandardCharsets
+import java.io.IOException
 
 class JvmEnvironment : IEnvironment {
     override fun getenv(name: String): String? = System.getenv(name)
 
-    override fun readStdin(bytes: Int): String {
-        var buffer = ByteBuffer.allocate(bytes)
-        var channel = Channels.newChannel(System.`in`)
-        while (channel.read(buffer) >= 0)
-            ;
+    override fun readStdin(bytes: Int): ByteArray {
+        val array = ByteArray(bytes)
 
-        buffer.flip()
-        return String(buffer.array(), 0, buffer.limit(), StandardCharsets.UTF_8)
+        var amountRead = 0
+        while (amountRead < bytes) {
+            val toRead = bytes - amountRead
+            val i = System.`in`.read(array, amountRead, toRead)
+            if (i == -1) {
+                throw IOException("premature EOF")
+            }
+            amountRead += i
+        }
+
+        return array
+    }
+
+    override fun writeStdout(array: ByteArray) {
+        System.out.write(array)
     }
 
     override fun writeStdout(value: String) {
-        var ba = value.toByteArray(StandardCharsets.UTF_8)
-        var buffer = ByteBuffer.wrap(ba)
-        var channel = Channels.newChannel(System.out)
-        while (channel.write(buffer) >= 0)
-            ;
+        System.out.print(value)
     }
 }

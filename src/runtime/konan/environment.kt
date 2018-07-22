@@ -16,7 +16,7 @@ class ErrnoException(): Exception("System call failed: errno = ${errstr}")
 class KonanEnvironment : IEnvironment {
     override fun getenv(name: String): String? = platform.posix.getenv(name)?.toKString()
 
-    override fun readStdin(bytes: Int): String {
+    override fun readStdin(bytes: Int): ByteArray {
         val array = ByteArray(bytes)
         array.usePinned { pinned ->
             var amountRead = 0
@@ -30,11 +30,10 @@ class KonanEnvironment : IEnvironment {
             }
         }
 
-        return array.stringFromUtf8()
+        return array
     }
 
-    override fun writeStdout(value: String) {
-        val array = value.toUtf8()
+    override fun writeStdout(array: ByteArray) {
         array.usePinned { pinned ->
             var amountWritten = 0
             while (amountWritten < array.size) {
@@ -46,5 +45,9 @@ class KonanEnvironment : IEnvironment {
                 amountWritten += i;
             }
         }
+    }
+
+    override fun writeStdout(value: String) {
+        writeStdout(value.toUtf8())
     }
 }
