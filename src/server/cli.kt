@@ -1,14 +1,11 @@
 package server
 
 import interfaces.IDatabase
-import interfaces.IDatastore
 import interfaces.withSqlTransaction
 import model.Model
 import model.ObjectNotVisibleException
 import model.SUniverse
-import model.Timers
 import model.createNewUniverse
-import runtime.shared.SqlDatastore
 import utils.bind
 import utils.get
 import utils.getopt
@@ -35,7 +32,6 @@ fun serveCli(argv: Array<String>) {
         val model = get<Model>()
 
         database.withSqlTransaction {
-            model.initialiseProperties()
             bind(findOrCreateUniverse(model))
         }
     }

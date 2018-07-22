@@ -13,20 +13,19 @@ class SqlDatastore(val database: IDatabase) : IDatastore {
                     """
                 CREATE TABLE IF NOT EXISTS objects (
                     oid INTEGER PRIMARY KEY AUTOINCREMENT
-            )
+                )
             """)
             database.executeSql(
                     """
                 CREATE TABLE IF NOT EXISTS timers (
                     oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
                     expiry INTEGER
-            )
+                )
             """)
             database.executeSql(
                     """
                 CREATE INDEX IF NOT EXISTS timers_by_expiry ON timers (expiry ASC)
             """)
-//        allProperties.forEach { e -> e.value.createTablesForProperty() }
         }
 
     }

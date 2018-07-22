@@ -51,7 +51,8 @@ fun serveCgi() {
         var response = CgiResponse()
 
         withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
-            bind(findUniverse(get()))
+            get<Authenticator>().withLoggedInUser("foo", "bar") {
+            }
         }
 
         response.headers += "Content-type" to "text/plain; charset=utf-8"
