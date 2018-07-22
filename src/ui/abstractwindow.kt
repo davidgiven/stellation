@@ -89,10 +89,14 @@ abstract class AbstractWindow(val ui: IUi) {
             }
         }
     }
-
 }
 
 fun <T : AbstractWindow> T.show(): T {
     create()
+    return this
+}
+
+fun <T : AbstractWindow> T.hide(): T {
+    element.remove()
     return this
 }

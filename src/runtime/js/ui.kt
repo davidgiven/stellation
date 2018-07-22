@@ -56,6 +56,10 @@ class JsUi : IUi {
 
         override fun get(name: String) = element!!.getProperty(name).toString()
 
+        override fun remove() {
+            element!!.parentElement!!.removeChild(element!!)
+        }
+
         override fun scrollIntoView() {
             element!!.scrollIntoView()
         }
@@ -79,6 +83,8 @@ class JsUi : IUi {
             element!!.style.width = "${x}px"
             element!!.style.height = "${y}px"
         }
+
+        override fun focus() = element!!.focus()
 
         override fun onDrag(callbacks: UiDragCallbacks) {
             element!!.onmousedown = {

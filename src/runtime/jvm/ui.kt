@@ -25,11 +25,14 @@ class JvmStubUi : IUi {
 
         override fun get(name: String) = attributes.get(name)
 
+        override fun remove() {}
         override fun scrollIntoView() {}
         override fun getPosition(): Pair<Int, Int> = Pair(0, 0)
         override fun setPosition(x: Int, y: Int) {}
         override fun getSize(): Pair<Int, Int> = Pair(0, 0)
         override fun setSize(x: Int, y: Int) {}
+        override fun focus() {}
+
         override fun onDrag(callbacks: UiDragCallbacks) {}
     }
 

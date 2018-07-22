@@ -25,7 +25,12 @@ abstract class AbstractForm<T>(ui: IUi) : AbstractWindow(ui) {
         mailbox.post(value)
     }
 
-    suspend fun execute(): T = mailbox.wait()
+    suspend fun execute(): T {
+        show()
+        val result = mailbox.wait()
+        hide()
+        return result
+    }
 
     fun createOkButtonBox(div: IUiElement) =
             div.addElement("button") {
@@ -34,16 +39,18 @@ abstract class AbstractForm<T>(ui: IUi) : AbstractWindow(ui) {
             }
 
     fun createYesNoButtonBox(div: IUiElement, yes: String = "Yes", no: String = "No"): YesNoButtons {
-        val yesButton = div.addElement("button") {
-            classes = setOf("button", "defaultbutton")
-            addText("span", yes)
-        }
+        with (div) {
+            val yesButton = addElement("button") {
+                classes = setOf("button", "defaultbutton")
+                addText("span", yes)
+            }
 
-        val noButton = div.addElement("button") {
-            classes = setOf("button", "cancelbutton")
-            addText("span", no)
-        }
+            val noButton = addElement("button") {
+                classes = setOf("button", "cancelbutton")
+                addText("span", no)
+            }
 
-        return YesNoButtons(yesButton, noButton)
+            return YesNoButtons(yesButton, noButton)
+        }
     }
 }

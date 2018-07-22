@@ -13,48 +13,69 @@ data class LoginData(
 class LoginForm(ui: IUi = get()) : AbstractForm<LoginData>(ui) {
     lateinit var emailInput: IUiElement
     lateinit var passwordInput: IUiElement
-    lateinit var okButton: IUiElement
-    lateinit var cancelButton: IUiElement
+    lateinit var loginButton: IUiElement
+    lateinit var registerButton: IUiElement
 
+    override val isResizable = false
     override val mainClass = "loginWindow"
 
     override fun createTitlebar(div: IUiElement) {
-        div.addText("span", "Titlebar")
+        div.addText("span", "Log in")
     }
 
     override fun createUserInterface(div: IUiElement) {
         div.addVBox {
-            addText("p",
-            """If you're an existing user, enter your email address and
-                | password to log in.""".trimMargin())
-
-            addElement("label") {
-                addText("p", "Email address:")
-                emailInput = addElement("input") {
-                    set("type", "text")
-                }
+            addText("p", "STELLATION VI") {
+                classes += setOf("wide-text", "centred-text")
+            }
+            addElement("p") {
+                classes += setOf("centred-text")
+                addText("span", "Very alpha edition")
+                addElement("br")
+                addText("span", "(c) 2000-2018 David Given")
             }
 
-            addElement("label") {
-                addText("p", "Password:")
+            addText(
+                    "p",
+                    """If you're an existing user, enter your email address and
+                | password to log in.""".trimMargin())
+
+            addElement("div") {
+                classes = setOf("loginGrid")
+
+                addText("label", "Email address:")
+                emailInput = addElement("input") {
+                    set("type", "email")
+                    set("required", "true")
+                }
+
+                addText("label", "Password:")
                 passwordInput = addElement("input") {
-                    set("type", "text")
+                    set("type", "password")
+                    set("autocomplete", "current-password")
+                    set("required", "true")
+                    onActivate(::okClicked)
                 }
             }
         }
+
+        emailInput.onActivate { passwordInput.focus() }
     }
 
     override fun createButtonBox(div: IUiElement) {
-        var (okButton, cancelButton) = createYesNoButtonBox(div)
-        this.okButton = okButton
-        this.cancelButton = cancelButton
+        var (loginButton, registerButton) = createYesNoButtonBox(div, "Log in", "Register")
+        this.loginButton = loginButton
+        this.registerButton = registerButton
 
-        okButton.onActivate {
-            post(LoginData(false, emailInput["value"], passwordInput["value"]))
-        }
+        loginButton.onActivate(::okClicked)
+        registerButton.onActivate(::cancelClicked)
+    }
 
-        cancelButton.onActivate {
-            post(LoginData(true))
-        }
+    private fun okClicked() {
+        post(LoginData(false, emailInput["value"], passwordInput["value"]))
+    }
+
+    private fun cancelClicked() {
+        post(LoginData(true))
     }
 }

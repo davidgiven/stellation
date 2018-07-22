@@ -1,26 +1,18 @@
 package client
 
-import interfaces.ITime
-import interfaces.hourstime
 import model.Model
 import org.w3c.dom.Element
 import runtime.js.initJsRuntime
 import runtime.js.kickScheduler
-import utils.Job
 import utils.bind
-import utils.get
 import kotlin.browser.document
 
 fun main(argv: Array<String>) {
     initJsRuntime()
     bind(Model())
 
-    Job {
-        println("The current time is ${get<ITime>().hourstime()}.")
-
-        document.body!!.removeChildren()
-        val console = Console().show()
-    }
+    document.body!!.removeChildren()
+    startGame()
     kickScheduler()
 }
 

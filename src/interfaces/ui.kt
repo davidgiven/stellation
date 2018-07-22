@@ -20,11 +20,13 @@ interface IUiNode {
 
     fun clear(name: String) = set(name, null)
 
+    fun remove()
     fun scrollIntoView()
     fun getPosition(): Pair<Int, Int>
     fun setPosition(x: Int, y: Int)
     fun getSize(): Pair<Int, Int>
     fun setSize(x: Int, y: Int)
+    fun focus()
 
     fun onDrag(callbacks: UiDragCallbacks)
 }
