@@ -1,8 +1,10 @@
 package server
 
 import interfaces.IEnvironment
+import interfaces.ILogger
 import model.Model
 import model.SUniverse
+import utils.bind
 import utils.get
 
 open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
@@ -16,9 +18,10 @@ class CgiRequest(val environment: IEnvironment = get()) {
         }
 
         val contentLength = environment.getenv("CONTENT_LENGTH")?.toInt()
-            ?: throw BadCgiException("missing content length")
+                ?: throw BadCgiException("missing content length")
 
         val body = environment.readStdin(contentLength)
+        parameters = decodeFormEncoding(body)
     }
 }
 
@@ -46,8 +49,15 @@ fun serveCgi() {
     try {
         var request = CgiRequest()
         var response = CgiResponse()
+
+        withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
+            bind(findUniverse(get()))
+        }
+
         response.headers += "Content-type" to "text/plain; charset=utf-8"
-        response.println("Hello, world!")
+        request.parameters.forEach { e ->
+            response.println("${e.key} = ${e.value}")
+        }
         response.write()
     } catch (e: Exception) {
         kotlin.io.println("Content-type: text/plain; charset=utf-8")

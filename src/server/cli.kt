@@ -30,19 +30,15 @@ fun serveCli(argv: Array<String>) {
             "--db" to { f -> databaseFilename = f; 1 }
     ))
 
-    val database = get<IDatabase>()
-    val datastore = bind<IDatastore>(SqlDatastore(database))
-    database.openDatabase(databaseFilename)
-    datastore.initialiseDatabase()
-    val model = bind(Model())
-    bind(Timers())
+    withServer(databaseFilename) {
+        val database = get<IDatabase>()
+        val model = get<Model>()
 
-    database.withSqlTransaction {
-        model.initialiseProperties()
-        bind(findOrCreateUniverse(model))
+        database.withSqlTransaction {
+            model.initialiseProperties()
+            bind(findOrCreateUniverse(model))
+        }
     }
-
-    database.closeDatabase()
 }
 
 private fun findOrCreateUniverse(model: Model): SUniverse {

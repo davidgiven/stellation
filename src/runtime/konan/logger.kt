@@ -1,9 +1,11 @@
 package runtime.konan
 
 import interfaces.ILogger
+import interfaces.IEnvironment
+import utils.get
 
-class KonanLogger : ILogger {
+class KonanLogger(val environment: IEnvironment = get()) : ILogger {
     override fun println(message: String) {
-        kotlin.io.println(message)
+        environment.writeStderr("${message}\n")
     }
 }

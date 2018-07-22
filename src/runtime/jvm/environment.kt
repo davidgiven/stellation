@@ -22,11 +22,8 @@ class JvmEnvironment : IEnvironment {
         return array
     }
 
-    override fun writeStdout(array: ByteArray) {
-        System.out.write(array)
-    }
-
-    override fun writeStdout(value: String) {
-        System.out.print(value)
-    }
+    override fun writeStdout(array: ByteArray) = System.out.write(array)
+    override fun writeStdout(value: String) = System.out.print(value)
+    override fun writeStderr(array: ByteArray) = System.err.write(array)
+    override fun writeStderr(value: String) = System.err.print(value)
 }
