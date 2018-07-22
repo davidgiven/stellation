@@ -7,6 +7,7 @@ kotlin_js_binary(
     name = "client_js",
     srcs = glob(["*.kt"]),
     deps = [
+        "//src/commands:commands_jsjar",
         "//src/interfaces:interfaces_jsjar",
         "//src/model:model_jsjar",
         "//src/runtime/js:runtime_jsjar",
