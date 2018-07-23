@@ -1,5 +1,7 @@
 package commands
 
+import utils.argify
+
 class CommandDispatcher {
     var allCommands: Map<String, () -> AbstractCommand> = emptyMap()
     var eitherCommands: Map<String, () -> AbstractCommand> = emptyMap()
@@ -29,6 +31,16 @@ class CommandDispatcher {
 
     init {
         addClientCommand(::HelpCommand)
+    }
+
+    suspend fun call(arg: String) {
+        val argv = argify(arg)
+        val constructor = allCommands.getValue(argv[0])
+        val command = constructor()
+
+        command.parseArguments(argv)
+        command.run()
+        command.renderResult()
     }
 }
 

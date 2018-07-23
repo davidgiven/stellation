@@ -8,14 +8,18 @@ import utils.bind
 import utils.Codec
 import kotlin.browser.document
 import interfaces.IConsole
+import commands.CommandDispatcher
 
 fun main(argv: Array<String>) {
     initJsRuntime()
     bind(Codec())
     bind(Model())
+    val console = Console()
+    bind<IConsole>(console)
+    bind(CommandDispatcher())
 
     document.body!!.removeChildren()
-    val console = bind<IConsole>(Console().show())
+    console.show()
 
     startGame()
     kickScheduler()

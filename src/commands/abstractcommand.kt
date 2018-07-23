@@ -21,7 +21,7 @@ abstract class AbstractCommand {
 
     open fun parseArguments(argv: List<String>) {
         this.argv = argv
-        getopt(argv, options)
+        getopt(argv.drop(1), options)
     }
 
     open suspend fun run() {

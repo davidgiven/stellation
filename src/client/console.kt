@@ -5,7 +5,8 @@ import ui.ConsoleWindow
 import ui.show
 import utils.Job
 import utils.get
-import commands.HelpCommand
+import utils.argify
+import commands.CommandDispatcher
 
 class Console: IConsole {
     val window = ConsoleWindow(get(), ::onCommand)
@@ -17,13 +18,11 @@ class Console: IConsole {
 
     override suspend fun println(s: String) = window.print(s)
 
-    suspend fun execute(command: String) {
-        window.print("> ${command}")
+    suspend fun execute(arg: String) {
+        window.print("> ${arg}")
 
-        val command = HelpCommand()
-        command.parseArguments(emptyList())
-        command.run()
-        command.renderResult()
+        val commandDispatcher: CommandDispatcher = get()
+        commandDispatcher.call(arg)
     }
 
     private fun onCommand(command: String) {
