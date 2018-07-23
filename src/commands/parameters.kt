@@ -1,9 +1,11 @@
 package commands
 
+import utils.InvalidCodecDataException
+
 class Parameters {
     var map: Map<String, String> = emptyMap()
 
-    inner class Getter(val key: String) {
+    inner class Proxy(val key: String) {
         fun to(value: String) {
             map += key to value
         }
@@ -11,18 +13,32 @@ class Parameters {
         fun to(value: Int) {
             map += key to value.toString()
         }
-    }
 
-    inner class Setter(val key: String) {
+        fun to(value: Boolean) {
+            map += key to (if (value) "1" else "0")
+        }
+
         fun asString() = map[key]
         fun asInt() = map[key]?.toInt()
+
+        fun asBoolean(): Boolean {
+            val s = map[key]
+            if (s == "0") return false
+            if (s == "1") return true
+            throw InvalidCodecDataException("bad boolean")
+        }
     }
 
     fun toMap() = map
 
-    fun set(key: String) = Setter(key)
-    fun set(index: Int) = Setter(index.toString())
+    fun param(key: String) = Proxy(key)
+    fun param(index: Int) = Proxy(index.toString())
 
-    fun get(key: String) = Getter(key)
-    fun get(index: Int) = Getter(index.toString())
+    fun success() = Proxy("_success")
+    fun setSuccess(value: Boolean) = success().to(value)
+    fun getSuccess() = success().asBoolean()
+
+    fun command() = Proxy("_command")
+    fun setCommand(value: String) = command().to(value)
+    fun getCommand() = command().asString()
 }

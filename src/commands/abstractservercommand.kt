@@ -7,7 +7,8 @@ abstract class AbstractServerCommand: AbstractCommand() {
 
     override suspend fun run() {
         val serverParams = Parameters()
-        argv.forEachIndexed { i, arg -> serverParams.set(i).to(arg) }
+        serverParams.setCommand(name)
+        argv.forEachIndexed { i, arg -> serverParams.param(i).to(arg) }
 
         output = mailbox.wait()
     }

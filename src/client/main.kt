@@ -7,6 +7,7 @@ import runtime.js.kickScheduler
 import utils.bind
 import utils.Codec
 import kotlin.browser.document
+import interfaces.IConsole
 
 fun main(argv: Array<String>) {
     initJsRuntime()
@@ -14,6 +15,8 @@ fun main(argv: Array<String>) {
     bind(Model())
 
     document.body!!.removeChildren()
+    val console = bind<IConsole>(Console().show())
+
     startGame()
     kickScheduler()
 }

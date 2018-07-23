@@ -2,7 +2,9 @@ package client
 
 import ui.LoginForm
 import utils.Job
+import utils.get
 import kotlin.browser.document
+import interfaces.IConsole
 
 private var loggedIn = false
 
@@ -25,8 +27,7 @@ private fun doLogin() {
 
 private fun doGame() {
     Job {
-        document.body!!.removeChildren()
-        val console = Console().show()
+        val console: IConsole = get()
         console.println("Welcome to Stellation VI.")
         console.println("Try 'help' if you're feeling lucky.")
     }

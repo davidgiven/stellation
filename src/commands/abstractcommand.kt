@@ -1,5 +1,6 @@
 package commands
 
+import interfaces.IConsole
 import model.Model
 import utils.GetoptCallback
 import utils.get
@@ -7,6 +8,7 @@ import utils.getopt
 
 abstract class AbstractCommand {
     protected val model: Model = get()
+    protected val console: IConsole = get()
 
     open val needsAuthentication = true
     abstract val name: String
@@ -25,7 +27,9 @@ abstract class AbstractCommand {
     open suspend fun run() {
     }
 
-    open fun renderResult() {
+    open suspend fun renderResult() {
+        val success = if (output.getSuccess()) "success" else "failure"
+        console.println("Command ${name} completed: ${success}.")
     }
 }
 
