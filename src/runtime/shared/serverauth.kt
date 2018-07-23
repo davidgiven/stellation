@@ -1,16 +1,16 @@
 package server
 
+import interfaces.AuthenticationFailedException
+import interfaces.IAuthenticator
 import interfaces.IDatabase
 import interfaces.Oid
 import utils.get
 import model.Model
 
-class AuthenticationFailedException : Exception("authentication failed")
+class ServerAuthenticator(val database: IDatabase = get(), val model: Model = get()):IAuthenticator {
+    override var currentUser: Oid = 0
 
-class Authenticator(val database: IDatabase = get(), val model: Model = get()) {
-    var currentUser: Oid = 0
-
-    fun initialiseDatabase() {
+    override fun initialiseDatabase() {
         database.executeSql(
                 """
                 CREATE TABLE IF NOT EXISTS players (
@@ -20,7 +20,7 @@ class Authenticator(val database: IDatabase = get(), val model: Model = get()) {
             """)
     }
 
-    fun withLoggedInUser(username: String, credentials: String, callback: () -> Unit) {
+    override fun withLoggedInUser(username: String, credentials: String, callback: () -> Unit) {
         check(currentUser == 0)
 
         try {

@@ -1,11 +1,22 @@
-package server
+package utils
 
-import runtime.hacks.toUtf8ByteArray
+import interfaces.IUtf8
+import runtime.jvm.JvmUtf8
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
 class FormDecoderTest {
+    lateinit var utf8: IUtf8
+    lateinit var decoder: FormDecoder
+
+    @BeforeTest
+    fun setup() {
+        utf8 = JvmUtf8()
+        decoder = FormDecoder(utf8)
+    }
+
     @Test
     fun empty() {
         assertEquals(emptyMap(), decode(""))
@@ -58,6 +69,7 @@ class FormDecoderTest {
         } catch (_: BadFormEncodingException) {
         }
     }
+
+    private fun decode(s: String) = decoder.decode(utf8.toByteArray(s))
 }
 
-private fun decode(s: String) = decodeFormEncoding(s.toUtf8ByteArray())

@@ -7,19 +7,22 @@ load(
 
 package(default_visibility = ["//visibility:public"])
 
-SRCS = glob(["*.kt"])
+SRCS = glob(
+    ["*.kt"],
+    exclude = ["hack_*.kt"],
+)
 
 kotlin_jvm_lib(
     name = "interfaces_jar",
-    srcs = SRCS,
+    srcs = SRCS + glob(["hack_jvm_*.kt"]),
 )
 
 kotlin_js_lib(
     name = "interfaces_jsjar",
-    srcs = SRCS,
+    srcs = SRCS + glob(["hack_js_*.kt"]),
 )
 
 kotlin_konan_lib(
     name = "interfaces_klib",
-    srcs = SRCS,
+    srcs = SRCS + glob(["hack_konan_*.kt"]),
 )

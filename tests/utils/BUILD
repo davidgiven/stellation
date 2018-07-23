@@ -78,3 +78,23 @@ kotlin_jvm_test(
         "//src/utils:utils_jar",
     ],
 )
+
+kotlin_jvm_test(
+    name = "FormDecoderTest",
+    size = "small",
+    srcs = ["formdecodertest.kt"],
+    libs = [
+        "@junit_junit//jar",
+        "@org_jetbrains_kotlin_kotin_stdlib//jar",
+        "@org_jetbrains_kotlin_kotin_test//jar",
+        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
+        "@org_jetbrains_kotlin_kotin_test_junit//jar",
+    ],
+    test_class = "utils.FormDecoderTest",
+    deps = [
+        "//src/interfaces:interfaces_jar",
+        "//src/runtime/jvm:runtime_jar",
+        "//src/server:server_jar",
+        "//src/utils:utils_jar",
+    ],
+)

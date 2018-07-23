@@ -1,5 +1,6 @@
 package server
 
+import interfaces.IAuthenticator
 import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.IEnvironment
@@ -9,6 +10,7 @@ import model.Model
 import model.ObjectNotVisibleException
 import model.Timers
 import runtime.shared.SqlDatastore
+import utils.FormDecoder
 import utils.bind
 import utils.get
 
@@ -28,7 +30,7 @@ fun withServer(dbfile: String, callback: ()->Unit) {
     datastore.initialiseDatabase()
     val model = bind(Model())
     bind(Timers())
-    val auth = bind(Authenticator())
+    val auth = bind<IAuthenticator>(ServerAuthenticator())
 
     database.withSqlTransaction {
         model.initialiseProperties()

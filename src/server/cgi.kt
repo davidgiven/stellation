@@ -1,15 +1,16 @@
 package server
 
+import interfaces.IAuthenticator
 import interfaces.IEnvironment
-import interfaces.ILogger
 import model.Model
 import model.SUniverse
+import utils.FormDecoder
 import utils.bind
 import utils.get
 
 open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
 
-class CgiRequest(val environment: IEnvironment = get()) {
+class CgiRequest(val environment: IEnvironment = get(), val formDecoder: FormDecoder = get()) {
     var parameters: Map<String, String> = emptyMap()
 
     init {
@@ -21,7 +22,7 @@ class CgiRequest(val environment: IEnvironment = get()) {
                 ?: throw BadCgiException("missing content length")
 
         val body = environment.readStdin(contentLength)
-        parameters = decodeFormEncoding(body)
+        parameters = formDecoder.decode(body)
     }
 }
 
@@ -47,11 +48,13 @@ class CgiResponse(val environment: IEnvironment = get()) {
 
 fun serveCgi() {
     try {
+        bind(FormDecoder())
         var request = CgiRequest()
         var response = CgiResponse()
 
         withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
-            get<Authenticator>().withLoggedInUser("foo", "bar") {
+            val authenticator: IAuthenticator = get()
+            authenticator.withLoggedInUser("foo", "bar") {
             }
         }
 
