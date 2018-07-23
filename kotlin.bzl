@@ -92,18 +92,33 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
 
   allDeps = deps + [":{}".format(mainName)]
   native.genrule(
-      name = name,
-      message = "Linking JS {}".format(name),
+      name = "{}_modules".format(name),
+      message = "DCE JS {}".format(name),
       srcs = allDeps,
-      outs = [name + ".js"],
+      outs = [name + ".jar"],
       output_to_bindir = 1,
       cmd = " && ".join([
           " ".join([
               "/home/dg/src/kotlinc/bin/kotlin-dce-js",
+              "-dev-mode",
               "-output-dir $@.files/node_modules",
           ] + ["$(locations "+d+")" for d in allDeps]
           ),
-          " (cd $@.files && " + " ".join([
+		  "jar cf $@ -C $@.files/node_modules ."
+      ])
+  )
+
+  native.genrule(
+      name = name,
+      message = "Linking JS {}".format(name),
+      srcs = [":{}_modules".format(name)],
+      outs = [name + ".js"],
+      output_to_bindir = 1,
+      cmd = " && ".join([
+	  	  "mkdir -p $@.files/node_modules",
+		  "cp $< $@.files/modules.jar",
+		  "(cd $@.files/node_modules && jar xf ../modules.jar)",
+          "(cd $@.files && " + " ".join([
               "browserify-lite",
               "--outfile out.js ",
               "{}.js".format(mainName),
