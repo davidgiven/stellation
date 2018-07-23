@@ -80,9 +80,9 @@ kotlin_jvm_test(
 )
 
 kotlin_jvm_test(
-    name = "FormDecoderTest",
+    name = "CodecTest",
     size = "small",
-    srcs = ["formdecodertest.kt"],
+    srcs = ["codectest.kt"],
     libs = [
         "@junit_junit//jar",
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
@@ -90,11 +90,8 @@ kotlin_jvm_test(
         "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
         "@org_jetbrains_kotlin_kotin_test_junit//jar",
     ],
-    test_class = "utils.FormDecoderTest",
+    test_class = "utils.CodecTest",
     deps = [
-        "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/server:server_jar",
         "//src/utils:utils_jar",
     ],
 )

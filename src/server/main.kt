@@ -10,11 +10,13 @@ import model.Model
 import model.ObjectNotVisibleException
 import model.Timers
 import runtime.shared.SqlDatastore
-import utils.FormDecoder
 import utils.bind
 import utils.get
+import utils.Codec
 
 fun main(argv: Array<String>) {
+    bind(Codec())
+
     val environment = get<IEnvironment>()
     if (environment.getenv("GATEWAY_INTERFACE") != null) {
         serveCgi()

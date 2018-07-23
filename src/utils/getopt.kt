@@ -16,7 +16,9 @@ private fun unrecognisedArgument(arg: String): (String) -> Int {
     throw UnrecognisedOptionException(arg)
 }
 
-fun getopt(argv: Array<String>, callbacks: Map<String, (String) -> Int>) {
+typealias GetoptCallback = (String) -> Int
+
+fun getopt(argv: List<String>, callbacks: Map<String, GetoptCallback>) {
     var index = 0
     while (index < argv.size) {
         val arg = argv[index]
@@ -60,3 +62,6 @@ fun getopt(argv: Array<String>, callbacks: Map<String, (String) -> Int>) {
         index++
     }
 }
+
+fun getopt(argv: Array<String>, callbacks: Map<String, GetoptCallback>) = getopt(argv.toList(), callbacks)
+

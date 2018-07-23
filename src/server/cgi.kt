@@ -2,15 +2,15 @@ package server
 
 import interfaces.IAuthenticator
 import interfaces.IEnvironment
+import interfaces.IUtf8
 import model.Model
 import model.SUniverse
-import utils.FormDecoder
-import utils.bind
+import utils.Codec
 import utils.get
 
 open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
 
-class CgiRequest(val environment: IEnvironment = get(), val formDecoder: FormDecoder = get()) {
+class CgiRequest(val environment: IEnvironment = get(), val codec: Codec = get(), val utf8: IUtf8 = get()) {
     var parameters: Map<String, String> = emptyMap()
 
     init {
@@ -22,13 +22,13 @@ class CgiRequest(val environment: IEnvironment = get(), val formDecoder: FormDec
                 ?: throw BadCgiException("missing content length")
 
         val body = environment.readStdin(contentLength)
-        parameters = formDecoder.decode(body)
+        parameters = codec.decode(utf8.toString(body))
     }
 }
 
-class CgiResponse(val environment: IEnvironment = get()) {
+class CgiResponse(val environment: IEnvironment = get(), val codec: Codec = get()) {
     var headers: Map<String, String> = emptyMap()
-    var body: List<String> = emptyList()
+    var body: Map<String, String> = emptyMap()
 
     fun write() {
         headers.forEach { e ->
@@ -38,17 +38,13 @@ class CgiResponse(val environment: IEnvironment = get()) {
             environment.writeStdout("\n")
         }
         environment.writeStdout("\n")
+        environment.writeStdout(codec.encode(body))
         body.forEach { environment.writeStdout("$it\n") }
-    }
-
-    fun println(s: String) {
-        body += s
     }
 }
 
 fun serveCgi() {
     try {
-        bind(FormDecoder())
         var request = CgiRequest()
         var response = CgiResponse()
 
@@ -60,7 +56,7 @@ fun serveCgi() {
 
         response.headers += "Content-type" to "text/plain; charset=utf-8"
         request.parameters.forEach { e ->
-            response.println("${e.key} = ${e.value}")
+            response.body += e.key to e.value
         }
         response.write()
     } catch (e: Exception) {
