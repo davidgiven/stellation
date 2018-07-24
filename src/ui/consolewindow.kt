@@ -11,6 +11,7 @@ class ConsoleWindow(ui: IUi = get(), val callback: ConsoleCommandCallback) : Abs
     lateinit var textInput: IUiElement
 
     override val mainClass = "consoleWindow"
+    override val isResizable = false
 
     override fun createTitlebar(div: IUiElement) {
         div.addText("span", "Console")

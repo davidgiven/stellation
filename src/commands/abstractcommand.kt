@@ -3,7 +3,10 @@ package commands
 import interfaces.IConsole
 import model.Model
 import utils.GetoptCallback
+import utils.GetoptException
+import utils.Parameters
 import utils.get
+import utils.getSuccess
 import utils.getopt
 
 abstract class AbstractCommand {
@@ -21,7 +24,13 @@ abstract class AbstractCommand {
 
     open fun parseArguments(argv: List<String>) {
         this.argv = argv
-        getopt(argv.drop(1), options)
+        if (options.isNotEmpty()) {
+            try {
+                getopt(argv.drop(1), options)
+            } catch (e: GetoptException) {
+                throw CommandSyntaxException(e.message ?: "syntax error")
+            }
+        }
     }
 
     open suspend fun run() {

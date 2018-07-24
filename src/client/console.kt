@@ -16,13 +16,13 @@ class Console: IConsole {
         return this
     }
 
-    override suspend fun println(s: String) = window.print(s)
+    override suspend fun println(message: String) = window.print(message)
 
     suspend fun execute(arg: String) {
         window.print("> ${arg}")
 
         val commandDispatcher: CommandDispatcher = get()
-        commandDispatcher.call(arg)
+        commandDispatcher.callFromClient(arg)
     }
 
     private fun onCommand(command: String) {

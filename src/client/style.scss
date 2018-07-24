@@ -228,9 +228,12 @@ input[type="text"], input[type="password"], input[type="email"] {
 }
 
 .consoleWindow {
-    width: 100%;
-    bottom: 0;
-    height: 30%;
+    width: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: 70%;
+    min-height: 5em;
 
     .body {
         overflow-y: scroll;
