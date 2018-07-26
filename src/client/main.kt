@@ -10,8 +10,8 @@ import kotlin.browser.document
 import interfaces.IConsole
 import commands.CommandDispatcher
 import interfaces.ICommandDispatcher
-import interfaces.IServerInterface
-import runtime.js.RemoteServerInterface
+import interfaces.IClientInterface
+import runtime.js.RemoteClientInterface
 import runtime.shared.CommandShell
 
 fun main(argv: Array<String>) {
@@ -21,7 +21,7 @@ fun main(argv: Array<String>) {
     val console = Console()
     bind<IConsole>(console)
     bind<ICommandDispatcher>(CommandDispatcher())
-    bind<IServerInterface>(RemoteServerInterface())
+    bind<IClientInterface>(RemoteClientInterface())
     bind(CommandShell())
 
     document.body!!.removeChildren()

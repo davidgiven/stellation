@@ -1,7 +1,7 @@
 package runtime.js
 
 import interfaces.CommandMessage
-import interfaces.IServerInterface
+import interfaces.IClientInterface
 import interfaces.RemoteCommandExecutionException
 import org.w3c.xhr.XMLHttpRequest
 import runtime.shared.ServerMessage
@@ -9,7 +9,7 @@ import utils.Codec
 import utils.Mailbox
 import utils.injection
 
-class RemoteServerInterface : IServerInterface {
+class RemoteClientInterface : IClientInterface {
     private val codec by injection<Codec>()
 
     override suspend fun executeCommand(argv: List<String>): CommandMessage {

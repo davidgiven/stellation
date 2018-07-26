@@ -1,17 +1,17 @@
 package server
 
 import interfaces.IAuthenticator
+import interfaces.IClientInterface
 import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.IEnvironment
 import interfaces.ILogger
-import interfaces.IServerInterface
 import interfaces.withSqlTransaction
 import model.Model
 import model.ObjectNotVisibleException
 import model.Timers
 import runtime.shared.CommandShell
-import runtime.shared.LocalServerInterface
+import runtime.shared.LocalClientInterface
 import runtime.shared.SqlDatastore
 import utils.Codec
 import utils.bind
@@ -37,8 +37,9 @@ fun withServer(dbfile: String, callback: () -> Unit) {
     val model = bind(Model())
     bind(Timers())
     val auth = bind<IAuthenticator>(ServerAuthenticator())
-    bind<IServerInterface>(LocalServerInterface())
+    bind<IClientInterface>(LocalClientInterface())
     bind(CommandShell())
+    bind(RemoteServer())
 
     database.withSqlTransaction {
         model.initialiseProperties()

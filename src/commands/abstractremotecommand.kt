@@ -1,11 +1,11 @@
 package commands
 
-import interfaces.IServerInterface
+import interfaces.IClientInterface
 import utils.injection
 
 /* Commands which are remoted from the client to the server (if necessary). */
 abstract class AbstractRemoteCommand : AbstractCommand() {
-    val serverInterface by injection<IServerInterface>()
+    val serverInterface by injection<IClientInterface>()
 
     override suspend fun run() {
         output = serverInterface.executeCommand(argv)

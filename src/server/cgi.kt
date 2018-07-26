@@ -1,11 +1,14 @@
 package server
 
+import interfaces.AuthenticationFailedException
 import interfaces.IAuthenticator
 import interfaces.IEnvironment
 import interfaces.IUtf8
 import model.Model
 import model.SUniverse
+import runtime.shared.ServerMessage
 import utils.Codec
+import utils.Message
 import utils.inject
 import utils.injection
 
@@ -16,7 +19,7 @@ class CgiRequest {
     private val codec by injection<Codec>()
     private val utf8 by injection<IUtf8>()
 
-    var parameters: Map<String, String> = emptyMap()
+    val input = ServerMessage()
 
     init {
         if (environment.getenv("REQUEST_METHOD") != "POST") {
@@ -26,8 +29,9 @@ class CgiRequest {
         val contentLength = environment.getenv("CONTENT_LENGTH")?.toInt()
                 ?: throw BadCgiException("missing content length")
 
-        val body = environment.readStdin(contentLength)
-        parameters = codec.decode(utf8.toString(body))
+        val bodyBytes = environment.readStdin(contentLength)
+        val body = utf8.toString(bodyBytes)
+        input.setFromMap(codec.decode(body))
     }
 }
 
@@ -36,7 +40,7 @@ class CgiResponse {
     private val codec by injection<Codec>()
 
     var headers: Map<String, String> = emptyMap()
-    var body: Map<String, String> = emptyMap()
+    var output: ServerMessage = ServerMessage()
 
     fun write() {
         headers.forEach { e ->
@@ -46,8 +50,7 @@ class CgiResponse {
             environment.writeStdout("\n")
         }
         environment.writeStdout("\n")
-        environment.writeStdout(codec.encode(body))
-        body.forEach { environment.writeStdout("$it\n") }
+        environment.writeStdout(codec.encode(output.toMap()))
     }
 }
 
@@ -55,20 +58,29 @@ fun serveCgi() {
     try {
         var request = CgiRequest()
         var response = CgiResponse()
+        response.headers += "Content-type" to "text/plain; charset=utf-8"
 
         withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
             val authenticator: IAuthenticator = inject()
-            authenticator.withLoggedInUser("foo", "bar") {
+            val remoteServer: RemoteServer = inject()
+            try {
+                authenticator.withLoggedInUser("foo", "bar") {
+                    remoteServer.onMessageReceived(request.input, response.output)
+                }
+            } catch (_: AuthenticationFailedException) {
+                throw UnauthorizedException()
             }
         }
 
-        response.headers += "Content-type" to "text/plain; charset=utf-8"
-        request.parameters.forEach { e ->
-            response.body += e.key to e.value
-        }
         response.write()
+    } catch (e: HttpStatusException) {
+        kotlin.io.println("Content-type: text/plain; charset=utf-8")
+        kotlin.io.println("Status: ${e.status}")
+        kotlin.io.println()
+        kotlin.io.println(e.message)
     } catch (e: Exception) {
         kotlin.io.println("Content-type: text/plain; charset=utf-8")
+        kotlin.io.println("Status: 500")
         kotlin.io.println("")
         throw e
     }

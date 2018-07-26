@@ -2,7 +2,7 @@ package interfaces
 
 class RemoteCommandExecutionException(e: String) : CommandExecutionException("remote error: $e")
 
-interface IServerInterface {
+interface IClientInterface {
     suspend fun executeCommand(argv: List<String>): CommandMessage
 }
 
