@@ -16,7 +16,7 @@ class SqlObjectsTest : AbstractObjectsTest() {
         resetBindingsForTest()
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore(database))
-        bind(Model(datastore))
+        bind(Model())
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()

@@ -2,10 +2,10 @@ package commands
 
 import interfaces.ICommandDispatcher
 import utils.GetoptCallback
-import utils.get
+import utils.injection
 
 class HelpCommand : AbstractLocalCommand() {
-    val commandDispatcher by lazy { get<ICommandDispatcher>() }
+    val commandDispatcher by injection<ICommandDispatcher>()
 
     override val name = "help"
     override val description = "accesses the help system"

@@ -10,7 +10,7 @@ data class LoginData(
         val password: String? = null
 )
 
-class LoginForm(ui: IUi = get()) : AbstractForm<LoginData>(ui) {
+class LoginForm : AbstractForm<LoginData>() {
     lateinit var emailInput: IUiElement
     lateinit var passwordInput: IUiElement
     lateinit var loginButton: IUiElement

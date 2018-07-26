@@ -3,9 +3,12 @@ package runtime.shared
 import interfaces.CommandExecutionException
 import interfaces.ICommandDispatcher
 import interfaces.IConsole
-import utils.get
+import utils.injection
 
-class CommandShell(val commandDispatcher: ICommandDispatcher = get(), val console: IConsole = get()) {
+class CommandShell() {
+    private val commandDispatcher by injection<ICommandDispatcher>()
+    private val console by injection<IConsole>()
+
     suspend fun call(cmdline: String) {
         if (cmdline.isBlank()) {
             return

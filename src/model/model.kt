@@ -2,7 +2,7 @@ package model
 
 import interfaces.IDatastore
 import interfaces.Oid
-import utils.get
+import utils.injection
 import kotlin.reflect.KClass
 
 class ObjectNotVisibleException(val oid: Oid)
@@ -13,7 +13,9 @@ class DatabaseTypeMismatchException(val oid: Oid, val kind: String, val desired:
 
 private typealias ClassMap = Map<String, (Model, Oid) -> SThing>
 
-class Model(val datastore: IDatastore = get()) {
+class Model {
+    val datastore by injection<IDatastore>()
+
     private var objectCache = emptyMap<Oid, SThing>()
 
     private val classConstructors: ClassMap = emptyMap<String, (Model, Oid) -> SThing>()

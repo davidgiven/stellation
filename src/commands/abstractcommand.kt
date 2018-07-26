@@ -8,14 +8,14 @@ import model.Model
 import utils.GetoptException
 import utils.Parameters
 import utils.getopt
-import utils.lazyget
+import utils.injection
 import utils.setSuccess
 
 class NotAServerCommandException : CommandExecutionException("this command can't be used on the server")
 
 abstract class AbstractCommand : ICommand {
-    protected val model: Model by lazyget()
-    protected val console: IConsole by lazyget()
+    protected val model by injection<Model>()
+    protected val console by injection<IConsole>()
 
     override lateinit var argv: List<String>
     override var input = Parameters()

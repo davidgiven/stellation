@@ -14,13 +14,14 @@ import runtime.shared.CommandShell
 import runtime.shared.LocalServerInterface
 import runtime.shared.SqlDatastore
 import utils.bind
-import utils.get
 import utils.Codec
+import utils.inject
+import utils.injection
 
 fun main(argv: Array<String>) {
     bind(Codec())
 
-    val environment = get<IEnvironment>()
+    val environment by injection<IEnvironment>()
     if (environment.getenv("GATEWAY_INTERFACE") != null) {
         serveCgi()
     } else {
@@ -29,7 +30,7 @@ fun main(argv: Array<String>) {
 }
 
 fun withServer(dbfile: String, callback: ()->Unit) {
-    val database = get<IDatabase>()
+    val database by injection<IDatabase>()
     val datastore = bind<IDatastore>(SqlDatastore(database))
     database.openDatabase(dbfile)
     datastore.initialiseDatabase()
@@ -50,7 +51,7 @@ fun withServer(dbfile: String, callback: ()->Unit) {
     }
 
     try {
-        get<ILogger>().println("server ready")
+        inject<ILogger>().println("server ready")
         callback()
     } finally {
         database.closeDatabase()

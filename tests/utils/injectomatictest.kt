@@ -21,9 +21,9 @@ class InjectomaticTest {
         bind(1.0)
         bind("fnord")
 
-        assertEquals(1, get())
-        assertEquals(1.0, get())
-        assertEquals("fnord", get())
+        assertEquals(1, inject())
+        assertEquals(1.0, inject())
+        assertEquals("fnord", inject())
     }
 
     @Test
@@ -31,7 +31,7 @@ class InjectomaticTest {
         var list = Subclass()
         bind<Superclass>(list)
 
-        assertSame(list, get<Superclass>())
+        assertSame(list, inject<Superclass>())
     }
 
     @Test
@@ -39,7 +39,7 @@ class InjectomaticTest {
         bind(Superclass())
 
         try {
-            get<Subclass>()
+            inject<Subclass>()
             fail()
         } catch (_: InjectomaticException) {
         }

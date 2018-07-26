@@ -6,15 +6,15 @@ import runtime.shared.CommandShell
 import ui.ConsoleWindow
 import ui.show
 import utils.Job
-import utils.lazyget
+import utils.injection
 
 class Console : IConsole {
     lateinit var window: ConsoleWindow
-    val ui: IUi by lazyget()
-    val commandShell: CommandShell by lazyget()
+    val ui by injection<IUi>()
+    val commandShell by injection<CommandShell>()
 
     fun show(): Console {
-        window = ConsoleWindow(ui, ::onCommand)
+        window = ConsoleWindow(::onCommand)
         window.show()
         return this
     }

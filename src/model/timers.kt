@@ -2,9 +2,12 @@ package model
 
 import interfaces.Oid
 import interfaces.IDatabase
-import utils.get
+import utils.injection
 
-class Timers(val model: Model = get(), val database: IDatabase = get()) {
+class Timers() {
+    val model by injection<Model>()
+    val database by injection<IDatabase>()
+
     fun setTimer(oid: Oid, expiry: Long) {
         database.sqlStatement("INSERT OR REPLACE INTO timers (oid, expiry) VALUES (?, ?)")
                 .bindOid(1, oid)

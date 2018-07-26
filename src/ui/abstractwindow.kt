@@ -3,9 +3,12 @@ package ui
 import interfaces.IUi
 import interfaces.IUiElement
 import interfaces.UiDragCallbacks
+import utils.injection
 import kotlin.math.max
 
-abstract class AbstractWindow(val ui: IUi) {
+abstract class AbstractWindow {
+    val ui by injection<IUi>()
+
     lateinit var element: IUiElement
     lateinit var titlebar: IUiElement
     lateinit var resizer: IUiElement

@@ -1,12 +1,11 @@
 package commands
 
 import interfaces.IServerInterface
-import utils.get
-import utils.lazyget
+import utils.injection
 
 /* Commands which are remoted from the client to the server (if necessary). */
 abstract class AbstractRemoteCommand : AbstractCommand() {
-    val serverInterface: IServerInterface by lazyget()
+    val serverInterface by injection<IServerInterface>()
 
     override suspend fun run() {
         output = serverInterface.executeCommand(argv)

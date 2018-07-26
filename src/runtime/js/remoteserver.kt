@@ -1,6 +1,5 @@
 package runtime.js
 
-import interfaces.ICommandDispatcher
 import interfaces.IServerInterface
 import interfaces.RemoteCommandExecutionException
 import org.w3c.xhr.XMLHttpRequest
@@ -8,13 +7,13 @@ import utils.Codec
 import utils.Mailbox
 import utils.Parameters
 import utils.add
-import utils.get
 import utils.getError
+import utils.injection
 import utils.set
 import utils.setError
 
-class RemoteServerInterface(val commandDispatcher: ICommandDispatcher = get(), val codec: Codec = get()) :
-        IServerInterface {
+class RemoteServerInterface : IServerInterface {
+    private val codec by injection<Codec>()
 
     override suspend fun executeCommand(argv: List<String>): Parameters {
         val sendParameters = Parameters()

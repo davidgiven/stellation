@@ -4,13 +4,10 @@ import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.Oid
 import interfaces.withSqlTransaction
-import model.Model
-import model.SStar
-import model.Timers
 import runtime.jvm.JvmDatabase
 import runtime.shared.SqlDatastore
 import utils.bind
-import utils.get
+import utils.inject
 import utils.resetBindingsForTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -18,9 +15,9 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TimersTest {
-    private val database get() = get<IDatabase>()
-    private val datastore get() = get<IDatastore>()
-    private val model get() = get<Model>()
+    private val database get() = inject<IDatabase>()
+    private val datastore get() = inject<IDatastore>()
+    private val model get() = inject<Model>()
 
     private lateinit var timers: Timers
     private lateinit var s1: SStar
@@ -33,7 +30,7 @@ class TimersTest {
         resetBindingsForTest()
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore(database))
-        bind(Model(datastore))
+        bind(Model())
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()

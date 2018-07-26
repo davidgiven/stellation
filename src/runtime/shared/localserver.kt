@@ -3,9 +3,11 @@ package runtime.shared
 import interfaces.ICommandDispatcher
 import interfaces.IServerInterface
 import utils.Parameters
-import utils.get
+import utils.injection
 
-class LocalServerInterface(val commandDispatcher: ICommandDispatcher = get()) : IServerInterface {
+class LocalServerInterface : IServerInterface {
+    private val commandDispatcher by injection<ICommandDispatcher>()
+
     override suspend fun executeCommand(argv: List<String>): Parameters {
         val command = commandDispatcher.resolve(argv)
         command.run()

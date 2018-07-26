@@ -12,7 +12,7 @@ class InMemoryObjectsTest : AbstractObjectsTest() {
     fun setup() {
         resetBindingsForTest()
         bind<IDatastore>(InMemoryDatastore())
-        bind(Model(datastore))
+        bind(Model())
 
         datastore.initialiseDatabase()
     }

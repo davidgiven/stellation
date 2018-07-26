@@ -4,10 +4,13 @@ import interfaces.AuthenticationFailedException
 import interfaces.IAuthenticator
 import interfaces.IDatabase
 import interfaces.Oid
-import utils.get
 import model.Model
+import utils.injection
 
-class ServerAuthenticator(val database: IDatabase = get(), val model: Model = get()):IAuthenticator {
+class ServerAuthenticator : IAuthenticator {
+    private val database by injection<IDatabase>()
+    private val model by injection<Model>()
+
     override var currentUser: Oid = 0
 
     override fun initialiseDatabase() {

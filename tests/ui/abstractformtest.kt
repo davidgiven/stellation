@@ -4,13 +4,16 @@ import interfaces.IUi
 import interfaces.IUiElement
 import runtime.jvm.JvmStubUi
 import utils.Job
+import utils.bind
 import utils.hasRunnableJobs
+import utils.resetBindingsForTest
 import utils.schedule
 import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestForm(ui: IUi) : AbstractForm<String>(ui) {
+class TestForm: AbstractForm<String>() {
     lateinit var okButton: IUiElement
     lateinit var cancelButton: IUiElement
 
@@ -40,9 +43,15 @@ class TestForm(ui: IUi) : AbstractForm<String>(ui) {
 }
 
 class AbstractFormTest {
-    val ui = JvmStubUi()
-    val form = TestForm(ui).show()
+    var form: TestForm? = null
     var testRan = false
+
+    @BeforeTest
+    fun setup() {
+        resetBindingsForTest()
+        bind<IUi>(JvmStubUi())
+        form = TestForm().show()
+    }
 
     @AfterTest
     fun teardown() {
@@ -53,26 +62,26 @@ class AbstractFormTest {
     @Test
     fun simplePost() {
         Job {
-            form.post("fnord")
-            assertEquals("fnord", form.execute())
+            form!!.post("fnord")
+            assertEquals("fnord", form!!.execute())
             testRan = true
         }
     }
 
     @Test
     fun okButtonPressedFirst() {
-        form.okButton.activate()
+        form!!.okButton.activate()
         Job {
-            assertEquals("ok", form.execute())
+            assertEquals("ok", form!!.execute())
             testRan = true
         }
     }
 
     @Test
     fun cancelButtonPressedFirst() {
-        form.cancelButton.activate()
+        form!!.cancelButton.activate()
         Job {
-            assertEquals("cancel", form.execute())
+            assertEquals("cancel", form!!.execute())
             testRan = true
         }
     }
@@ -80,10 +89,10 @@ class AbstractFormTest {
     @Test
     fun okButtonPressedLast() {
         Job {
-            assertEquals("ok", form.execute())
+            assertEquals("ok", form!!.execute())
             testRan = true
         }
-        form.okButton.activate()
+        form!!.okButton.activate()
     }
 
     private fun runRunnableJobs() {

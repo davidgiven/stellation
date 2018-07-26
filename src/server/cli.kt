@@ -7,8 +7,8 @@ import model.ObjectNotVisibleException
 import model.SUniverse
 import model.createNewUniverse
 import utils.bind
-import utils.get
 import utils.getopt
+import utils.inject
 import kotlin.system.exitProcess
 
 private var databaseFilename = "stellation.sqlite"
@@ -28,8 +28,8 @@ fun serveCli(argv: Array<String>) {
     ))
 
     withServer(databaseFilename) {
-        val database = get<IDatabase>()
-        val model = get<Model>()
+        val database = inject<IDatabase>()
+        val model = inject<Model>()
 
         database.withSqlTransaction {
             bind(findOrCreateUniverse(model))

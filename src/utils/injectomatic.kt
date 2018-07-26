@@ -29,10 +29,10 @@ inline fun <reified T> bind(o: T): T {
     return o
 }
 
-inline fun <reified T> get(): T {
+inline fun <reified T> inject(): T {
     val kclass = T::class
     checkBindingExists(kclass)
     return injectomatic_bindings.get(kclass) as T
 }
 
-inline fun <reified T> lazyget() = lazy { get<T>() }
+inline fun <reified T> injection() = lazy { inject<T>() }

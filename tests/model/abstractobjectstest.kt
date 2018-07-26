@@ -2,7 +2,7 @@ package model
 
 import interfaces.IDatabase
 import interfaces.IDatastore
-import utils.get
+import utils.inject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -12,9 +12,9 @@ import kotlin.test.assertSame
 import kotlin.test.fail
 
 abstract class AbstractObjectsTest {
-    protected val database get() = get<IDatabase>()
-    protected val datastore get() = get<IDatastore>()
-    protected val model get() = get<Model>()
+    protected val database get() = inject<IDatabase>()
+    protected val datastore get() = inject<IDatastore>()
+    protected val model get() = inject<Model>()
 
     @Test
     fun objectCreationTest() {

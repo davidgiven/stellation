@@ -6,11 +6,16 @@ import interfaces.IUtf8
 import model.Model
 import model.SUniverse
 import utils.Codec
-import utils.get
+import utils.inject
+import utils.injection
 
 open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
 
-class CgiRequest(val environment: IEnvironment = get(), val codec: Codec = get(), val utf8: IUtf8 = get()) {
+class CgiRequest {
+    private val environment by injection<IEnvironment>()
+    private val codec by injection<Codec>()
+    private val utf8 by injection<IUtf8>()
+
     var parameters: Map<String, String> = emptyMap()
 
     init {
@@ -26,7 +31,10 @@ class CgiRequest(val environment: IEnvironment = get(), val codec: Codec = get()
     }
 }
 
-class CgiResponse(val environment: IEnvironment = get(), val codec: Codec = get()) {
+class CgiResponse {
+    private val environment by injection<IEnvironment>()
+    private val codec by injection<Codec>()
+
     var headers: Map<String, String> = emptyMap()
     var body: Map<String, String> = emptyMap()
 
@@ -49,7 +57,7 @@ fun serveCgi() {
         var response = CgiResponse()
 
         withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
-            val authenticator: IAuthenticator = get()
+            val authenticator: IAuthenticator = inject()
             authenticator.withLoggedInUser("foo", "bar") {
             }
         }

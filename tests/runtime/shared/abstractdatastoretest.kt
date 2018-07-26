@@ -2,14 +2,14 @@ package runtime.shared
 
 import interfaces.IDatabase
 import interfaces.IDatastore
-import utils.get
+import utils.inject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 abstract class AbstractDatastoreTest {
-    protected val database get() = get<IDatabase>()
-    protected val datastore get() = get<IDatastore>()
+    protected val database get() = inject<IDatabase>()
+    protected val datastore get() = inject<IDatastore>()
 
     protected fun createProperties() {
         for (t in listOf("INTEGER", "REAL", "TEXT")) {

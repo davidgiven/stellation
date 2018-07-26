@@ -1,12 +1,10 @@
 package ui
 
-import interfaces.IUi
 import interfaces.IUiElement
-import utils.get
 
 typealias ConsoleCommandCallback = (String) -> Unit
 
-class ConsoleWindow(ui: IUi = get(), val callback: ConsoleCommandCallback) : AbstractWindow(ui) {
+class ConsoleWindow(val callback: ConsoleCommandCallback) : AbstractWindow() {
     lateinit var linesBox: IUiElement
     lateinit var textInput: IUiElement
 

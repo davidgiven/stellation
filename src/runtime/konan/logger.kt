@@ -2,9 +2,10 @@ package runtime.konan
 
 import interfaces.ILogger
 import interfaces.IEnvironment
-import utils.get
+import utils.injection
 
-class KonanLogger(val environment: IEnvironment = get()) : ILogger {
+class KonanLogger : ILogger {
+    val environment by injection<IEnvironment>()
     override fun println(message: String) {
         environment.writeStderr("${message}\n")
     }

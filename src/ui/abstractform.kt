@@ -6,7 +6,7 @@ import utils.Mailbox
 
 data class YesNoButtons(val yesButton: IUiElement, val noButton: IUiElement)
 
-abstract class AbstractForm<T>(ui: IUi) : AbstractWindow(ui) {
+abstract class AbstractForm<T> : AbstractWindow() {
     val mailbox = Mailbox<T>()
     var finished: Boolean = false
 
