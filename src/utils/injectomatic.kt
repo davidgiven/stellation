@@ -35,3 +35,4 @@ inline fun <reified T> get(): T {
     return injectomatic_bindings.get(kclass) as T
 }
 
+inline fun <reified T> lazyget() = lazy { get<T>() }

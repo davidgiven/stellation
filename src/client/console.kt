@@ -1,17 +1,20 @@
 package client
 
 import interfaces.IConsole
+import interfaces.IUi
+import runtime.shared.CommandShell
 import ui.ConsoleWindow
 import ui.show
 import utils.Job
-import utils.get
-import utils.argify
-import commands.CommandDispatcher
+import utils.lazyget
 
-class Console: IConsole {
-    val window = ConsoleWindow(get(), ::onCommand)
+class Console : IConsole {
+    lateinit var window: ConsoleWindow
+    val ui: IUi by lazyget()
+    val commandShell: CommandShell by lazyget()
 
     fun show(): Console {
+        window = ConsoleWindow(ui, ::onCommand)
         window.show()
         return this
     }
@@ -19,10 +22,7 @@ class Console: IConsole {
     override suspend fun println(message: String) = window.print(message)
 
     suspend fun execute(arg: String) {
-        window.print("> ${arg}")
-
-        val commandDispatcher: CommandDispatcher = get()
-        commandDispatcher.callFromClient(arg)
+        commandShell.call(arg)
     }
 
     private fun onCommand(command: String) {

@@ -9,6 +9,10 @@ import utils.Codec
 import kotlin.browser.document
 import interfaces.IConsole
 import commands.CommandDispatcher
+import interfaces.ICommandDispatcher
+import interfaces.IServerInterface
+import runtime.js.RemoteServerInterface
+import runtime.shared.CommandShell
 
 fun main(argv: Array<String>) {
     initJsRuntime()
@@ -16,7 +20,9 @@ fun main(argv: Array<String>) {
     bind(Model())
     val console = Console()
     bind<IConsole>(console)
-    bind(CommandDispatcher())
+    bind<ICommandDispatcher>(CommandDispatcher())
+    bind<IServerInterface>(RemoteServerInterface())
+    bind(CommandShell())
 
     document.body!!.removeChildren()
     console.show()

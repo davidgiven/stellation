@@ -6,6 +6,7 @@ import kotlin.reflect.KClass
 
 const val COUNT = "_count"
 const val SUCCESS = "_success"
+const val ERROR = "_error"
 
 class Parameters(var _map: Map<String, String> = emptyMap()): Iterable<String> {
     var count = 0
@@ -73,4 +74,7 @@ inline fun <reified V> Parameters.add(value: V): Parameters {
 
 inline fun Parameters.setSuccess(success: Boolean) = set(SUCCESS, success)
 inline fun Parameters.getSuccess(): Boolean = get(SUCCESS)
+
+inline fun Parameters.setError(error: String) = set(ERROR, error)
+inline fun Parameters.getError(): String? = getOrNull(ERROR)
 

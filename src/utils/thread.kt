@@ -1,6 +1,5 @@
 package utils
 
-import interfaces.ILogger
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.EmptyCoroutineContext
 import kotlin.coroutines.experimental.startCoroutine
@@ -41,8 +40,8 @@ private val completionContinuation = object : Continuation<Unit> {
     }
 
     override fun resumeWithException(exception: Throwable) {
-        get<ILogger>().println("Exception: ${exception}")
         currentJob = null
+        throw exception
     }
 }
 

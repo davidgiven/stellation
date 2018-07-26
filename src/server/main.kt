@@ -5,10 +5,13 @@ import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.IEnvironment
 import interfaces.ILogger
+import interfaces.IServerInterface
 import interfaces.withSqlTransaction
 import model.Model
 import model.ObjectNotVisibleException
 import model.Timers
+import runtime.shared.CommandShell
+import runtime.shared.LocalServerInterface
 import runtime.shared.SqlDatastore
 import utils.bind
 import utils.get
@@ -33,6 +36,8 @@ fun withServer(dbfile: String, callback: ()->Unit) {
     val model = bind(Model())
     bind(Timers())
     val auth = bind<IAuthenticator>(ServerAuthenticator())
+    bind<IServerInterface>(LocalServerInterface())
+    bind(CommandShell())
 
     database.withSqlTransaction {
         model.initialiseProperties()

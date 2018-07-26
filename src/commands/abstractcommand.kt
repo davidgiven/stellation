@@ -1,28 +1,27 @@
 package commands
 
+import interfaces.CommandExecutionException
+import interfaces.CommandSyntaxException
+import interfaces.ICommand
 import interfaces.IConsole
 import model.Model
-import utils.GetoptCallback
 import utils.GetoptException
 import utils.Parameters
-import utils.get
-import utils.getSuccess
 import utils.getopt
+import utils.lazyget
+import utils.setSuccess
 
-abstract class AbstractCommand {
-    protected val model: Model = get()
-    protected val console: IConsole = get()
+class NotAServerCommandException : CommandExecutionException("this command can't be used on the server")
 
-    open val needsAuthentication = true
-    abstract val name: String
-    abstract val description: String
-    abstract val options: Map<String,GetoptCallback>
+abstract class AbstractCommand : ICommand {
+    protected val model: Model by lazyget()
+    protected val console: IConsole by lazyget()
 
-    lateinit var argv: List<String>
-    var input = Parameters()
-    var output = Parameters()
+    override lateinit var argv: List<String>
+    override var input = Parameters()
+    override var output = Parameters()
 
-    open fun parseArguments(argv: List<String>) {
+    override fun parseArguments(argv: List<String>) {
         this.argv = argv
         if (options.isNotEmpty()) {
             try {
@@ -33,12 +32,16 @@ abstract class AbstractCommand {
         }
     }
 
-    open suspend fun run() {
+    override suspend fun run() {
+        output.setSuccess(true)
     }
 
-    open suspend fun renderResult() {
-        val success = if (output.getSuccess()) "success" else "failure"
-        console.println("Command ${name} completed: ${success}.")
+    override fun serverRun() {
+        throw NotAServerCommandException()
+    }
+
+    override suspend fun renderResult() {
+        console.println("OK")
     }
 }
 

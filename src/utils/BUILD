@@ -12,23 +12,14 @@ SRCS = glob(["*.kt"])
 kotlin_jvm_lib(
     name = "utils_jar",
     srcs = SRCS,
-    deps = [
-        "//src/interfaces:interfaces_jar",
-    ],
 )
 
 kotlin_konan_lib(
     name = "utils_klib",
     srcs = SRCS,
-    deps = [
-        "//src/interfaces:interfaces_klib",
-    ],
 )
 
 kotlin_js_lib(
     name = "utils_jsjar",
     srcs = SRCS,
-    deps = [
-        "//src/interfaces:interfaces_jsjar",
-    ],
 )

@@ -1,81 +1,45 @@
 package commands
 
-import interfaces.IConsole
+import interfaces.CommandNotFoundException
+import interfaces.CommandSyntaxException
+import interfaces.ICommandDispatcher
 import utils.CommandLineParseException
 import utils.argify
-import utils.get
 import utils.setSuccess
 
-open class CommandExecutionException(s: String, e: Throwable? = null) : Exception(s, e)
-class CommandNotFoundException(name: String) : CommandExecutionException("command '$name' not found")
-class CommandSyntaxException(message: String) : CommandExecutionException(message)
+class CommandDispatcher : ICommandDispatcher {
+    override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
 
-class CommandDispatcher {
-    var allCommands: Map<String, () -> AbstractCommand> = emptyMap()
-    var localCommands: Map<String, () -> AbstractLocalCommand> = emptyMap()
-    var clientCommands: Map<String, () -> AbstractClientCommand> = emptyMap()
-    var remoteCommands: Map<String, () -> AbstractRemoteCommand> = emptyMap()
+    fun populateCommands(): Map<String, () -> AbstractCommand> {
+        var commands: Map<String, () -> AbstractCommand> = emptyMap()
 
-    init {
-        addLocalCommand(::HelpCommand)
-        addLocalCommand(::EchoCommand)
-        addRemoteCommand(::PingCommand)
+        fun addCommand(c: () -> AbstractCommand) {
+            val name = c().name
+            commands += name to c
+        }
+
+        addCommand(::HelpCommand)
+        addCommand(::EchoCommand)
+        addCommand(::PingCommand)
+
+        return commands
     }
 
-    private fun addClientCommand(c: () -> AbstractClientCommand) {
-        val p = c().name to c
-
-        allCommands += p
-        clientCommands += p
+    override fun resolve(cmdline: String): AbstractCommand {
+        try {
+            return resolve(argify(cmdline))
+        } catch (e: CommandLineParseException) {
+            throw CommandSyntaxException(e.message ?: "syntax error")
+        }
     }
 
-    private fun addRemoteCommand(c: () -> AbstractRemoteCommand) {
-        val name = c().name
-
-        allCommands += name to c
-        remoteCommands += name to c
-    }
-
-    private fun addLocalCommand(c: () -> AbstractLocalCommand) {
-        val name = c().name
-
-        allCommands += name to c
-        localCommands += name to c
-    }
-
-    private fun findCommand(argv: List<String>): AbstractCommand {
+    override fun resolve(argv: List<String>): AbstractCommand {
         val name = argv[0]
-        val constructor = allCommands.get(name) ?: throw CommandNotFoundException(name)
+        val constructor = commands.get(name) ?: throw CommandNotFoundException(name)
         val command = constructor()
         command.parseArguments(argv)
+        command.output.setSuccess(false)
         return command
-    }
-
-    private fun safeArgifu(arg: String): List<String> =
-            try {
-                argify(arg)
-            } catch (e: CommandLineParseException) {
-                throw CommandSyntaxException(e.message ?: "syntax error")
-            }
-
-    suspend fun callFromClient(arg: String) {
-        val console: IConsole = get()
-        try {
-            val argv = safeArgifu(arg)
-            if (argv.isNotEmpty()) {
-                val command = findCommand(argv)
-
-                command.output.setSuccess(false)
-                command.run()
-                command.renderResult()
-            }
-        } catch (e: CommandExecutionException) {
-            console.println("Failed: ${e.message ?: "unknown reason"}")
-        } catch (e: Throwable) {
-            console.println("Internal client error:")
-            console.println(e.toString())
-            throw e
-        }
     }
 }
 
