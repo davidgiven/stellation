@@ -11,7 +11,7 @@ val errno: Int
 val errstr: String
     get() = platform.posix.strerror(errno)!!.toKString()
 
-class ErrnoException(): Exception("System call failed: errno = ${errstr}")
+class ErrnoException() : Exception("System call failed: errno = ${errstr}")
 
 class KonanEnvironment : IEnvironment {
     override fun getenv(name: String): String? = platform.posix.getenv(name)?.toKString()

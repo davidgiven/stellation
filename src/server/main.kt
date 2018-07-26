@@ -13,8 +13,8 @@ import model.Timers
 import runtime.shared.CommandShell
 import runtime.shared.LocalServerInterface
 import runtime.shared.SqlDatastore
-import utils.bind
 import utils.Codec
+import utils.bind
 import utils.inject
 import utils.injection
 
@@ -29,7 +29,7 @@ fun main(argv: Array<String>) {
     }
 }
 
-fun withServer(dbfile: String, callback: ()->Unit) {
+fun withServer(dbfile: String, callback: () -> Unit) {
     val database by injection<IDatabase>()
     val datastore = bind<IDatastore>(SqlDatastore(database))
     database.openDatabase(dbfile)

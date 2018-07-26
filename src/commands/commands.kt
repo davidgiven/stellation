@@ -5,7 +5,6 @@ import interfaces.CommandSyntaxException
 import interfaces.ICommandDispatcher
 import utils.CommandLineParseException
 import utils.argify
-import utils.setSuccess
 
 class CommandDispatcher : ICommandDispatcher {
     override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }

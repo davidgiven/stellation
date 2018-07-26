@@ -8,14 +8,16 @@ const val COUNT = "_count"
 const val SUCCESS = "_success"
 const val ERROR = "_error"
 
-class Message(var _map: Map<String, String> = emptyMap()): Iterable<String> {
+open class Message : Iterable<String> {
+    var _map: Map<String, String> = emptyMap()
     var count = 0
 
-    init {
+    inline val size: Int get() = getOrDefault(COUNT, 0)
+
+    fun setFromMap(map: Map<String, String>) {
+        _map = map
         count = _map[COUNT]?.toInt() ?: 0
     }
-
-    inline val size: Int get() = getOrDefault(COUNT, 0)
 
     fun toMap(): Map<String, String> {
         if (count == 0) {
@@ -67,14 +69,10 @@ inline fun <K, reified V> Message.getOrNull(key: K): V? = getOrNull(key, V::clas
 inline operator fun <K, reified V> Message.get(key: K): V = getOrNull(key)!!
 inline fun <K, reified V> Message.getOrDefault(key: K, default: V): V = getOrNull(key) ?: default
 
+inline operator fun <K> Message.contains(key: K): Boolean = key.toString() in _map
+
 inline fun <reified V> Message.add(value: V): Message {
     set(count++, value)
     return this
 }
-
-inline fun Message.setSuccess(success: Boolean) = set(SUCCESS, success)
-inline fun Message.getSuccess(): Boolean = get(SUCCESS)
-
-inline fun Message.setError(error: String) = set(ERROR, error)
-inline fun Message.getError(): String? = getOrNull(ERROR)
 

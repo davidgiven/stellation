@@ -1,8 +1,6 @@
 package ui
 
-import interfaces.IUi
 import interfaces.IUiElement
-import utils.get
 
 data class LoginData(
         val canceled: Boolean,

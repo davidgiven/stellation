@@ -28,7 +28,7 @@ private class SqliteValue(unprotectedValue: CPointer<sqlite3_value>?) : SqlValue
 }
 
 private class SqliteStatement(val databaseConnection: SqliteConnection, val sql: String)
-        : SqlStatement {
+    : SqlStatement {
     var sqliteStatement: CPointer<sqlite3_stmt>? = null
 
     init {

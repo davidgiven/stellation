@@ -1,15 +1,14 @@
 package commands
 
 import interfaces.CommandExecutionException
+import interfaces.CommandMessage
 import interfaces.CommandSyntaxException
 import interfaces.ICommand
 import interfaces.IConsole
 import model.Model
 import utils.GetoptException
-import utils.Message
 import utils.getopt
 import utils.injection
-import utils.setSuccess
 
 class NotAServerCommandException : CommandExecutionException("this command can't be used on the server")
 
@@ -18,8 +17,8 @@ abstract class AbstractCommand : ICommand {
     protected val console by injection<IConsole>()
 
     override lateinit var argv: List<String>
-    override var input = Message()
-    override var output = Message()
+    override var input = CommandMessage()
+    override var output = CommandMessage()
 
     override fun parseArguments(argv: List<String>) {
         this.argv = argv

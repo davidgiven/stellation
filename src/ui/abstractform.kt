@@ -1,6 +1,5 @@
 package ui
 
-import interfaces.IUi
 import interfaces.IUiElement
 import utils.Mailbox
 
@@ -39,7 +38,7 @@ abstract class AbstractForm<T> : AbstractWindow() {
             }
 
     fun createYesNoButtonBox(div: IUiElement, yes: String = "Yes", no: String = "No"): YesNoButtons {
-        with (div) {
+        with(div) {
             val yesButton = addElement("button") {
                 classes = setOf("button", "defaultbutton")
                 addText("span", yes)

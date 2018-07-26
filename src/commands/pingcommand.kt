@@ -1,7 +1,6 @@
 package commands
 
 import utils.GetoptCallback
-import utils.setSuccess
 
 class PingCommand : AbstractRemoteCommand() {
     override val name = "ping"
