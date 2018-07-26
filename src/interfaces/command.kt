@@ -1,7 +1,7 @@
 package interfaces
 
 import utils.GetoptCallback
-import utils.Parameters
+import utils.Message
 
 open class CommandExecutionException(s: String, e: Throwable? = null) : Exception(s, e)
 class CommandNotFoundException(name: String) : CommandExecutionException("command '$name' not found")
@@ -13,8 +13,8 @@ interface ICommand {
     val options: Map<String, GetoptCallback>
 
     var argv: List<String>
-    var input: Parameters
-    var output: Parameters
+    var input: Message
+    var output: Message
 
     fun parseArguments(argv: List<String>)
     suspend fun run()

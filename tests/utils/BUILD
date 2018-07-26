@@ -114,9 +114,9 @@ kotlin_jvm_test(
 )
 
 kotlin_jvm_test(
-    name = "ParametersTest",
+    name = "MessageTest",
     size = "small",
-    srcs = ["parameterstest.kt"],
+    srcs = ["messagetest.kt"],
     libs = [
         "@junit_junit//jar",
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
@@ -124,7 +124,7 @@ kotlin_jvm_test(
         "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
         "@org_jetbrains_kotlin_kotin_test_junit//jar",
     ],
-    test_class = "utils.ParametersTest",
+    test_class = "utils.MessageTest",
     deps = [
         "//src/utils:utils_jar",
     ],

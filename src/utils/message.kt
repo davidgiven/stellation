@@ -8,7 +8,7 @@ const val COUNT = "_count"
 const val SUCCESS = "_success"
 const val ERROR = "_error"
 
-class Parameters(var _map: Map<String, String> = emptyMap()): Iterable<String> {
+class Message(var _map: Map<String, String> = emptyMap()): Iterable<String> {
     var count = 0
 
     init {
@@ -38,16 +38,16 @@ class Parameters(var _map: Map<String, String> = emptyMap()): Iterable<String> {
     override fun iterator(): Iterator<String> = toList().iterator()
 }
 
-inline fun <K> Parameters.clear(key: K) {
+inline fun <K> Message.clear(key: K) {
     _map -= key.toString()
 }
 
-inline operator fun <K, V> Parameters.set(key: K, value: V) {
+inline operator fun <K, V> Message.set(key: K, value: V) {
     _map += key.toString() to value.toString()
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <K, V> Parameters.getOrNull(key: K, kclass: KClass<*>): V? {
+fun <K, V> Message.getOrNull(key: K, kclass: KClass<*>): V? {
     val value = _map[key.toString()]
     value ?: return null
     return when (kclass) {
@@ -62,19 +62,19 @@ fun <K, V> Parameters.getOrNull(key: K, kclass: KClass<*>): V? {
     }
 }
 
-inline fun <K, reified V> Parameters.getOrNull(key: K): V? = getOrNull(key, V::class)
+inline fun <K, reified V> Message.getOrNull(key: K): V? = getOrNull(key, V::class)
 
-inline operator fun <K, reified V> Parameters.get(key: K): V = getOrNull(key)!!
-inline fun <K, reified V> Parameters.getOrDefault(key: K, default: V): V = getOrNull(key) ?: default
+inline operator fun <K, reified V> Message.get(key: K): V = getOrNull(key)!!
+inline fun <K, reified V> Message.getOrDefault(key: K, default: V): V = getOrNull(key) ?: default
 
-inline fun <reified V> Parameters.add(value: V): Parameters {
+inline fun <reified V> Message.add(value: V): Message {
     set(count++, value)
     return this
 }
 
-inline fun Parameters.setSuccess(success: Boolean) = set(SUCCESS, success)
-inline fun Parameters.getSuccess(): Boolean = get(SUCCESS)
+inline fun Message.setSuccess(success: Boolean) = set(SUCCESS, success)
+inline fun Message.getSuccess(): Boolean = get(SUCCESS)
 
-inline fun Parameters.setError(error: String) = set(ERROR, error)
-inline fun Parameters.getError(): String? = getOrNull(ERROR)
+inline fun Message.setError(error: String) = set(ERROR, error)
+inline fun Message.getError(): String? = getOrNull(ERROR)
 

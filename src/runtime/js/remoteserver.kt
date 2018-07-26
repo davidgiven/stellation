@@ -5,7 +5,7 @@ import interfaces.RemoteCommandExecutionException
 import org.w3c.xhr.XMLHttpRequest
 import utils.Codec
 import utils.Mailbox
-import utils.Parameters
+import utils.Message
 import utils.add
 import utils.getError
 import utils.injection
@@ -15,30 +15,30 @@ import utils.setError
 class RemoteServerInterface : IServerInterface {
     private val codec by injection<Codec>()
 
-    override suspend fun executeCommand(argv: List<String>): Parameters {
-        val sendParameters = Parameters()
+    override suspend fun executeCommand(argv: List<String>): Message {
+        val sendMessage = Message()
         for (arg in argv) {
-            sendParameters.add(arg)
+            sendMessage.add(arg)
         }
-        sendParameters["_rpc"] = "execute"
+        sendMessage["_rpc"] = "execute"
 
-        val encoded = codec.encode(sendParameters.toMap())
+        val encoded = codec.encode(sendMessage.toMap())
 
-        val mailbox: Mailbox<Parameters> = Mailbox()
+        val mailbox: Mailbox<Message> = Mailbox()
         val xhr = XMLHttpRequest()
         xhr.onreadystatechange = {
             if (xhr.readyState == XMLHttpRequest.DONE) {
                 try {
                     if (xhr.status.toInt() == 200) {
-                        val receiveParameters = Parameters(codec.decode(xhr.responseText))
-                        mailbox.post(receiveParameters)
+                        val receiveMessage = Message(codec.decode(xhr.responseText))
+                        mailbox.post(receiveMessage)
                     } else {
                         throw RemoteCommandExecutionException("network error ${xhr.status}")
                     }
                 } catch (e: Exception) {
-                    val receiveParameters = Parameters()
-                    receiveParameters.setError("network error ${xhr.status}")
-                    mailbox.post(receiveParameters)
+                    val receiveMessage = Message()
+                    receiveMessage.setError("network error ${xhr.status}")
+                    mailbox.post(receiveMessage)
                     kickScheduler()
                 }
             }
@@ -46,12 +46,12 @@ class RemoteServerInterface : IServerInterface {
         xhr.open("POST", "http://localhost/~dg/cgi-bin/stellation.cgi", true)
         xhr.send(encoded)
 
-        val receiveParameters = mailbox.wait()
-        val error = receiveParameters.getError()
+        val receiveMessage = mailbox.wait()
+        val error = receiveMessage.getError()
         if (error != null) {
             throw RemoteCommandExecutionException(error)
         }
-        return receiveParameters
+        return receiveMessage
     }
 }
 

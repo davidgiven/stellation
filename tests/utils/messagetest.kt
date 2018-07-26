@@ -4,17 +4,17 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-class ParametersTest {
+class MessageTest {
     @Test
     fun empty() {
-        val p = Parameters()
+        val p = Message()
         assertEquals(emptyMap(), p.toMap())
         assertEquals(emptyList(), p.toList())
     }
 
     @Test
     fun strings() {
-        val p = Parameters()
+        val p = Message()
         p["foo"] = "bar"
         p["baz"] = "boo"
         assertEquals(mapOf("foo" to "bar", "baz" to "boo"), p.toMap())
@@ -25,7 +25,7 @@ class ParametersTest {
 
     @Test
     fun arguments() {
-        val p = Parameters()
+        val p = Message()
         p.add("foo")
         p.add("bar")
         assertEquals(mapOf("0" to "foo", "1" to "bar", "_count" to "2"), p.toMap())
@@ -37,7 +37,7 @@ class ParametersTest {
 
     @Test
     fun mixed() {
-        val p = Parameters()
+        val p = Message()
         p["foo"] = "bar"
         p.add("thingy")
         p["baz"] = "boo"
@@ -50,7 +50,7 @@ class ParametersTest {
     }
 
     @Test fun types() {
-        val p = Parameters()
+        val p = Message()
         p["char"] = 'q'
         p["short"] = 1.toShort()
         p["int"] = 2
@@ -74,7 +74,7 @@ class ParametersTest {
     }
 
     @Test fun missingByName() {
-        val p = Parameters()
+        val p = Message()
         assertEquals(null as Char?, p.getOrNull("char"))
         assertEquals(null as Short?, p.getOrNull("short"))
         assertEquals(null as Int?, p.getOrNull("int"))
@@ -84,7 +84,7 @@ class ParametersTest {
     }
 
     @Test fun defaults() {
-        val p = Parameters()
+        val p = Message()
         assertEquals('0', p.getOrDefault("char", '0'))
         assertEquals(0.toShort(), p.getOrDefault("short", 0.toShort()))
         assertEquals(0, p.getOrDefault("int", 0))
@@ -94,7 +94,7 @@ class ParametersTest {
     }
 
     @Test fun exceptionOnMissing() {
-        val p = Parameters()
+        val p = Message()
         try {
             val i: Int = p["fnord"]
             fail("exception not thrown")

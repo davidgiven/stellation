@@ -1,10 +1,10 @@
 package interfaces
 
-import utils.Parameters
+import utils.Message
 
 class RemoteCommandExecutionException(e: String): CommandExecutionException("remote error: $e")
 
 interface IServerInterface {
-    suspend fun executeCommand(argv: List<String>): Parameters
+    suspend fun executeCommand(argv: List<String>): Message
 }
 

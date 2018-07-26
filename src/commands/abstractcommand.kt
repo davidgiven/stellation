@@ -6,7 +6,7 @@ import interfaces.ICommand
 import interfaces.IConsole
 import model.Model
 import utils.GetoptException
-import utils.Parameters
+import utils.Message
 import utils.getopt
 import utils.injection
 import utils.setSuccess
@@ -18,8 +18,8 @@ abstract class AbstractCommand : ICommand {
     protected val console by injection<IConsole>()
 
     override lateinit var argv: List<String>
-    override var input = Parameters()
-    override var output = Parameters()
+    override var input = Message()
+    override var output = Message()
 
     override fun parseArguments(argv: List<String>) {
         this.argv = argv
