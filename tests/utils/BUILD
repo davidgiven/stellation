@@ -129,3 +129,20 @@ kotlin_jvm_test(
         "//src/utils:utils_jar",
     ],
 )
+
+kotlin_jvm_test(
+    name = "BCryptTest",
+    size = "small",
+    srcs = ["bcrypttest.kt"],
+    libs = [
+        "@junit_junit//jar",
+        "@org_jetbrains_kotlin_kotin_stdlib//jar",
+        "@org_jetbrains_kotlin_kotin_test//jar",
+        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
+        "@org_jetbrains_kotlin_kotin_test_junit//jar",
+    ],
+    test_class = "utils.BCryptTest",
+    deps = [
+        "//src/utils:utils_jar",
+    ],
+)
