@@ -2,7 +2,8 @@ package model
 
 import interfaces.Oid
 import utils.NameGenerator
-import utils.random
+import utils.Random
+import utils.injection
 import utils.roundBy
 import kotlin.math.PI
 import kotlin.math.cos
@@ -14,8 +15,13 @@ open class SUniverse(model: Model, oid: Oid) : SThing(model, oid) {
 }
 
 fun Model.createNewUniverse(): SUniverse {
+    val random by injection<Random>()
+
     val universe = createObject(SUniverse::class)
     check(universe.oid == 1)
+
+    val god = createNewPlayer("God", "omnipotent")
+    check(god.oid == 2)
 
     val nameGenerator = NameGenerator()
     var starNames = emptySet<String>()
@@ -25,7 +31,7 @@ fun Model.createNewUniverse(): SUniverse {
 
     var starLocations = emptySet<Pair<Double, Double>>()
     while (starLocations.size < SGalaxy.NUMBER_OF_STARS) {
-        val theta = random(0.0..(PI * 2.0))
+        val theta = random.random(0.0..(PI * 2.0))
         val x = (sin(theta) * SGalaxy.RADIUS).roundBy(10.0)
         val y = (cos(theta) * SGalaxy.RADIUS).roundBy(10.0)
         starLocations += Pair(x, y)
@@ -41,10 +47,6 @@ fun Model.createNewUniverse(): SUniverse {
         star.y = location.second
         star.moveTo(galaxy)
     }
-
-    // For test purposes, create a new player.
-
-    createNewPlayer("TestPlayer")
 
     return universe
 }

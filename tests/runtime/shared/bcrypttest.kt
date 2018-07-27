@@ -1,5 +1,10 @@
-package utils
+package runtime.shared
 
+import utils.BCrypt
+import utils.Random
+import utils.bind
+import utils.resetBindingsForTest
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -50,7 +55,14 @@ class BCryptTest {
                     "~!@#$%^&*()      ~!@#$%^&*()PNBFRD", "$2a$12\$WApznUOJfkEGSmYRfnkrPO",
                     "$2a$12\$WApznUOJfkEGSmYRfnkrPOr466oFDCaj4b6HY3EXGvfxm43seyhgC"))
 
-    private val bcrypt = BCrypt()
+    private lateinit var bcrypt: BCrypt
+
+    @BeforeTest
+    fun setup() {
+        resetBindingsForTest()
+        bind(Random(0))
+        bcrypt = bind(BCrypt())
+    }
 
     /**
      * Test method for 'BCrypt.hashpw(String, String)'

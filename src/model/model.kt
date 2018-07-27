@@ -13,6 +13,9 @@ class DatabaseTypeMismatchException(val oid: Oid, val kind: String, val desired:
 
 private typealias ClassMap = Map<String, (Model, Oid) -> SThing>
 
+const val UNIVERSE_OID = 1
+const val GOD_OID = 2
+
 class Model {
     val datastore by injection<IDatastore>()
 
@@ -78,6 +81,9 @@ class Model {
         datastore.setStringProperty(oid, KIND.name, klass.simpleName!!)
         return loadObject(oid, klass)
     }
+
+    fun getUniverse(): SUniverse = loadObject(UNIVERSE_OID, SUniverse::class)
+    fun getGod(): SPlayer = loadObject(GOD_OID, SPlayer::class)
 }
 
 fun <T : SThing> Oid.load(model: Model, klass: KClass<T>): T = model.loadObject(this, klass)

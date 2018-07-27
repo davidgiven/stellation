@@ -6,6 +6,7 @@ import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.IEnvironment
 import interfaces.ILogger
+import interfaces.ITime
 import interfaces.withSqlTransaction
 import model.Model
 import model.ObjectNotVisibleException
@@ -14,6 +15,7 @@ import runtime.shared.CommandShell
 import runtime.shared.LocalClientInterface
 import runtime.shared.SqlDatastore
 import utils.Codec
+import utils.Random
 import utils.bind
 import utils.inject
 import utils.injection
@@ -40,6 +42,9 @@ fun withServer(dbfile: String, callback: () -> Unit) {
     bind<IClientInterface>(LocalClientInterface())
     bind(CommandShell())
     bind(RemoteServer())
+
+    val time = inject<ITime>()
+    bind(Random(time.nanotime()))
 
     database.withSqlTransaction {
         model.initialiseProperties()

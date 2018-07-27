@@ -10,13 +10,16 @@ open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
     val ships by SHIPS
 }
 
-fun Model.createNewPlayer(name: String): SPlayer {
+fun Model.createNewPlayer(name: String, password_hash: String): SPlayer {
     val player = createObject(SPlayer::class)
     player.name = name
-    player.password_hash = "<password hash here>"
+    player.password_hash = password_hash
+    return player
+}
 
+fun Model.createPlayerFleet(player: SPlayer) {
     val ship = createObject(SShip::class)
-    ship.name = "$name's seedship"
+    ship.name = "${player.name}'s seedship"
     ship.owner = player
     player.ships += ship
 
@@ -31,6 +34,4 @@ fun Model.createNewPlayer(name: String): SPlayer {
     addModule(SAntimatterDistillery::class)
     addModule(SAsteroidMiner::class)
     addModule(SHydroponicsPlant::class)
-
-    return player
 }

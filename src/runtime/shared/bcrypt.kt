@@ -56,6 +56,8 @@ package utils
  * @version 0.4
  */
 class BCrypt {
+    private val random by injection<Random>()
+
     // BCrypt parameters
     private val GENSALT_DEFAULT_LOG2_ROUNDS = 10
     private val BCRYPT_SALT_LEN = 16
@@ -463,7 +465,7 @@ class BCrypt {
     fun gensalt(
             log_rounds: Int = GENSALT_DEFAULT_LOG2_ROUNDS): String {
         val rs = StringBuilder()
-        val rnd = ByteArray(BCRYPT_SALT_LEN) { random(0..255).toByte() }
+        val rnd = ByteArray(BCRYPT_SALT_LEN) { random.random(0..255).toByte() }
 
         rs.append("$2a$")
         if (log_rounds < 10)
