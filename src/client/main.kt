@@ -19,13 +19,13 @@ import utils.Random
 
 fun main(argv: Array<String>) {
     initJsRuntime()
-    bind(Codec())
-    bind(Model())
     val console = Console()
     bind<IConsole>(console)
     bind<ICommandDispatcher>(CommandDispatcher())
     bind<IClientInterface>(RemoteClientInterface())
     bind(CommandShell())
+    bind(Codec())
+    bind(Model())
 
     val time = inject<ITime>()
     bind(Random(time.nanotime()))

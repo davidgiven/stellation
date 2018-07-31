@@ -1,5 +1,6 @@
 package model
 
+import interfaces.IAuthenticator
 import interfaces.IDatastore
 import interfaces.Oid
 import utils.injection
@@ -18,6 +19,7 @@ const val GOD_OID = 2
 
 class Model {
     val datastore by injection<IDatastore>()
+    val authenticator by injection<IAuthenticator>()
 
     private var objectCache = emptyMap<Oid, SThing>()
 

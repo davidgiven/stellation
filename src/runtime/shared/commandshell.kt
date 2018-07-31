@@ -3,20 +3,26 @@ package runtime.shared
 import interfaces.CommandExecutionException
 import interfaces.ICommandDispatcher
 import interfaces.IConsole
+import utils.argify
 import utils.injection
+import utils.unargify
 
 class CommandShell() {
     private val commandDispatcher by injection<ICommandDispatcher>()
     private val console by injection<IConsole>()
 
     suspend fun call(cmdline: String) {
-        if (cmdline.isBlank()) {
+        call(argify(cmdline))
+    }
+
+    suspend fun call(argv: List<String>) {
+        if (argv.isEmpty()) {
             return
         }
 
         try {
-            console.println("> $cmdline")
-            val command = commandDispatcher.resolve(cmdline)
+            console.println("> ${unargify(argv)}")
+            val command = commandDispatcher.resolve(argv)
             command.run()
             command.renderResult()
         } catch (e: CommandExecutionException) {

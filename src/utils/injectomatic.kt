@@ -35,4 +35,7 @@ inline fun <reified T> inject(): T {
     return injectomatic_bindings.get(kclass) as T
 }
 
+inline fun <reified T> inject(constructor: () -> T): T =
+        injectomatic_bindings.getOrElse(T::class) { bind(constructor()) } as T
+
 inline fun <reified T> injection() = lazy { inject<T>() }

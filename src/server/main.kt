@@ -1,15 +1,15 @@
 package server
 
+import commands.CommandDispatcher
 import interfaces.IAuthenticator
 import interfaces.IClientInterface
+import interfaces.ICommandDispatcher
 import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.IEnvironment
-import interfaces.ILogger
 import interfaces.ITime
 import interfaces.withSqlTransaction
 import model.Model
-import model.ObjectNotVisibleException
 import model.Timers
 import runtime.shared.CommandShell
 import runtime.shared.LocalClientInterface
@@ -22,6 +22,17 @@ import utils.injection
 
 fun main(argv: Array<String>) {
     bind(Codec())
+    bind<IDatastore>(SqlDatastore())
+    bind(Model())
+    bind(Timers())
+    bind<IAuthenticator>(ServerAuthenticator())
+    bind<IClientInterface>(LocalClientInterface())
+    bind(CommandShell())
+    bind<ICommandDispatcher>(CommandDispatcher())
+    bind(RemoteServer())
+
+    val time = inject<ITime>()
+    bind(Random(time.nanotime()))
 
     val environment by injection<IEnvironment>()
     if (environment.getenv("GATEWAY_INTERFACE") != null) {
@@ -33,18 +44,11 @@ fun main(argv: Array<String>) {
 
 fun withServer(dbfile: String, callback: () -> Unit) {
     val database by injection<IDatabase>()
-    val datastore = bind<IDatastore>(SqlDatastore(database))
+    val datastore by injection<IDatastore>()
     database.openDatabase(dbfile)
     datastore.initialiseDatabase()
-    val model = bind(Model())
-    bind(Timers())
-    val auth = bind<IAuthenticator>(ServerAuthenticator())
-    bind<IClientInterface>(LocalClientInterface())
-    bind(CommandShell())
-    bind(RemoteServer())
-
-    val time = inject<ITime>()
-    bind(Random(time.nanotime()))
+    val model by injection<Model>()
+    val auth by injection<IAuthenticator>()
 
     database.withSqlTransaction {
         model.initialiseProperties()
@@ -52,12 +56,6 @@ fun withServer(dbfile: String, callback: () -> Unit) {
     }
 
     try {
-        bind(findUniverse(model))
-    } catch (_: ObjectNotVisibleException) {
-    }
-
-    try {
-        inject<ILogger>().println("server ready")
         callback()
     } finally {
         database.closeDatabase()

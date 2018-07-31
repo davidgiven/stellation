@@ -8,7 +8,7 @@ abstract class AbstractRemoteCommand : AbstractCommand() {
     val serverInterface by injection<IClientInterface>()
 
     override suspend fun run() {
-        output = serverInterface.executeCommand(argv)
+        serverInterface.executeCommand(this)
     }
 
     abstract override fun serverRun()

@@ -22,7 +22,7 @@ class ThingTest {
     fun setup() {
         resetBindingsForTest()
         bind<IDatabase>(JvmDatabase())
-        bind<IDatastore>(SqlDatastore(database))
+        bind<IDatastore>(SqlDatastore())
         bind(Model())
 
         database.openDatabase(":memory:")

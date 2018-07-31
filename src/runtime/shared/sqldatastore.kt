@@ -5,8 +5,11 @@ import interfaces.IDatastore
 import interfaces.Oid
 import interfaces.SetProperty
 import interfaces.withSqlTransaction
+import utils.injection
 
-class SqlDatastore(val database: IDatabase) : IDatastore {
+class SqlDatastore : IDatastore {
+    val database by injection<IDatabase>()
+
     override fun initialiseDatabase() {
         database.withSqlTransaction {
             database.executeSql(

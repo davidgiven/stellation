@@ -1,6 +1,8 @@
 package model
 
+import interfaces.NobodyLoggedInException
 import interfaces.Oid
+import interfaces.PermissionDeniedException
 import kotlin.reflect.KClass
 
 open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
@@ -8,6 +10,22 @@ open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
     var password_hash by PASSWORD_HASH
     val frames by FRAMES
     val ships by SHIPS
+}
+
+fun SPlayer.isGod(): Boolean = (oid == GOD_OID)
+
+fun SPlayer.checkGod() {
+    if (!isGod()) {
+        throw PermissionDeniedException()
+    }
+}
+
+fun Model.currentPlayer(): SPlayer {
+    val oid = authenticator.currentUser
+    if (oid == 0) {
+        throw NobodyLoggedInException()
+    }
+    return loadObject(authenticator.currentUser, SPlayer::class)
 }
 
 fun Model.createNewPlayer(name: String, password_hash: String): SPlayer {

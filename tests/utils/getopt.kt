@@ -4,6 +4,7 @@ import org.junit.Rule
 import org.junit.rules.ExpectedException
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -11,97 +12,121 @@ class GetoptTest {
     @Rule @JvmField
     val thrown = ExpectedException.none()
 
-    private var results: List<Pair<String, String>> = emptyList()
+    private var vFlag = false
+    private var fFlag = ""
+    private var verboseFlag = false
+    private var fileFlag = ""
+    private var intFlag = 0
+    private var boolFlag = false
 
-    private val callbacks: Map<String, (String) -> Int> = mapOf(
-            "-v" to { _ -> results += Pair("-v", ""); 0 },
-            "-f" to { f -> results += Pair("-f", f); 1 },
-            "--verbose" to { _ -> results += Pair("--verbose", ""); 0 },
-            "--file" to { f -> results += Pair("--file", f); 1 },
-            FILE_OPTION to { f -> results += Pair(FILE_OPTION, f); 0 }
-    )
+    private val options = Flags()
+            .addFlag("-v") { vFlag = true }
+            .addString("-f", ::fFlag)
+            .addFlag("--verbose") { verboseFlag = true }
+            .addString("--file", ::fileFlag)
+            .addInt("--int", ::intFlag)
+            .addBoolean("-b", ::boolFlag)
 
     @Test
     fun empty() {
-        getopt(emptyArray(), callbacks)
-        assertTrue(results.isEmpty())
+        val remaining = getopt(emptyArray(), options)
+        assertFalse(vFlag)
+        assertTrue(remaining.isEmpty())
     }
 
     @Test
     fun shortFlag() {
-        getopt(arrayOf("-v"), callbacks)
-        assertEquals(listOf(Pair("-v", "")), results)
+        val remaining = getopt(arrayOf("-v"), options)
+        assertTrue(vFlag)
+        assertTrue(remaining.isEmpty())
     }
 
     @Test
     fun longFlag() {
-        getopt(arrayOf("--verbose"), callbacks)
-        assertEquals(listOf(Pair("--verbose", "")), results)
+        val remaining = getopt(arrayOf("--verbose"), options)
+        assertTrue(verboseFlag)
+        assertTrue(remaining.isEmpty())
     }
 
     @Test
     fun shortWithInlineParameter() {
-        getopt(arrayOf("-fFNORD", "-v"), callbacks)
-        assertEquals(listOf(Pair("-f", "FNORD"), Pair("-v", "")), results)
+        val remaining = getopt(arrayOf("-fFNORD", "-v"), options)
+        assertEquals("FNORD", fFlag)
+        assertTrue(vFlag)
+        assertTrue(remaining.isEmpty())
     }
 
     @Test
     fun shortWithOutOfLineParameter() {
-        getopt(arrayOf("-f", "FNORD", "-v"), callbacks)
-        assertEquals(listOf(Pair("-f", "FNORD"), Pair("-v", "")), results)
+        val remaining = getopt(arrayOf("-f", "FNORD", "-v"), options)
+        assertEquals("FNORD", fFlag)
+        assertTrue(vFlag)
+        assertTrue(remaining.isEmpty())
     }
 
     @Test
     fun longWithInlineParameter() {
-        getopt(arrayOf("--file=FNORD", "--verbose"), callbacks)
-        assertEquals(listOf(Pair("--file", "FNORD"), Pair("--verbose", "")), results)
+        val remaining = getopt(arrayOf("--file=FNORD", "--verbose"), options)
+        assertEquals("FNORD", fileFlag)
+        assertTrue(verboseFlag)
+        assertTrue(remaining.isEmpty())
     }
 
     @Test
     fun longWithOutOfLineParameter() {
-        getopt(arrayOf("--file", "FNORD", "--verbose"), callbacks)
-        assertEquals(listOf(Pair("--file", "FNORD"), Pair("--verbose", "")), results)
+        val remaining = getopt(arrayOf("--file", "FNORD", "--verbose"), options)
+        assertEquals("FNORD", fileFlag)
+        assertTrue(verboseFlag)
+        assertTrue(remaining.isEmpty())
     }
 
     @Test
-    fun withFile() {
-        getopt(arrayOf("FNORD", "--verbose"), callbacks)
-        assertEquals(listOf(Pair(FILE_OPTION, "FNORD"), Pair("--verbose", "")), results)
+    fun withNonParameterFirst() {
+        val remaining = getopt(arrayOf("FNORD", "--verbose"), options)
+        assertFalse(verboseFlag)
+        assertEquals(listOf("FNORD", "--verbose"), remaining)
+    }
+
+    @Test
+    fun withNonParameterLast() {
+        val remaining = getopt(arrayOf("--verbose", "FNORD"), options)
+        assertTrue(verboseFlag)
+        assertEquals(listOf("FNORD"), remaining)
     }
 
     @Test
     fun missingShortParameter() {
         try {
-            getopt(arrayOf("-f"), callbacks)
+            getopt(arrayOf("-f"), options)
             fail("exception not thrown")
-        } catch (_: MissingOptionException) {
+        } catch (_: MissingFlagException) {
         }
     }
 
     @Test
     fun missingLongParameter() {
         try {
-            getopt(arrayOf("--file"), callbacks)
+            getopt(arrayOf("--file"), options)
             fail("exception not thrown")
-        } catch (_: MissingOptionException) {
+        } catch (_: MissingFlagException) {
         }
     }
 
     @Test
     fun invalidShortParameter() {
         try {
-            getopt(arrayOf("-x"), callbacks)
+            getopt(arrayOf("-x"), options)
             fail("exception not thrown")
-        } catch (_: UnrecognisedOptionException) {
+        } catch (_: UnrecognisedFlagException) {
         }
     }
 
     @Test
     fun invalidLongParameter() {
         try {
-            getopt(arrayOf("--xxx"), callbacks)
+            getopt(arrayOf("--xxx"), options)
             fail("exception not thrown")
-        } catch (_: UnrecognisedOptionException) {
+        } catch (_: UnrecognisedFlagException) {
         }
     }
 }

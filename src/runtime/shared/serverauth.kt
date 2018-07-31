@@ -23,7 +23,7 @@ class ServerAuthenticator : IAuthenticator {
             """)
     }
 
-    override fun withLoggedInUser(username: String, credentials: String, callback: () -> Unit) {
+    override fun authenticateUser(username: String, password: String, callback: () -> Unit) {
         check(currentUser == 0)
 
         try {
@@ -38,6 +38,11 @@ class ServerAuthenticator : IAuthenticator {
         } finally {
             currentUser = 0
         }
+    }
+
+    override fun setAuthenticatedUser(oid: Oid) {
+       check(currentUser == 0)
+        currentUser = oid
     }
 }
 

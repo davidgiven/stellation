@@ -9,9 +9,10 @@ import utils.Job
 import utils.injection
 
 class Console : IConsole {
-    lateinit var window: ConsoleWindow
     val ui by injection<IUi>()
     val commandShell by injection<CommandShell>()
+
+    lateinit var window: ConsoleWindow
 
     fun show(): Console {
         window = ConsoleWindow(::onCommand)

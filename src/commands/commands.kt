@@ -1,10 +1,7 @@
 package commands
 
 import interfaces.CommandNotFoundException
-import interfaces.CommandSyntaxException
 import interfaces.ICommandDispatcher
-import utils.CommandLineParseException
-import utils.argify
 
 class CommandDispatcher : ICommandDispatcher {
     override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
@@ -12,24 +9,21 @@ class CommandDispatcher : ICommandDispatcher {
     fun populateCommands(): Map<String, () -> AbstractCommand> {
         var commands: Map<String, () -> AbstractCommand> = emptyMap()
 
-        fun addCommand(c: () -> AbstractCommand) {
+        val commandsList = listOf(
+                ::HelpCommand,
+                ::EchoCommand,
+                ::PingCommand,
+                ::SetPasswordCommand,
+                ::WhoAmICommand
+        )
+
+        for (c in commandsList) {
             val name = c().name
+            check(name !in commands)
             commands += name to c
         }
 
-        addCommand(::HelpCommand)
-        addCommand(::EchoCommand)
-        addCommand(::PingCommand)
-
         return commands
-    }
-
-    override fun resolve(cmdline: String): AbstractCommand {
-        try {
-            return resolve(argify(cmdline))
-        } catch (e: CommandLineParseException) {
-            throw CommandSyntaxException(e.message ?: "syntax error")
-        }
     }
 
     override fun resolve(argv: List<String>): AbstractCommand {

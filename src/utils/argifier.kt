@@ -83,3 +83,18 @@ fun argify(input: String): List<String> {
 
     return builders.map(StringBuilder::toString)
 }
+
+fun unargify(argv: List<String>): String {
+    var words: List<String> = emptyList()
+    for (arg in argv) {
+        var word = arg
+        word = word.replace("\\", "\\\\")
+        if (' ' in word) {
+            word = '"' + word.replace("'", "\\'").replace("\"", "\\\"") + '"'
+        } else {
+            word = word.replace("'", "\\'").replace("\"", "\\\"")
+        }
+        words += word
+    }
+    return words.joinToString(" ")
+}

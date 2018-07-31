@@ -72,5 +72,13 @@ class ArgifierTest {
             }
         }
     }
+
+    @Test
+    fun unargify() {
+        assertEquals("foo bar", utils.unargify(listOf("foo", "bar")))
+        assertEquals("\"foo bar\"", utils.unargify(listOf("foo bar")))
+        assertEquals("\\\"foo", utils.unargify(listOf("\"foo")))
+        assertEquals("\\'foo", utils.unargify(listOf("'foo")))
+    }
 }
 

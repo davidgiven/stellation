@@ -4,9 +4,6 @@ import interfaces.ICommandDispatcher
 import interfaces.ILogger
 import runtime.shared.ServerMessage
 import utils.injection
-import kotlin.coroutines.experimental.Continuation
-import kotlin.coroutines.experimental.EmptyCoroutineContext
-import kotlin.coroutines.experimental.startCoroutine
 
 abstract class HttpStatusException(val status: Int, message: String) : Exception(message)
 class BadRequestException : HttpStatusException(400, "Bad Request")
@@ -32,20 +29,4 @@ class RemoteServer {
             output.setError(e.message)
         }
     }
-}
-
-private val completionContinuation = object : Continuation<Unit> {
-    override val context = EmptyCoroutineContext
-
-    override fun resume(value: Unit) {
-        throw RuntimeException("this coroutine cannot suspend")
-    }
-
-    override fun resumeWithException(exception: Throwable) {
-        throw exception
-    }
-}
-
-private fun runBlocking(block: suspend () -> Unit) {
-    block.startCoroutine(completionContinuation)
 }

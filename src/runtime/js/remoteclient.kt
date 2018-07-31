@@ -1,6 +1,7 @@
 package runtime.js
 
 import interfaces.CommandMessage
+import interfaces.ICommand
 import interfaces.IClientInterface
 import interfaces.RemoteCommandExecutionException
 import org.w3c.xhr.XMLHttpRequest
@@ -12,9 +13,9 @@ import utils.injection
 class RemoteClientInterface : IClientInterface {
     private val codec by injection<Codec>()
 
-    override suspend fun executeCommand(argv: List<String>): CommandMessage {
+    override suspend fun executeCommand(command: ICommand) {
         val sendMessage = ServerMessage()
-        sendMessage.setCommandInput(argv)
+        sendMessage.setCommandInput(command.argv)
 
         val mailbox: Mailbox<ServerMessage> = Mailbox()
         val xhr = XMLHttpRequest()
@@ -43,7 +44,7 @@ class RemoteClientInterface : IClientInterface {
             throw RemoteCommandExecutionException(error)
         }
 
-        return receiveMessage.getCommandOutput()
+        command.output = receiveMessage.getCommandOutput()
     }
 }
 

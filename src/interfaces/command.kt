@@ -1,6 +1,6 @@
 package interfaces
 
-import utils.GetoptCallback
+import utils.Flags
 import utils.Message
 import utils.getOrDefault
 import utils.set
@@ -17,13 +17,15 @@ class CommandMessage : Message() {
 interface ICommand {
     val name: String
     val description: String
-    val options: Map<String, GetoptCallback>
+    val flags: Flags
 
     var argv: List<String>
     var input: CommandMessage
     var output: CommandMessage
 
     fun parseArguments(argv: List<String>)
+    fun parseRemainingArguments(argv: List<String>)
+    fun validateArguments()
     suspend fun run()
     fun serverRun()
     suspend fun renderResult()

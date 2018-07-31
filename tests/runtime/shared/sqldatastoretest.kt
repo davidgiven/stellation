@@ -14,7 +14,7 @@ class SqlDatastoreTest : AbstractDatastoreTest() {
     fun setup() {
         resetBindingsForTest()
         bind<IDatabase>(JvmDatabase())
-        bind<IDatastore>(SqlDatastore(database))
+        bind<IDatastore>(SqlDatastore())
 
         database.openDatabase(":memory:")
         datastore.initialiseDatabase()

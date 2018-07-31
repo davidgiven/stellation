@@ -8,8 +8,7 @@ import model.Model
 import model.SUniverse
 import runtime.shared.ServerMessage
 import utils.Codec
-import utils.Message
-import utils.inject
+import utils.bind
 import utils.injection
 
 open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
@@ -61,10 +60,14 @@ fun serveCgi() {
         response.headers += "Content-type" to "text/plain; charset=utf-8"
 
         withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
-            val authenticator: IAuthenticator = inject()
-            val remoteServer: RemoteServer = inject()
+            val model by injection<Model>()
+            val authenticator by injection<IAuthenticator>()
+            val remoteServer by injection<RemoteServer>()
+
+            bind(findUniverse(model))
+
             try {
-                authenticator.withLoggedInUser("foo", "bar") {
+                authenticator.authenticateUser("foo", "bar") {
                     remoteServer.onMessageReceived(request.input, response.output)
                 }
             } catch (_: AuthenticationFailedException) {
