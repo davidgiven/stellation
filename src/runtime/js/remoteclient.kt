@@ -2,6 +2,7 @@ package runtime.js
 
 import interfaces.AuthenticationFailedException
 import interfaces.CommandMessage
+import interfaces.IAuthenticator
 import interfaces.ICommand
 import interfaces.IClientInterface
 import interfaces.RemoteCommandExecutionException
@@ -13,6 +14,7 @@ import utils.injection
 
 class RemoteClientInterface : IClientInterface {
     private val codec by injection<Codec>()
+    private val authenticator by injection<IAuthenticator>()
 
     private var username = ""
     private var password = ""
@@ -65,6 +67,7 @@ class RemoteClientInterface : IClientInterface {
 
         }
 
+        authenticator.setAuthenticatedPlayer(receiveMessage.getPlayerOid())
         command.output = receiveMessage.getCommandOutput()
     }
 }

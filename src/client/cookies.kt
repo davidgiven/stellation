@@ -12,7 +12,7 @@ class Cookies {
     private val SPLITTER = Regex("; *")
 
     operator fun set(name: String, value: String) {
-        val expiry = Date(Date().getTime() + (1000 * 3600 * 24 * 365)).toUTCString()
+        val expiry = Date(Date().getTime() + (1000.0 * 3600.0 * 24.0 * 365.0)).toUTCString()
         val encodedName = encodeURIComponent(name)
         val encodedValue = encodeURIComponent(value)
         document.cookie = "$PREFIX$encodedName=$encodedValue;expires=$expiry;path=/"

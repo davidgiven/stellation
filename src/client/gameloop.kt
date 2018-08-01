@@ -1,58 +1,58 @@
 package client
 
 import interfaces.AuthenticationFailedException
-import ui.LoginForm
-import utils.Job
-import kotlin.browser.document
-import interfaces.IConsole
 import interfaces.IClientInterface
 import interfaces.ICommandDispatcher
-import interfaces.log
+import interfaces.IConsole
+import interfaces.IDatastore
 import ui.AlertForm
-import utils.inject
+import ui.LoginForm
+import utils.Job
 import utils.injection
 
-private var loggedIn = false
+class GameLoop {
+    val cookies by injection<Cookies>()
+    val clientInterface by injection<IClientInterface>()
+    val commandDispatcher by injection<ICommandDispatcher>()
+    val console by injection<IConsole>()
+    val datastore by injection<IDatastore>()
 
-fun startGame() {
-    doLogin()
-}
+    fun startGame() {
+        doLogin()
+    }
 
-private fun doLogin() {
-    Job {
-        val cookies = inject<Cookies>()
+    private fun doLogin() {
+        Job {
+            while (true) {
+                datastore.initialiseDatabase()
 
-        while (true) {
-            val defaultUsername = cookies["username"] ?: ""
-            val defaultPassword = cookies["password"] ?: ""
+                val defaultUsername = cookies["username"] ?: ""
+                val defaultPassword = cookies["password"] ?: ""
 
-            val loginData = LoginForm(defaultUsername, defaultPassword).execute()
-            if (!loginData.canceled) {
-                try {
-                    val client = inject<IClientInterface>()
-                    client.setCredentials(loginData.username!!, loginData.password!!)
+                val loginData = LoginForm(defaultUsername, defaultPassword).execute()
+                if (!loginData.canceled) {
+                    try {
+                        clientInterface.setCredentials(loginData.username!!, loginData.password!!)
 
-                    val commandDispatcher = inject<ICommandDispatcher>()
-                    val command = commandDispatcher.resolve(listOf("ping"))
-                    command.run()
+                        val command = commandDispatcher.resolve(listOf("ping"))
+                        command.run()
 
-                    cookies["username"] = loginData.username!!
-                    cookies["password"] = loginData.password!!
-                    loggedIn = true
-                    doGame()
-                    break
-                } catch (_: AuthenticationFailedException) {
-                    AlertForm("Login failed", "Username or password unrecognised.").execute()
+                        cookies["username"] = loginData.username!!
+                        cookies["password"] = loginData.password!!
+                        doGame()
+                        break
+                    } catch (_: AuthenticationFailedException) {
+                        AlertForm("Login failed", "Username or password unrecognised.").execute()
+                    }
                 }
             }
         }
     }
-}
 
-private fun doGame() {
-    Job {
-        val console by injection<IConsole>()
-        console.println("Welcome to Stellation VI.")
-        console.println("Try 'help' if you're feeling lucky.")
+    private fun doGame() {
+        Job {
+            console.println("Welcome to Stellation VI.")
+            console.println("Try 'help' if you're feeling lucky.")
+        }
     }
 }

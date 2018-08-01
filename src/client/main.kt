@@ -11,10 +11,12 @@ import kotlin.browser.document
 import interfaces.IConsole
 import interfaces.ITime
 import commands.CommandDispatcher
+import interfaces.IAuthenticator
 import interfaces.ICommandDispatcher
 import interfaces.IClientInterface
 import runtime.js.RemoteClientInterface
 import runtime.shared.CommandShell
+import server.LocalAuthenticator
 import utils.Random
 
 fun main(argv: Array<String>) {
@@ -23,10 +25,12 @@ fun main(argv: Array<String>) {
     bind<IConsole>(console)
     bind<ICommandDispatcher>(CommandDispatcher())
     bind<IClientInterface>(RemoteClientInterface())
+    bind<IAuthenticator>(LocalAuthenticator())
     bind(CommandShell())
     bind(Codec())
     bind(Model())
     bind(Cookies())
+    val gameloop = bind(GameLoop())
 
     val time = inject<ITime>()
     bind(Random(time.nanotime()))
@@ -34,7 +38,7 @@ fun main(argv: Array<String>) {
     document.body!!.removeChildren()
     console.show()
 
-    startGame()
+    gameloop.startGame()
     kickScheduler()
 }
 
