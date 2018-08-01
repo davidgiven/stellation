@@ -8,6 +8,7 @@ import interfaces.IConsole
 import interfaces.IClientInterface
 import interfaces.ICommandDispatcher
 import interfaces.log
+import ui.AlertForm
 import utils.inject
 import utils.injection
 
@@ -41,6 +42,7 @@ private fun doLogin() {
                     doGame()
                     break
                 } catch (_: AuthenticationFailedException) {
+                    AlertForm("Login failed", "Username or password unrecognised.").execute()
                 }
             }
         }
