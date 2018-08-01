@@ -488,16 +488,22 @@ class BCrypt {
      * @return    true if the passwords match, false otherwise
      */
     fun checkpw(plaintext: String, hashed: String): Boolean {
-        val try_pw = hashpw(plaintext, hashed)
-        val hashed_bytes = toByteArray(hashed)
-        val try_bytes = toByteArray(try_pw)
+        try {
+            val try_pw = hashpw(plaintext, hashed)
+            val hashed_bytes = toByteArray(hashed)
+            val try_bytes = toByteArray(try_pw)
 
-        if (hashed_bytes.size != try_bytes.size)
+            if (hashed_bytes.size != try_bytes.size)
+                return false
+            var ret = 0
+            for (i in try_bytes.indices)
+                ret = ret or (hashed_bytes[i].toInt() xor try_bytes[i].toInt())
+            return ret == 0
+        } catch (_: IllegalArgumentException) {
             return false
-        var ret = 0
-        for (i in try_bytes.indices)
-            ret = ret or (hashed_bytes[i].toInt() xor try_bytes[i].toInt())
-        return ret == 0
+        } catch (_: IndexOutOfBoundsException) {
+            return false
+        }
     }
 
     private fun toByteArray(input: String): ByteArray {

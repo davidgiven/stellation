@@ -23,7 +23,7 @@ class InvalidFlagValueException(arg: String) : GetoptException(
 )
 
 abstract class AbstractFlag(val name: String) {
-    abstract fun set(value: String): Boolean
+    abstract fun set(input: String): Boolean
 }
 
 class Flag(name: String, val callback: (String) -> Unit) : AbstractFlag(name) {

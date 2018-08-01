@@ -3,12 +3,15 @@ package server
 import interfaces.AuthenticationFailedException
 import interfaces.IAuthenticator
 import interfaces.IEnvironment
+import interfaces.ILogger
 import interfaces.IUtf8
+import interfaces.log
 import model.Model
 import model.SUniverse
 import runtime.shared.ServerMessage
 import utils.Codec
 import utils.bind
+import utils.inject
 import utils.injection
 
 open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
@@ -18,12 +21,15 @@ class CgiRequest {
     private val codec by injection<Codec>()
     private val utf8 by injection<IUtf8>()
 
+    val path: String
     val input = ServerMessage()
 
     init {
         if (environment.getenv("REQUEST_METHOD") != "POST") {
             throw BadCgiException("request is not POST")
         }
+
+        path = environment.getenv("PATH_INFO") ?: ""
 
         val contentLength = environment.getenv("CONTENT_LENGTH")?.toInt()
                 ?: throw BadCgiException("missing content length")
@@ -67,7 +73,10 @@ fun serveCgi() {
             bind(findUniverse(model))
 
             try {
-                authenticator.authenticateUser("foo", "bar") {
+                val username = request.input.getUsername()
+                val password = request.input.getPassword()
+                authenticator.authenticatePlayer(username, password) {
+                    response.output.setPlayerOid(authenticator.currentPlayerOid)
                     remoteServer.onMessageReceived(request.input, response.output)
                 }
             } catch (_: AuthenticationFailedException) {

@@ -7,6 +7,7 @@ import kotlin.reflect.KClass
 
 open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
     var name by NAME
+    var email by EMAIL_ADDRESS
     var password_hash by PASSWORD_HASH
     val frames by FRAMES
     val ships by SHIPS
@@ -21,17 +22,18 @@ fun SPlayer.checkGod() {
 }
 
 fun Model.currentPlayer(): SPlayer {
-    val oid = authenticator.currentUser
+    val oid = authenticator.currentPlayerOid
     if (oid == 0) {
         throw NobodyLoggedInException()
     }
-    return loadObject(authenticator.currentUser, SPlayer::class)
+    return loadObject(authenticator.currentPlayerOid, SPlayer::class)
 }
 
-fun Model.createNewPlayer(name: String, password_hash: String): SPlayer {
+fun Model.createNewPlayer(name: String, email: String): SPlayer {
     val player = createObject(SPlayer::class)
     player.name = name
-    player.password_hash = password_hash
+    player.email = email
+    authenticator.registerPlayer(email, player.oid)
     return player
 }
 

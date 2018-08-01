@@ -20,7 +20,7 @@ fun Model.createNewUniverse(): SUniverse {
     val universe = createObject(SUniverse::class)
     check(universe.oid == 1)
 
-    val god = createNewPlayer("God", "omnipotent")
+    val god = createNewPlayer("God", "god")
     check(god.oid == 2)
 
     val nameGenerator = NameGenerator()

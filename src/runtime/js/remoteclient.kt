@@ -13,9 +13,19 @@ import utils.injection
 class RemoteClientInterface : IClientInterface {
     private val codec by injection<Codec>()
 
+    private var username = ""
+    private var password = ""
+
+    override fun setCredentials(username: String, password: String) {
+        this.username = username
+        this.password = password
+    }
+
     override suspend fun executeCommand(command: ICommand) {
         val sendMessage = ServerMessage()
         sendMessage.setCommandInput(command.argv)
+        sendMessage.setUsername(username)
+        sendMessage.setPassword(password)
 
         val mailbox: Mailbox<ServerMessage> = Mailbox()
         val xhr = XMLHttpRequest()
@@ -39,8 +49,8 @@ class RemoteClientInterface : IClientInterface {
         xhr.send(codec.encode(sendMessage.toMap()))
 
         val receiveMessage = mailbox.wait()
-        val error = receiveMessage.getError()
-        if (error != null) {
+        if (receiveMessage.hasError()) {
+            val error = receiveMessage.getError()
             throw RemoteCommandExecutionException(error)
         }
 

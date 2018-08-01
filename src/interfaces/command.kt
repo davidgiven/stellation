@@ -9,9 +9,11 @@ open class CommandExecutionException(s: String, e: Throwable? = null) : Exceptio
 class CommandNotFoundException(name: String) : CommandExecutionException("command '$name' not found")
 class CommandSyntaxException(message: String) : CommandExecutionException(message)
 
+private const val SUCCESS = "_success"
+
 class CommandMessage : Message() {
-    fun setSuccess(success: Boolean) = set("_success", success)
-    fun getSuccess(): Boolean = getOrDefault("_success", false)
+    fun setSuccess(success: Boolean) = set(SUCCESS, success)
+    fun getSuccess(): Boolean = getOrDefault(SUCCESS, false)
 }
 
 interface ICommand {

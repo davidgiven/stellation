@@ -14,6 +14,7 @@ import model.Timers
 import runtime.shared.CommandShell
 import runtime.shared.LocalClientInterface
 import runtime.shared.SqlDatastore
+import utils.BCrypt
 import utils.Codec
 import utils.Random
 import utils.bind
@@ -30,6 +31,7 @@ fun main(argv: Array<String>) {
     bind(CommandShell())
     bind<ICommandDispatcher>(CommandDispatcher())
     bind(RemoteServer())
+    bind(BCrypt())
 
     val time = inject<ITime>()
     bind(Random(time.nanotime()))

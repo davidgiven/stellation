@@ -4,6 +4,8 @@ import ui.LoginForm
 import utils.Job
 import kotlin.browser.document
 import interfaces.IConsole
+import interfaces.IClientInterface
+import utils.inject
 import utils.injection
 
 private var loggedIn = false
@@ -17,6 +19,8 @@ private fun doLogin() {
         while (true) {
             val loginData = LoginForm().execute()
             if (!loginData.canceled) {
+                val client = inject<IClientInterface>()
+                client.setCredentials(loginData.username!!, loginData.password!!)
                 loggedIn = true
                 doGame()
                 break

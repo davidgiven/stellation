@@ -2,6 +2,7 @@ package server
 
 import interfaces.ICommandDispatcher
 import interfaces.ILogger
+import interfaces.log
 import runtime.shared.ServerMessage
 import utils.injection
 
@@ -12,21 +13,24 @@ class InternalServerErrorException : HttpStatusException(500, "Internal Server E
 
 class RemoteServer {
     val commandDispatcher by injection<ICommandDispatcher>()
-    val logger by injection<ILogger>()
 
     fun onMessageReceived(input: ServerMessage, output: ServerMessage) {
         try {
+            log("input = ${input.toMap()}")
+            log("command input = ${input.getCommandInput()}")
+            log("has command input = ${input.hasCommandInput()}")
             if (input.hasCommandInput()) {
                 val argv = input.getCommandInput()
                 val command = commandDispatcher.resolve(argv)
 
-                runBlocking { command.run() }
+                log("calling server part of ${argv[0]}")
+                command.serverRun()
 
                 output.setCommandOutput(command.output)
             }
         } catch (e: Exception) {
-            logger.println(e.toString())
-            output.setError(e.message)
+            log(e.toString())
+            output.setError(e.message!!)
         }
     }
 }

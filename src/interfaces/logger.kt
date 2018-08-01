@@ -1,5 +1,7 @@
 package interfaces
 
+import utils.inject
+
 interface ILogger {
     fun println(message: String)
 }
@@ -10,4 +12,8 @@ fun ILogger.log(vararg messages: String) {
         sb.append(s)
     }
     this.println("Log: $sb")
+}
+
+fun log(vararg messages: String) {
+    inject<ILogger>().log(*messages)
 }

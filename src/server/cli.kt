@@ -1,8 +1,10 @@
 package server
 
+import interfaces.IAuthenticator
 import interfaces.IConsole
 import interfaces.IDatabase
 import interfaces.withSqlTransaction
+import model.GOD_OID
 import model.Model
 import model.ObjectNotVisibleException
 import model.SUniverse
@@ -11,10 +13,11 @@ import runtime.shared.CommandShell
 import utils.Flags
 import utils.bind
 import utils.getopt
-import utils.injection
+import utils.inject
 import kotlin.system.exitProcess
 
 private var databaseFilename = "stellation.sqlite"
+private var userOid = GOD_OID
 
 private fun help(@Suppress("UNUSED_PARAMETER") arg: String): Nothing {
     println("Stellation6 server")
@@ -29,13 +32,17 @@ fun serveCli(argv: Array<String>) {
             argv, Flags()
             .addFlag("-h", ::help)
             .addFlag("--help", ::help)
+            .addInt("--user", ::userOid)
             .addString("--db", ::databaseFilename))
 
     withServer(databaseFilename) {
         bind<IConsole>(ServerConsole())
-        val database by injection<IDatabase>()
-        val model by injection<Model>()
-        val commandshell by injection<CommandShell>()
+        val authenticator = inject<IAuthenticator>()
+        val database = inject<IDatabase>()
+        val model = inject<Model>()
+        val commandshell = inject<CommandShell>()
+
+        authenticator.setAuthenticatedPlayer(userOid)
 
         database.withSqlTransaction {
             bind(findOrCreateUniverse(model))

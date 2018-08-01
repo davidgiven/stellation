@@ -140,6 +140,16 @@ class BCryptTest {
     }
 
     /**
+     * Test method for 'BCrypt.checkpw(String, String)' with an invalid password;
+     * expects failure
+     */
+    @Test
+    fun testCheckpw_invalid() {
+        assertFalse(bcrypt.checkpw("some password", "not a valid hash"))
+        assertFalse(bcrypt.checkpw("some password", ""))
+    }
+
+    /**
      * Test for correct hashing of non-US-ASCII passwords
      */
     @Test

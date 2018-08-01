@@ -2,6 +2,8 @@ package utils
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class MessageTest {
@@ -93,10 +95,17 @@ class MessageTest {
         assertEquals("", p.getOrDefault("string", ""))
     }
 
+    @Test fun contains() {
+        var p = Message()
+        p["foo"] = "bar"
+        assertTrue("foo" in p)
+        assertFalse("baz" in p)
+    }
+
     @Test fun exceptionOnMissing() {
         val p = Message()
         try {
-            val i: Int = p["fnord"]
+            p.get<String, Int>("fnord")
             fail("exception not thrown")
         } catch (_: NullPointerException) {
         }

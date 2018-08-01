@@ -5,8 +5,6 @@ package utils
 import kotlin.reflect.KClass
 
 const val COUNT = "_count"
-const val SUCCESS = "_success"
-const val ERROR = "_error"
 
 open class Message : Iterable<String> {
     var _map: Map<String, String> = emptyMap()
@@ -38,6 +36,8 @@ open class Message : Iterable<String> {
     }
 
     override fun iterator(): Iterator<String> = toList().iterator()
+
+    inline operator fun <K> contains(key: K): Boolean = _map.containsKey(key.toString())
 }
 
 inline fun <K> Message.clear(key: K) {
@@ -68,8 +68,6 @@ inline fun <K, reified V> Message.getOrNull(key: K): V? = getOrNull(key, V::clas
 
 inline operator fun <K, reified V> Message.get(key: K): V = getOrNull(key)!!
 inline fun <K, reified V> Message.getOrDefault(key: K, default: V): V = getOrNull(key) ?: default
-
-inline operator fun <K> Message.contains(key: K): Boolean = key.toString() in _map
 
 inline fun <reified V> Message.add(value: V): Message {
     set(count++, value)

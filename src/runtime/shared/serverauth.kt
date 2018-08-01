@@ -3,15 +3,21 @@ package server
 import interfaces.AuthenticationFailedException
 import interfaces.IAuthenticator
 import interfaces.IDatabase
+import interfaces.ILogger
 import interfaces.Oid
 import model.Model
+import model.SPlayer
+import model.currentPlayer
+import utils.BCrypt
 import utils.injection
 
 class ServerAuthenticator : IAuthenticator {
     private val database by injection<IDatabase>()
     private val model by injection<Model>()
+    private val bcrypt by injection<BCrypt>()
+    private val logger by injection<ILogger>()
 
-    override var currentUser: Oid = 0
+    override var currentPlayerOid: Oid = 0
 
     override fun initialiseDatabase() {
         database.executeSql(
@@ -23,26 +29,45 @@ class ServerAuthenticator : IAuthenticator {
             """)
     }
 
-    override fun authenticateUser(username: String, password: String, callback: () -> Unit) {
-        check(currentUser == 0)
+    override fun authenticatePlayer(username: String, password: String, callback: () -> Unit) {
+        check(currentPlayerOid == 0)
 
         try {
-            currentUser = database.sqlStatement("SELECT oid FROM players WHERE username = ?")
+            currentPlayerOid = database.sqlStatement("SELECT oid FROM players WHERE username = ?")
                     .bindString(1, username)
                     .executeSimpleQuery()
                     ?.get("oid")
                     ?.getOid()
                     ?: throw AuthenticationFailedException()
 
+            if (!bcrypt.checkpw(password, model.currentPlayer().password_hash)) {
+                throw AuthenticationFailedException()
+            }
+
             callback()
         } finally {
-            currentUser = 0
+            currentPlayerOid = 0
         }
     }
 
-    override fun setAuthenticatedUser(oid: Oid) {
-       check(currentUser == 0)
-        currentUser = oid
+    override fun setAuthenticatedPlayer(oid: Oid) {
+       check(currentPlayerOid == 0)
+        currentPlayerOid = oid
+    }
+
+    override fun registerPlayer(username: String, playerOid: Oid) {
+        database.sqlStatement("""
+                INSERT OR REPLACE INTO players (username, oid) VALUES (?, ?)
+                """)
+                .bindString(1, username)
+                .bindOid(2, playerOid)
+                .executeStatement()
+    }
+
+    override fun setPassword(playerOid: Oid, password: String) {
+        val player = model.loadObject(playerOid, SPlayer::class)
+        val salt = bcrypt.gensalt(4)
+        val hashed = bcrypt.hashpw(password, salt)
+        player.password_hash = hashed
     }
 }
-
