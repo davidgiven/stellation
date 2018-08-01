@@ -8,7 +8,7 @@ data class LoginData(
         val password: String? = null
 )
 
-class LoginForm : AbstractForm<LoginData>() {
+class LoginForm(val defaultUsername: String = "", val defaultPassword: String = "") : AbstractForm<LoginData>() {
     lateinit var emailInput: IUiElement
     lateinit var passwordInput: IUiElement
     lateinit var loginButton: IUiElement
@@ -45,6 +45,7 @@ class LoginForm : AbstractForm<LoginData>() {
                 emailInput = addElement("input") {
                     set("type", "email")
                     set("required", "true")
+                    set("value", defaultUsername)
                 }
 
                 addText("label", "Password:")
@@ -52,6 +53,7 @@ class LoginForm : AbstractForm<LoginData>() {
                     set("type", "password")
                     set("autocomplete", "current-password")
                     set("required", "true")
+                    set("value", defaultPassword)
                     onActivate(::okClicked)
                 }
             }

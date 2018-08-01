@@ -26,6 +26,7 @@ fun main(argv: Array<String>) {
     bind(CommandShell())
     bind(Codec())
     bind(Model())
+    bind(Cookies())
 
     val time = inject<ITime>()
     bind(Random(time.nanotime()))

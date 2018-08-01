@@ -15,6 +15,7 @@ private const val ERROR = "error"
 private const val PASSWORD = "password"
 private const val USERNAME = "username"
 private const val PLAYEROID = "oid"
+private const val STATUS = "status"
 
 class ServerMessage : Message() {
     val codec by injection<Codec>()
@@ -63,5 +64,9 @@ class ServerMessage : Message() {
 
     fun setPlayerOid(playerOid: Oid) = set(PLAYEROID, playerOid)
     fun getPlayerOid(): Oid = get(PLAYEROID)
+
+    fun hasStauts() = STATUS in this
+    fun setStatus(status: Int) = set(STATUS, status)
+    fun getStatus(): Int = get(STATUS)
 }
 

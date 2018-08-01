@@ -1,10 +1,13 @@
 package client
 
+import interfaces.AuthenticationFailedException
 import ui.LoginForm
 import utils.Job
 import kotlin.browser.document
 import interfaces.IConsole
 import interfaces.IClientInterface
+import interfaces.ICommandDispatcher
+import interfaces.log
 import utils.inject
 import utils.injection
 
@@ -16,14 +19,29 @@ fun startGame() {
 
 private fun doLogin() {
     Job {
+        val cookies = inject<Cookies>()
+
         while (true) {
-            val loginData = LoginForm().execute()
+            val defaultUsername = cookies["username"] ?: ""
+            val defaultPassword = cookies["password"] ?: ""
+
+            val loginData = LoginForm(defaultUsername, defaultPassword).execute()
             if (!loginData.canceled) {
-                val client = inject<IClientInterface>()
-                client.setCredentials(loginData.username!!, loginData.password!!)
-                loggedIn = true
-                doGame()
-                break
+                try {
+                    val client = inject<IClientInterface>()
+                    client.setCredentials(loginData.username!!, loginData.password!!)
+
+                    val commandDispatcher = inject<ICommandDispatcher>()
+                    val command = commandDispatcher.resolve(listOf("ping"))
+                    command.run()
+
+                    cookies["username"] = loginData.username!!
+                    cookies["password"] = loginData.password!!
+                    loggedIn = true
+                    doGame()
+                    break
+                } catch (_: AuthenticationFailedException) {
+                }
             }
         }
     }

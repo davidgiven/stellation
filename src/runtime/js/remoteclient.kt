@@ -1,5 +1,6 @@
 package runtime.js
 
+import interfaces.AuthenticationFailedException
 import interfaces.CommandMessage
 import interfaces.ICommand
 import interfaces.IClientInterface
@@ -32,8 +33,10 @@ class RemoteClientInterface : IClientInterface {
         xhr.onreadystatechange = {
             if (xhr.readyState == XMLHttpRequest.DONE) {
                 val receiveMessage = ServerMessage()
+                val status = xhr.status.toInt()
+                receiveMessage.setStatus(status)
                 try {
-                    if (xhr.status.toInt() == 200) {
+                    if (status == 200) {
                         receiveMessage.setFromMap(codec.decode(xhr.responseText))
                     } else {
                         throw RemoteCommandExecutionException("network error ${xhr.status}")
@@ -50,8 +53,16 @@ class RemoteClientInterface : IClientInterface {
 
         val receiveMessage = mailbox.wait()
         if (receiveMessage.hasError()) {
+            if (receiveMessage.hasStauts()) {
+                when (receiveMessage.getStatus()) {
+                    401  -> throw AuthenticationFailedException()
+                    else -> {
+                    }
+                }
+            }
             val error = receiveMessage.getError()
             throw RemoteCommandExecutionException(error)
+
         }
 
         command.output = receiveMessage.getCommandOutput()
