@@ -1,20 +1,18 @@
 package server
 
-import interfaces.AuthenticationFailedException
 import interfaces.IAuthenticator
 import interfaces.IEnvironment
-import interfaces.ILogger
 import interfaces.IUtf8
-import interfaces.log
 import model.Model
 import model.SUniverse
 import runtime.shared.ServerMessage
 import utils.Codec
+import utils.Fault
+import utils.FaultDomain.NETWORK
 import utils.bind
-import utils.inject
 import utils.injection
 
-open class BadCgiException(s: String) : Exception("Bad CGI request: $s")
+fun throwBadCgiException(s: String): Nothing = throw Fault(NETWORK).withDetail("Bad CGI request: $s")
 
 class CgiRequest {
     private val environment by injection<IEnvironment>()
@@ -26,13 +24,13 @@ class CgiRequest {
 
     init {
         if (environment.getenv("REQUEST_METHOD") != "POST") {
-            throw BadCgiException("request is not POST")
+            throwBadCgiException("request is not POST")
         }
 
         path = environment.getenv("PATH_INFO") ?: ""
 
         val contentLength = environment.getenv("CONTENT_LENGTH")?.toInt()
-                ?: throw BadCgiException("missing content length")
+                ?: throwBadCgiException("missing content length")
 
         val bodyBytes = environment.readStdin(contentLength)
         val body = utf8.toString(bodyBytes)
@@ -72,24 +70,20 @@ fun serveCgi() {
 
             bind(findUniverse(model))
 
-            try {
-                val username = request.input.getUsername()
-                val password = request.input.getPassword()
-                authenticator.authenticatePlayer(username, password) {
-                    response.output.setPlayerOid(authenticator.currentPlayerOid)
-                    remoteServer.onMessageReceived(request.input, response.output)
-                }
-            } catch (_: AuthenticationFailedException) {
-                throw UnauthorizedException()
+            val username = request.input.getUsername()
+            val password = request.input.getPassword()
+            authenticator.authenticatePlayer(username, password) {
+                response.output.setPlayerOid(authenticator.currentPlayerOid)
+                remoteServer.onMessageReceived(request.input, response.output)
             }
         }
 
         response.write()
-    } catch (e: HttpStatusException) {
+    } catch (f: Fault) {
         kotlin.io.println("Content-type: text/plain; charset=utf-8")
-        kotlin.io.println("Status: ${e.status}")
+        kotlin.io.println("Status: ${f.status}")
         kotlin.io.println()
-        kotlin.io.println(e.message)
+        kotlin.io.println(f.message)
     } catch (e: Exception) {
         kotlin.io.println("Content-type: text/plain; charset=utf-8")
         kotlin.io.println("Status: 500")

@@ -6,10 +6,10 @@ import interfaces.IDatabase
 import interfaces.withSqlTransaction
 import model.GOD_OID
 import model.Model
-import model.ObjectNotVisibleException
 import model.SUniverse
 import model.createNewUniverse
 import runtime.shared.CommandShell
+import utils.Fault
 import utils.Flags
 import utils.bind
 import utils.getopt
@@ -57,7 +57,7 @@ fun serveCli(argv: Array<String>) {
 private fun findOrCreateUniverse(model: Model): SUniverse {
     try {
         return findUniverse(model)
-    } catch (_: ObjectNotVisibleException) {
+    } catch (f: Fault) {
         return model.createNewUniverse()
     }
 }

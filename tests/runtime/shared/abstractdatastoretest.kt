@@ -1,5 +1,6 @@
 package runtime.shared
 
+import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
 import utils.inject
@@ -8,6 +9,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 abstract class AbstractDatastoreTest {
+    protected val clock get() = inject<IClock>()
     protected val database get() = inject<IDatabase>()
     protected val datastore get() = inject<IDatastore>()
 

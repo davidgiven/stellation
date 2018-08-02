@@ -1,7 +1,7 @@
 package commands
 
-import interfaces.CommandNotFoundException
 import interfaces.ICommandDispatcher
+import interfaces.throwCommandNotFoundException
 
 class CommandDispatcher : ICommandDispatcher {
     override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
@@ -28,7 +28,7 @@ class CommandDispatcher : ICommandDispatcher {
 
     override fun resolve(argv: List<String>): AbstractCommand {
         val name = argv[0]
-        val constructor = commands.get(name) ?: throw CommandNotFoundException(name)
+        val constructor = commands.get(name) ?: throwCommandNotFoundException(name)
         val command = constructor()
         command.parseArguments(argv)
         command.output.setSuccess(false)

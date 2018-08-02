@@ -1,8 +1,9 @@
 package utils
 
-open class CommandLineParseException(s: String) : Exception("failed to parse command line: $s")
-class BadStringEscapeException : CommandLineParseException("bad string escape")
-class UnterminatedStringException : CommandLineParseException("unterminated string")
+import utils.FaultDomain.SYNTAX
+
+fun throwBadStringEscapeException(): Nothing = throw Fault(SYNTAX).withDetail("bad string escape")
+fun throwUnterminatedStringException(): Nothing = throw Fault(SYNTAX).withDetail("unterminated string")
 
 fun argify(input: String): List<String> {
     var builders: List<StringBuilder> = emptyList()
@@ -25,7 +26,7 @@ fun argify(input: String): List<String> {
         val e = input.getOrElse(index++) { '\u0000' }
         return when (e) {
             '\\', '"', '\'', ' ' -> e
-            else                 -> throw BadStringEscapeException()
+            else                 -> throwBadStringEscapeException()
         }
     }
 
@@ -59,7 +60,7 @@ fun argify(input: String): List<String> {
             current!!.append(c)
         }
 
-        throw UnterminatedStringException()
+        throwUnterminatedStringException()
     }
 
     while (!finished()) {

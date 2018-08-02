@@ -1,26 +1,21 @@
 package utils
 
+import utils.FaultDomain.SYNTAX
 import kotlin.reflect.KMutableProperty0
 
 const val FILE_OPTION = " <file>"
 
-open class GetoptException(message: String) : RuntimeException(message)
+private fun throwDuplicateFlagException(arg: String): Nothing =
+        throw Fault(SYNTAX).withDetail("flag '$arg' is already defined")
 
-class DuplicateFlagException(arg: String) : GetoptException(
-        "flag '$arg' is already defined"
-)
+private fun throwMissingFlagException(arg: String): Nothing =
+        throw Fault(SYNTAX).withDetail("parameter for flag '$arg' is missing (try --help)")
 
-class MissingFlagException(arg: String) : GetoptException(
-        "parameter for flag '$arg' is missing (try --help)"
-)
+private fun throwUnrecognisedFlagException(arg: String): Nothing =
+        throw Fault(SYNTAX).withDetail("unrecognised flag '$arg' (try --help)")
 
-class UnrecognisedFlagException(arg: String) : GetoptException(
-        "unrecognised flag '$arg' (try --help)"
-)
-
-class InvalidFlagValueException(arg: String) : GetoptException(
-        "invalid value for flag '$arg' (try --help)"
-)
+private fun throwInvalidFlagValueException(arg: String): Nothing =
+        throw Fault(SYNTAX).withDetail("invalid value for flag '$arg' (try --help)")
 
 abstract class AbstractFlag(val name: String) {
     abstract fun set(input: String): Boolean
@@ -47,7 +42,7 @@ class BooleanFlag(name: String, property: KMutableProperty0<Boolean>) : VarFlag<
     override fun translate(input: String) = when (input) {
         "true"  -> true
         "false" -> false
-        else    -> throw InvalidFlagValueException(name)
+        else    -> throwInvalidFlagValueException(name)
     }
 }
 
@@ -56,7 +51,7 @@ class IntFlag(name: String, property: KMutableProperty0<Int>) : VarFlag<Int>(nam
         try {
             return input.toInt()
         } catch (_: NumberFormatException) {
-            throw InvalidFlagValueException(name)
+            throwInvalidFlagValueException(name)
         }
     }
 }
@@ -70,7 +65,7 @@ class Flags {
 
     fun add(flag: AbstractFlag): Flags {
         if (flag.name in map) {
-            throw DuplicateFlagException(flag.name)
+            throwDuplicateFlagException(flag.name)
         }
         map += flag.name to flag
         return this
@@ -121,14 +116,14 @@ fun getopt(argv: List<String>, flags: Flags): List<String> {
             return argv.subList(index, argv.size)
         }
 
-        val flag = flags.map[key] ?: throw UnrecognisedFlagException(key)
+        val flag = flags.map[key] ?: throwUnrecognisedFlagException(key)
         val consumed = flag.set(value)
         if (consume) {
             if (consumed) {
                 index++
             }
             if (index >= argv.size) {
-                throw MissingFlagException(key)
+                throwMissingFlagException(key)
             }
         }
         index++

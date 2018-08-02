@@ -3,16 +3,20 @@ package runtime.shared
 import interfaces.IDatastore
 import interfaces.Oid
 import interfaces.SetProperty
+import utils.Fault
+import utils.FaultDomain.INVALID_ARGUMENT
 
-class BadDatastoreTypeException : RuntimeException("type mismatch on datastore access")
+fun throwBadDatastoreTypeException(): Nothing =
+        throw Fault(INVALID_ARGUMENT).withDetail("type mismatch on datastore access")
+
 
 private abstract class Value {
-    open fun getOid(): Oid? = throw BadDatastoreTypeException()
-    open fun getInt(): Int = throw BadDatastoreTypeException()
-    open fun getLong(): Long = throw BadDatastoreTypeException()
-    open fun getReal(): Double = throw BadDatastoreTypeException()
-    open fun getString(): String = throw BadDatastoreTypeException()
-    open fun getSet(): SetProperty = throw BadDatastoreTypeException()
+    open fun getOid(): Oid? = throwBadDatastoreTypeException()
+    open fun getInt(): Int = throwBadDatastoreTypeException()
+    open fun getLong(): Long = throwBadDatastoreTypeException()
+    open fun getReal(): Double = throwBadDatastoreTypeException()
+    open fun getString(): String = throwBadDatastoreTypeException()
+    open fun getSet(): SetProperty = throwBadDatastoreTypeException()
 }
 
 private class OidValue(val value: Oid?) : Value() {
@@ -138,5 +142,9 @@ class InMemoryDatastore : IDatastore {
             values += key to SetValue(set)
         }
         return set
+    }
+
+    override fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

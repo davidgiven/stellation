@@ -1,6 +1,9 @@
 package model
 
 import interfaces.Oid
+import utils.Fault
+import utils.FaultDomain
+import utils.FaultDomain.*
 
 enum class Location {
     EMPTY,
@@ -51,7 +54,7 @@ class Frame {
                 '0'  -> Location.EMPTY
                 '1'  -> Location.MIDDLE
                 '2'  -> Location.EDGE
-                else -> throw IllegalArgumentException("bad frame representation '$c'")
+                else -> throw Fault(INVALID_ARGUMENT).withDetail("bad frame representation '$c'")
             }
 
     private fun toRep(l: Location): Char =

@@ -1,8 +1,13 @@
 package interfaces
 
-class AuthenticationFailedException : Exception("authentication failed")
-class NobodyLoggedInException: Exception("nobody is logged in")
-class PermissionDeniedException: Exception("you're not allowed to do that")
+import utils.Fault
+import utils.FaultDomain.PERMISSION
+
+fun throwAuthenticationFailedException(): Nothing =
+        throw Fault(PERMISSION).withStatus(401).withDetail("authentication failed")
+
+fun throwNobodyLoggedInException(): Nothing = throw Fault(PERMISSION).withDetail("nobody is logged in")
+fun throwPermissionDeniedException(): Nothing = throw Fault(PERMISSION).withDetail("you're not allowed to do that")
 
 interface IAuthenticator {
     var currentPlayerOid: Oid

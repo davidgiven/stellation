@@ -1,5 +1,6 @@
 package runtime.shared
 
+import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.Oid
@@ -9,6 +10,7 @@ import utils.injection
 
 class SqlDatastore : IDatastore {
     val database by injection<IDatabase>()
+    val clock by injection<IClock>()
 
     override fun initialiseDatabase() {
         database.withSqlTransaction {
@@ -18,6 +20,7 @@ class SqlDatastore : IDatastore {
                     oid INTEGER PRIMARY KEY AUTOINCREMENT
                 )
             """)
+
             database.executeSql(
                     """
                 CREATE TABLE IF NOT EXISTS timers (
@@ -39,7 +42,8 @@ class SqlDatastore : IDatastore {
                     """
                  CREATE TABLE IF NOT EXISTS prop_$name (
                     oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
-                    value $sqlType)
+                    value $sqlType,
+                    mtime REAL)
             """)
         } else {
             database.executeSql(
@@ -47,6 +51,12 @@ class SqlDatastore : IDatastore {
                  CREATE TABLE IF NOT EXISTS prop_$name (
                     oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
                     value $sqlType)
+            """)
+            database.executeSql(
+                    """
+                 CREATE TABLE IF NOT EXISTS propmtime_$name (
+                    oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                    mtime REAL)
             """)
         }
     }
@@ -77,9 +87,10 @@ class SqlDatastore : IDatastore {
     private fun setStatement(oid: Oid, name: String) =
             database.sqlStatement(
                     """
-                        INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)
+                        INSERT OR REPLACE INTO prop_$name (oid, value, mtime) VALUES (?, ?, ?)
                     """)
                     .bindOid(1, oid)
+                    .bindReal(3, clock.getTime())
 
     private fun getStatement(oid: Oid, name: String) =
             database.sqlStatement(
@@ -95,37 +106,52 @@ class SqlDatastore : IDatastore {
     override fun getOidProperty(oid: Oid, name: String): Oid? =
             getStatement(oid, name).executeSimpleQuery()?.get("value")?.getOid()
 
-    override fun setIntProperty(oid: Oid, name: String, value: Int): Unit =
-            setStatement(oid, name).bindInt(2, value).executeStatement()
+    override fun setIntProperty(oid: Oid, name: String, value: Int) {
+        setStatement(oid, name).bindInt(2, value).executeStatement()
+    }
 
     override fun getIntProperty(oid: Oid, name: String): Int =
             getStatement(oid, name).executeSimpleQuery()?.get("value")?.getInt() ?: 0
 
-    override fun setLongProperty(oid: Oid, name: String, value: Long) =
-            setStatement(oid, name).bindLong(2, value).executeStatement()
+    override fun setLongProperty(oid: Oid, name: String, value: Long) {
+        setStatement(oid, name).bindLong(2, value).executeStatement()
+    }
 
     override fun getLongProperty(oid: Oid, name: String): Long =
             getStatement(oid, name).executeSimpleQuery()?.get("value")?.getLong() ?: 0
 
-    override fun setRealProperty(oid: Oid, name: String, value: Double) =
-            setStatement(oid, name).bindReal(2, value).executeStatement()
+    override fun setRealProperty(oid: Oid, name: String, value: Double) {
+        setStatement(oid, name).bindReal(2, value).executeStatement()
+    }
 
     override fun getRealProperty(oid: Oid, name: String): Double =
             getStatement(oid, name).executeSimpleQuery()?.get("value")?.getReal() ?: 0.0
 
-    override fun setStringProperty(oid: Oid, name: String, value: String) =
-            setStatement(oid, name).bindString(2, value).executeStatement()
+    override fun setStringProperty(oid: Oid, name: String, value: String) {
+        setStatement(oid, name).bindString(2, value).executeStatement()
+    }
 
     override fun getStringProperty(oid: Oid, name: String): String =
             getStatement(oid, name).executeSimpleQuery()?.get("value")?.getString() ?: ""
 
     override fun getSetProperty(oid: Oid, name: String): SetProperty =
             object : SetProperty {
+                private fun changed() {
+                    database.sqlStatement(
+                            """
+                    INSERT OR REPLACE INTO propmtime_$name (oid, mtime) VALUES (?, ?)
+                """)
+                            .bindOid(1, oid)
+                            .bindReal(2, clock.getTime())
+                            .executeStatement()
+                }
+
                 override fun add(item: Oid): SetProperty {
                     database.sqlStatement("INSERT OR IGNORE INTO prop_$name (oid, value) VALUES (?, ?)")
                             .bindInt(1, oid)
                             .bindOid(2, item)
                             .executeStatement()
+                    changed()
                     return this
                 }
 
@@ -134,6 +160,7 @@ class SqlDatastore : IDatastore {
                             .bindInt(1, oid)
                             .bindOid(2, item)
                             .executeStatement()
+                    changed()
                     return this
                 }
 
@@ -141,6 +168,7 @@ class SqlDatastore : IDatastore {
                     database.sqlStatement("DELETE FROM prop_$name WHERE oid = ?")
                             .bindInt(1, oid)
                             .executeStatement()
+                    changed()
                     return this
                 }
 
@@ -166,4 +194,8 @@ class SqlDatastore : IDatastore {
                                 ?.getValue("value")
                                 ?.getOid()
             }
+
+    override fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

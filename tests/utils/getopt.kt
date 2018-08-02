@@ -99,7 +99,9 @@ class GetoptTest {
         try {
             getopt(arrayOf("-f"), options)
             fail("exception not thrown")
-        } catch (_: MissingFlagException) {
+        } catch (f: Fault) {
+            assertEquals(FaultDomain.SYNTAX, f.domain)
+            assertContains("missing", f.detail)
         }
     }
 
@@ -108,7 +110,9 @@ class GetoptTest {
         try {
             getopt(arrayOf("--file"), options)
             fail("exception not thrown")
-        } catch (_: MissingFlagException) {
+        } catch (f: Fault) {
+            assertEquals(FaultDomain.SYNTAX, f.domain)
+            assertContains("missing", f.detail)
         }
     }
 
@@ -117,7 +121,9 @@ class GetoptTest {
         try {
             getopt(arrayOf("-x"), options)
             fail("exception not thrown")
-        } catch (_: UnrecognisedFlagException) {
+        } catch (f: Fault) {
+            assertEquals(FaultDomain.SYNTAX, f.domain)
+            assertContains("unrecognised", f.detail)
         }
     }
 
@@ -126,7 +132,13 @@ class GetoptTest {
         try {
             getopt(arrayOf("--xxx"), options)
             fail("exception not thrown")
-        } catch (_: UnrecognisedFlagException) {
+        } catch (f: Fault) {
+            assertEquals(FaultDomain.SYNTAX, f.domain)
+            assertContains("unrecognised", f.detail)
         }
+    }
+
+    private fun assertContains(needle: String, haystack: String) {
+        assertTrue(needle in haystack)
     }
 }

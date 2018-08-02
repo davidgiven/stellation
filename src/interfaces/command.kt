@@ -1,13 +1,17 @@
 package interfaces
 
+import utils.Fault
+import utils.FaultDomain.SYNTAX
 import utils.Flags
 import utils.Message
 import utils.getOrDefault
 import utils.set
 
-open class CommandExecutionException(s: String, e: Throwable? = null) : Exception(s, e)
-class CommandNotFoundException(name: String) : CommandExecutionException("command '$name' not found")
-class CommandSyntaxException(message: String) : CommandExecutionException(message)
+fun throwCommandNotFoundException(name: String): Nothing =
+        throw Fault(SYNTAX).withDetail("command '$name' not found")
+
+fun throwCommandSyntaxException(message: String): Nothing =
+        throw Fault(SYNTAX).withDetail(message)
 
 private const val SUCCESS = "_success"
 

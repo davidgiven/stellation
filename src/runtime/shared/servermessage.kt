@@ -3,6 +3,7 @@ package runtime.shared
 import interfaces.CommandMessage
 import interfaces.Oid
 import utils.Codec
+import utils.Fault
 import utils.Message
 import utils.add
 import utils.get
@@ -11,7 +12,7 @@ import utils.set
 
 private const val CMDINPUT = "cmdinput"
 private const val CMDOUTPUT = "cmdoutput"
-private const val ERROR = "error"
+private const val FAULT = "fault"
 private const val PASSWORD = "password"
 private const val USERNAME = "username"
 private const val PLAYEROID = "oid"
@@ -20,9 +21,9 @@ private const val STATUS = "status"
 class ServerMessage : Message() {
     val codec by injection<Codec>()
 
-    fun hasError() = contains(ERROR)
-    fun setError(error: String) = set(ERROR, error)
-    fun getError(): String = get(ERROR)
+    fun hasFault() = contains(FAULT)
+    fun setFault(fault: Fault) = set(FAULT, fault.serialise())
+    fun getFault(): Fault = Fault(get<String, String>(FAULT))
 
     fun hasCommandInput() = contains(CMDINPUT)
 
@@ -64,9 +65,5 @@ class ServerMessage : Message() {
 
     fun setPlayerOid(playerOid: Oid) = set(PLAYEROID, playerOid)
     fun getPlayerOid(): Oid = get(PLAYEROID)
-
-    fun hasStauts() = STATUS in this
-    fun setStatus(status: Int) = set(STATUS, status)
-    fun getStatus(): Int = get(STATUS)
 }
 

@@ -1,5 +1,7 @@
 package utils
 
+import utils.FaultDomain.INTERNAL
+
 /* Translates a map of strings into an opaque, encoded String (and back again).
  *
  * The encoded syntax is nigh-trivial: it's a newline-separated KEY=VALUE list. KEY
@@ -10,7 +12,8 @@ private const val ESCAPED_PERCENT = "%p"
 private const val ESCAPED_NEWLINE = "%n"
 private const val ESCAPED_EQUALS = "%e"
 
-class InvalidCodecDataException(s: String, e: Throwable? = null) : Exception("invalid encoded packet: ${s}", e)
+fun throwInvalidCodecDataException(s: String, e: Throwable? = null): Nothing =
+        throw Fault(e).withDomain(INTERNAL).withDetail("invalid encoded packet: $s")
 
 class Codec {
     private val ENCODE_REGEX = Regex("[%=\n]")
@@ -31,7 +34,7 @@ class Codec {
             ESCAPED_PERCENT -> "%"
             ESCAPED_NEWLINE -> "\n"
             ESCAPED_EQUALS  -> "="
-            else            -> throw InvalidCodecDataException("bad string escape ${r.value}")
+            else            -> throwInvalidCodecDataException("bad string escape ${r.value}")
         }
     }
 
@@ -55,7 +58,7 @@ class Codec {
             if (!line.isEmpty()) {
                 val tokens = line.split("=")
                 if (tokens.size != 2) {
-                    throw InvalidCodecDataException("couldn't parse line")
+                    throwInvalidCodecDataException("couldn't parse line")
                 }
                 map += decodeString(tokens[0]) to decodeString(tokens[1])
             }

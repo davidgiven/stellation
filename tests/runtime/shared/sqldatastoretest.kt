@@ -1,5 +1,6 @@
 package runtime.shared
 
+import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.withSqlTransaction
@@ -13,6 +14,7 @@ class SqlDatastoreTest : AbstractDatastoreTest() {
     @BeforeTest
     fun setup() {
         resetBindingsForTest()
+        bind<IClock>(Clock())
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore())
 

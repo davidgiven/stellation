@@ -36,4 +36,6 @@ interface IDatastore {
     fun getStringProperty(oid: Oid, name: String): String
 
     fun getSetProperty(oid: Oid, name: String): SetProperty
+
+    fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String>
 }

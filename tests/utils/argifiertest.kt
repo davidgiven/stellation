@@ -1,5 +1,6 @@
 package utils
 
+import utils.FaultDomain.SYNTAX
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -57,7 +58,8 @@ class ArgifierTest {
             try {
                 argify(e)
                 fail("exception not thrown while parsing $e")
-            } catch (_: UnterminatedStringException) {
+            } catch (f: Fault) {
+                assertEquals(SYNTAX, f.domain)
             }
         }
     }
@@ -68,7 +70,8 @@ class ArgifierTest {
             try {
                 argify(e)
                 fail("exception not thrown while parsing $e")
-            } catch (_: BadStringEscapeException) {
+            } catch (f: Fault) {
+                assertEquals(SYNTAX, f.domain)
             }
         }
     }

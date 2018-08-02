@@ -1,6 +1,8 @@
 package model
 
+import interfaces.IClock
 import interfaces.IDatastore
+import runtime.shared.Clock
 import runtime.shared.InMemoryDatastore
 import utils.bind
 import utils.resetBindingsForTest
@@ -12,6 +14,7 @@ class InMemoryObjectsTest : AbstractObjectsTest() {
     fun setup() {
         resetBindingsForTest()
         bind<IDatastore>(InMemoryDatastore())
+        bind<IClock>(Clock())
         bind(Model())
 
         datastore.initialiseDatabase()

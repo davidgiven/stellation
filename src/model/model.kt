@@ -3,14 +3,16 @@ package model
 import interfaces.IAuthenticator
 import interfaces.IDatastore
 import interfaces.Oid
+import utils.Fault
+import utils.FaultDomain.INVALID_ARGUMENT
 import utils.injection
 import kotlin.reflect.KClass
 
-class ObjectNotVisibleException(val oid: Oid)
-    : Exception("object $oid does not exist or is not visible")
+fun throwObjectNotVisibleException(oid: Oid): Nothing =
+        throw Fault(INVALID_ARGUMENT).withDetail("object $oid does not exist or is not visible")
 
-class DatabaseTypeMismatchException(val oid: Oid, val kind: String, val desired: String)
-    : Exception("expected $oid to be a $desired, but it was a $kind")
+fun throwDatabaseTypeMismatchException(oid: Oid, kind: String, desired: String): Nothing =
+        throw Fault(INVALID_ARGUMENT).withDetail("expected $oid to be a $desired, but it was a $kind")
 
 private typealias ClassMap = Map<String, (Model, Oid) -> SThing>
 
@@ -52,7 +54,7 @@ class Model {
     @Suppress("UNCHECKED_CAST")
     fun <T : SThing> loadRawObject(oid: Oid, kclass: KClass<T>): T {
         if (!datastore.doesObjectExist(oid)) {
-            throw ObjectNotVisibleException(oid)
+            throwObjectNotVisibleException(oid)
         }
 
         val kind = datastore.getStringProperty(oid, KIND.name)
@@ -60,7 +62,7 @@ class Model {
         if (kclass.isInstance(instance)) {
             return instance as T
         }
-        throw DatabaseTypeMismatchException(oid, kind, kclass.simpleName!!)
+        throwDatabaseTypeMismatchException(oid, kind, kclass.simpleName!!)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -74,7 +76,7 @@ class Model {
         if (kclass.isInstance(instance)) {
             return instance as T
         }
-        throw DatabaseTypeMismatchException(
+        throwDatabaseTypeMismatchException(
                 oid, datastore.getStringProperty(oid, KIND.name), kclass.simpleName!!)
     }
 

@@ -1,14 +1,15 @@
 package runtime.js
 
-import interfaces.AuthenticationFailedException
-import interfaces.CommandMessage
 import interfaces.IAuthenticator
-import interfaces.ICommand
 import interfaces.IClientInterface
-import interfaces.RemoteCommandExecutionException
+import interfaces.ICommand
+import interfaces.throwAuthenticationFailedException
 import org.w3c.xhr.XMLHttpRequest
 import runtime.shared.ServerMessage
 import utils.Codec
+import utils.Fault
+import utils.FaultDomain.NETWORK
+import utils.FaultDomain.PERMISSION
 import utils.Mailbox
 import utils.injection
 
@@ -36,15 +37,17 @@ class RemoteClientInterface : IClientInterface {
             if (xhr.readyState == XMLHttpRequest.DONE) {
                 val receiveMessage = ServerMessage()
                 val status = xhr.status.toInt()
-                receiveMessage.setStatus(status)
                 try {
-                    if (status == 200) {
-                        receiveMessage.setFromMap(codec.decode(xhr.responseText))
-                    } else {
-                        throw RemoteCommandExecutionException("network error ${xhr.status}")
+                    when (status) {
+                        200  ->
+                            receiveMessage.setFromMap(codec.decode(xhr.responseText))
+                        401  ->
+                            throwAuthenticationFailedException()
+                        else ->
+                            throw Fault(NETWORK).withStatus(status).withDetail("network error")
                     }
-                } catch (e: Exception) {
-                    receiveMessage.setError("network error ${xhr.status}")
+                } catch (f: Fault) {
+                    receiveMessage.setFault(f)
                 }
                 mailbox.post(receiveMessage)
                 kickScheduler()
@@ -54,21 +57,11 @@ class RemoteClientInterface : IClientInterface {
         xhr.send(codec.encode(sendMessage.toMap()))
 
         val receiveMessage = mailbox.wait()
-        if (receiveMessage.hasError()) {
-            if (receiveMessage.hasStauts()) {
-                when (receiveMessage.getStatus()) {
-                    401  -> throw AuthenticationFailedException()
-                    else -> {
-                    }
-                }
-            }
-            val error = receiveMessage.getError()
-            throw RemoteCommandExecutionException(error)
-
+        if (receiveMessage.hasFault()) {
+            throw receiveMessage.getFault()
         }
 
         authenticator.setAuthenticatedPlayer(receiveMessage.getPlayerOid())
         command.output = receiveMessage.getCommandOutput()
     }
 }
-

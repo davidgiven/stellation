@@ -1,17 +1,18 @@
 package commands
 
-import interfaces.CommandExecutionException
 import interfaces.CommandMessage
-import interfaces.CommandSyntaxException
 import interfaces.ICommand
 import interfaces.IConsole
+import interfaces.throwCommandSyntaxException
 import model.Model
+import utils.Fault
+import utils.FaultDomain.SYNTAX
 import utils.Flags
-import utils.GetoptException
 import utils.getopt
 import utils.injection
 
-class NotAServerCommandException : CommandExecutionException("this command can't be used on the server")
+fun throwNotAServerCommandException(): Nothing =
+        throw Fault(SYNTAX).withDetail("this command can't be used on the server")
 
 abstract class AbstractCommand : ICommand {
     protected val model by injection<Model>()
@@ -24,18 +25,14 @@ abstract class AbstractCommand : ICommand {
 
     override fun parseArguments(argv: List<String>) {
         this.argv = argv
-        try {
-            val remaining = getopt(argv.drop(1), flags)
-            parseRemainingArguments(remaining)
-        } catch (e: GetoptException) {
-            throw CommandSyntaxException(e.message ?: "syntax error")
-        }
+        val remaining = getopt(argv.drop(1), flags)
+        parseRemainingArguments(remaining)
         validateArguments()
     }
 
     override fun parseRemainingArguments(argv: List<String>) {
         if (argv.isNotEmpty()) {
-            throw CommandSyntaxException("unrecognised arguments starting with '${argv.first()}'")
+            throwCommandSyntaxException("unrecognised arguments starting with '${argv.first()}'")
         }
     }
 
@@ -46,7 +43,7 @@ abstract class AbstractCommand : ICommand {
     }
 
     override fun serverRun() {
-        throw NotAServerCommandException()
+        throwNotAServerCommandException()
     }
 
     override suspend fun renderResult() {

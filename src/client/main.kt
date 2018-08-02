@@ -14,7 +14,9 @@ import commands.CommandDispatcher
 import interfaces.IAuthenticator
 import interfaces.ICommandDispatcher
 import interfaces.IClientInterface
+import interfaces.IClock
 import runtime.js.RemoteClientInterface
+import runtime.shared.Clock
 import runtime.shared.CommandShell
 import server.LocalAuthenticator
 import utils.Random
@@ -30,6 +32,7 @@ fun main(argv: Array<String>) {
     bind(Codec())
     bind(Model())
     bind(Cookies())
+    bind<IClock>(Clock())
     val gameloop = bind(GameLoop())
 
     val time = inject<ITime>()

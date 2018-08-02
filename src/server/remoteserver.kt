@@ -1,15 +1,13 @@
 package server
 
 import interfaces.ICommandDispatcher
-import interfaces.ILogger
 import interfaces.log
 import runtime.shared.ServerMessage
+import utils.Fault
+import utils.FaultDomain.NETWORK
 import utils.injection
 
-abstract class HttpStatusException(val status: Int, message: String) : Exception(message)
-class BadRequestException : HttpStatusException(400, "Bad Request")
-class UnauthorizedException : HttpStatusException(401, "Unauthorized")
-class InternalServerErrorException : HttpStatusException(500, "Internal Server Error")
+fun throwUnauthorizedException(): Nothing = throw Fault(NETWORK).withStatus(401).withDetail("Unauthorized")
 
 class RemoteServer {
     val commandDispatcher by injection<ICommandDispatcher>()
@@ -28,9 +26,9 @@ class RemoteServer {
 
                 output.setCommandOutput(command.output)
             }
-        } catch (e: Exception) {
-            log(e.toString())
-            output.setError(e.message!!)
+        } catch (f: Fault) {
+            log(f.toString())
+            output.setFault(f)
         }
     }
 }

@@ -1,12 +1,13 @@
 package client
 
-import interfaces.AuthenticationFailedException
 import interfaces.IClientInterface
 import interfaces.ICommandDispatcher
 import interfaces.IConsole
 import interfaces.IDatastore
 import ui.AlertForm
 import ui.LoginForm
+import utils.Fault
+import utils.FaultDomain.PERMISSION
 import utils.Job
 import utils.injection
 
@@ -41,8 +42,12 @@ class GameLoop {
                         cookies["password"] = loginData.password!!
                         doGame()
                         break
-                    } catch (_: AuthenticationFailedException) {
-                        AlertForm("Login failed", "Username or password unrecognised.").execute()
+                    } catch (f: Fault) {
+                        if (f.domain == PERMISSION) {
+                            AlertForm("Login failed", "Username or password unrecognised.").execute()
+                        } else {
+                            throw f
+                        }
                     }
                 }
             }

@@ -1,5 +1,6 @@
 package utils
 
+import utils.FaultDomain.INTERNAL
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -42,7 +43,8 @@ class CodecTest {
             try {
                 codec.decode(s)
                 fail("uncaught exception decoding '$s'")
-            } catch (_: InvalidCodecDataException) {
+            } catch (f: Fault) {
+                assertEquals(INTERNAL, f.domain)
             }
         }
     }

@@ -2,6 +2,8 @@ package model
 
 import interfaces.IDatabase
 import interfaces.IDatastore
+import utils.Fault
+import utils.FaultDomain.INVALID_ARGUMENT
 import utils.inject
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -78,7 +80,8 @@ abstract class AbstractObjectsTest {
         try {
             model.loadRawObject(42, SStar::class)
             fail()
-        } catch (_: ObjectNotVisibleException) {
+        } catch (f: Fault) {
+            assertEquals(INVALID_ARGUMENT, f.domain)
         }
     }
 
@@ -109,7 +112,8 @@ abstract class AbstractObjectsTest {
         try {
             var m = model.createObject(SModule::class)
             model.loadRawObject(m.oid, SFactory::class)
-        } catch (_: DatabaseTypeMismatchException) {
+        } catch (f: Fault) {
+            assertEquals(INVALID_ARGUMENT, f.domain)
         }
     }
 }

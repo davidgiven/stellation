@@ -1,8 +1,8 @@
 package runtime.shared
 
-import interfaces.CommandExecutionException
 import interfaces.ICommandDispatcher
 import interfaces.IConsole
+import utils.Fault
 import utils.argify
 import utils.injection
 import utils.unargify
@@ -25,8 +25,8 @@ class CommandShell() {
             val command = commandDispatcher.resolve(argv)
             command.run()
             command.renderResult()
-        } catch (e: CommandExecutionException) {
-            console.println("Failed: $e")
+        } catch (f: Fault) {
+            console.println("Failed: ${f.message}")
         } catch (e: Exception) {
             console.println("Internal error: $e")
         }

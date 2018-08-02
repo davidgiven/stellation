@@ -1,8 +1,8 @@
 package model
 
-import interfaces.NobodyLoggedInException
 import interfaces.Oid
-import interfaces.PermissionDeniedException
+import interfaces.throwNobodyLoggedInException
+import interfaces.throwPermissionDeniedException
 import kotlin.reflect.KClass
 
 open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
@@ -17,14 +17,14 @@ fun SPlayer.isGod(): Boolean = (oid == GOD_OID)
 
 fun SPlayer.checkGod() {
     if (!isGod()) {
-        throw PermissionDeniedException()
+        throwPermissionDeniedException()
     }
 }
 
 fun Model.currentPlayer(): SPlayer {
     val oid = authenticator.currentPlayerOid
     if (oid == 0) {
-        throw NobodyLoggedInException()
+        throwNobodyLoggedInException()
     }
     return loadObject(authenticator.currentPlayerOid, SPlayer::class)
 }

@@ -1,8 +1,8 @@
 package commands
 
-import interfaces.CommandSyntaxException
 import interfaces.IAuthenticator
 import interfaces.Oid
+import interfaces.throwCommandSyntaxException
 import model.checkGod
 import model.currentPlayer
 import utils.Flags
@@ -23,7 +23,7 @@ class SetPasswordCommand : AbstractRemoteCommand() {
 
     override fun validateArguments() {
         if (passwordOption == "") {
-            throw CommandSyntaxException("a new password must be specified")
+            throwCommandSyntaxException("a new password must be specified")
         }
         if (userOption == 0) {
             userOption = authenticator.currentPlayerOid

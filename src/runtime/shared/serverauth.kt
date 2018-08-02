@@ -1,10 +1,10 @@
 package server
 
-import interfaces.AuthenticationFailedException
 import interfaces.IAuthenticator
 import interfaces.IDatabase
 import interfaces.ILogger
 import interfaces.Oid
+import interfaces.throwAuthenticationFailedException
 import model.Model
 import model.SPlayer
 import model.currentPlayer
@@ -38,10 +38,10 @@ class ServerAuthenticator : IAuthenticator {
                     .executeSimpleQuery()
                     ?.get("oid")
                     ?.getOid()
-                    ?: throw AuthenticationFailedException()
+                    ?: throwAuthenticationFailedException()
 
             if (!bcrypt.checkpw(password, model.currentPlayer().password_hash)) {
-                throw AuthenticationFailedException()
+                throwAuthenticationFailedException()
             }
 
             callback()
@@ -51,12 +51,13 @@ class ServerAuthenticator : IAuthenticator {
     }
 
     override fun setAuthenticatedPlayer(oid: Oid) {
-       check(currentPlayerOid == 0)
+        check(currentPlayerOid == 0)
         currentPlayerOid = oid
     }
 
     override fun registerPlayer(username: String, playerOid: Oid) {
-        database.sqlStatement("""
+        database.sqlStatement(
+                """
                 INSERT OR REPLACE INTO players (username, oid) VALUES (?, ?)
                 """)
                 .bindString(1, username)
