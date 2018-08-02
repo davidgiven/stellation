@@ -5,7 +5,6 @@ import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.Oid
 import interfaces.SetProperty
-import interfaces.withSqlTransaction
 import utils.injection
 
 class SqlDatastore : IDatastore {
@@ -13,27 +12,26 @@ class SqlDatastore : IDatastore {
     val clock by injection<IClock>()
 
     override fun initialiseDatabase() {
-        database.withSqlTransaction {
-            database.executeSql(
-                    """
+        database.executeSql(
+                """
                 CREATE TABLE IF NOT EXISTS objects (
                     oid INTEGER PRIMARY KEY AUTOINCREMENT
                 )
             """)
 
-            database.executeSql(
-                    """
-                CREATE TABLE IF NOT EXISTS timers (
-                    oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
-                    expiry INTEGER
+        database.executeSql(
+                """
+                CREATE TABLE IF NOT EXISTS mtimes (
+                    oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                    name TEXT,
+                    mtime REAL,
+                    PRIMARY KEY(oid, name)
                 )
             """)
-            database.executeSql(
-                    """
-                CREATE INDEX IF NOT EXISTS timers_by_expiry ON timers (expiry ASC)
+        database.executeSql(
+                """
+                CREATE INDEX IF NOT EXISTS mtimes_by_mtime ON mtimes (mtime ASC)
             """)
-        }
-
     }
 
     override fun createProperty(name: String, sqlType: String, isAggregate: Boolean) {
@@ -42,8 +40,7 @@ class SqlDatastore : IDatastore {
                     """
                  CREATE TABLE IF NOT EXISTS prop_$name (
                     oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
-                    value $sqlType,
-                    mtime REAL)
+                    value $sqlType)
             """)
         } else {
             database.executeSql(
@@ -51,12 +48,6 @@ class SqlDatastore : IDatastore {
                  CREATE TABLE IF NOT EXISTS prop_$name (
                     oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
                     value $sqlType)
-            """)
-            database.executeSql(
-                    """
-                 CREATE TABLE IF NOT EXISTS propmtime_$name (
-                    oid INTEGER PRIMARY KEY NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
-                    mtime REAL)
             """)
         }
     }
@@ -84,13 +75,23 @@ class SqlDatastore : IDatastore {
                     .getValue("count")
                     .getInt() != 0
 
+    private fun propertyChanged(oid: Oid, name: String) {
+        database.sqlStatement(
+                """
+                        INSERT OR REPLACE INTO mtimes (oid, name, mtime) VALUES (?, ?, ?)
+                    """)
+                .bindOid(1, oid)
+                .bindString(2, name)
+                .bindReal(3, clock.getTime())
+                .executeStatement()
+    }
+
     private fun setStatement(oid: Oid, name: String) =
             database.sqlStatement(
                     """
-                        INSERT OR REPLACE INTO prop_$name (oid, value, mtime) VALUES (?, ?, ?)
+                        INSERT OR REPLACE INTO prop_$name (oid, value) VALUES (?, ?)
                     """)
                     .bindOid(1, oid)
-                    .bindReal(3, clock.getTime())
 
     private fun getStatement(oid: Oid, name: String) =
             database.sqlStatement(
@@ -101,6 +102,7 @@ class SqlDatastore : IDatastore {
 
     override fun setOidProperty(oid: Oid, name: String, value: Oid?) {
         setStatement(oid, name).bindOid(2, value).executeStatement()
+        propertyChanged(oid, name)
     }
 
     override fun getOidProperty(oid: Oid, name: String): Oid? =
@@ -108,6 +110,7 @@ class SqlDatastore : IDatastore {
 
     override fun setIntProperty(oid: Oid, name: String, value: Int) {
         setStatement(oid, name).bindInt(2, value).executeStatement()
+        propertyChanged(oid, name)
     }
 
     override fun getIntProperty(oid: Oid, name: String): Int =
@@ -115,6 +118,7 @@ class SqlDatastore : IDatastore {
 
     override fun setLongProperty(oid: Oid, name: String, value: Long) {
         setStatement(oid, name).bindLong(2, value).executeStatement()
+        propertyChanged(oid, name)
     }
 
     override fun getLongProperty(oid: Oid, name: String): Long =
@@ -122,6 +126,7 @@ class SqlDatastore : IDatastore {
 
     override fun setRealProperty(oid: Oid, name: String, value: Double) {
         setStatement(oid, name).bindReal(2, value).executeStatement()
+        propertyChanged(oid, name)
     }
 
     override fun getRealProperty(oid: Oid, name: String): Double =
@@ -129,6 +134,7 @@ class SqlDatastore : IDatastore {
 
     override fun setStringProperty(oid: Oid, name: String, value: String) {
         setStatement(oid, name).bindString(2, value).executeStatement()
+        propertyChanged(oid, name)
     }
 
     override fun getStringProperty(oid: Oid, name: String): String =
@@ -136,22 +142,12 @@ class SqlDatastore : IDatastore {
 
     override fun getSetProperty(oid: Oid, name: String): SetProperty =
             object : SetProperty {
-                private fun changed() {
-                    database.sqlStatement(
-                            """
-                    INSERT OR REPLACE INTO propmtime_$name (oid, mtime) VALUES (?, ?)
-                """)
-                            .bindOid(1, oid)
-                            .bindReal(2, clock.getTime())
-                            .executeStatement()
-                }
-
                 override fun add(item: Oid): SetProperty {
                     database.sqlStatement("INSERT OR IGNORE INTO prop_$name (oid, value) VALUES (?, ?)")
                             .bindInt(1, oid)
                             .bindOid(2, item)
                             .executeStatement()
-                    changed()
+                    propertyChanged(oid, name)
                     return this
                 }
 
@@ -160,7 +156,7 @@ class SqlDatastore : IDatastore {
                             .bindInt(1, oid)
                             .bindOid(2, item)
                             .executeStatement()
-                    changed()
+                    propertyChanged(oid, name)
                     return this
                 }
 
@@ -168,7 +164,7 @@ class SqlDatastore : IDatastore {
                     database.sqlStatement("DELETE FROM prop_$name WHERE oid = ?")
                             .bindInt(1, oid)
                             .executeStatement()
-                    changed()
+                    propertyChanged(oid, name)
                     return this
                 }
 

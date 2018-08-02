@@ -62,31 +62,44 @@ private class SqliteStatement(val sqliteStatement: PreparedStatement) : SqlState
 
     override fun executeQuery(): List<Map<String, SqlValue>> {
         val results = sqliteStatement.executeQuery()
-        val metadata = results.metaData
-        val columnCount = metadata.columnCount
-        var columnNames = Array<String>(columnCount) { metadata.getColumnLabel(it + 1) }
-
-        fun generator(): Map<String, SqlValue>? {
-            if (!results.next()) {
-                return null
-            }
-
-            var data: Map<String, SqlValue> = emptyMap()
-            for (i in 0..(columnCount - 1)) {
-                data += Pair(columnNames[i], SqliteValue(results.getString(i + 1)))
-            }
-            return data
-        }
-
         try {
-            return generateSequence(::generator).toList()
+            val metadata = results.metaData
+            val columnCount = metadata.columnCount
+            var columnNames = Array<String>(columnCount) { metadata.getColumnLabel(it + 1) }
+
+            fun generator(): Map<String, SqlValue>? {
+                if (!results.next()) {
+                    return null
+                }
+
+                var data: Map<String, SqlValue> = emptyMap()
+                for (i in 0..(columnCount - 1)) {
+                    data += Pair(columnNames[i], SqliteValue(results.getString(i + 1)))
+                }
+                return data
+            }
+
+            try {
+                return generateSequence(::generator).toList()
+            } finally {
+                reset()
+            }
         } finally {
-            reset()
+            results.close()
         }
     }
 
     override fun executeStatement() {
-        sqliteStatement.execute()
+        try {
+            if (sqliteStatement.execute()) {
+                /* Remove any parasitic results, which will hang around and keep the
+                 * transaction open.
+                 */
+                sqliteStatement.resultSet.close()
+            }
+        } finally {
+            reset()
+        }
     }
 }
 
@@ -105,6 +118,12 @@ class JvmDatabase : IDatabase {
         databaseConnection = DriverManager.getConnection("jdbc:sqlite:$filename", config.toProperties())
         databaseConnection!!.autoCommit = false
         executeSql("COMMIT") // Why does turning autocommit off leave a transaction open?
+
+        executeSql("PRAGMA foreign_keys = ON")
+        executeSql("PRAGMA temp_store = MEMORY")
+        executeSql("PRAGMA encoding = \"UTF-8\"")
+        executeSql("PRAGMA journal_mode = WAL")
+        executeSql("PRAGMA synchronous = OFF")
     }
 
     override fun closeDatabase() {
