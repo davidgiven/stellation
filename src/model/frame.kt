@@ -2,8 +2,7 @@ package model
 
 import interfaces.Oid
 import utils.Fault
-import utils.FaultDomain
-import utils.FaultDomain.*
+import utils.FaultDomain.INVALID_ARGUMENT
 
 enum class Location {
     EMPTY,
@@ -51,17 +50,17 @@ class Frame {
 
     private fun fromRep(c: Char): Location =
             when (c) {
-                '0'  -> Location.EMPTY
-                '1'  -> Location.MIDDLE
-                '2'  -> Location.EDGE
+                '0' -> Location.EMPTY
+                '1' -> Location.MIDDLE
+                '2' -> Location.EDGE
                 else -> throw Fault(INVALID_ARGUMENT).withDetail("bad frame representation '$c'")
             }
 
     private fun toRep(l: Location): Char =
             when (l) {
-                Location.EMPTY  -> '0'
+                Location.EMPTY -> '0'
                 Location.MIDDLE -> '1'
-                Location.EDGE   -> '2'
+                Location.EDGE -> '2'
             }
 }
 

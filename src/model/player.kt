@@ -21,6 +21,30 @@ fun SPlayer.checkGod() {
     }
 }
 
+fun SPlayer.canSee(obj: SThing): Boolean {
+    val objStar = obj.getContainingStar() ?: return false
+    for (ship in ships) {
+        val shipStar = ship.getContainingStar()
+        if (shipStar == objStar) {
+            return true
+        }
+    }
+    return false
+}
+
+fun SPlayer.calculateVisibleStars(): Set<SStar> {
+    var set = emptySet<SStar>()
+    for (ship in ships) {
+        if (ship.findChild<SJumpdrive>() != null) {
+            val star = ship.getContainingStar()
+            if (star != null) {
+                set += star
+            }
+        }
+    }
+    return set
+}
+
 fun Model.currentPlayer(): SPlayer {
     val oid = authenticator.currentPlayerOid
     if (oid == 0) {

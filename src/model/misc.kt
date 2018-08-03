@@ -11,10 +11,6 @@ open class SStar(model: Model, oid: Oid) : SThing(model, oid) {
     var asteroidsO by ASTEROIDS_O
 }
 
-open class SShip(model: Model, oid: Oid) : SThing(model, oid) {
-    var name by NAME
-}
-
 open class SModule(model: Model, oid: Oid) : SThing(model, oid) {
     open val width = 1
     open val height = 1

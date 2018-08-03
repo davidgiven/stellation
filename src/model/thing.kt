@@ -1,6 +1,12 @@
 package model
 
 import interfaces.Oid
+import utils.Fault
+import utils.FaultDomain.INVALID_ARGUMENT
+
+fun throwRecursiveMoveException(child: Oid): Nothing =
+        throw Fault(INVALID_ARGUMENT).withDetail("$child cannot be contained by itself")
+
 
 abstract class SThing(val model: Model, val oid: Oid) {
     override fun equals(other: Any?): Boolean {
@@ -8,7 +14,7 @@ abstract class SThing(val model: Model, val oid: Oid) {
             return true
         if ((other == null) || (other !is SThing))
             return false
-        return oid == this.oid
+        return oid == other.oid
     }
 
     override fun hashCode(): Int = oid
@@ -25,6 +31,15 @@ abstract class SThing(val model: Model, val oid: Oid) {
         return null
     }
 
+    open fun computeVisibilitySet(): Set<SThing> {
+        var set = emptySet<SThing>()
+        for (o in contents) {
+            set += o
+            set += o.computeVisibilitySet()
+        }
+        return set
+    }
+
 //    fun kickTimer() {
 //        val expiry = recomputeTimeout()
 //        if (expiry != null) {
@@ -33,7 +48,30 @@ abstract class SThing(val model: Model, val oid: Oid) {
 //    }
 }
 
+
+inline fun <reified C : SThing> SThing.findChild(): C? =
+        contents.find { it is C } as C?
+
+fun SThing.getContainingStar(): SStar? {
+    var loc: SThing? = this
+    while (loc != null) {
+        if (loc is SStar) {
+            return loc
+        }
+        loc = loc.location
+    }
+    return null
+}
+
 fun <T : SThing> T.moveTo(destination: SThing): T {
+    var loc: SThing? = destination
+    while (loc != null) {
+        if (loc == this) {
+            throwRecursiveMoveException(this.oid)
+        }
+        loc = loc.location
+    }
+
     this.remove()
     this.location = destination
     destination.contents += this

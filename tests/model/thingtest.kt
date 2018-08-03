@@ -4,16 +4,20 @@ import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.withSqlTransaction
-import kotlin.test.Test
 import runtime.jvm.JvmDatabase
 import runtime.shared.Clock
 import runtime.shared.SqlDatastore
+import utils.Fault
+import utils.FaultDomain.INVALID_ARGUMENT
 import utils.bind
 import utils.inject
 import utils.resetBindingsForTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
+import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class ThingTest {
     private val database get() = inject<IDatabase>()
@@ -32,7 +36,6 @@ class ThingTest {
         datastore.initialiseDatabase()
         database.withSqlTransaction { model.initialiseProperties() }
         database.executeSql("BEGIN")
-
     }
 
     @AfterTest
@@ -62,6 +65,19 @@ class ThingTest {
     }
 
     @Test
+    fun invalidMoveTest() {
+        val g = model.createObject(SGalaxy::class)
+        val s = model.createObject(SStar::class).moveTo(g)
+
+        try {
+            g.moveTo(s)
+        } catch (f: Fault) {
+            assertEquals(INVALID_ARGUMENT, f.domain)
+            assertContains("contained by itself", f.detail)
+        }
+    }
+
+    @Test
     fun multipleRemoveTest() {
         val g = model.createObject(SGalaxy::class)
         val s = model.createObject(SStar::class).moveTo(g)
@@ -75,4 +91,18 @@ class ThingTest {
     fun removeFromNowhereTest() {
         model.createObject(SGalaxy::class).remove()
     }
+
+    @Test
+    fun findChildTest() {
+        val g = model.createObject(SGalaxy::class)
+        val s = model.createObject(SStar::class).moveTo(g)
+
+        assertEquals(s, g.findChild<SStar>())
+        assertNull(g.findChild<SPlayer>())
+    }
+
+    private fun assertContains(needle: String, haystack: String) {
+        assertTrue(needle in haystack)
+    }
+
 }
