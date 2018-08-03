@@ -147,4 +147,13 @@ class InMemoryDatastore : IDatastore {
     override fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun getHierarchy(root: Oid, containment: String): Set<Oid> {
+        var set = emptySet<Oid>()
+        set += root
+        for (child in getSetProperty(root, containment).getAll()) {
+            set += getHierarchy(child, containment)
+        }
+        return set
+    }
 }

@@ -194,4 +194,22 @@ class SqlDatastore : IDatastore {
     override fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun getHierarchy(root: Oid, containment: String): Set<Oid> =
+            database.sqlStatement(
+                    """
+                    WITH RECURSIVE
+                        children(child) AS (
+                            SELECT ?
+                            UNION ALL
+                            SELECT value
+                                FROM prop_$containment, children
+                                ON oid == children.child
+                        )
+                    SELECT child FROM children
+                """
+            ).bindOid(1, root)
+                    .executeQuery()
+                    .map { it.getValue("child").getOid()!! }
+                    .toSet()
 }

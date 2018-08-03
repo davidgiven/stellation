@@ -7,12 +7,9 @@ load(
 package(default_visibility = ["//visibility:public"])
 
 kotlin_jvm_test(
-    name = "SqlDatastoreTest",
+    name = "RuntimeSharedTest",
     size = "small",
-    srcs = [
-        "abstractdatastoretest.kt",
-        "sqldatastoretest.kt",
-    ],
+    srcs = glob(["*.kt"]),
     libs = [
         "@junit_junit//jar",
         "@org_jetbrains_kotlin_kotin_stdlib//jar",
@@ -22,74 +19,7 @@ kotlin_jvm_test(
         "@org_jetbrains_kotlin_kotin_reflect//jar",
         "@org_xerial_sqlite_jdbc//jar",
     ],
-    test_class = "runtime.shared.SqlDatastoreTest",
-    deps = [
-        "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/runtime/shared:shared_jar",
-        "//src/utils:utils_jar",
-    ],
-)
-
-kotlin_jvm_test(
-    name = "InMemoryDatastoreTest",
-    size = "small",
-    srcs = [
-        "abstractdatastoretest.kt",
-        "memdatastoretest.kt",
-    ],
-    libs = [
-        "@junit_junit//jar",
-        "@org_jetbrains_kotlin_kotin_stdlib//jar",
-        "@org_jetbrains_kotlin_kotin_test//jar",
-        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
-        "@org_jetbrains_kotlin_kotin_test_junit//jar",
-        "@org_jetbrains_kotlin_kotin_reflect//jar",
-        "@org_xerial_sqlite_jdbc//jar",
-    ],
-    test_class = "runtime.shared.InMemoryDatastoreTest",
-    deps = [
-        "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/runtime/shared:shared_jar",
-        "//src/utils:utils_jar",
-    ],
-)
-
-kotlin_jvm_test(
-    name = "BCryptTest",
-    size = "small",
-    srcs = ["bcrypttest.kt"],
-    libs = [
-        "@junit_junit//jar",
-        "@org_jetbrains_kotlin_kotin_stdlib//jar",
-        "@org_jetbrains_kotlin_kotin_test//jar",
-        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
-        "@org_jetbrains_kotlin_kotin_test_junit//jar",
-        "@org_jetbrains_kotlin_kotin_reflect//jar",
-    ],
-    test_class = "runtime.shared.BCryptTest",
-    deps = [
-        "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/runtime/shared:shared_jar",
-        "//src/utils:utils_jar",
-    ],
-)
-
-kotlin_jvm_test(
-    name = "ServerMessageTest",
-    size = "small",
-    srcs = ["servermessagetest.kt"],
-    libs = [
-        "@junit_junit//jar",
-        "@org_jetbrains_kotlin_kotin_stdlib//jar",
-        "@org_jetbrains_kotlin_kotin_test//jar",
-        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
-        "@org_jetbrains_kotlin_kotin_test_junit//jar",
-        "@org_jetbrains_kotlin_kotin_reflect//jar",
-    ],
-    test_class = "runtime.shared.ServerMessageTest",
+    test_class = "runtime.shared.AllTestsSuite",
     deps = [
         "//src/interfaces:interfaces_jar",
         "//src/runtime/jvm:runtime_jar",

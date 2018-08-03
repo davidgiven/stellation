@@ -133,4 +133,21 @@ abstract class AbstractDatastoreTest {
         datastore.setOidProperty(o, "oid", null)
         assertEquals(null, datastore.getOidProperty(o, "oid"))
     }
+
+    @Test
+    fun hierarchyTest() {
+        var o = datastore.createObject()
+        var o1 = datastore.createObject()
+        datastore.getSetProperty(o, "set").add(o1)
+        var o2 = datastore.createObject()
+        datastore.getSetProperty(o, "set").add(o2)
+        var o21 = datastore.createObject()
+        datastore.getSetProperty(o2, "set").add(o21)
+        var o22 = datastore.createObject()
+        datastore.getSetProperty(o2, "set").add(o22)
+
+        assertEquals(setOf(o, o1, o2, o21, o22), datastore.getHierarchy(o, "set"))
+        assertEquals(setOf(o2, o21, o22), datastore.getHierarchy(o2, "set"))
+        assertEquals(setOf(o1), datastore.getHierarchy(o1, "set"))
+    }
 }
