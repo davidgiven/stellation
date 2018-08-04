@@ -9,6 +9,17 @@ interface SetProperty {
     operator fun contains(item: Oid): Boolean
     fun getAll(): List<Oid>
     fun getOne(): Oid?
+
+    fun addAll(new: Iterable<Oid>) {
+        for (oid in new) {
+            add(oid)
+        }
+    }
+
+    fun replaceAll(new: Iterable<Oid>) {
+        clear()
+        addAll(new)
+    }
 }
 
 interface IDatastore {
@@ -37,6 +48,6 @@ interface IDatastore {
 
     fun getSetProperty(oid: Oid, name: String): SetProperty
 
-    fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String>
+    fun getPropertiesChangedSince(oids: List<Oid>, timestamp: Double): List<Pair<Oid, String>>
     fun getHierarchy(root: Oid, containment: String): Set<Oid>
 }

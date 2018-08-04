@@ -191,8 +191,40 @@ class SqlDatastore : IDatastore {
                                 ?.getOid()
             }
 
-    override fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getPropertiesChangedSince(oids: List<Oid>, timestamp: Double): List<Pair<Oid, String>> {
+        database.executeSql(
+                """
+                    DROP TABLE IF EXISTS _temp_oids
+                """
+        )
+        database.executeSql(
+                """
+                    CREATE TEMPORARY TABLE _temp_oids (
+                        oid INTEGER PRIMARY KEY
+                    )
+                """)
+        for (oid in oids) {
+            database.sqlStatement(
+                    """
+                        INSERT INTO _temp_oids (oid) VALUES (?)
+                    """)
+                    .bindOid(1, oid)
+                    .executeStatement()
+        }
+
+        return database.sqlStatement(
+                """
+                    SELECT
+                        oid, name
+                    FROM
+                        mtimes
+                    WHERE
+                        (mtime > ?)
+                        AND EXISTS (SELECT * FROM _temp_oids WHERE _temp_oids.oid = mtimes.oid)
+                """)
+                .bindReal(1, timestamp)
+                .executeQuery()
+                .map { Pair(it.get("oid")!!.getInt(), it.get("name")!!.getString()) }
     }
 
     override fun getHierarchy(root: Oid, containment: String): Set<Oid> =

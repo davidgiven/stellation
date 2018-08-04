@@ -76,7 +76,7 @@ class VisibilityTest {
 
     @Test fun calculateVisibleStars() {
         assertEquals(setOf(star1), player1.calculateVisibleStars())
-        assertEquals(setOf(star1, star2), player2.calculateVisibleStars())
+        assertEquals(setOf(star2), player2.calculateVisibleStars())
         assertEquals(emptySet(), player3.calculateVisibleStars())
     }
 
@@ -91,7 +91,10 @@ class VisibilityTest {
         val ship = createShip(owner)
         ship.owner = owner
 
-        model.createObject(SJumpdrive::class).moveTo(ship)
+        val jumpdrive = model.createObject(SJumpdrive::class)
+        jumpdrive.owner = owner
+        jumpdrive.moveTo(ship)
+
         return ship
     }
 }

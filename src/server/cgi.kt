@@ -1,10 +1,13 @@
 package server
 
 import interfaces.IAuthenticator
+import interfaces.IClock
 import interfaces.IEnvironment
 import interfaces.IUtf8
 import model.Model
 import model.SUniverse
+import model.calculateSyncPacket
+import model.currentPlayer
 import runtime.shared.ServerMessage
 import utils.Codec
 import utils.Fault
@@ -67,14 +70,20 @@ fun serveCgi() {
             val model by injection<Model>()
             val authenticator by injection<IAuthenticator>()
             val remoteServer by injection<RemoteServer>()
+            val clock by injection<IClock>()
 
             bind(findUniverse(model))
 
             val username = request.input.getUsername()
             val password = request.input.getPassword()
             authenticator.authenticatePlayer(username, password) {
-                response.output.setPlayerOid(authenticator.currentPlayerOid)
-                remoteServer.onMessageReceived(request.input, response.output)
+                try {
+                    response.output.setPlayerOid(authenticator.currentPlayerOid)
+                    remoteServer.onMessageReceived(request.input, response.output)
+                } finally {
+                    response.output.setClock(clock.getTime())
+                    response.output.setSyncMessage(model.currentPlayer().calculateSyncPacket(0.0))
+                }
             }
         }
 

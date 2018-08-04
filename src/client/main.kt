@@ -10,6 +10,7 @@ import utils.Codec
 import kotlin.browser.document
 import interfaces.IConsole
 import interfaces.ITime
+import interfaces.nanotime
 import commands.CommandDispatcher
 import interfaces.IAuthenticator
 import interfaces.ICommandDispatcher

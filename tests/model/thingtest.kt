@@ -101,6 +101,16 @@ class ThingTest {
         assertNull(g.findChild<SPlayer>())
     }
 
+    @Test
+    fun hierarchyTest() {
+        val g = model.createObject(SGalaxy::class)
+        val s1 = model.createObject(SStar::class).moveTo(g)
+        val s2 = model.createObject(SStar::class).moveTo(g)
+        val sh = model.createObject(SShip::class).moveTo(s1)
+
+        assertEquals(setOf(g, s1, s2, sh), g.calculateHierarchicalContents())
+    }
+
     private fun assertContains(needle: String, haystack: String) {
         assertTrue(needle in haystack)
     }

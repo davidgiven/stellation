@@ -9,5 +9,7 @@ import org.junit.runners.Suite
         InMemoryObjectsTest::class,
         SqlObjectsTest::class,
         ThingTest::class,
-        TimersTest::class)
+        TimersTest::class,
+        VisibilityTest::class,
+        SyncTest::class)
 class AllTestsSuite

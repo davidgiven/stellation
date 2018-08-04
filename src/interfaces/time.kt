@@ -1,8 +1,9 @@
 package interfaces
 
 interface ITime {
-    fun nanotime(): Long
+    fun realtime(): Double
 }
 
-fun ITime.millitime() = this.nanotime() / 1000L
-fun ITime.hourstime() = this.nanotime().toDouble() / 1e9 / 3600.0
+fun ITime.millitime() = (this.realtime() * 1000.0).toLong()
+fun ITime.hourstime() = this.realtime() / 3600.0
+fun ITime.nanotime() = (this.realtime() * 1e9).toLong()

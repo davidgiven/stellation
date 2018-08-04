@@ -3,5 +3,5 @@ package runtime.jvm
 import interfaces.ITime
 
 class JvmTime : ITime {
-    override fun nanotime(): Long = System.nanoTime()
+    override fun realtime() = System.nanoTime().toDouble() / 1e9
 }

@@ -1,8 +1,11 @@
 package model
 
+import interfaces.IClock
+import interfaces.ITime
 import interfaces.Oid
 import utils.NameGenerator
 import utils.Random
+import utils.inject
 import utils.injection
 import utils.roundBy
 import kotlin.math.PI
@@ -15,6 +18,10 @@ open class SUniverse(model: Model, oid: Oid) : SThing(model, oid) {
 }
 
 fun Model.createNewUniverse(): SUniverse {
+    val clock = inject<IClock>()
+    val time = inject<ITime>()
+    clock.setTime(time.realtime())
+
     val random by injection<Random>()
 
     val universe = createObject(SUniverse::class)

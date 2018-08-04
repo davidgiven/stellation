@@ -9,6 +9,7 @@ import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.IEnvironment
 import interfaces.ITime
+import interfaces.nanotime
 import interfaces.withSqlTransaction
 import model.Model
 import model.Timers

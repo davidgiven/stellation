@@ -3,6 +3,7 @@ package runtime.shared
 import interfaces.IDatastore
 import interfaces.Oid
 import interfaces.SetProperty
+import interfaces.UNIMPLEMENTED
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
 
@@ -144,9 +145,8 @@ class InMemoryDatastore : IDatastore {
         return set
     }
 
-    override fun getPropertiesChangedSince(oid: Oid, timestamp: Double): List<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getPropertiesChangedSince(oids: List<Oid>, timestamp: Double): List<Pair<Oid, String>> =
+            UNIMPLEMENTED()
 
     override fun getHierarchy(root: Oid, containment: String): Set<Oid> {
         var set = emptySet<Oid>()

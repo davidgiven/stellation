@@ -2,6 +2,7 @@ package runtime.shared
 
 import interfaces.CommandMessage
 import interfaces.Oid
+import model.SyncMessage
 import utils.Codec
 import utils.Fault
 import utils.Message
@@ -17,6 +18,8 @@ private const val PASSWORD = "password"
 private const val USERNAME = "username"
 private const val PLAYEROID = "oid"
 private const val STATUS = "status"
+private const val SYNC = "sync"
+private const val CLOCK = "clock"
 
 class ServerMessage : Message() {
     val codec by injection<Codec>()
@@ -57,6 +60,18 @@ class ServerMessage : Message() {
         return message
     }
 
+    fun setSyncMessage(sync: SyncMessage) {
+        val encoded = codec.encode(sync.toMap())
+        set(SYNC, encoded)
+    }
+
+    fun getSyncMessage(): SyncMessage {
+        val encoded: String = get(SYNC)
+        val message = SyncMessage()
+        message.setFromMap(codec.decode(encoded))
+        return message
+    }
+
     fun setUsername(username: String) = set(USERNAME, username)
     fun getUsername(): String = get(USERNAME)
 
@@ -65,5 +80,8 @@ class ServerMessage : Message() {
 
     fun setPlayerOid(playerOid: Oid) = set(PLAYEROID, playerOid)
     fun getPlayerOid(): Oid = get(PLAYEROID)
+
+    fun setClock(clock: Double) = set(CLOCK, clock)
+    fun getClock(): Double = get(CLOCK)
 }
 

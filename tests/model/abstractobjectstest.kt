@@ -40,9 +40,6 @@ abstract class AbstractObjectsTest {
 
         s.brightness = 7.6
         assertEquals(7.6, s.brightness)
-
-        s.asteroidsM = 42
-        assertEquals(42, s.asteroidsM)
     }
 
     @Test
@@ -50,13 +47,11 @@ abstract class AbstractObjectsTest {
         val s1 = model.createObject(SStar::class)
         s1.name = "Foo"
         s1.brightness = 7.6
-        s1.asteroidsM = 42
 
         val s2 = model.loadRawObject(s1.oid, SStar::class)
         assertNotSame(s2, s1)
         assertEquals("Foo", s2.name)
         assertEquals(7.6, s2.brightness)
-        assertEquals(42, s2.asteroidsM)
     }
 
     @Test

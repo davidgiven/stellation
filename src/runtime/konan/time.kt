@@ -3,5 +3,5 @@ package runtime.konan
 import interfaces.ITime
 
 class KonanTime : ITime {
-    override fun nanotime(): Long = kotlin.system.getTimeNanos()
+    override fun realtime() = kotlin.system.getTimeNanos().toDouble() / 1e9
 }

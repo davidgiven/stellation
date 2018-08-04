@@ -63,6 +63,13 @@ fun SThing.getContainingStar(): SStar? {
     return null
 }
 
+fun SThing.calculateHierarchicalContents(): Set<SThing> =
+        model
+                .datastore
+                .getHierarchy(oid, "contents")
+                .map { model.loadObject(it, SThing::class) }
+                .toSet()
+
 fun <T : SThing> T.moveTo(destination: SThing): T {
     var loc: SThing? = destination
     while (loc != null) {

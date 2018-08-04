@@ -41,15 +41,18 @@ interface Aggregate<T : SThing> : Iterable<T> {
 interface VarProxy<T> : ReadWriteProperty<SThing, T>
 interface ValProxy<T> : ReadOnlyProperty<SThing, T>
 
-var allProperties: Set<Property> = emptySet()
+var allProperties: Map<String, Property> = emptyMap()
 
 abstract class Property(val scope: Scope, val name: String) {
     init {
-        allProperties += this
+        allProperties += name to this
     }
 
     abstract val sqlType: String
     abstract val isAggregate: Boolean
+
+    abstract fun serialiseToString(model: Model, oid: Oid): String
+    abstract fun deserialiseFromString(model: Model, oid: Oid, value: String)
 }
 
 abstract class PrimitiveProperty<T>(scope: Scope, name: String)
@@ -64,6 +67,9 @@ abstract class PrimitiveProperty<T>(scope: Scope, name: String)
         setPrimitive(thisRef.model, thisRef.oid, value)
     }
 
+    override fun serialiseToString(model: Model, oid: Oid) =
+            getPrimitive(model, oid).toString()
+
     override val isAggregate = false
 }
 
@@ -75,6 +81,9 @@ open class IntProperty(scope: Scope, name: String) : PrimitiveProperty<Int>(scop
 
     override fun setPrimitive(model: Model, oid: Oid, value: Int) =
             model.datastore.setIntProperty(oid, name, value)
+
+    override fun deserialiseFromString(model: Model, oid: Oid, value: String) =
+            setPrimitive(model, oid, value.toInt())
 }
 
 open class LongProperty(scope: Scope, name: String) : PrimitiveProperty<Long>(scope, name) {
@@ -85,6 +94,9 @@ open class LongProperty(scope: Scope, name: String) : PrimitiveProperty<Long>(sc
 
     override fun setPrimitive(model: Model, oid: Oid, value: Long) =
             model.datastore.setLongProperty(oid, name, value)
+
+    override fun deserialiseFromString(model: Model, oid: Oid, value: String) =
+            setPrimitive(model, oid, value.toLong())
 }
 
 open class RealProperty(scope: Scope, name: String) : PrimitiveProperty<Double>(scope, name) {
@@ -95,6 +107,9 @@ open class RealProperty(scope: Scope, name: String) : PrimitiveProperty<Double>(
 
     override fun setPrimitive(model: Model, oid: Oid, value: Double) =
             model.datastore.setRealProperty(oid, name, value)
+
+    override fun deserialiseFromString(model: Model, oid: Oid, value: String) =
+            setPrimitive(model, oid, value.toDouble())
 }
 
 open class StringProperty(scope: Scope, name: String) : PrimitiveProperty<String>(scope, name) {
@@ -105,6 +120,9 @@ open class StringProperty(scope: Scope, name: String) : PrimitiveProperty<String
 
     override fun setPrimitive(model: Model, oid: Oid, value: String) =
             model.datastore.setStringProperty(oid, name, value)
+
+    override fun deserialiseFromString(model: Model, oid: Oid, value: String) =
+            setPrimitive(model, oid, value)
 }
 
 open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>) :
@@ -116,12 +134,26 @@ open class RefProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
 
     override fun setPrimitive(model: Model, oid: Oid, value: T?) =
             model.datastore.setOidProperty(oid, name, value?.oid)
+
+    override fun serialiseToString(model: Model, oid: Oid) =
+            model.datastore.getOidProperty(oid, name).toString()
+
+    override fun deserialiseFromString(model: Model, oid: Oid, value: String) =
+            model.datastore.setOidProperty(oid, name, value.toInt())
 }
 
 open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClass<T>)
     : Property(scope, name), ValProxy<Aggregate<T>> {
     override val sqlType = "INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE"
     override val isAggregate = true
+
+    override fun serialiseToString(model: Model, oid: Oid) =
+            model.datastore.getSetProperty(oid, name).getAll().map { it.toString() }.joinToString(",")
+
+    override fun deserialiseFromString(model: Model, oid: Oid, value: String) {
+        val values = value.split(',').map { it.toInt() }
+        model.datastore.getSetProperty(oid, name).clear().replaceAll(values)
+    }
 
     override fun getValue(thisRef: SThing, property: KProperty<*>): Aggregate<T> {
         val model = thisRef.model
@@ -154,21 +186,19 @@ open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
     }
 }
 
-val ASTEROIDS_M = IntProperty(Scope.LOCAL, "asteroids_m")
-val ASTEROIDS_O = IntProperty(Scope.LOCAL, "asteroids_o")
-val BRIGHTNESS = RealProperty(Scope.GLOBAL, "brightness")
+val BRIGHTNESS = RealProperty(Scope.LOCAL, "brightness")
 val CONTENTS = SetProperty(Scope.LOCAL, "contents", SThing::class)
 val DATA = StringProperty(Scope.LOCAL, "data")
 val EMAIL_ADDRESS = StringProperty(Scope.SERVERONLY, "email_address")
 val FRAMES = SetProperty(Scope.LOCAL, "frames", SFrame::class)
-val GALAXY = RefProperty(Scope.GLOBAL, "galaxy", SGalaxy::class)
-val KIND = StringProperty(Scope.GLOBAL, "kind")
+val GALAXY = RefProperty(Scope.LOCAL, "galaxy", SGalaxy::class)
+val KIND = StringProperty(Scope.LOCAL, "kind")
 val LOCATION = RefProperty(Scope.LOCAL, "location", SThing::class)
 val NAME = StringProperty(Scope.LOCAL, "name")
 val OWNER = RefProperty(Scope.LOCAL, "owner", SPlayer::class)
 val PASSWORD_HASH = StringProperty(Scope.SERVERONLY, "password_hash")
 val PLAYERS = SetProperty(Scope.SERVERONLY, "players", SPlayer::class)
-val SHIPS = SetProperty(Scope.GLOBAL, "ships", SShip::class)
+val SHIPS = SetProperty(Scope.PRIVATE, "ships", SShip::class)
 val XPOS = RealProperty(Scope.LOCAL, "x")
 val YPOS = RealProperty(Scope.LOCAL, "y")
 

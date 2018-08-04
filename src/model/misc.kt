@@ -2,15 +2,6 @@ package model
 
 import interfaces.Oid
 
-open class SStar(model: Model, oid: Oid) : SThing(model, oid) {
-    var name by NAME
-    var x by XPOS
-    var y by YPOS
-    var brightness by BRIGHTNESS
-    var asteroidsM by ASTEROIDS_M
-    var asteroidsO by ASTEROIDS_O
-}
-
 open class SModule(model: Model, oid: Oid) : SThing(model, oid) {
     open val width = 1
     open val height = 1
