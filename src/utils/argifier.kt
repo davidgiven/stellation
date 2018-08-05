@@ -6,7 +6,7 @@ fun throwBadStringEscapeException(): Nothing = throw Fault(SYNTAX).withDetail("b
 fun throwUnterminatedStringException(): Nothing = throw Fault(SYNTAX).withDetail("unterminated string")
 
 fun argify(input: String): List<String> {
-    var builders: List<StringBuilder> = emptyList()
+    val builders = ArrayList<StringBuilder>()
     var current: StringBuilder? = null
     var index = 0
 

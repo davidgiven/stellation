@@ -14,7 +14,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
 typealias JobCallback = suspend Job.() -> Unit
 typealias JobContinuation = Continuation<Unit>
 
-private var jobQueue: List<Job> = emptyList()
+private val jobQueue = ArrayList<Job>()
 private var currentJob: Job? = null
 
 fun hasJobs() = (currentJob != null) || !jobQueue.isEmpty()
@@ -26,7 +26,7 @@ fun schedule() {
     } else {
         currentJob = jobQueue.firstOrNull()
         if (currentJob != null) {
-            jobQueue = jobQueue.drop(1)
+            jobQueue.removeAt(0)
             currentJob!!.start()
         }
     }

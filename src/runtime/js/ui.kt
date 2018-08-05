@@ -64,7 +64,6 @@ class JsUi : IUi {
             element!!.scrollIntoView()
         }
 
-        //        override fun getPosition() = Pair(element!!.offsetLeft, element!!.offsetTop)
         override fun getPosition(): Pair<Int, Int> {
             val computed = window.getComputedStyle(element!!.parentElement!!)
             return Pair(

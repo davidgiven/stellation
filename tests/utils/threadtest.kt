@@ -1,10 +1,10 @@
 package utils
 
 import interfaces.ILogger
+import junit.framework.Assert.assertEquals
+import org.junit.Before
+import org.junit.Test
 import runtime.jvm.JvmLogger
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class ThreadTest {
     companion object {
@@ -13,7 +13,7 @@ class ThreadTest {
         }
     }
 
-    @BeforeTest
+    @Before
     fun setup() {
         assertEquals(false, hasJobs())
     }

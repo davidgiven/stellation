@@ -103,4 +103,11 @@ class SyncTest {
                         jumpdrive1.oid),
                 p.getVisibleObjects())
     }
+
+    @Test
+    fun incrementalSyncTest() {
+        clock.setTime(3.0)
+        star1.name = "Fnord"
+        val p = syncer.exportSyncPacket(player1.oid, 1.0)
+    }
 }

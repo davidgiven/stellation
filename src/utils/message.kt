@@ -26,7 +26,7 @@ open class Message : Iterable<String> {
     }
 
     fun toList(): List<String> {
-        var list: List<String> = emptyList()
+        val list = ArrayList<String>()
         for (i in 0..(count - 1)) {
             val arg: String = get(i)
             list += arg
