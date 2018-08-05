@@ -1,7 +1,7 @@
 package commands
 
 import interfaces.IAuthenticator
-import interfaces.Oid
+import utils.Oid
 import interfaces.throwCommandSyntaxException
 import model.checkGod
 import model.currentPlayer

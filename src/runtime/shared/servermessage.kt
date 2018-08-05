@@ -1,15 +1,12 @@
 package runtime.shared
 
 import interfaces.CommandMessage
-import interfaces.Oid
-import model.SyncMessage
+import utils.Oid
+import utils.SyncMessage
 import utils.Codec
 import utils.Fault
 import utils.Message
-import utils.add
-import utils.get
 import utils.injection
-import utils.set
 
 private const val CMDINPUT = "cmdinput"
 private const val CMDOUTPUT = "cmdoutput"
@@ -26,14 +23,14 @@ class ServerMessage : Message() {
 
     fun hasFault() = contains(FAULT)
     fun setFault(fault: Fault) = set(FAULT, fault.serialise())
-    fun getFault(): Fault = Fault(get<String, String>(FAULT))
+    fun getFault(): Fault = Fault(get(FAULT))
 
     fun hasCommandInput() = contains(CMDINPUT)
 
     fun setCommandInput(argv: List<String>) {
         val message = Message()
         for (arg in argv) {
-            message.add(arg)
+            message.addString(arg)
         }
         val encoded = codec.encode(message.toMap())
         set(CMDINPUT, encoded)
@@ -72,16 +69,16 @@ class ServerMessage : Message() {
         return message
     }
 
-    fun setUsername(username: String) = set(USERNAME, username)
-    fun getUsername(): String = get(USERNAME)
+    fun setUsername(username: String) = setString(USERNAME, username)
+    fun getUsername(): String = getString(USERNAME)
 
-    fun setPassword(password: String) = set(PASSWORD, password)
-    fun getPassword(): String = get(PASSWORD)
+    fun setPassword(password: String) = setString(PASSWORD, password)
+    fun getPassword(): String = getString(PASSWORD)
 
-    fun setPlayerOid(playerOid: Oid) = set(PLAYEROID, playerOid)
-    fun getPlayerOid(): Oid = get(PLAYEROID)
+    fun setPlayerOid(playerOid: Oid) = setInt(PLAYEROID, playerOid)
+    fun getPlayerOid(): Oid = getInt(PLAYEROID)
 
-    fun setClock(clock: Double) = set(CLOCK, clock)
-    fun getClock(): Double = get(CLOCK)
+    fun setClock(clock: Double) = setDouble(CLOCK, clock)
+    fun getClock() = getDouble(CLOCK)
 }
 

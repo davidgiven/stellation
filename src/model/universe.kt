@@ -2,7 +2,7 @@ package model
 
 import interfaces.IClock
 import interfaces.ITime
-import interfaces.Oid
+import utils.Oid
 import utils.NameGenerator
 import utils.Random
 import utils.inject

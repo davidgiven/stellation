@@ -2,20 +2,23 @@ package runtime.js
 
 import interfaces.IAuthenticator
 import interfaces.IClientInterface
+import interfaces.IClock
 import interfaces.ICommand
+import interfaces.ISyncer
 import interfaces.throwAuthenticationFailedException
 import org.w3c.xhr.XMLHttpRequest
 import runtime.shared.ServerMessage
 import utils.Codec
 import utils.Fault
 import utils.FaultDomain.NETWORK
-import utils.FaultDomain.PERMISSION
 import utils.Mailbox
 import utils.injection
 
 class RemoteClientInterface : IClientInterface {
     private val codec by injection<Codec>()
     private val authenticator by injection<IAuthenticator>()
+    private val clock by injection<IClock>()
+    private val syncer by injection<ISyncer>()
 
     private var username = ""
     private var password = ""
@@ -30,6 +33,7 @@ class RemoteClientInterface : IClientInterface {
         sendMessage.setCommandInput(command.argv)
         sendMessage.setUsername(username)
         sendMessage.setPassword(password)
+        sendMessage.setClock(clock.getTime())
 
         val mailbox: Mailbox<ServerMessage> = Mailbox()
         val xhr = XMLHttpRequest()
@@ -39,9 +43,9 @@ class RemoteClientInterface : IClientInterface {
                 val status = xhr.status.toInt()
                 try {
                     when (status) {
-                        200  ->
+                        200 ->
                             receiveMessage.setFromMap(codec.decode(xhr.responseText))
-                        401  ->
+                        401 ->
                             throwAuthenticationFailedException()
                         else ->
                             throw Fault(NETWORK).withStatus(status).withDetail("network error")
@@ -62,6 +66,8 @@ class RemoteClientInterface : IClientInterface {
         }
 
         authenticator.setAuthenticatedPlayer(receiveMessage.getPlayerOid())
+        syncer.importSyncPacket(receiveMessage.getSyncMessage())
+        clock.setTime(receiveMessage.getClock())
         command.output = receiveMessage.getCommandOutput()
     }
 }

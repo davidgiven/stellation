@@ -1,6 +1,6 @@
 package model
 
-import interfaces.Oid
+import utils.Oid
 import interfaces.throwNobodyLoggedInException
 import interfaces.throwPermissionDeniedException
 import kotlin.reflect.KClass
@@ -53,30 +53,6 @@ fun SPlayer.calculateVisibleObjects(): Set<SThing> {
         set += star.calculateHierarchicalContents()
     }
     return set
-}
-
-fun SPlayer.calculateSyncPacket(lastSync: Double): SyncMessage {
-    val datastore = model.datastore
-    val p = SyncMessage()
-
-    var visibleObjects =
-            setOf(model.getUniverse(), model.getUniverse().galaxy!!) +
-                    model.getUniverse().galaxy!!.contents + calculateVisibleObjects()
-
-    for (o in visibleObjects) {
-        p.addVisibleObject(o.oid)
-    }
-    val changedProperties = datastore.getPropertiesChangedSince(
-            visibleObjects.map { it.oid }, lastSync)
-    for ((oid, propertyName) in changedProperties) {
-        val property = allProperties[propertyName]!!
-        val thing = model.loadObject(oid, SThing::class)
-        if ((property.scope == Scope.LOCAL) || ((property.scope == Scope.PRIVATE) && (thing.owner == this))) {
-            val serialised = property.serialiseToString(model, oid)
-            p.addProperty(oid, propertyName, serialised)
-        }
-    }
-    return p
 }
 
 fun Model.currentPlayer(): SPlayer {

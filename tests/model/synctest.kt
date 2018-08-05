@@ -3,12 +3,14 @@ package model
 import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
+import interfaces.ISyncer
 import interfaces.withSqlTransaction
 import org.junit.Before
 import org.junit.Test
 import runtime.jvm.JvmDatabase
 import runtime.shared.Clock
 import runtime.shared.SqlDatastore
+import runtime.shared.Syncer
 import utils.bind
 import utils.inject
 import utils.resetBindingsForTest
@@ -19,8 +21,10 @@ class SyncTest {
     private val datastore get() = inject<IDatastore>()
     private val model get() = inject<Model>()
     private val clock get() = inject<IClock>()
+    private val syncer get() = inject<ISyncer>()
 
     private lateinit var universe: SUniverse
+    private lateinit var god: SPlayer
     private lateinit var star1: SStar
     private lateinit var star2: SStar
     private lateinit var player1: SPlayer
@@ -36,6 +40,7 @@ class SyncTest {
         bind<IClock>(Clock())
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore())
+        bind<ISyncer>(Syncer())
         bind(Model())
 
         clock.setTime(1.0)
@@ -46,6 +51,7 @@ class SyncTest {
         database.executeSql("BEGIN")
 
         universe = model.createObject(SUniverse::class)
+        god = model.createObject(SPlayer::class)
         universe.galaxy = model.createObject(SGalaxy::class).moveTo(universe)
 
         star1 = model.createObject(SStar::class).moveTo(universe.galaxy!!)
@@ -85,7 +91,7 @@ class SyncTest {
 
     @Test
     fun initialSyncTest() {
-        val p = player1.calculateSyncPacket(0.0)
+        val p = syncer.exportSyncPacket(player1.oid, 0.0)
         assertEquals(
                 setOf(
                         universe.oid,

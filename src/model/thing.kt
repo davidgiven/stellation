@@ -1,6 +1,6 @@
 package model
 
-import interfaces.Oid
+import utils.Oid
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
 

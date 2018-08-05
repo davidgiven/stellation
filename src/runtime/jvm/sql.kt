@@ -1,7 +1,7 @@
 package runtime.jvm
 
 import interfaces.IDatabase
-import interfaces.Oid
+import utils.Oid
 import interfaces.SqlStatement
 import interfaces.SqlValue
 import org.sqlite.JDBC

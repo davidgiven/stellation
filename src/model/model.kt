@@ -2,7 +2,7 @@ package model
 
 import interfaces.IAuthenticator
 import interfaces.IDatastore
-import interfaces.Oid
+import utils.Oid
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
 import utils.injection

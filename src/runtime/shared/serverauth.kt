@@ -3,7 +3,7 @@ package server
 import interfaces.IAuthenticator
 import interfaces.IDatabase
 import interfaces.ILogger
-import interfaces.Oid
+import utils.Oid
 import interfaces.throwAuthenticationFailedException
 import model.Model
 import model.SPlayer

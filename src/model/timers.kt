@@ -1,7 +1,7 @@
 package model
 
 import interfaces.IDatabase
-import interfaces.Oid
+import utils.Oid
 import utils.injection
 
 class Timers {

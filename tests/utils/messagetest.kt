@@ -28,8 +28,8 @@ class MessageTest {
     @Test
     fun arguments() {
         val p = Message()
-        p.add("foo")
-        p.add("bar")
+        p.addString("foo")
+        p.addString("bar")
         assertEquals(mapOf("0" to "foo", "1" to "bar", "_count" to "2"), p.toMap())
         assertEquals(listOf("foo", "bar"), p.toList())
         assertEquals("foo", p[0])
@@ -41,7 +41,7 @@ class MessageTest {
     fun mixed() {
         val p = Message()
         p["foo"] = "bar"
-        p.add("thingy")
+        p.addString("thingy")
         p["baz"] = "boo"
         assertEquals(mapOf("foo" to "bar", "baz" to "boo", "0" to "thingy", "_count" to "1"), p.toMap())
         assertEquals(listOf("thingy"), p.toList())
@@ -53,12 +53,12 @@ class MessageTest {
 
     @Test fun types() {
         val p = Message()
-        p["char"] = 'q'
-        p["short"] = 1.toShort()
-        p["int"] = 2
-        p["float"] = (3.0).toFloat()
-        p["double"] = 4.0
-        p["string"] = "five"
+        p.setChar("char", 'q')
+        p.setShort("short", 1.toShort())
+        p.setInt("int", 2)
+        p.setFloat("float", (3.0).toFloat())
+        p.setDouble("double", 4.0)
+        p.setString("string", "five")
         assertEquals(
                 mapOf(
                         "char" to "q",
@@ -67,32 +67,32 @@ class MessageTest {
                         "float" to "3.0",
                         "double" to "4.0",
                         "string" to "five"), p.toMap())
-        assertEquals('q', p["char"])
-        assertEquals(1.toShort(), p["short"])
-        assertEquals(2, p["int"])
-        assertEquals((3.0).toFloat(), p["float"])
-        assertEquals(4.0, p["double"])
-        assertEquals("five", p["string"])
+        assertEquals('q', p.getChar("char"))
+        assertEquals(1.toShort(), p.getShort("short"))
+        assertEquals(2, p.getInt("int"))
+        assertEquals((3.0).toFloat(), p.getFloat("float"))
+        assertEquals(4.0, p.getDouble("double"))
+        assertEquals("five", p.getString("string"))
     }
 
     @Test fun missingByName() {
         val p = Message()
-        assertEquals(null as Char?, p.getOrNull("char"))
-        assertEquals(null as Short?, p.getOrNull("short"))
-        assertEquals(null as Int?, p.getOrNull("int"))
-        assertEquals(null as Float?, p.getOrNull("float"))
-        assertEquals(null as Double?, p.getOrNull("double"))
-        assertEquals(null as String?, p.getOrNull("string"))
+        assertEquals(null as Char?, p.getCharOrNull("char"))
+        assertEquals(null as Short?, p.getShortOrNull("short"))
+        assertEquals(null as Int?, p.getIntOrNull("int"))
+        assertEquals(null as Float?, p.getFloatOrNull("float"))
+        assertEquals(null as Double?, p.getDoubleOrNull("double"))
+        assertEquals(null as String?, p.getStringOrNull("string"))
     }
 
     @Test fun defaults() {
         val p = Message()
-        assertEquals('0', p.getOrDefault("char", '0'))
-        assertEquals(0.toShort(), p.getOrDefault("short", 0.toShort()))
-        assertEquals(0, p.getOrDefault("int", 0))
-        assertEquals((0.0).toFloat(), p.getOrDefault("float", (0.0).toFloat()))
-        assertEquals(0.0, p.getOrDefault("double", 0.0))
-        assertEquals("", p.getOrDefault("string", ""))
+        assertEquals('0', p.getCharOrDefault("char", '0'))
+        assertEquals(0.toShort(), p.getShortOrDefault("short", 0.toShort()))
+        assertEquals(0, p.getIntOrDefault("int", 0))
+        assertEquals((0.0).toFloat(), p.getFloatOrDefault("float", (0.0).toFloat()))
+        assertEquals(0.0, p.getDoubleOrDefault("double", 0.0))
+        assertEquals("", p.getStringOrDefault("string", ""))
     }
 
     @Test fun contains() {
@@ -105,7 +105,7 @@ class MessageTest {
     @Test fun exceptionOnMissing() {
         val p = Message()
         try {
-            p.get<String, Int>("fnord")
+            p["fnord"]
             fail("exception not thrown")
         } catch (_: NullPointerException) {
         }

@@ -2,6 +2,7 @@ package interfaces
 
 import utils.Fault
 import utils.FaultDomain.PERMISSION
+import utils.Oid
 
 fun throwAuthenticationFailedException(): Nothing =
         throw Fault(PERMISSION).withStatus(401).withDetail("authentication failed")

@@ -48,16 +48,16 @@ class Fault : Exception {
         val codec = inject<Codec>()
         val p = Message()
         p.setFromMap(codec.decode(encoded))
-        status = p[STATUS]
-        val domainOrdinal: Int = p[DOMAIN]
+        status = p.getInt(STATUS)
+        val domainOrdinal = p.getInt(DOMAIN)
         domain = FaultDomain.values()[domainOrdinal]
         detail = p[DETAIL]
     }
 
     fun serialise(): String {
         val p = Message()
-        p[STATUS] = status
-        p[DOMAIN] = domain.ordinal
+        p.setInt(STATUS, status)
+        p.setInt(DOMAIN, domain.ordinal)
         p[DETAIL] = detail
 
         val codec = inject<Codec>()

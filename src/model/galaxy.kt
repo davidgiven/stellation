@@ -1,6 +1,6 @@
 package model
 
-import interfaces.Oid
+import utils.Oid
 
 open class SGalaxy(model: Model, oid: Oid) : SThing(model, oid) {
     companion object {

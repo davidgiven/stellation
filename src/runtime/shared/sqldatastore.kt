@@ -3,7 +3,7 @@ package runtime.shared
 import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
-import interfaces.Oid
+import utils.Oid
 import interfaces.SetProperty
 import utils.injection
 
@@ -62,11 +62,22 @@ class SqlDatastore : IDatastore {
 
     }
 
+    override fun createObject(oid: Oid) {
+        database.sqlStatement("INSERT INTO objects (oid) VALUES(?)")
+                .bindOid(1, oid)
+                .executeStatement()
+    }
+
     override fun destroyObject(oid: Oid) {
         database.sqlStatement("DELETE FROM objects WHERE oid = ?")
                 .bindInt(1, oid)
                 .executeStatement()
     }
+
+    override fun getAllObjects() =
+            database.sqlStatement("SELECT oid FROM objects")
+                    .executeQuery()
+                    .map { it.get("oid")!!.getOid()!! }
 
     override fun doesObjectExist(oid: Oid): Boolean =
             database.sqlStatement("SELECT COUNT(*) AS count FROM objects WHERE oid = ? LIMIT 1")

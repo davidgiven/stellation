@@ -1,6 +1,6 @@
 package model
 
-import interfaces.Oid
+import utils.Oid
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass

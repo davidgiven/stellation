@@ -1,7 +1,7 @@
 package server
 
 import interfaces.IAuthenticator
-import interfaces.Oid
+import utils.Oid
 import interfaces.UNIMPLEMENTED
 
 class LocalAuthenticator : IAuthenticator {

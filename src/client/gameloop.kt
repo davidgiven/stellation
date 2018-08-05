@@ -1,6 +1,7 @@
 package client
 
 import interfaces.IClientInterface
+import interfaces.IClock
 import interfaces.ICommandDispatcher
 import interfaces.IConsole
 import interfaces.IDatastore
@@ -17,6 +18,7 @@ class GameLoop {
     val commandDispatcher by injection<ICommandDispatcher>()
     val console by injection<IConsole>()
     val datastore by injection<IDatastore>()
+    val clock by injection<IClock>()
 
     fun startGame() {
         doLogin()
@@ -34,6 +36,7 @@ class GameLoop {
                 if (!loginData.canceled) {
                     try {
                         clientInterface.setCredentials(loginData.username!!, loginData.password!!)
+                        clock.setTime(0.0)
 
                         val command = commandDispatcher.resolve(listOf("ping"))
                         command.run()

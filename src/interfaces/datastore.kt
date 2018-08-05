@@ -1,6 +1,6 @@
 package interfaces
 
-typealias Oid = Int
+import utils.Oid
 
 interface SetProperty {
     fun add(item: Oid): SetProperty
@@ -28,7 +28,9 @@ interface IDatastore {
     fun createProperty(name: String, sqlType: String, isAggregate: Boolean)
 
     fun createObject(): Oid
+    fun createObject(oid: Oid)
     fun destroyObject(oid: Oid)
+    fun getAllObjects(): List<Oid>
     fun doesObjectExist(oid: Oid): Boolean
 
     fun setOidProperty(oid: Oid, name: String, value: Oid?)

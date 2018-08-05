@@ -8,6 +8,7 @@ import interfaces.ICommandDispatcher
 import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.IEnvironment
+import interfaces.ISyncer
 import interfaces.ITime
 import interfaces.nanotime
 import interfaces.withSqlTransaction
@@ -17,6 +18,7 @@ import runtime.shared.Clock
 import runtime.shared.CommandShell
 import runtime.shared.LocalClientInterface
 import runtime.shared.SqlDatastore
+import runtime.shared.Syncer
 import utils.BCrypt
 import utils.Codec
 import utils.Random
@@ -36,6 +38,7 @@ fun main(argv: Array<String>) {
     bind(RemoteServer())
     bind(BCrypt())
     bind<IClock>(Clock())
+    bind<ISyncer>(Syncer())
 
     val time = inject<ITime>()
     bind(Random(time.nanotime()))

@@ -1,5 +1,7 @@
 package interfaces
 
+import utils.Oid
+
 class SqlException(message: String) : Exception(message)
 
 interface SqlValue {

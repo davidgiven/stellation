@@ -1,7 +1,7 @@
 package runtime.konan
 
 import interfaces.IDatabase
-import interfaces.Oid
+import utils.Oid
 import interfaces.SqlException
 import interfaces.SqlStatement
 import interfaces.SqlValue

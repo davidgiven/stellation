@@ -1,6 +1,6 @@
 package model
 
-import interfaces.Oid
+import utils.Oid
 
 open class SStar(model: Model, oid: Oid) : SThing(model, oid) {
     var name by NAME

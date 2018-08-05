@@ -2,17 +2,21 @@ package server
 
 import interfaces.IAuthenticator
 import interfaces.IClock
+import interfaces.IDatabase
 import interfaces.IEnvironment
+import interfaces.ISyncer
+import interfaces.ITime
 import interfaces.IUtf8
+import interfaces.withSqlTransaction
 import model.Model
 import model.SUniverse
-import model.calculateSyncPacket
 import model.currentPlayer
 import runtime.shared.ServerMessage
 import utils.Codec
 import utils.Fault
 import utils.FaultDomain.NETWORK
 import utils.bind
+import utils.inject
 import utils.injection
 
 fun throwBadCgiException(s: String): Nothing = throw Fault(NETWORK).withDetail("Bad CGI request: $s")
@@ -67,22 +71,33 @@ fun serveCgi() {
         response.headers += "Content-type" to "text/plain; charset=utf-8"
 
         withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
-            val model by injection<Model>()
-            val authenticator by injection<IAuthenticator>()
-            val remoteServer by injection<RemoteServer>()
-            val clock by injection<IClock>()
+            val model = inject<Model>()
+            val authenticator = inject<IAuthenticator>()
+            val remoteServer = inject<RemoteServer>()
+            val clock = inject<IClock>()
+            val syncer = inject<ISyncer>()
+            val database = inject<IDatabase>()
+            val time = inject<ITime>()
 
             bind(findUniverse(model))
+
+            clock.setTime(time.realtime())
 
             val username = request.input.getUsername()
             val password = request.input.getPassword()
             authenticator.authenticatePlayer(username, password) {
                 try {
-                    response.output.setPlayerOid(authenticator.currentPlayerOid)
-                    remoteServer.onMessageReceived(request.input, response.output)
+                    database.withSqlTransaction {
+                        response.output.setPlayerOid(authenticator.currentPlayerOid)
+                        remoteServer.onMessageReceived(request.input, response.output)
+                    }
                 } finally {
-                    response.output.setClock(clock.getTime())
-                    response.output.setSyncMessage(model.currentPlayer().calculateSyncPacket(0.0))
+                    database.withSqlTransaction {
+                        val clientSyncTime = request.input.getClock()
+                        response.output.setClock(clock.getTime())
+                        response.output.setSyncMessage(
+                                syncer.exportSyncPacket(model.currentPlayer().oid, clientSyncTime))
+                    }
                 }
             }
         }

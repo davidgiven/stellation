@@ -24,4 +24,11 @@ class ServerMessageTest {
         assertTrue(p.hasCommandInput())
         assertEquals(argv, p.getCommandInput())
     }
+
+    @Test
+    fun getSetClock() {
+        val p = ServerMessage()
+        p.setClock(1.234)
+        assertEquals(1.234, p.getClock())
+    }
 }

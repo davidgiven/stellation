@@ -1,6 +1,6 @@
 package model
 
-import interfaces.Oid
+import utils.Oid
 
 open class SModule(model: Model, oid: Oid) : SThing(model, oid) {
     open val width = 1

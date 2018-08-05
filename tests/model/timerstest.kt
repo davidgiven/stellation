@@ -3,7 +3,7 @@ package model
 import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
-import interfaces.Oid
+import utils.Oid
 import interfaces.withSqlTransaction
 import runtime.jvm.JvmDatabase
 import runtime.shared.Clock

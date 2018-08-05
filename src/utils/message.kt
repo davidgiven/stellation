@@ -10,7 +10,7 @@ open class Message : Iterable<String> {
     var _map: Map<String, String> = emptyMap()
     var count = 0
 
-    inline val size: Int get() = getOrDefault(COUNT, 0)
+    inline val size: Int get() = getIntOrDefault(COUNT, 0)
 
     fun setFromMap(map: Map<String, String>) {
         _map = map
@@ -38,39 +38,52 @@ open class Message : Iterable<String> {
     override fun iterator(): Iterator<String> = toList().iterator()
 
     inline operator fun <K> contains(key: K): Boolean = _map.containsKey(key.toString())
-}
 
-inline fun <K> Message.clear(key: K) {
-    _map -= key.toString()
-}
+    inline fun <K> getCharOrNull(key: K) = _map[key.toString()]?.get(0)
+    inline fun <K> getIntOrNull(key: K) = _map[key.toString()]?.toInt()
+    inline fun <K> getShortOrNull(key: K) = _map[key.toString()]?.toShort()
+    inline fun <K> getBooleanOrNull(key: K) = _map[key.toString()]?.toBoolean()
+    inline fun <K> getFloatOrNull(key: K) = _map[key.toString()]?.toFloat()
+    inline fun <K> getDoubleOrNull(key: K) = _map[key.toString()]?.toDouble()
+    inline fun <K> getStringOrNull(key: K) = _map[key.toString()]
 
-inline operator fun <K, V> Message.set(key: K, value: V) {
-    _map += key.toString() to value.toString()
-}
+    inline fun <K> getCharOrDefault(key: K, value: Char) = _map[key.toString()]?.get(0) ?: value
+    inline fun <K> getIntOrDefault(key: K, value: Int) = _map[key.toString()]?.toInt() ?: value
+    inline fun <K> getShortOrDefault(key: K, value: Short) = _map[key.toString()]?.toShort() ?: value
+    inline fun <K> getBooleanOrDefault(key: K, value: Boolean) = _map[key.toString()]?.toBoolean() ?: value
+    inline fun <K> getFloatOrDefault(key: K, value: Float) = _map[key.toString()]?.toFloat() ?: value
+    inline fun <K> getDoubleOrDefault(key: K, value: Double) = _map[key.toString()]?.toDouble() ?: value
+    inline fun <K> getStringOrDefault(key: K, value: String) = _map[key.toString()] ?: value
 
-@Suppress("UNCHECKED_CAST")
-fun <K, V> Message.getOrNull(key: K, kclass: KClass<*>): V? {
-    val value = _map[key.toString()]
-    value ?: return null
-    return when (kclass) {
-        Char::class    -> value[0] as V
-        Int::class     -> value.toInt() as V
-        Short::class   -> value.toShort() as V
-        Boolean::class -> value.toBoolean() as V
-        Float::class   -> value.toFloat() as V
-        Double::class  -> value.toDouble() as V
-        String::class  -> value as V
-        else           -> throw IllegalArgumentException()
+    inline fun <K> getChar(key: K) = getCharOrNull(key)!!
+    inline fun <K> getInt(key: K) = getIntOrNull(key)!!
+    inline fun <K> getShort(key: K) = getShortOrNull(key)!!
+    inline fun <K> getBoolean(key: K) = getBooleanOrNull(key)!!
+    inline fun <K> getFloat(key: K) = getFloatOrNull(key)!!
+    inline fun <K> getDouble(key: K) = getDoubleOrNull(key)!!
+    inline fun <K> getString(key: K) = getStringOrNull(key)!!
+
+    inline fun <K> setChar(key: K, value: Char) { _map += key.toString() to value.toString() }
+    inline fun <K> setInt(key: K, value: Int) { _map += key.toString() to value.toString() }
+    inline fun <K> setShort(key: K, value: Short) { _map += key.toString() to value.toString() }
+    inline fun <K> setBoolean(key: K, value: Boolean) { _map += key.toString() to value.toString() }
+    inline fun <K> setFloat(key: K, value: Float) { _map += key.toString() to value.toString() }
+    inline fun <K> setDouble(key: K, value: Double) { _map += key.toString() to value.toString() }
+    inline fun <K> setString(key: K, value: String) { _map += key.toString() to value }
+
+    inline fun addChar(value: Char) = setChar(count++, value)
+    inline fun addInt(value: Int) = setInt(count++, value)
+    inline fun addShort(value: Short) = setShort(count++, value)
+    inline fun addBoolean(value: Boolean) = setBoolean(count++, value)
+    inline fun addFloat(value: Float) = setFloat(count++, value)
+    inline fun addDouble(value: Double) = setDouble(count++, value)
+    inline fun addString(value: String) = setString(count++, value)
+
+    inline operator fun <K> set(key: K, value: String) = setString(key, value)
+    inline operator fun <K> get(key: K): String = getString(key)
+
+    inline fun <K> clear(key: K) {
+        _map -= key.toString()
     }
-}
-
-inline fun <K, reified V> Message.getOrNull(key: K): V? = getOrNull(key, V::class)
-
-inline operator fun <K, reified V> Message.get(key: K): V = getOrNull(key)!!
-inline fun <K, reified V> Message.getOrDefault(key: K, default: V): V = getOrNull(key) ?: default
-
-inline fun <reified V> Message.add(value: V): Message {
-    set(count++, value)
-    return this
 }
 

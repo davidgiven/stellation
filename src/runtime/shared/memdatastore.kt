@@ -1,7 +1,7 @@
 package runtime.shared
 
 import interfaces.IDatastore
-import interfaces.Oid
+import utils.Oid
 import interfaces.SetProperty
 import interfaces.UNIMPLEMENTED
 import utils.Fault
@@ -45,13 +45,13 @@ private class SetValue(val value: SetProperty) : Value() {
 }
 
 class InMemoryDatastore : IDatastore {
-    private var oid: Int = 1
+    private var maxOid: Int = 1
     private lateinit var objects: Set<Oid>
     private lateinit var values: Map<Pair<Oid, String>, Value>
     private lateinit var properties: Set<String>
 
     override fun initialiseDatabase() {
-        oid = 1
+        maxOid = 1
         objects = emptySet()
         values = emptyMap()
         properties = emptySet()
@@ -62,15 +62,24 @@ class InMemoryDatastore : IDatastore {
     }
 
     override fun createObject(): Oid {
-        val newoid = oid++
+        val newoid = maxOid++
         objects += newoid
         return newoid
+    }
+
+    override fun createObject(oid: Oid) {
+        if (oid > maxOid) {
+            maxOid = oid + 1
+        }
+        objects += oid
     }
 
     override fun destroyObject(oid: Oid) {
         objects -= oid
         properties.forEach { values -= Pair(oid, it) }
     }
+
+    override fun getAllObjects(): List<Oid> = objects.toList()
 
     override fun doesObjectExist(oid: Oid): Boolean = objects.contains(oid)
 
