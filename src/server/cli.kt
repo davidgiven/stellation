@@ -13,42 +13,45 @@ import utils.Fault
 import utils.Flags
 import utils.bind
 import utils.getopt
-import utils.inject
+import utils.injection
 import kotlin.system.exitProcess
 
-private var databaseFilename = "stellation.sqlite"
-private var userOid = GOD_OID
+class CliHandler {
+    private val authenticator by injection<IAuthenticator>()
+    private val database by injection<IDatabase>()
+    private val model by injection<Model>()
+    private val commandshell by injection<CommandShell>()
 
-private fun help(@Suppress("UNUSED_PARAMETER") arg: String): Nothing {
-    println("Stellation6 server")
-    println("Syntax: stellation [<option>] <command> [<command args>]")
-    println("  --help            Shows this message")
-    println("  --db=<filename>   Use this filename for the database file")
-    exitProcess(0)
-}
+    private var databaseFilename = "stellation.sqlite"
+    private var userOid = GOD_OID
 
-fun serveCli(argv: Array<String>) {
-    val remaining = getopt(
-            argv, Flags()
-            .addFlag("-h", ::help)
-            .addFlag("--help", ::help)
-            .addInt("--user", ::userOid)
-            .addString("--db", ::databaseFilename))
+    private fun help(@Suppress("UNUSED_PARAMETER") arg: String): Nothing {
+        println("Stellation6 server")
+        println("Syntax: stellation [<option>] <command> [<command args>]")
+        println("  --help            Shows this message")
+        println("  --db=<filename>   Use this filename for the database file")
+        exitProcess(0)
+    }
 
-    withServer(databaseFilename) {
-        bind<IConsole>(ServerConsole())
-        val authenticator = inject<IAuthenticator>()
-        val database = inject<IDatabase>()
-        val model = inject<Model>()
-        val commandshell = inject<CommandShell>()
+    fun serve(argv: Array<String>) {
+        val remaining = getopt(
+                argv, Flags()
+                .addFlag("-h", ::help)
+                .addFlag("--help", ::help)
+                .addInt("--user", ::userOid)
+                .addString("--db", ::databaseFilename))
 
-        authenticator.setAuthenticatedPlayer(userOid)
+        withServer(databaseFilename) {
+            bind<IConsole>(ServerConsole())
 
-        database.withSqlTransaction {
-            bind(findOrCreateUniverse(model))
+            authenticator.setAuthenticatedPlayer(userOid)
 
-            runBlocking {
-                commandshell.call(remaining)
+            database.withSqlTransaction {
+                bind(findOrCreateUniverse(model))
+
+                runBlocking {
+                    commandshell.call(remaining)
+                }
             }
         }
     }

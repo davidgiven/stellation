@@ -45,9 +45,9 @@ fun main(argv: Array<String>) {
 
     val environment by injection<IEnvironment>()
     if (environment.getenv("GATEWAY_INTERFACE") != null) {
-        serveCgi()
+        CgiHandler().serve()
     } else {
-        serveCli(argv)
+        CliHandler().serve(argv)
     }
 }
 
