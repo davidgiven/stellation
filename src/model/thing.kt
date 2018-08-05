@@ -3,12 +3,20 @@ package model
 import utils.Oid
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
+import utils.injection
 
 fun throwRecursiveMoveException(child: Oid): Nothing =
         throw Fault(INVALID_ARGUMENT).withDetail("$child cannot be contained by itself")
 
 
 abstract class SThing(val model: Model, val oid: Oid) {
+    var kind by KIND
+    var owner by OWNER
+    var location by LOCATION
+    val contents by CONTENTS
+
+    private val timers by injection<Timers>()
+
     override fun equals(other: Any?): Boolean {
         if (this === other)
             return true
@@ -19,15 +27,10 @@ abstract class SThing(val model: Model, val oid: Oid) {
 
     override fun hashCode(): Int = oid
 
-    var kind by KIND
-    var owner by OWNER
-    var location by LOCATION
-    val contents by CONTENTS
-
-    open fun onTimerExpiry(time: Long) {
+    open fun onTimerExpiry() {
     }
 
-    open fun recomputeTimeout(): Long? {
+    open fun recomputeTimeout(): Double? {
         return null
     }
 
@@ -40,14 +43,13 @@ abstract class SThing(val model: Model, val oid: Oid) {
         return set
     }
 
-//    fun kickTimer() {
-//        val expiry = recomputeTimeout()
-//        if (expiry != null) {
-//            setTimer(oid, expiry)
-//        }
-//    }
+    fun kickTimer() {
+        val expiry = recomputeTimeout()
+        if (expiry != null) {
+            timers.setTimer(oid, expiry)
+        }
+    }
 }
-
 
 inline fun <reified C : SThing> SThing.findChild(): C? =
         contents.find { it is C } as C?

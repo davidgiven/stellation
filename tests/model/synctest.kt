@@ -109,5 +109,7 @@ class SyncTest {
         clock.setTime(3.0)
         star1.name = "Fnord"
         val p = syncer.exportSyncPacket(player1.oid, 1.0)
+        val changed = p.getChangedProperties()
+        assertEquals(listOf(Triple(star1.oid, "name", "Fnord")), changed)
     }
 }

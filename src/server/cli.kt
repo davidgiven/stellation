@@ -1,27 +1,14 @@
 package server
 
-import interfaces.IAuthenticator
 import interfaces.IConsole
-import interfaces.IDatabase
 import interfaces.withSqlTransaction
 import model.GOD_OID
-import model.Model
-import model.SUniverse
-import model.createNewUniverse
-import runtime.shared.CommandShell
-import utils.Fault
 import utils.Flags
 import utils.bind
 import utils.getopt
-import utils.injection
 import kotlin.system.exitProcess
 
-class CliHandler {
-    private val authenticator by injection<IAuthenticator>()
-    private val database by injection<IDatabase>()
-    private val model by injection<Model>()
-    private val commandshell by injection<CommandShell>()
-
+class CliHandler : AbstractHandler() {
     private var databaseFilename = "stellation.sqlite"
     private var userOid = GOD_OID
 
@@ -48,20 +35,15 @@ class CliHandler {
 
             database.withSqlTransaction {
                 bind(findOrCreateUniverse(model))
+                catchup()
+            }
 
+            database.withSqlTransaction {
                 runBlocking {
                     commandshell.call(remaining)
                 }
             }
         }
-    }
-}
-
-private fun findOrCreateUniverse(model: Model): SUniverse {
-    try {
-        return findUniverse(model)
-    } catch (f: Fault) {
-        return model.createNewUniverse()
     }
 }
 

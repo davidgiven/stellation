@@ -17,12 +17,15 @@ class Syncer : ISyncer {
     private val datastore by injection<IDatastore>()
     private val model by injection<Model>()
 
+    private val listeners = HashMap<Pair<Oid, String>, (Oid, String) -> Unit>()
+
     override fun importSyncPacket(sync: SyncMessage) {
         /* Remove any objects which have become invisible. */
 
         val visibleObjects = sync.getVisibleObjects()
         val oldObjects = datastore.getAllObjects()
-        for (oid in oldObjects - visibleObjects) {
+        val deletedObjects = datastore.getAllObjects() - visibleObjects
+        for (oid in deletedObjects) {
             datastore.destroyObject(oid)
         }
         for (oid in visibleObjects) {
@@ -37,6 +40,10 @@ class Syncer : ISyncer {
             val property = allProperties[name]!!
             property.deserialiseFromString(model, oid, value)
         }
+
+        /* Call listeners. */
+
+
     }
 
     override fun exportSyncPacket(player: Oid, timestamp: Double): SyncMessage {
@@ -62,5 +69,9 @@ class Syncer : ISyncer {
             }
         }
         return p
+    }
+
+    override fun listen(oid: Oid, property: String, callback: (Oid, String) -> Unit) {
+        listeners.put(Pair(oid, property), callback)
     }
 }

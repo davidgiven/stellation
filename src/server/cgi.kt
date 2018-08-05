@@ -1,38 +1,15 @@
 package server
 
-import interfaces.IAuthenticator
-import interfaces.IClock
-import interfaces.IDatabase
-import interfaces.IEnvironment
-import interfaces.ISyncer
-import interfaces.ITime
-import interfaces.IUtf8
 import interfaces.withSqlTransaction
-import model.Model
-import model.SUniverse
 import model.currentPlayer
 import runtime.shared.ServerMessage
-import utils.Codec
 import utils.Fault
 import utils.FaultDomain.NETWORK
 import utils.bind
-import utils.inject
-import utils.injection
 
 fun throwBadCgiException(s: String): Nothing = throw Fault(NETWORK).withDetail("Bad CGI request: $s")
 
-class CgiHandler {
-    private val authenticator by injection<IAuthenticator>()
-    private val clock by injection<IClock>()
-    private val codec by injection<Codec>()
-    private val database by injection<IDatabase>()
-    private val environment by injection<IEnvironment>()
-    private val model by injection<Model>()
-    private val remoteServer by injection<RemoteServer>()
-    private val syncer by injection<ISyncer>()
-    private val time by injection<ITime>()
-    private val utf8 by injection<IUtf8>()
-
+class CgiHandler : AbstractHandler() {
     inner class CgiRequest {
         val path: String
         val input = ServerMessage()
@@ -78,7 +55,9 @@ class CgiHandler {
             withServer("/home/dg/nonshared/stellation/stellation.sqlite") {
                 bind(findUniverse(model))
 
-                clock.setTime(time.realtime())
+                database.withSqlTransaction {
+                    catchup()
+                }
 
                 val username = request.input.getUsername()
                 val password = request.input.getPassword()
@@ -113,6 +92,4 @@ class CgiHandler {
         }
     }
 }
-
-fun findUniverse(model: Model) = model.loadObject(1, SUniverse::class)
 

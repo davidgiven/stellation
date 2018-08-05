@@ -29,21 +29,24 @@ class Timers {
                 .executeStatement()
     }
 
-    fun processTimers(max_time: Double, callback: (Oid, Double) -> Unit) {
-        while (true) {
-            val results = database.sqlStatement(
-                    """
+    fun getOldestTimer(maxTime: Double): Pair<Oid, Double>? {
+        val results = database.sqlStatement(
+                """
                     SELECT oid, expiry FROM timers
                     WHERE expiry < ?
                     ORDER BY expiry ASC
                     LIMIT 1
                 """)
-                    .bindReal(1, max_time)
-                    .executeSimpleQuery()
-            results ?: break
+                .bindReal(1, maxTime)
+                .executeSimpleQuery()
+        results ?: return null
 
-            val oid = results.get("oid")!!.getInt()
-            val expiry = results.get("expiry")!!.getReal()
+        return Pair(results.get("oid")!!.getOid()!!, results.get("expiry")!!.getReal())
+    }
+
+    fun processTimers(maxTime: Double, callback: (Oid, Double) -> Unit) {
+        while (true) {
+            val (oid, expiry) = getOldestTimer(maxTime) ?: break
 
             database.sqlStatement("DELETE FROM timers WHERE oid = ?")
                     .bindOid(1, oid)
