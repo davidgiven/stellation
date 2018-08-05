@@ -20,20 +20,16 @@ class Syncer : ISyncer {
     override fun importSyncPacket(sync: SyncMessage) {
         /* Remove any objects which have become invisible. */
 
-        log("begin import")
         val visibleObjects = sync.getVisibleObjects()
         val oldObjects = datastore.getAllObjects()
-        log("tombstoning invisible objects")
         for (oid in oldObjects - visibleObjects) {
             datastore.destroyObject(oid)
         }
-        log("creating new objects")
         for (oid in visibleObjects) {
             if (!datastore.doesObjectExist(oid)) {
                 datastore.createObject(oid)
             }
         }
-        log("merging changed properties")
 
         /* Merge in changed properties. */
 
@@ -41,7 +37,6 @@ class Syncer : ISyncer {
             val property = allProperties[name]!!
             property.deserialiseFromString(model, oid, value)
         }
-        log("done")
     }
 
     override fun exportSyncPacket(player: Oid, timestamp: Double): SyncMessage {

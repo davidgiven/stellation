@@ -14,14 +14,10 @@ class RemoteServer {
 
     fun onMessageReceived(input: ServerMessage, output: ServerMessage) {
         try {
-            log("input = ${input.toMap()}")
-            log("command input = ${input.getCommandInput()}")
-            log("has command input = ${input.hasCommandInput()}")
             if (input.hasCommandInput()) {
                 val argv = input.getCommandInput()
                 val command = commandDispatcher.resolve(argv)
 
-                log("calling server part of ${argv[0]}")
                 command.serverRun()
 
                 output.setCommandOutput(command.output)

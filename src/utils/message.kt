@@ -2,26 +2,25 @@
 
 package utils
 
-import kotlin.reflect.KClass
-
 const val COUNT = "_count"
 
 open class Message : Iterable<String> {
-    var _map: Map<String, String> = emptyMap()
+    var _map: MutableMap<String, String> = HashMap()
     var count = 0
 
     inline val size: Int get() = getIntOrDefault(COUNT, 0)
 
     fun setFromMap(map: Map<String, String>) {
-        _map = map
+        _map.clear()
+        _map.putAll(map)
         count = _map[COUNT]?.toInt() ?: 0
     }
 
     fun toMap(): Map<String, String> {
         if (count == 0) {
-            _map -= COUNT
+            _map.remove(COUNT)
         } else {
-            _map += COUNT to count.toString()
+            _map.put(COUNT, count.toString())
         }
         return _map
     }
@@ -63,13 +62,13 @@ open class Message : Iterable<String> {
     inline fun <K> getDouble(key: K) = getDoubleOrNull(key)!!
     inline fun <K> getString(key: K) = getStringOrNull(key)!!
 
-    inline fun <K> setChar(key: K, value: Char) { _map += key.toString() to value.toString() }
-    inline fun <K> setInt(key: K, value: Int) { _map += key.toString() to value.toString() }
-    inline fun <K> setShort(key: K, value: Short) { _map += key.toString() to value.toString() }
-    inline fun <K> setBoolean(key: K, value: Boolean) { _map += key.toString() to value.toString() }
-    inline fun <K> setFloat(key: K, value: Float) { _map += key.toString() to value.toString() }
-    inline fun <K> setDouble(key: K, value: Double) { _map += key.toString() to value.toString() }
-    inline fun <K> setString(key: K, value: String) { _map += key.toString() to value }
+    inline fun <K> setChar(key: K, value: Char) = _map.put(key.toString(), value.toString())
+    inline fun <K> setInt(key: K, value: Int) = _map.put(key.toString(), value.toString())
+    inline fun <K> setShort(key: K, value: Short) = _map.put(key.toString(), value.toString())
+    inline fun <K> setBoolean(key: K, value: Boolean) = _map.put(key.toString(), value.toString())
+    inline fun <K> setFloat(key: K, value: Float) = _map.put(key.toString(), value.toString())
+    inline fun <K> setDouble(key: K, value: Double) = _map.put(key.toString(), value.toString())
+    inline fun <K> setString(key: K, value: String) = _map.put(key.toString(), value)
 
     inline fun addChar(value: Char) = setChar(count++, value)
     inline fun addInt(value: Int) = setInt(count++, value)
@@ -83,7 +82,7 @@ open class Message : Iterable<String> {
     inline operator fun <K> get(key: K): String = getString(key)
 
     inline fun <K> clear(key: K) {
-        _map -= key.toString()
+        _map.remove(key.toString())
     }
 }
 

@@ -35,12 +35,12 @@ fun SPlayer.canSee(obj: SThing): Boolean {
 }
 
 fun SPlayer.calculateVisibleStars(): Set<SStar> {
-    var set = emptySet<SStar>()
+    var set = HashSet<SStar>()
     for (ship in ships) {
         if (ship.findChild<SJumpdrive>() != null) {
             val star = ship.getContainingStar()
             if (star != null) {
-                set += star
+                set.add(star)
             }
         }
     }
@@ -48,9 +48,10 @@ fun SPlayer.calculateVisibleStars(): Set<SStar> {
 }
 
 fun SPlayer.calculateVisibleObjects(): Set<SThing> {
-    var set = setOf<SThing>(this)
+    var set = HashSet<SThing>()
+    set.add(this)
     for (star in calculateVisibleStars()) {
-        set += star.calculateHierarchicalContents()
+        set.addAll(star.calculateHierarchicalContents())
     }
     return set
 }
