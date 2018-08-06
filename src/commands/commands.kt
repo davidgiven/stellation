@@ -16,7 +16,8 @@ class CommandDispatcher : ICommandDispatcher {
                 ::SetPasswordCommand,
                 ::WhoAmICommand,
                 ::StarsCommand,
-                ::ExCommand
+                ::ExCommand,
+                ::RenameCommand
         )
 
         for (c in commandsList) {

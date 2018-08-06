@@ -1,5 +1,6 @@
 package model
 
+import interfaces.throwPermissionDeniedException
 import utils.Oid
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
@@ -29,6 +30,13 @@ abstract class SThing(val model: Model, val oid: Oid): Iterable<SThing> {
     override fun hashCode(): Int = oid
 
     override fun iterator(): Iterator<SThing> = contents.iterator()
+
+    fun checkModificationAccess() {
+        val player = model.currentPlayer()
+        if (!player.isGod() && (player.owner != owner)) {
+            throwPermissionDeniedException()
+        }
+    }
 
     open fun onTimerExpiry() {
     }
