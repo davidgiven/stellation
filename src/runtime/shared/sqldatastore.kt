@@ -1,15 +1,16 @@
 package runtime.shared
 
-import interfaces.IClock
 import interfaces.IDatabase
 import interfaces.IDatastore
-import utils.Oid
+import interfaces.ITime
 import interfaces.SetProperty
+import interfaces.SqlException
+import utils.Oid
 import utils.injection
 
 class SqlDatastore : IDatastore {
     val database by injection<IDatabase>()
-    val clock by injection<IClock>()
+    val time by injection<ITime>()
 
     override fun initialiseDatabase() {
         database.executeSql(
@@ -21,16 +22,37 @@ class SqlDatastore : IDatastore {
 
         database.executeSql(
                 """
-                CREATE TABLE IF NOT EXISTS mtimes (
+                CREATE TABLE IF NOT EXISTS sessions (
+                    session INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                    lastused REAL NOT NULL
+                )
+            """)
+
+        database.executeSql(
+                """
+                CREATE TABLE IF NOT EXISTS seen_by (
                     oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
-                    name TEXT,
-                    mtime REAL,
-                    PRIMARY KEY(oid, name)
+                    name TEXT NOT NULL,
+                    session INTEGER NOT NULL REFERENCES sessions(session) ON DELETE CASCADE,
+                    PRIMARY KEY (oid, name, session)
                 )
             """)
         database.executeSql(
                 """
-                CREATE INDEX IF NOT EXISTS mtimes_by_mtime ON mtimes (mtime ASC)
+                CREATE INDEX IF NOT EXISTS seen_by_by_session ON seen_by (session)
+            """)
+
+        database.executeSql(
+                """
+                CREATE TABLE IF NOT EXISTS properties (
+                    oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+                    name TEXT NOT NULL,
+                    PRIMARY KEY (oid, name)
+                )
+            """)
+        database.executeSql(
+                """
+                CREATE INDEX IF NOT EXISTS properties_by_oid ON properties (oid)
             """)
     }
 
@@ -87,13 +109,13 @@ class SqlDatastore : IDatastore {
                     .getInt() != 0
 
     private fun propertyChanged(oid: Oid, name: String) {
-        database.sqlStatement(
-                """
-                        INSERT OR REPLACE INTO mtimes (oid, name, mtime) VALUES (?, ?, ?)
-                    """)
+        database.sqlStatement("INSERT OR IGNORE INTO properties (oid, name) VALUES (?, ?)")
                 .bindOid(1, oid)
                 .bindString(2, name)
-                .bindReal(3, clock.getTime())
+                .executeStatement()
+        database.sqlStatement("DELETE FROM seen_by WHERE oid = ? AND name = ?")
+                .bindOid(1, oid)
+                .bindString(2, name)
                 .executeStatement()
     }
 
@@ -202,7 +224,18 @@ class SqlDatastore : IDatastore {
                                 ?.getOid()
             }
 
-    override fun getPropertiesChangedSince(oids: List<Oid>, timestamp: Double): List<Pair<Oid, String>> {
+    override fun createSyncSession(): Int {
+        database.sqlStatement("INSERT INTO sessions (lastused) VALUES (?)")
+                .bindReal(1, time.realtime())
+                .executeStatement()
+        return database.sqlStatement("SELECT last_insert_rowid() AS session")
+                .executeSimpleQuery()
+                ?.get("session")
+                ?.getInt()
+                ?: throw SqlException("cannot get sync session")
+    }
+
+    override fun getPropertiesChangedSince(oids: List<Oid>, session: Int): List<Pair<Oid, String>> {
         database.executeSql(
                 """
                     DROP TABLE IF EXISTS _temp_oids
@@ -228,14 +261,31 @@ class SqlDatastore : IDatastore {
                     SELECT
                         oid, name
                     FROM
-                        mtimes
+                        properties
                     WHERE
-                        (mtime > ?)
-                        AND EXISTS (SELECT * FROM _temp_oids WHERE _temp_oids.oid = mtimes.oid)
+                        EXISTS (SELECT * FROM _temp_oids WHERE _temp_oids.oid = properties.oid)
+                        AND NOT EXISTS (
+                            SELECT
+                                *
+                            FROM
+                                seen_by
+                            WHERE
+                                seen_by.oid = properties.oid
+                                AND seen_by.name = properties.name
+                                AND seen_by.session = ?
+                        )
                 """)
-                .bindReal(1, timestamp)
+                .bindInt(1, session)
                 .executeQuery()
                 .map { Pair(it.get("oid")!!.getInt(), it.get("name")!!.getString()) }
+    }
+
+    override fun propertySeenBy(oid: Oid, name: String, session: Int) {
+        database.sqlStatement("INSERT INTO seen_by (oid, name, session) VALUES (?, ?, ?)")
+                .bindOid(1, oid)
+                .bindString(2, name)
+                .bindInt(3, session)
+                .executeStatement()
     }
 
     override fun getHierarchy(root: Oid, containment: String): Set<Oid> =

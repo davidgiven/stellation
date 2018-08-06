@@ -3,6 +3,7 @@ package server
 import interfaces.IAuthenticator
 import interfaces.IClock
 import interfaces.IDatabase
+import interfaces.IDatastore
 import interfaces.IEnvironment
 import interfaces.ISyncer
 import interfaces.ITime
@@ -22,6 +23,7 @@ abstract class AbstractHandler {
     protected val clock by injection<IClock>()
     protected val codec by injection<Codec>()
     protected val database by injection<IDatabase>()
+    protected val datastore by injection<IDatastore>()
     protected val environment by injection<IEnvironment>()
     protected val model by injection<Model>()
     protected val remoteServer by injection<RemoteServer>()

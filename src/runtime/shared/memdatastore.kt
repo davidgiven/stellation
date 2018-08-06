@@ -76,7 +76,6 @@ class InMemoryDatastore : IDatastore {
 
     override fun destroyObject(oid: Oid) {
         objects -= oid
-        properties.forEach { values -= Pair(oid, it) }
     }
 
     override fun getAllObjects(): List<Oid> = objects.toList()
@@ -154,8 +153,9 @@ class InMemoryDatastore : IDatastore {
         return set
     }
 
-    override fun getPropertiesChangedSince(oids: List<Oid>, timestamp: Double): List<Pair<Oid, String>> =
-            UNIMPLEMENTED()
+    override fun createSyncSession() = UNIMPLEMENTED()
+    override fun getPropertiesChangedSince(oids: List<Oid>, session: Int) = UNIMPLEMENTED()
+    override fun propertySeenBy(oid: Oid, name: String, session: Int) = UNIMPLEMENTED()
 
     override fun getHierarchy(root: Oid, containment: String): Set<Oid> {
         var set = emptySet<Oid>()

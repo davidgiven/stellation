@@ -50,6 +50,9 @@ interface IDatastore {
 
     fun getSetProperty(oid: Oid, name: String): SetProperty
 
-    fun getPropertiesChangedSince(oids: List<Oid>, timestamp: Double): List<Pair<Oid, String>>
+    fun createSyncSession(): Int
+    fun getPropertiesChangedSince(oids: List<Oid>, session: Int): List<Pair<Oid, String>>
+    fun propertySeenBy(oid: Oid, name: String, session: Int)
+
     fun getHierarchy(root: Oid, containment: String): Set<Oid>
 }

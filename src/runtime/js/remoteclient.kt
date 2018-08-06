@@ -22,10 +22,12 @@ class RemoteClientInterface : IClientInterface {
 
     private var username = ""
     private var password = ""
+    private var session = 0
 
     override fun setCredentials(username: String, password: String) {
         this.username = username
         this.password = password
+        session = 0
     }
 
     override suspend fun executeCommand(command: ICommand) {
@@ -33,7 +35,9 @@ class RemoteClientInterface : IClientInterface {
         sendMessage.setCommandInput(command.argv)
         sendMessage.setUsername(username)
         sendMessage.setPassword(password)
-        sendMessage.setClock(clock.getTime())
+        if (session != 0) {
+            sendMessage.setSyncSession(session)
+        }
 
         val mailbox: Mailbox<ServerMessage> = Mailbox()
         val xhr = XMLHttpRequest()
@@ -66,6 +70,7 @@ class RemoteClientInterface : IClientInterface {
         }
 
         authenticator.setAuthenticatedPlayer(receiveMessage.getPlayerOid())
+        session = receiveMessage.getSyncSession()
         syncer.importSyncPacket(receiveMessage.getSyncMessage())
         clock.setTime(receiveMessage.getClock())
         command.output = receiveMessage.getCommandOutput()

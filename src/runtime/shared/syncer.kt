@@ -2,7 +2,6 @@ package runtime.shared
 
 import interfaces.IDatastore
 import interfaces.ISyncer
-import interfaces.log
 import model.Model
 import model.SPlayer
 import model.SThing
@@ -46,7 +45,7 @@ class Syncer : ISyncer {
 
     }
 
-    override fun exportSyncPacket(player: Oid, timestamp: Double): SyncMessage {
+    override fun exportSyncPacket(player: Oid, session: Int): SyncMessage {
         val p = SyncMessage()
 
         val playerObj = model.loadObject(player, SPlayer::class)
@@ -58,7 +57,7 @@ class Syncer : ISyncer {
             p.addVisibleObject(o.oid)
         }
         val changedProperties = datastore.getPropertiesChangedSince(
-                visibleObjects.map { it.oid }, timestamp)
+                visibleObjects.map { it.oid }, session)
         for ((oid, propertyName) in changedProperties) {
             val property = allProperties[propertyName]!!
             val thing = model.loadObject(oid, SThing::class)
@@ -66,6 +65,7 @@ class Syncer : ISyncer {
             if ((property.scope == Scope.LOCAL) || ((property.scope == Scope.PRIVATE) && (owner.oid == player))) {
                 val serialised = property.serialiseToString(model, oid)
                 p.addChangedProperty(oid, propertyName, serialised)
+                datastore.propertySeenBy(oid, propertyName, session)
             }
         }
         return p

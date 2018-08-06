@@ -17,6 +17,8 @@ private const val PLAYEROID = "oid"
 private const val STATUS = "status"
 private const val SYNC = "sync"
 private const val CLOCK = "clock"
+private const val SESSION = "session"
+
 
 class ServerMessage : Message() {
     val codec by injection<Codec>()
@@ -68,6 +70,10 @@ class ServerMessage : Message() {
         message.setFromMap(codec.decode(encoded))
         return message
     }
+
+    fun hasSyncSession() = contains(SESSION)
+    fun getSyncSession(): Int = getInt(SESSION)
+    fun setSyncSession(session: Int) = setInt(SESSION, session)
 
     fun setUsername(username: String) = setString(USERNAME, username)
     fun getUsername(): String = getString(USERNAME)

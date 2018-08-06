@@ -62,6 +62,11 @@ class CgiHandler : AbstractHandler() {
                 val username = request.input.getUsername()
                 val password = request.input.getPassword()
                 authenticator.authenticatePlayer(username, password) {
+                    var syncsession =
+                            if (request.input.hasSyncSession())
+                                request.input.getSyncSession() else
+                                datastore.createSyncSession()
+
                     try {
                         database.withSqlTransaction {
                             response.output.setPlayerOid(authenticator.currentPlayerOid)
@@ -69,10 +74,10 @@ class CgiHandler : AbstractHandler() {
                         }
                     } finally {
                         database.withSqlTransaction {
-                            val clientSyncTime = request.input.getClock()
                             response.output.setClock(clock.getTime())
+                            response.output.setSyncSession(syncsession)
                             response.output.setSyncMessage(
-                                    syncer.exportSyncPacket(model.currentPlayer().oid, clientSyncTime))
+                                    syncer.exportSyncPacket(model.currentPlayer().oid, syncsession))
                         }
                     }
                 }
