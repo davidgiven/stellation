@@ -128,7 +128,7 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
   )
 
 def kotlin_konan_lib(name, srcs=[], deps=[]):
-  cmd = ["/home/dg/src/kotlin-native-linux-0.7.1/bin/kotlinc-native",
+  cmd = ["/home/dg/src/kotlin-native-linux-0.8.1/bin/kotlinc-native",
          "-Xcoroutines=enable",
          "-produce library",
          "-g",
@@ -150,7 +150,7 @@ def kotlin_konan_lib(name, srcs=[], deps=[]):
   )
 
 def kotlin_konan_binary(name, srcs=[], deps=[], main="main"):
-  cmd = ["/home/dg/src/kotlin-native-linux-0.7.1/bin/kotlinc-native",
+  cmd = ["/home/dg/src/kotlin-native-linux-0.8.1/bin/kotlinc-native",
          "-produce program",
          "--purge_user_libs",
          "-entry {}".format(main),
@@ -180,7 +180,7 @@ def kotlin_konan_cinterop(name, src, libname):
     srcs = [src],
     outs = [libname + ".klib"],
     cmd = " ".join([
-        "/home/dg/src/kotlin-native-linux-0.7.1/bin/cinterop",
+        "/home/dg/src/kotlin-native-linux-0.8.1/bin/cinterop",
         "-def $<",
         "-o $@",
     ])

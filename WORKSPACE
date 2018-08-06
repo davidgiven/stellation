@@ -1,4 +1,4 @@
-kotlin_version = "1.2.51"
+kotlin_version = "1.2.60"
 
 maven_server(
     name = "maven_central",
