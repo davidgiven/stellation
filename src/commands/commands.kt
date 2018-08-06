@@ -14,7 +14,9 @@ class CommandDispatcher : ICommandDispatcher {
                 ::EchoCommand,
                 ::PingCommand,
                 ::SetPasswordCommand,
-                ::WhoAmICommand
+                ::WhoAmICommand,
+                ::StarsCommand,
+                ::ExCommand
         )
 
         for (c in commandsList) {

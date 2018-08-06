@@ -87,6 +87,7 @@ class Model {
     }
 
     fun getUniverse(): SUniverse = loadObject(UNIVERSE_OID, SUniverse::class)
+    fun getGalaxy(): SGalaxy = getUniverse().galaxy!!
     fun getGod(): SPlayer = loadObject(GOD_OID, SPlayer::class)
 }
 

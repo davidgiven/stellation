@@ -7,6 +7,7 @@ import utils.inject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlin.test.assertFalse
 
 abstract class AbstractDatastoreTest {
     protected val clock get() = inject<IClock>()
@@ -42,6 +43,15 @@ abstract class AbstractDatastoreTest {
         datastore.setIntProperty(o, "integer", 5)
         var i = datastore.getIntProperty(o, "integer")
         assertEquals(5, i)
+    }
+
+    @Test
+    fun hasPropertyTest() {
+        var o = datastore.createObject()
+        assertFalse(datastore.hasProperty(o, "integer"))
+
+        datastore.setIntProperty(o, "integer", 5)
+        assertTrue(datastore.hasProperty(o, "integer"))
     }
 
     @Test

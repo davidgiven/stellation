@@ -33,6 +33,8 @@ interface IDatastore {
     fun getAllObjects(): List<Oid>
     fun doesObjectExist(oid: Oid): Boolean
 
+    fun hasProperty(oid: Oid, name: String): Boolean
+
     fun setOidProperty(oid: Oid, name: String, value: Oid?)
     fun getOidProperty(oid: Oid, name: String): Oid?
 

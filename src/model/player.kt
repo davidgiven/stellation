@@ -6,7 +6,6 @@ import interfaces.throwPermissionDeniedException
 import kotlin.reflect.KClass
 
 open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
-    var name by NAME
     var email by EMAIL_ADDRESS
     var password_hash by PASSWORD_HASH
     val frames by FRAMES

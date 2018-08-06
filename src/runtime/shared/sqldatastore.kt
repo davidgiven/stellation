@@ -108,6 +108,13 @@ class SqlDatastore : IDatastore {
                     .getValue("count")
                     .getInt() != 0
 
+    override fun hasProperty(oid: Oid, name: String) =
+            database.sqlStatement("SELECT EXISTS(SELECT * FROM prop_$name WHERE oid = ?) as e")
+                    .bindOid(1, oid)
+                    .executeSimpleQuery()
+                    ?.get("e")
+                    ?.getInt() == 1
+
     private fun propertyChanged(oid: Oid, name: String) {
         database.sqlStatement("INSERT OR IGNORE INTO properties (oid, name) VALUES (?, ?)")
                 .bindOid(1, oid)

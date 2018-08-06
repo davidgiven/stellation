@@ -82,6 +82,8 @@ class InMemoryDatastore : IDatastore {
 
     override fun doesObjectExist(oid: Oid): Boolean = objects.contains(oid)
 
+    override fun hasProperty(oid: Oid, name: String) = Pair(oid, name) in values
+
     override fun setOidProperty(oid: Oid, name: String, value: Oid?) {
         values += Pair(oid, name) to OidValue(value)
     }

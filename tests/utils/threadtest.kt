@@ -1,7 +1,7 @@
 package utils
 
 import interfaces.ILogger
-import junit.framework.Assert.assertEquals
+import kotlin.test.assertEquals
 import org.junit.Before
 import org.junit.Test
 import runtime.jvm.JvmLogger

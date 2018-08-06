@@ -9,11 +9,12 @@ fun throwRecursiveMoveException(child: Oid): Nothing =
         throw Fault(INVALID_ARGUMENT).withDetail("$child cannot be contained by itself")
 
 
-abstract class SThing(val model: Model, val oid: Oid) {
+abstract class SThing(val model: Model, val oid: Oid): Iterable<SThing> {
     var kind by KIND
     var owner by OWNER
     var location by LOCATION
     val contents by CONTENTS
+    var name by NAME
 
     private val timers by injection<Timers>()
 
@@ -26,6 +27,8 @@ abstract class SThing(val model: Model, val oid: Oid) {
     }
 
     override fun hashCode(): Int = oid
+
+    override fun iterator(): Iterator<SThing> = contents.iterator()
 
     open fun onTimerExpiry() {
     }

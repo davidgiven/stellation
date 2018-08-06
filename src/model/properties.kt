@@ -51,6 +51,9 @@ abstract class Property(val scope: Scope, val name: String) {
     abstract val sqlType: String
     abstract val isAggregate: Boolean
 
+    fun hasValue(model: Model, oid: Oid) = model.datastore.hasProperty(oid, name)
+    fun hasValue(thisRef: SThing, property: KProperty<*>) = hasValue(thisRef.model, thisRef.oid)
+
     abstract fun serialiseToString(model: Model, oid: Oid): String
     abstract fun deserialiseFromString(model: Model, oid: Oid, value: String)
 }

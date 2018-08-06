@@ -65,7 +65,6 @@ class Frame {
 }
 
 open class SFrame(model: Model, oid: Oid) : SThing(model, oid) {
-    var name by NAME
     var data by DATA
 
     val frame: Frame
