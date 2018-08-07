@@ -12,7 +12,7 @@ fun throwBadCgiException(s: String): Nothing = throw Fault(NETWORK).withDetail("
 class CgiHandler : AbstractHandler() {
     inner class CgiRequest {
         val path: String
-        val input = ServerMessage()
+        val input: ServerMessage
 
         init {
             if (environment.getenv("REQUEST_METHOD") != "POST") {
@@ -26,7 +26,7 @@ class CgiHandler : AbstractHandler() {
 
             val bodyBytes = environment.readStdin(contentLength)
             val body = utf8.toString(bodyBytes)
-            input.setFromMap(codec.decode(body))
+            input = ServerMessage(body)
         }
     }
 
@@ -42,7 +42,7 @@ class CgiHandler : AbstractHandler() {
                 environment.writeStdout("\n")
             }
             environment.writeStdout("\n")
-            environment.writeStdout(codec.encode(output.toMap()))
+            environment.writeStdout(output.serialise())
         }
     }
 

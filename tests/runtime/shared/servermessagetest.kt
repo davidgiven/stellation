@@ -1,7 +1,5 @@
 package runtime.shared
 
-import utils.Codec
-import utils.bind
 import utils.resetBindingsForTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -12,7 +10,6 @@ class ServerMessageTest {
     @BeforeTest
     fun setup() {
         resetBindingsForTest()
-        bind(Codec())
     }
 
     @Test

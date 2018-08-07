@@ -18,7 +18,6 @@ import runtime.shared.Clock
 import runtime.shared.CommandShell
 import runtime.shared.Syncer
 import server.LocalAuthenticator
-import utils.Codec
 import utils.Random
 import utils.bind
 import utils.inject
@@ -32,7 +31,6 @@ fun main(argv: Array<String>) {
     bind<IClientInterface>(RemoteClientInterface())
     bind<IAuthenticator>(LocalAuthenticator())
     bind(CommandShell())
-    bind(Codec())
     bind(Model())
     bind(Cookies())
     bind<IClock>(Clock())

@@ -20,14 +20,12 @@ import runtime.shared.LocalClientInterface
 import runtime.shared.SqlDatastore
 import runtime.shared.Syncer
 import utils.BCrypt
-import utils.Codec
 import utils.Random
 import utils.bind
 import utils.inject
 import utils.injection
 
 fun main(argv: Array<String>) {
-    bind(Codec())
     bind<IDatastore>(SqlDatastore())
     bind(Model())
     bind(Timers())

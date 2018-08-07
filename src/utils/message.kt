@@ -2,7 +2,41 @@
 
 package utils
 
+import utils.FaultDomain.INTERNAL
+
+fun throwInvalidCodecDataException(s: String, e: Throwable? = null): Nothing =
+        throw Fault(e).withDomain(INTERNAL).withDetail("invalid encoded packet: $s")
+
 const val COUNT = "_count"
+
+private const val ESCAPED_PERCENT = "%p"
+private const val ESCAPED_NEWLINE = "%n"
+private const val ESCAPED_EQUALS = "%e"
+
+private val ENCODE_REGEX = Regex("[%=\n]")
+
+private val ENCODE_TRANSFORMED = { r: MatchResult ->
+    when (r.value) {
+        "%" -> ESCAPED_PERCENT
+        "\n" -> ESCAPED_NEWLINE
+        "=" -> ESCAPED_EQUALS
+        else -> r.value
+    }
+}
+
+private val DECODE_REGEX = Regex("%.")
+
+private val DECODE_TRANSFORMED = { r: MatchResult ->
+    when (r.value) {
+        ESCAPED_PERCENT -> "%"
+        ESCAPED_NEWLINE -> "\n"
+        ESCAPED_EQUALS -> "="
+        else -> throwInvalidCodecDataException("bad string escape ${r.value}")
+    }
+}
+
+private fun encodeString(string: String): String = ENCODE_REGEX.replace(string, ENCODE_TRANSFORMED)
+private fun decodeString(string: String): String = DECODE_REGEX.replace(string, DECODE_TRANSFORMED)
 
 open class Message : Iterable<String> {
     var _map: MutableMap<String, String> = HashMap()
@@ -10,9 +44,47 @@ open class Message : Iterable<String> {
 
     inline val size: Int get() = getIntOrDefault(COUNT, 0)
 
-    fun setFromMap(map: Map<String, String>) {
+    constructor()
+
+    constructor(serialised: String) {
+        deserialise(serialised)
+    }
+
+    constructor(map: Map<String, String>) {
         _map.clear()
         _map.putAll(map)
+        count = _map[COUNT]?.toInt() ?: 0
+    }
+
+    fun serialise(): String {
+        val sb = StringBuilder()
+
+        val map = toMap()
+        val keys = map.keys.toList().sorted()
+        for (k in keys) {
+            val v = map[k]!!
+            sb.append(encodeString(k))
+            sb.append('=')
+            sb.append(encodeString(v))
+            sb.append('\n')
+        }
+
+        return sb.toString()
+    }
+
+    fun deserialise(input: String) {
+        _map.clear()
+
+        input.lineSequence().forEach { line ->
+            if (!line.isEmpty()) {
+                val tokens = line.split("=")
+                if (tokens.size != 2) {
+                    throwInvalidCodecDataException("couldn't parse line")
+                }
+                _map[decodeString(tokens[0])] = decodeString(tokens[1])
+            }
+        }
+
         count = _map[COUNT]?.toInt() ?: 0
     }
 
@@ -20,7 +92,7 @@ open class Message : Iterable<String> {
         if (count == 0) {
             _map.remove(COUNT)
         } else {
-            _map.put(COUNT, count.toString())
+            _map[COUNT] = count.toString()
         }
         return _map
     }

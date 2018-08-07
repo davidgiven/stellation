@@ -1,12 +1,10 @@
 package runtime.shared
 
 import interfaces.CommandMessage
-import utils.Oid
-import utils.SyncMessage
-import utils.Codec
 import utils.Fault
 import utils.Message
-import utils.injection
+import utils.Oid
+import utils.SyncMessage
 
 private const val CMDINPUT = "cmdinput"
 private const val CMDOUTPUT = "cmdoutput"
@@ -20,8 +18,9 @@ private const val CLOCK = "clock"
 private const val SESSION = "session"
 
 
-class ServerMessage : Message() {
-    val codec by injection<Codec>()
+class ServerMessage : Message {
+    constructor(): super()
+    constructor(serialised: String): super(serialised)
 
     fun hasFault() = contains(FAULT)
     fun setFault(fault: Fault) = set(FAULT, fault.serialise())
@@ -34,41 +33,32 @@ class ServerMessage : Message() {
         for (arg in argv) {
             message.addString(arg)
         }
-        val encoded = codec.encode(message.toMap())
-        set(CMDINPUT, encoded)
+        set(CMDINPUT, message.serialise())
     }
 
     fun getCommandInput(): List<String> {
         val encoded: String = get(CMDINPUT)
-        val message = Message()
-        message.setFromMap(codec.decode(encoded))
-        return message.toList()
+        return Message(encoded).toList()
     }
 
     fun hasCommandOutput() = contains(CMDOUTPUT)
 
     fun setCommandOutput(output: CommandMessage) {
-        val encoded = codec.encode(output.toMap())
-        set(CMDOUTPUT, encoded)
+        set(CMDOUTPUT, output.serialise())
     }
 
     fun getCommandOutput(): CommandMessage {
         val encoded: String = get(CMDOUTPUT)
-        val message = CommandMessage()
-        message.setFromMap(codec.decode(encoded))
-        return message
+        return CommandMessage(encoded)
     }
 
     fun setSyncMessage(sync: SyncMessage) {
-        val encoded = codec.encode(sync.toMap())
-        set(SYNC, encoded)
+        set(SYNC, sync.serialise())
     }
 
     fun getSyncMessage(): SyncMessage {
         val encoded: String = get(SYNC)
-        val message = SyncMessage()
-        message.setFromMap(codec.decode(encoded))
-        return message
+        return SyncMessage(encoded)
     }
 
     fun hasSyncSession() = contains(SESSION)

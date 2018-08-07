@@ -45,9 +45,7 @@ class Fault : Exception {
     }
 
     constructor(encoded: String) : super() {
-        val codec = inject<Codec>()
-        val p = Message()
-        p.setFromMap(codec.decode(encoded))
+        val p = Message(encoded)
         status = p.getInt(STATUS)
         val domainOrdinal = p.getInt(DOMAIN)
         domain = FaultDomain.values()[domainOrdinal]
@@ -59,8 +57,6 @@ class Fault : Exception {
         p.setInt(STATUS, status)
         p.setInt(DOMAIN, domain.ordinal)
         p[DETAIL] = detail
-
-        val codec = inject<Codec>()
-        return codec.encode(p.toMap())
+        return p.serialise()
     }
 }

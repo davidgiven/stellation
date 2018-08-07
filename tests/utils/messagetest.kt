@@ -1,12 +1,23 @@
 package utils
 
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class MessageTest {
+    private val encodeDecodeTests: Map<Map<String, String>, String> = mapOf(
+            /* Remember that encoded strings are sorted by key! */
+            emptyMap<String, String>() to "",
+            mapOf("foo" to "bar") to "foo=bar\n",
+            mapOf("föǫ" to "bà®") to "föǫ=bà®\n",
+            mapOf("foo" to "bar", "baz" to "boo") to "baz=boo\nfoo=bar\n",
+            mapOf("foo=" to "=bar") to "foo%e=%ebar\n",
+            mapOf("fo\no" to "b\nar") to "fo%no=b%nar\n",
+            mapOf("%" to "%%") to "%p=%p%p\n"
+    )
+
     @Test
     fun empty() {
         val p = Message()
@@ -108,6 +119,38 @@ class MessageTest {
             p["fnord"]
             fail("exception not thrown")
         } catch (_: NullPointerException) {
+        }
+    }
+
+
+    @Test
+    fun encode() {
+        encodeDecodeTests.forEach { e ->
+            assertEquals(e.value, Message(e.key).serialise(), "encoding to '${e.value}'")
+        }
+    }
+
+    @Test
+    fun decode() {
+        encodeDecodeTests.forEach { e ->
+            assertEquals(e.key, Message(e.value).toMap(), "decoding '${e.value}'")
+        }
+    }
+
+    @Test
+    fun decodeFails() {
+        val failingTestCases = listOf(
+                "foo=bar=baz\n",
+                "foo=bar%x\n"
+        )
+
+        failingTestCases.forEach { s ->
+            try {
+                Message(s)
+                fail("uncaught exception decoding '$s'")
+            } catch (f: Fault) {
+                assertEquals(FaultDomain.INTERNAL, f.domain)
+            }
         }
     }
 }

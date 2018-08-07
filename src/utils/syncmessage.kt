@@ -1,6 +1,9 @@
 package utils
 
-class SyncMessage : Message() {
+class SyncMessage : Message {
+    constructor(): super()
+    constructor(serialised: String): super(serialised)
+
     fun addVisibleObject(oid: Oid) {
         set(oid, "")
     }

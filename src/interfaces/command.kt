@@ -13,7 +13,10 @@ fun throwCommandSyntaxException(message: String): Nothing =
 
 private const val SUCCESS = "_success"
 
-class CommandMessage : Message() {
+class CommandMessage : Message {
+    constructor(): super()
+    constructor(serialised: String): super(serialised)
+
     fun setSuccess(success: Boolean) = setBoolean(SUCCESS, success)
     fun getSuccess(): Boolean = getBooleanOrDefault(SUCCESS, false)
 }

@@ -6,7 +6,6 @@ import org.junit.runners.Suite
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
         ArgifierTest::class,
-        CodecTest::class,
         GetoptTest::class,
         InjectomaticTest::class,
         MessageTest::class,

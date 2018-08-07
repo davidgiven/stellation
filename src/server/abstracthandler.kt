@@ -14,14 +14,12 @@ import model.SUniverse
 import model.Timers
 import model.createNewUniverse
 import runtime.shared.CommandShell
-import utils.Codec
 import utils.Fault
 import utils.injection
 
 abstract class AbstractHandler {
     protected val authenticator by injection<IAuthenticator>()
     protected val clock by injection<IClock>()
-    protected val codec by injection<Codec>()
     protected val database by injection<IDatabase>()
     protected val datastore by injection<IDatastore>()
     protected val environment by injection<IEnvironment>()
