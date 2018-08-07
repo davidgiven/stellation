@@ -31,8 +31,7 @@ abstract class SThing(val model: Model, val oid: Oid): Iterable<SThing> {
 
     override fun iterator(): Iterator<SThing> = contents.iterator()
 
-    fun checkReadAccess() {
-        val player = model.currentPlayer()
+    fun checkReadAccess(player: SPlayer = model.currentPlayer()) {
         if (player.isGod()) {
             return
         }
@@ -41,15 +40,14 @@ abstract class SThing(val model: Model, val oid: Oid): Iterable<SThing> {
         }
     }
 
-    fun checkModificationAccess() {
-        val player = model.currentPlayer()
+    fun checkModificationAccess(player: SPlayer = model.currentPlayer()) {
         if (player.isGod()) {
             return
         }
         if (!player.canSee(this)) {
             throwObjectNotVisibleException(oid)
         }
-        if (player.owner != owner) {
+        if (player != owner) {
             throwPermissionDeniedException()
         }
     }
