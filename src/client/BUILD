@@ -3,10 +3,20 @@ load("//:kotlin.bzl", "kotlin_js_binary", "kotlin_js_lib")
 
 package(default_visibility = ["//visibility:public"])
 
-kotlin_js_binary(
-    name = "client_js",
+kotlin_js_lib(
+    name = "main_jsjar",
     srcs = glob(["*.kt"]),
     deps = [
+        "@org_jetbrains_kotlin_kotin_stdlib_js//jar",
+        "@org_jetbrains_kotlinx_atomicfu_js//jar",
+        "@org_jetbrains_kotlinx_kotlinx_coroutines_core_js//jar",
+    ],
+)
+
+kotlin_js_binary(
+    name = "client_js",
+    srcs = [
+        "//src/client:main_jsjar",
         "//src/client/ui:client_ui_jsjar",
         "//src/commands:commands_jsjar",
         "//src/interfaces:interfaces_jsjar",
@@ -15,6 +25,8 @@ kotlin_js_binary(
         "//src/runtime/shared:shared_jsjar",
         "//src/ui:ui_jsjar",
         "//src/utils:utils_jsjar",
+    ],
+    deps = [
         "@org_jetbrains_kotlin_kotin_stdlib_js//jar",
         "@org_jetbrains_kotlinx_atomicfu_js//jar",
         "@org_jetbrains_kotlinx_kotlinx_coroutines_core_js//jar",

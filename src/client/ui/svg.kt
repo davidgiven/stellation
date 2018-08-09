@@ -36,6 +36,7 @@ class SVGElement {
     var y by doubleProxy
     var cx by doubleProxy
     var cy by doubleProxy
+    var r by doubleProxy
     var width by doubleProxy
     var height by doubleProxy
     var stroke by stringProxy

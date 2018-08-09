@@ -40,10 +40,9 @@ class Galaxy(val thing: SGalaxy) {
         for (star in thing) {
             if (star is SStar) {
                 val r = SVGElement("circle")
-//                r.x = star.x * scale + width / 2.0
-//                r.y = star.y * scale + height / 2.0
-                r.width = 5.0
-                r.height = 5.0
+                r.cx = star.x * scale + width / 2.0
+                r.cy = star.y * scale + height / 2.0
+                r.r = 5.0
                 r.stroke = "#fff"
                 r["stroke-width"] = "1px"
                 r.addTo(root)

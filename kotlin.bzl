@@ -58,53 +58,52 @@ def kotlin_jvm_test(name, srcs=[], deps=[], libs=[], **kwargs):
   )
 
 def kotlin_js_lib(name, srcs=[], deps=[], main=False):
-  cmd = ["/home/dg/src/kotlinc/bin/kotlinc-js",
-         "-Xcoroutines=enable",
-         "-module-kind commonjs",
-         "-output {0}/files/{0}.js".format(name),
-         "-meta-info"]
-  if not main:
-    cmd += ["-main noCall"]
+  cmd = ["tar cf $@"]
   cmd += ["$(location {})".format(src) for src in srcs]
-
-  libraries = ":".join(["$(location {})".format(jar) for jar in deps])
-  if libraries:
-    cmd += ["-libraries {}".format(libraries)]
 
   native.genrule(
     name = name,
     message = "Building JS {0}".format(name),
     srcs = srcs + deps,
-    outs = ["%s.jar" % name],
-    cmd = " ".join(cmd) +
-      ("&& jar cf $@ -C {0}/files .".format(name))
+    outs = ["%s.tar" % name],
+    cmd = " ".join(cmd)
   )
 
 def kotlin_js_binary(name, srcs=[], deps=[]):
-  mainName = "{}_main_jsjar".format(name)
+  cmds = ["mkdir $@.srcs"]
+  for src in srcs:
+      cmds += ["tar xf $(location {0}) -C $@.srcs".format(src)]
 
-  kotlin_js_lib(
-      name = mainName,
-      srcs = srcs,
-      deps = deps,
-      main = True
+  cmds += [" ".join(["/home/dg/src/kotlinc/bin/kotlinc-js",
+         "-Xcoroutines=enable",
+         "-module-kind commonjs",
+         "-output $@",
+         "-meta-info",
+         "$$(find $@.srcs -name *.kt)"])]
+
+  native.genrule(
+    name = "{}_compiled".format(name),
+    message = "Building JS {0}".format(name),
+    srcs = srcs,
+    outs = ["{0}.main.js".format(name)],
+    cmd = " && ".join(cmds)
   )
 
-  allDeps = deps + [":{}".format(mainName)]
+  allDeps = deps + [":{0}.main.js".format(name)]
   native.genrule(
       name = "{}_modules".format(name),
       message = "DCE JS {}".format(name),
       srcs = allDeps,
-      outs = [name + ".jar"],
+      outs = [name + ".tar"],
       output_to_bindir = 1,
       cmd = " && ".join([
           " ".join([
               "/home/dg/src/kotlinc/bin/kotlin-dce-js",
               "-dev-mode",
               "-output-dir $@.files/node_modules",
-          ] + ["$(locations "+d+")" for d in allDeps]
+          ] + ["$(locations {})".format(d) for d in allDeps]
           ),
-		  "jar cf $@ -C $@.files/node_modules ."
+		  "tar cf $@ -C $@.files/node_modules ."
       ])
   )
 
@@ -116,12 +115,11 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
       output_to_bindir = 1,
       cmd = " && ".join([
 	  	  "mkdir -p $@.files/node_modules",
-		  "cp $< $@.files/modules.jar",
-		  "(cd $@.files/node_modules && jar xf ../modules.jar)",
+	      "tar xf $< -C $@.files/node_modules",
           "(cd $@.files && " + " ".join([
-              "browserify-lite",
-              "--outfile out.js ",
-              "{}.js".format(mainName),
+              "webpack",
+              "{}.main.js".format(name),
+              "out.js"
           ]) + ")",
           "cp $@.files/out.js $@"
       ])
