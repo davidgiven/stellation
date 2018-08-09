@@ -99,7 +99,6 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
       cmd = " && ".join([
           " ".join([
               "/home/dg/src/kotlinc/bin/kotlin-dce-js",
-              "-dev-mode",
               "-output-dir $@.files/node_modules",
           ] + ["$(locations {})".format(d) for d in allDeps]
           ),
@@ -118,8 +117,9 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
 	      "tar xf $< -C $@.files/node_modules",
           "(cd $@.files && " + " ".join([
               "webpack",
+              "--display none",
               "{}.main.js".format(name),
-              "out.js"
+              "out.js",
           ]) + ")",
           "cp $@.files/out.js $@"
       ])
