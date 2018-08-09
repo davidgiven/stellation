@@ -1,5 +1,5 @@
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
-load("//:kotlin.bzl", "kotlin_js_lib", "kotlin_js_binary")
+load("//:kotlin.bzl", "kotlin_js_binary", "kotlin_js_lib")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -7,6 +7,7 @@ kotlin_js_binary(
     name = "client_js",
     srcs = glob(["*.kt"]),
     deps = [
+        "//src/client/ui:client_ui_jsjar",
         "//src/commands:commands_jsjar",
         "//src/interfaces:interfaces_jsjar",
         "//src/model:model_jsjar",

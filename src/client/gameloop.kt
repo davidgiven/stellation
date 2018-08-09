@@ -1,10 +1,12 @@
 package client
 
+import client.ui.Galaxy
 import interfaces.IClientInterface
 import interfaces.IClock
 import interfaces.ICommandDispatcher
 import interfaces.IConsole
 import interfaces.IDatastore
+import model.Model
 import ui.AlertForm
 import ui.LoginForm
 import utils.Fault
@@ -19,6 +21,9 @@ class GameLoop {
     val console by injection<IConsole>()
     val datastore by injection<IDatastore>()
     val clock by injection<IClock>()
+    val model by injection<Model>()
+
+    var galaxy: Galaxy? = null
 
     fun startGame() {
         doLogin()
@@ -58,6 +63,9 @@ class GameLoop {
     }
 
     private fun doGame() {
+        galaxy = Galaxy(model.getGalaxy())
+        galaxy!!.attach()
+
         Job {
             console.println("Welcome to Stellation VI.")
             console.println("Try 'help' if you're feeling lucky.")
