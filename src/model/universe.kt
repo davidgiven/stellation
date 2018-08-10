@@ -54,6 +54,7 @@ fun Model.createNewUniverse(): SUniverse {
         star.name = name
         star.x = location.first
         star.y = location.second
+        star.brightness = random.random(0.0..10.0).roundBy(10.0)
         star.moveTo(galaxy)
     }
 

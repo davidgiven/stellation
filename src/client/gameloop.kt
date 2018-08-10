@@ -46,8 +46,8 @@ class GameLoop {
                         val command = commandDispatcher.resolve(listOf("ping"))
                         command.run()
 
-                        cookies["username"] = loginData.username!!
-                        cookies["password"] = loginData.password!!
+                        cookies["username"] = loginData.username
+                        cookies["password"] = loginData.password
                         doGame()
                         break
                     } catch (f: Fault) {
