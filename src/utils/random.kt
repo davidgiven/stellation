@@ -19,7 +19,7 @@ class Random {
 
     fun random(min: Double, max: Double): Double {
         val r = random().toDouble() / Int.MAX_VALUE
-        return (r % (1 + max - min)) + min
+        return r * (max - min) + min
     }
 
     fun random(range: ClosedRange<Int>): Int {

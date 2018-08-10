@@ -2,6 +2,7 @@ package model
 
 import interfaces.IClock
 import interfaces.ITime
+import interfaces.log
 import utils.Oid
 import utils.NameGenerator
 import utils.Random
@@ -39,8 +40,9 @@ fun Model.createNewUniverse(): SUniverse {
     var starLocations = emptySet<Pair<Double, Double>>()
     while (starLocations.size < SGalaxy.NUMBER_OF_STARS) {
         val theta = random.random(0.0..(PI * 2.0))
-        val x = (sin(theta) * SGalaxy.RADIUS).roundBy(10.0)
-        val y = (cos(theta) * SGalaxy.RADIUS).roundBy(10.0)
+        val r = random.random(0.0..SGalaxy.RADIUS)
+        val x = (sin(theta) * r).roundBy(10.0)
+        val y = (cos(theta) * r).roundBy(10.0)
         starLocations += Pair(x, y)
     }
 
