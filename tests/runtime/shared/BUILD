@@ -1,8 +1,5 @@
-load(
-    "//:kotlin.bzl",
-    "kotlin_jvm_lib",
-    "kotlin_jvm_test",
-)
+load("//:kotlin.bzl", "kotlin_jvm_test")
+load("//:variables.bzl", "JVMTESTLIBS")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -10,20 +7,13 @@ kotlin_jvm_test(
     name = "RuntimeSharedTest",
     size = "small",
     srcs = glob(["*.kt"]),
-    libs = [
-        "@junit_junit//jar",
-        "@org_jetbrains_kotlin_kotin_stdlib//jar",
-        "@org_jetbrains_kotlin_kotin_test//jar",
-        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
-        "@org_jetbrains_kotlin_kotin_test_junit//jar",
-        "@org_jetbrains_kotlin_kotin_reflect//jar",
-        "@org_xerial_sqlite_jdbc//jar",
-    ],
+    libs = JVMTESTLIBS,
     test_class = "runtime.shared.AllTestsSuite",
     deps = [
-        "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/runtime/shared:shared_jar",
-        "//src/utils:utils_jar",
+        "//src/interfaces",
+        "//src/model",
+        "//src/runtime/jvm",
+        "//src/runtime/shared",
+        "//src/utils",
     ],
 )

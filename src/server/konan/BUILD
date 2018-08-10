@@ -1,12 +1,4 @@
-load(
-    "//:kotlin.bzl",
-    "kotlin_js_binary",
-    "kotlin_js_lib",
-    "kotlin_jvm_binary",
-    "kotlin_jvm_lib",
-    "kotlin_konan_binary",
-    "kotlin_konan_lib",
-)
+load("//:kotlin.bzl", "kotlin_konan_binary")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -18,12 +10,12 @@ kotlin_konan_binary(
     ],
     main = "server.konan.main",
     deps = [
-        "//src/commands:commands_klib",
-        "//src/interfaces:interfaces_klib",
-        "//src/model:model_klib",
-        "//src/runtime/konan:runtime_klib",
-        "//src/runtime/shared:shared_klib",
-        "//src/server:server_klib",
-        "//src/utils:utils_klib",
+        "//src/commands",
+        "//src/interfaces",
+        "//src/model",
+        "//src/runtime/konan",
+        "//src/runtime/shared",
+        "//src/server",
+        "//src/utils",
     ],
 )

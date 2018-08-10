@@ -1,49 +1,18 @@
-load(
-    "//:kotlin.bzl",
-    "kotlin_jvm_lib",
-    "kotlin_jvm_test",
-)
+load("//:kotlin.bzl", "kotlin_jvm_test")
+load("//:variables.bzl", "JVMTESTLIBS")
 
 package(default_visibility = ["//visibility:public"])
 
 kotlin_jvm_test(
-    name = "CoreUiTest",
+    name = "UiTest",
     size = "small",
-    srcs = ["coreuitest.kt"],
-    libs = [
-        "@junit_junit//jar",
-        "@org_jetbrains_kotlin_kotin_stdlib//jar",
-        "@org_jetbrains_kotlin_kotin_test//jar",
-        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
-        "@org_jetbrains_kotlin_kotin_test_junit//jar",
-        "@org_jetbrains_kotlinx_kotlinx_coroutines_core//jar",
-    ],
-    test_class = "ui.CoreUiTest",
+    srcs = glob(["*.kt"]),
+    libs = JVMTESTLIBS,
+    test_class = "ui.AllTestsSuite",
     deps = [
-        "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/utils:utils_jar",
-    ],
-)
-
-kotlin_jvm_test(
-    name = "AbstractFormTest",
-    size = "small",
-    srcs = ["abstractformtest.kt"],
-    libs = [
-        "@junit_junit//jar",
-        "@org_jetbrains_kotlin_kotin_stdlib//jar",
-        "@org_jetbrains_kotlin_kotin_test//jar",
-        "@org_jetbrains_kotlin_kotin_test_annotations_common//jar",
-        "@org_jetbrains_kotlin_kotin_test_junit//jar",
-        "@org_jetbrains_kotlin_kotin_reflect//jar",
-        "@org_jetbrains_kotlinx_kotlinx_coroutines_core//jar",
-    ],
-    test_class = "ui.AbstractFormTest",
-    deps = [
-        "//src/interfaces:interfaces_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/ui:ui_jar",
-        "//src/utils:utils_jar",
+        "//src/interfaces",
+        "//src/runtime/jvm",
+        "//src/ui",
+        "//src/utils",
     ],
 )

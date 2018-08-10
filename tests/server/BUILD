@@ -1,7 +1,4 @@
-load(
-    "//:kotlin.bzl",
-    "kotlin_jvm_lib",
-    "kotlin_jvm_test",
-)
+load("//:kotlin.bzl", "kotlin_jvm_test")
+load("//:variables.bzl", "JVMTESTLIBS")
 
 package(default_visibility = ["//visibility:public"])

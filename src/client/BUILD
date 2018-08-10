@@ -1,30 +1,25 @@
 load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
-load("//:kotlin.bzl", "kotlin_js_binary", "kotlin_js_lib")
+load("//:kotlin.bzl", "kotlin_js_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-kotlin_js_lib(
-    name = "main_jsjar",
+filegroup(
+    name = "client",
     srcs = glob(["*.kt"]),
-    deps = [
-        "@org_jetbrains_kotlin_kotin_stdlib_js//jar",
-        "@org_jetbrains_kotlinx_atomicfu_js//jar",
-        "@org_jetbrains_kotlinx_kotlinx_coroutines_core_js//jar",
-    ],
 )
 
 kotlin_js_binary(
     name = "client_js",
     srcs = [
-        "//src/client:main_jsjar",
-        "//src/client/ui:client_ui_jsjar",
-        "//src/commands:commands_jsjar",
-        "//src/interfaces:interfaces_jsjar",
-        "//src/model:model_jsjar",
-        "//src/runtime/js:runtime_jsjar",
-        "//src/runtime/shared:shared_jsjar",
-        "//src/ui:ui_jsjar",
-        "//src/utils:utils_jsjar",
+        ":client",
+        "//src/client/ui",
+        "//src/commands",
+        "//src/interfaces",
+        "//src/model",
+        "//src/runtime/js",
+        "//src/runtime/shared",
+        "//src/ui",
+        "//src/utils",
     ],
     deps = [
         "@org_jetbrains_kotlin_kotin_stdlib_js//jar",

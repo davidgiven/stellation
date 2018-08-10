@@ -1,27 +1,20 @@
-load(
-    "//:kotlin.bzl",
-    "kotlin_jvm_lib",
-    "kotlin_jvm_binary",
-)
+load("//:kotlin.bzl", "kotlin_jvm_binary")
+load("//:variables.bzl", "JVMLIBS")
 
 package(default_visibility = ["//visibility:public"])
 
 kotlin_jvm_binary(
     name = "server_jvm",
     srcs = ["main.kt"],
-    libs = [
-        "@org_jetbrains_kotlin_kotin_stdlib//jar",
-        "@org_jetbrains_kotlin_kotin_reflect//jar",
-        "@org_xerial_sqlite_jdbc//jar",
-    ],
+    libs = JVMLIBS,
     main_class = "server.jvm.MainKt",
     deps = [
-        "//src/commands:commands_jar",
-        "//src/interfaces:interfaces_jar",
-        "//src/model:model_jar",
-        "//src/runtime/jvm:runtime_jar",
-        "//src/runtime/shared:shared_jar",
-        "//src/server:server_jar",
-        "//src/utils:utils_jar",
+        "//src/commands",
+        "//src/interfaces",
+        "//src/model",
+        "//src/runtime/jvm",
+        "//src/runtime/shared",
+        "//src/server",
+        "//src/utils",
     ],
 )

@@ -1,40 +1,38 @@
-def kotlin_jvm_lib(name, srcs=[], deps=[]):
-  native.filegroup(
-      name = name,
-      srcs = srcs
-  )
-
-def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
-  kotlin_jvm_lib(
-      name = name + "_main",
-      srcs = srcs
-  )
-
+def kotlin_jvm_link(name, deps=[], libs=[], **kwargs):
   cmd = ["/home/dg/src/kotlinc/bin/kotlinc-jvm",
          "-Xcoroutines=enable",
-         "-d $@",
-         "$(location {}_main)".format(name)]
+         "-d $@"]
 
   for dep in deps:
       cmd += ["$(locations {})".format(dep)]
 
-  classpath = ":".join(["$(location {})".format(jar) for jar in libs])
+  classpath = ":".join(["$(locations {})".format(jar) for jar in libs])
   if classpath != "":
     cmd += ["-cp {}".format(classpath)]
 
   native.genrule(
-    name = name + "_jar",
+    name = name,
     message = "Building JVM {0}".format(name),
-    srcs = srcs + deps + libs + [name + "_main"],
+    srcs = deps + libs,
     outs = [name + ".kotlin.jar"],
     cmd = " ".join(cmd)
   )
 
-  jars = " ".join(["$(location {})".format(dep) for dep in deps])
+def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
+  native.filegroup(
+      name = name + "_main",
+      srcs = srcs
+  )
 
+  kotlin_jvm_link(
+      name = name + "_jar",
+      deps = deps + [":{}_main".format(name)],
+      libs = libs,
+  )
+
+  jars = " ".join(["$(location {})".format(dep) for dep in deps])
   native.java_binary(
       name = name,
-      message = "Linking JVM {0}".format(name),
       runtime_deps = [":{}_jar".format(name)] + libs,
       **kwargs
   )
@@ -42,27 +40,26 @@ def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
 def kotlin_jvm_test(name, srcs=[], deps=[], libs=[], **kwargs):
   jars = " ".join(["$(location {})".format(dep) for dep in deps])
 
-  kotlin_jvm_lib(
-      name = name + "_main_jar",
+  native.filegroup(
+      name = name + "_main",
       srcs = srcs,
-      deps = deps + libs
+  )
+
+  kotlin_jvm_link(
+      name = name + "_jar",
+      deps = deps + [":{}_main".format(name)],
+      libs = libs,
   )
 
   native.java_import(
       name = name + "_jars",
-      jars = deps + [":{}_main_jar".format(name)]
+      jars = [":{}_jar".format(name)]
   )
 
   native.java_test(
       name = name,
       runtime_deps = [":{}_jars".format(name)] + libs,
       **kwargs
-  )
-
-def kotlin_js_lib(name, srcs=[], deps=[], main=False):
-  native.filegroup(
-      name = name,
-      srcs = srcs
   )
 
 def kotlin_js_binary(name, srcs=[], deps=[]):
@@ -117,14 +114,8 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
       ])
   )
 
-def kotlin_konan_lib(name, srcs=[], deps=[]):
-  native.filegroup(
-      name = name,
-      srcs = srcs
-  )
-
 def kotlin_konan_binary(name, srcs=[], deps=[], libs=[], main="main"):
-  kotlin_konan_lib(
+  native.filegroup(
       name = name + "_main",
       srcs = srcs
   )
