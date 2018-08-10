@@ -34,6 +34,7 @@ def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
 
   native.java_binary(
       name = name,
+      message = "Linking JVM {0}".format(name),
       runtime_deps = [":{}_jar".format(name)] + libs,
       **kwargs
   )
@@ -117,46 +118,36 @@ def kotlin_js_binary(name, srcs=[], deps=[]):
   )
 
 def kotlin_konan_lib(name, srcs=[], deps=[]):
-  cmd = ["/home/dg/src/kotlin-native-linux-0.8.1/bin/kotlinc-native",
-         "-Xcoroutines=enable",
-         "-produce library",
-         "-g",
-         "--disable devirtualization",
-         "-output $@"]
-
-  for f in srcs:
-    cmd += ["$(location {})".format(f)]
-  for j in deps:
-    cmd += ["-repo $$(dirname $(location {}))".format(j)]
-    cmd += ["-library $(location {})".format(j)]
-
-  native.genrule(
-    name = name,
-    message = "Building Konan {0}".format(name),
-    srcs = srcs + deps,
-    outs = [name + ".klib"],
-    cmd = " ".join(cmd),
+  native.filegroup(
+      name = name,
+      srcs = srcs
   )
 
-def kotlin_konan_binary(name, srcs=[], deps=[], main="main"):
+def kotlin_konan_binary(name, srcs=[], deps=[], libs=[], main="main"):
+  kotlin_konan_lib(
+      name = name + "_main",
+      srcs = srcs
+  )
+
   cmd = ["/home/dg/src/kotlin-native-linux-0.8.1/bin/kotlinc-native",
          "-produce program",
          "--purge_user_libs",
          "-entry {}".format(main),
          "-g",
          "--disable devirtualization",
-         "-output $@"]
+         "-output $@",
+         "$(location {}_main)".format(name)]
 
-  for f in srcs:
-    cmd += ["$(location {})".format(f)]
-  for j in deps:
-    cmd += ["-repo $$(dirname $(location {}))".format(j)]
-    cmd += ["-library $(location {})".format(j)]
+  for dep in deps:
+    cmd += ["$(locations {})".format(dep)]
+  for lib in libs:
+    cmd += ["-repo $$(dirname $(location {}))".format(lib)]
+    cmd += ["-library $(location {})".format(lib)]
 
   native.genrule(
     name = name,
-    message = "Linking Konan {0}".format(name),
-    srcs = srcs + deps,
+    message = "Compiling Konan {0}".format(name),
+    srcs = srcs + libs + deps + [":{}_main".format(name)],
     outs = [name + ".kexe"],
     cmd = " ".join(cmd),
     output_to_bindir = 1,
