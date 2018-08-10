@@ -1,39 +1,40 @@
 def kotlin_jvm_lib(name, srcs=[], deps=[]):
+  native.filegroup(
+      name = name,
+      srcs = srcs
+  )
+
+def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
+  kotlin_jvm_lib(
+      name = name + "_main",
+      srcs = srcs
+  )
+
   cmd = ["/home/dg/src/kotlinc/bin/kotlinc-jvm",
          "-Xcoroutines=enable",
-         "-d $@"]
-  for f in srcs:
-    cmd += ["$(location {})".format(f)]
+         "-d $@",
+         "$(location {}_main)".format(name)]
 
-  classpath = ":".join(["$(location {})".format(jar) for jar in deps])
+  for dep in deps:
+      cmd += ["$(locations {})".format(dep)]
+
+  classpath = ":".join(["$(location {})".format(jar) for jar in libs])
   if classpath != "":
     cmd += ["-cp {}".format(classpath)]
 
   native.genrule(
-    name = name,
+    name = name + "_jar",
     message = "Building JVM {0}".format(name),
-    srcs = srcs + deps,
-    outs = [name + ".jar"],
+    srcs = srcs + deps + libs + [name + "_main"],
+    outs = [name + ".kotlin.jar"],
     cmd = " ".join(cmd)
   )
 
-def kotlin_jvm_binary(name, srcs=[], deps=[], libs=[], **kwargs):
   jars = " ".join(["$(location {})".format(dep) for dep in deps])
-
-  kotlin_jvm_lib(
-      name = name + "_main_jar",
-      srcs = srcs,
-      deps = deps + libs
-  )
-
-  native.java_import(
-      name = name + "_jars",
-      jars = deps + [":{}_main_jar".format(name)]
-  )
 
   native.java_binary(
       name = name,
-      runtime_deps = [":{}_jars".format(name)] + libs,
+      runtime_deps = [":{}_jar".format(name)] + libs,
       **kwargs
   )
 
@@ -58,35 +59,25 @@ def kotlin_jvm_test(name, srcs=[], deps=[], libs=[], **kwargs):
   )
 
 def kotlin_js_lib(name, srcs=[], deps=[], main=False):
-  cmd = ["tar cf $@"]
-  cmd += ["$(location {})".format(src) for src in srcs]
-
-  native.genrule(
-    name = name,
-    message = "Building JS {0}".format(name),
-    srcs = srcs + deps,
-    outs = ["%s.tar" % name],
-    cmd = " ".join(cmd)
+  native.filegroup(
+      name = name,
+      srcs = srcs
   )
 
 def kotlin_js_binary(name, srcs=[], deps=[]):
-  cmds = ["mkdir $@.srcs"]
-  for src in srcs:
-      cmds += ["tar xf $(location {0}) -C $@.srcs".format(src)]
-
-  cmds += [" ".join(["/home/dg/src/kotlinc/bin/kotlinc-js",
-         "-Xcoroutines=enable",
-         "-module-kind commonjs",
-         "-output $@",
-         "-meta-info",
-         "$$(find $@.srcs -name *.kt)"])]
-
   native.genrule(
     name = "{}_compiled".format(name),
     message = "Building JS {0}".format(name),
     srcs = srcs,
     outs = ["{0}.main.js".format(name)],
-    cmd = " && ".join(cmds)
+    cmd = " ".join([
+        "/home/dg/src/kotlinc/bin/kotlinc-js",
+        "-Xcoroutines=enable",
+        "-module-kind commonjs",
+        "-output $@",
+        "-meta-info",
+        "$(SRCS)"
+    ])
   )
 
   allDeps = deps + [":{0}.main.js".format(name)]
