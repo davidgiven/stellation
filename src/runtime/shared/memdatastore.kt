@@ -10,7 +10,6 @@ import utils.FaultDomain.INVALID_ARGUMENT
 fun throwBadDatastoreTypeException(): Nothing =
         throw Fault(INVALID_ARGUMENT).withDetail("type mismatch on datastore access")
 
-
 private abstract class Value {
     open fun getOid(): Oid? = throwBadDatastoreTypeException()
     open fun getInt(): Int = throwBadDatastoreTypeException()
@@ -46,15 +45,15 @@ private class SetValue(val value: SetProperty) : Value() {
 
 class InMemoryDatastore : IDatastore {
     private var maxOid: Int = 1
-    private lateinit var objects: Set<Oid>
-    private lateinit var values: Map<Pair<Oid, String>, Value>
-    private lateinit var properties: Set<String>
+    private val objects = HashSet<Oid>()
+    private val values = HashMap<Pair<Oid, String>, Value>()
+    private val properties = HashSet<String>()
 
     override fun initialiseDatabase() {
         maxOid = 1
-        objects = emptySet()
-        values = emptyMap()
-        properties = emptySet()
+        objects.clear()
+        values.clear()
+        properties.clear()
     }
 
     override fun createProperty(name: String, sqlType: String, isAggregate: Boolean) {
