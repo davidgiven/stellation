@@ -1,6 +1,7 @@
 package client.ui
 
 import org.w3c.dom.Element
+import org.w3c.dom.Text
 import org.w3c.dom.asList
 import kotlin.browser.document
 import kotlin.properties.ReadWriteProperty
@@ -64,6 +65,16 @@ class SVGElement {
     var href: String
         get() = element.getAttributeNS(XLINK_NS, "href")!!
         set(value) { element.setAttributeNS(XLINK_NS, "href", value) }
+
+    var text: String
+        get() = (element.firstChild as Text).textContent!!
+        set(value) {
+            if (element.childElementCount == 0) {
+                element.appendChild(document.createTextNode(value))
+            } else {
+                (element.firstChild as Text).textContent = value
+            }
+        }
 
     operator fun get(name: String) = element.getAttribute(name)
     operator fun set(name: String, value: String) = element.setAttribute(name, value)

@@ -12,6 +12,11 @@ $bigshadow: 3px;
     src: url("COMMODORE_PET.woff2") format('woff2');
 }
 
+@font-face {
+    font-family: "Tiny";
+    src: url("tiny.woff") format('woff');
+}
+
 :focus {
 	outline: yellow dotted 2px;
 	outline-offset: 2px;
@@ -314,9 +319,18 @@ input[type="text"], input[type="password"], input[type="email"] {
 
 .svg-star {
     r: 5px;
-    stroke: $primary-color;
+    stroke: white;
 }
 
 circle, rect, line, path {
     vector-effect: non-scaling-stroke;
+}
+
+text.star {
+    fill: $primary-color;
+    stroke: none;
+    font-size: 9px;
+    text-shadow: none;
+    text-anchor: middle;
+    alignment-baseline: hanging;
 }

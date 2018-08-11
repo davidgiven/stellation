@@ -53,10 +53,17 @@ class Galaxy(val thing: SGalaxy) {
                 val r = SVGElement("use")
                 val b = star.brightness.toInt()
                 r.href = "#svg-star-$b"
-                val tx = star.x * scale
-                val ty = star.y * scale
-                r["transform"] = "translate($tx,$ty) scale(5)"
+                val sx = star.x * scale
+                val sy = star.y * scale
+                r["transform"] = "translate($sx,$sy) scale(5)"
                 r.addTo(mapGroup)
+
+                val t = SVGElement("text")
+                t.text = star.name.toUpperCase()
+                t.classes = setOf("star")
+                val ty = sy + 10
+                t["transform"] = "translate($sx,$ty)"
+                t.addTo(mapGroup)
             }
         }
     }
