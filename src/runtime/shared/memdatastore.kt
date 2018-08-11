@@ -123,7 +123,7 @@ class InMemoryDatastore : IDatastore {
         var set = values[key]?.getSet()
         if (set == null) {
             set = object : SetProperty {
-                private var value: Set<Oid> = emptySet()
+                private val value = HashSet<Oid>()
 
                 override fun add(item: Oid): SetProperty {
                     value += item
@@ -136,7 +136,7 @@ class InMemoryDatastore : IDatastore {
                 }
 
                 override fun clear(): SetProperty {
-                    value = emptySet()
+                    value.clear()
                     return this
                 }
 

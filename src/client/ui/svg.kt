@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package client.ui
 
 import org.w3c.dom.Element
@@ -7,8 +9,8 @@ import kotlin.browser.document
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-private const val SVG_NS = "http://www.w3.org/2000/svg"
-private const val XLINK_NS = "http://www.w3.org/1999/xlink"
+const val SVG_NS = "http://www.w3.org/2000/svg"
+const val XLINK_NS = "http://www.w3.org/1999/xlink"
 
 private val doubleProxy = object : ReadWriteProperty<SVGElement, Double> {
     override fun setValue(thisRef: SVGElement, property: KProperty<*>, value: Double) =
@@ -52,9 +54,7 @@ class SVGElement {
     var classes: Set<String>
         get() = element.classList.asList().toSet()
         set(replacement) {
-            val current = classes
-            replacement.minus(current).forEach { element.classList.add(it) }
-            current.minus(replacement).forEach { element.classList.remove(it) }
+            element.classList.value = replacement.joinToString(" ")
         }
 
     val clientSize: Pair<Double, Double> get() {
@@ -63,8 +63,8 @@ class SVGElement {
     }
 
     var href: String
-        get() = element.getAttributeNS(XLINK_NS, "href")!!
-        set(value) { element.setAttributeNS(XLINK_NS, "href", value) }
+        inline get() = element.getAttributeNS(XLINK_NS, "href")!!
+        inline set(value) { element.setAttributeNS(XLINK_NS, "href", value) }
 
     var text: String
         get() = (element.firstChild as Text).textContent!!
@@ -76,18 +76,13 @@ class SVGElement {
             }
         }
 
-    operator fun get(name: String) = element.getAttribute(name)
-    operator fun set(name: String, value: String) = element.setAttribute(name, value)
+    inline operator fun get(name: String) = element.getAttribute(name)
+    inline operator fun set(name: String, value: String) = element.setAttribute(name, value)
 
-    fun addTo(e: Element) {
+    inline fun addTo(e: Element): SVGElement {
         e.appendChild(element)
+        return this
     }
 
-    fun addTo(e: SVGElement) = addTo(e.element)
-
-    fun clear() {
-        while (element.lastChild != null) {
-            element.removeChild(element.lastChild!!)
-        }
-    }
+    inline fun addTo(e: SVGElement) = addTo(e.element)
 }

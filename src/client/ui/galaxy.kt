@@ -5,14 +5,21 @@ import model.SStar
 import org.w3c.dom.events.WheelEvent
 import kotlin.browser.document
 import kotlin.browser.window
-import kotlin.math.pow
 
-private const val SCALE_STEP = 1.005
+private const val SCALE_STEP = 1.2
+
+private data class StarSlot(
+        var star: SVGElement,
+        var text: SVGElement)
 
 class Galaxy(val thing: SGalaxy) {
     private val SIZE = SGalaxy.RADIUS * 1.1
 
+    private val cache = HashMap<SStar, StarSlot>()
+
     private val root = SVGElement("svg")
+    private val mapGroup = SVGElement("g").addTo(root)
+    private var graticule = createGraticule().addTo(mapGroup)
     private var width = 0.0
     private var height = 0.0
     private var panX = 0.0
@@ -22,17 +29,37 @@ class Galaxy(val thing: SGalaxy) {
 
     init {
         root.classes = setOf("map")
-        window.addEventListener("resize", { render() })
-        window.addEventListener("wheel", { onWheelEvent(it as WheelEvent) })
+        window.onresize = { update() }
+        root.element.addEventListener("wheel", { onWheelEvent(it as WheelEvent) })
     }
 
     fun attach() {
         document.body!!.insertBefore(root.element, document.body!!.firstElementChild)
-        render()
+        update()
     }
 
-    fun render() {
-        root.clear()
+    private fun createGraticule(): SVGElement {
+        val graticuleElement = SVGElement("use")
+        graticuleElement.href = "#svg-graticule"
+        return graticuleElement
+    }
+
+    private fun findOrCreateStarSlot(star: SStar) =
+            cache.getOrPut(star) {
+                val starElement = SVGElement("use")
+                val b = star.brightness.toInt()
+                starElement.href = "#svg-star-$b"
+                starElement.addTo(mapGroup)
+
+                val textElement = SVGElement("text")
+                textElement.text = star.name.toUpperCase()
+                textElement.classes = setOf("star")
+                textElement.addTo(mapGroup)
+
+                StarSlot(starElement, textElement)
+            }
+
+    fun update() {
         val (w, h) = root.clientSize
         width = w
         height = h
@@ -46,40 +73,27 @@ class Galaxy(val thing: SGalaxy) {
         var ox = width / 2.0
         var oy = height / 2.0
 
-        val mapGroup = SVGElement("g")
-        mapGroup.addTo(root)
         mapGroup["transform"] = "translate($ox,$oy)"
-
-        val r = SVGElement("use")
-        r.addTo(mapGroup)
-        r.href = "#svg-graticule"
-        r["transform"] = "scale($scale)"
+        graticule["transform"] = "scale($scale)"
 
         for (star in thing) {
             if (star is SStar) {
-                val r = SVGElement("use")
-                val b = star.brightness.toInt()
-                r.href = "#svg-star-$b"
+                val slot = findOrCreateStarSlot(star)
                 val sx = star.x * scale
                 val sy = star.y * scale
-                r["transform"] = "translate($sx,$sy) scale(5)"
-                r.addTo(mapGroup)
+                slot.star["transform"] = "translate($sx,$sy) scale(5)"
 
-                val t = SVGElement("text")
-                t.text = star.name.toUpperCase()
-                t.classes = setOf("star")
                 val ty = sy + 10
-                t["transform"] = "translate($sx,$ty)"
-                t.addTo(mapGroup)
+                slot.text["transform"] = "translate($sx,$ty)"
             }
         }
     }
 
-    fun onWheelEvent(event: WheelEvent) {
-        val scaleDelta = SCALE_STEP.pow(-event.deltaY)
+    private fun onWheelEvent(event: WheelEvent) {
+        val scaleDelta = if (event.deltaY < 0) SCALE_STEP else 1.0 / SCALE_STEP
         if (scaleDelta != 0.0) {
             scale *= scaleDelta
-            render()
+            update()
         }
     }
 }
