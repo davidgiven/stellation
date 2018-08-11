@@ -312,9 +312,16 @@ input[type="text"], input[type="password"], input[type="email"] {
     fill: none;
 }
 
-.svg-graticule {
-    stroke: darken($primary-color, 30%);
+.svg-graticule-heavy, .svg-graticule-light {
     stroke-dasharray: 2 2;
+}
+
+.svg-graticule-heavy {
+    stroke: darken($primary-color, 30%);
+}
+
+.svg-graticule-light {
+    stroke: darken($primary-color, 45%);
 }
 
 .svg-star {

@@ -112,24 +112,33 @@
         </g>
     </g>
 
-    <g id="svg-graticule" class="svg-graticule">
-        <circle cx="0" cy="0" r="10"/>
-        <circle cx="0" cy="0" r="20"/>
-        <circle cx="0" cy="0" r="30"/>
-        <circle cx="0" cy="0" r="40"/>
-        <circle cx="0" cy="0" r="50"/>
-        <circle cx="0" cy="0" r="60"/>
+    <g id="svg-graticule">
+        <g class="svg-graticule-heavy">
+            <circle cx="0" cy="0" r="10"/>
+            <circle cx="0" cy="0" r="20"/>
+            <circle cx="0" cy="0" r="30"/>
+            <circle cx="0" cy="0" r="40"/>
+            <circle cx="0" cy="0" r="50"/>
+            <circle cx="0" cy="0" r="60"/>
+        </g>
 
         <g id="svg-grid-4">
             <g id="svg-grid-3">
                 <g id="svg-grid-2">
-                    <path id="svg-grid-1" d="M-60 -60 h120 M-60 -55 h120 M-60 -50 h120"/>
+                    <g id="svg-grid-1">
+                        <path class="svg-graticule-heavy" d="M-60 -60 h120"/>
+                        <path class="svg-graticule-light" d="M-60 -59 h120 M-60 -58 h120 M-60 -57 h120 M-60 -56 h120"/>
+                    </g>
+                    <use xlink:href="#svg-grid-1" transform="translate(0,5)"/>
+                    <use xlink:href="#svg-grid-1" transform="translate(0,10)"/>
                     <use xlink:href="#svg-grid-1" transform="translate(0,15)"/>
+                    <use xlink:href="#svg-grid-1" transform="translate(0,20)"/>
+                    <use xlink:href="#svg-grid-1" transform="translate(0,25)"/>
                 </g>
                 <use xlink:href="#svg-grid-2" transform="translate(0,30)"/>
             </g>
             <use xlink:href="#svg-grid-3" transform="translate(0,60)"/>
-            <path d="M-60 60 h120"/>
+            <path d="M-60 60 h120" class="svg-graticule-heavy"/>
         </g>
         <use xlink:href="#svg-grid-4" transform="rotate(90)"/>
     </g>
