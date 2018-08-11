@@ -40,16 +40,9 @@ fun main(argv: Array<String>) {
     val time = inject<ITime>()
     bind(Random(time.nanotime()))
 
-    document.body!!.removeChildren()
+    document.getElementById("loading")!!.remove()
     console.show()
 
     gameloop.startGame()
     kickScheduler()
-}
-
-fun Element.removeChildren(): Element {
-    while (lastChild != null) {
-        removeChild(lastChild!!)
-    }
-    return this
 }

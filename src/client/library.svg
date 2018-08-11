@@ -1,0 +1,137 @@
+<svg display="none"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="-100 -100 200 200"
+     fill="none"
+     stroke="black"
+     stroke-width="1px"
+     vector-effect="non-scaling-stroke">
+
+    <g transform="translate(-90,90) scale(5)">
+        <g id="svg-star-0" class="svg-star svg-star-0">
+            <circle cx="0" cy="0" r="1"/>
+        </g>
+    </g>
+
+    <g transform="translate(-70,90) scale(5)">
+        <g id="svg-star-1" class="svg-star svg-star-1">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+        </g>
+    </g>
+
+    <g transform="translate(-50,90) scale(5)">
+        <g id="svg-star-2" class="svg-star svg-star-2">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(180)"/>
+        </g>
+    </g>
+
+    <g transform="translate(-30,90) scale(5)">
+        <g id="svg-star-3" class="svg-star svg-star-3">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(120)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(240)"/>
+        </g>
+    </g>
+
+    <g transform="translate(-10,90) scale(5)">
+        <g id="svg-star-4" class="svg-star svg-star-4">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(90)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(180)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(270)"/>
+        </g>
+    </g>
+
+    <g transform="translate(10,90) scale(5)">
+        <g id="svg-star-5" class="svg-star svg-star-5">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(72)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(144)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(216)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(288)"/>
+        </g>
+    </g>
+
+    <g transform="translate(30,90) scale(5)">
+        <g id="svg-star-6" class="svg-star svg-star-6">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(60)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(120)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(180)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(240)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(300)"/>
+        </g>
+    </g>
+
+    <g transform="translate(50,90) scale(5)">
+        <g id="svg-star-7" class="svg-star svg-star-7">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(51)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(103)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(154)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(206)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(257)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(309)"/>
+        </g>
+    </g>
+
+    <g transform="translate(70,90) scale(5)">
+        <g id="svg-star-8" class="svg-star svg-star-8">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(45)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(90)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(135)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(180)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(225)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(270)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(315)"/>
+        </g>
+    </g>
+
+    <g transform="translate(90,90) scale(5)">
+        <g id="svg-star-9" class="svg-star svg-star-9">
+            <use xlink:href="#svg-star-0"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(0)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(40)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(80)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(120)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(160)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(200)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(240)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(280)"/>
+            <line x1="0" y1="0" x2="0" y2="1" transform="rotate(320)"/>
+        </g>
+    </g>
+
+    <g id="svg-graticule" class="svg-graticule">
+        <circle cx="0" cy="0" r="10"/>
+        <circle cx="0" cy="0" r="20"/>
+        <circle cx="0" cy="0" r="30"/>
+        <circle cx="0" cy="0" r="40"/>
+        <circle cx="0" cy="0" r="50"/>
+        <circle cx="0" cy="0" r="60"/>
+
+        <g id="svg-grid-4">
+            <g id="svg-grid-3">
+                <g id="svg-grid-2">
+                    <path id="svg-grid-1" d="M-60 -60 h120 M-60 -55 h120 M-60 -50 h120"/>
+                    <use xlink:href="#svg-grid-1" transform="translate(0,15)"/>
+                </g>
+                <use xlink:href="#svg-grid-2" transform="translate(0,30)"/>
+            </g>
+            <use xlink:href="#svg-grid-3" transform="translate(0,60)"/>
+            <path d="M-60 60 h120"/>
+        </g>
+        <use xlink:href="#svg-grid-4" transform="rotate(90)"/>
+    </g>
+</svg>
+

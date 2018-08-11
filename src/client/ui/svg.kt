@@ -56,8 +56,10 @@ class SVGElement {
             current.minus(replacement).forEach { element.classList.remove(it) }
         }
 
-    val clientWidth: Double get() = element.clientWidth.toDouble()
-    val clientHeight: Double get() = element.clientHeight.toDouble()
+    val clientSize: Pair<Double, Double> get() {
+        val rect = element.getBoundingClientRect()
+        return Pair(rect.width, rect.height)
+    }
 
     var href: String
         get() = element.getAttributeNS(XLINK_NS, "href")!!

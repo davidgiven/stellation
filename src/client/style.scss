@@ -302,24 +302,21 @@ input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
     height: 100%;
 
-    .graticule {
-        stroke: darken($primary-color, 40%);
-        stroke-dasharray: 2 2;
-        fill: none;
-    }
+    stroke: $primary-color;
+    stroke-width: 1px;
+    fill: none;
+}
 
-    .star {
-        r: 5px;
-        fill: none;
-        stroke: $primary-color;
-        stroke-width: 1px;
-    }
+.svg-graticule {
+    stroke: darken($primary-color, 30%);
+    stroke-dasharray: 2 2;
+}
 
-    .star-0 {
-        stroke-dasharray: 1 2;
-    }
+.svg-star {
+    r: 5px;
+    stroke: $primary-color;
+}
 
-    .star-2 {
-        fill: $primary-color;
-    }
+circle, rect, line, path {
+    vector-effect: non-scaling-stroke;
 }

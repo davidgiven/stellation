@@ -55,11 +55,29 @@ genrule(
     ]),
 )
 
+genrule(
+    name = "client_html",
+    srcs = [
+        "client.html",
+        "library.svg",
+        ":sass_rules",
+    ],
+    outs = ["index.html"],
+    cmd = " ".join([
+        "gpp",
+        "-H",
+        "-I $$(dirname $(location :sass_rules))",
+        "-I $$(dirname $(location library.svg))",
+        "-o $@",
+        "$(location client.html)",
+    ]),
+)
+
 pkg_tar(
     name = "client_pkg",
     srcs = glob(["resources/**"]) + [
         ":uglified_client_js",
-        ":sass_rules",
+        ":client_html",
     ],
     extension = "tar.gz",
 )
