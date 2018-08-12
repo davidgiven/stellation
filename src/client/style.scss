@@ -12,11 +12,6 @@ $bigshadow: 3px;
     src: url("COMMODORE_PET.woff2") format('woff2');
 }
 
-@font-face {
-    font-family: "Tiny";
-    src: url("tiny.woff") format('woff');
-}
-
 :focus {
 	outline: yellow dotted 2px;
 	outline-offset: 2px;
