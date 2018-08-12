@@ -9,6 +9,8 @@ import interfaces.IDatastore
 import model.Model
 import ui.AlertForm
 import ui.LoginForm
+import ui.SummaryWindow
+import ui.show
 import utils.Fault
 import utils.FaultDomain.PERMISSION
 import utils.Job
@@ -65,6 +67,9 @@ class GameLoop {
     private fun doGame() {
         galaxy = Galaxy(model.getGalaxy())
         galaxy!!.attach()
+
+        val summary = SummaryWindow()
+        summary.show()
 
         Job {
             console.println("Welcome to Stellation VI.")

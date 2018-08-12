@@ -16,33 +16,39 @@ class ConsoleWindow(val callback: ConsoleCommandCallback) : AbstractWindow() {
     }
 
     override fun createUserInterface(div: IUiElement) {
-        div.classes += "console"
-
-        div.addElement("label") {
-            classes += setOf("expand")
-
-            linesBox = addElement("div") {
-                classes += setOf("lines")
-            }
-
-            addHBox {
-                addText("div", ">") {
-                    classes += "prompt"
-                }
-
-                textInput = addElement("input") {
-                    set("type", "text")
-
-                    onActivate {
-                        val value = textInput["value"]!!
-                        textInput["value"] = ""
-                        callback(value)
-                    }
-                }
-            }
+        div.run {
+            classes += "scrollable"
 
             addElement("div") {
-                classes += "expand"
+                classes += setOf("console")
+
+                addElement("label") {
+                    classes += setOf("expand")
+
+                    linesBox = addElement("div") {
+                        classes += setOf("lines")
+                    }
+
+                    addHBox {
+                        addText("div", ">") {
+                            classes += "prompt"
+                        }
+
+                        textInput = addElement("input") {
+                            set("type", "text")
+
+                            onActivate {
+                                val value = textInput["value"]!!
+                                textInput["value"] = ""
+                                callback(value)
+                            }
+                        }
+                    }
+
+                    addElement("div") {
+                        classes += "expand"
+                    }
+                }
             }
         }
     }

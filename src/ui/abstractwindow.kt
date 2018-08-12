@@ -15,6 +15,7 @@ abstract class AbstractWindow {
 
     abstract val mainClass: String
     open val isResizable = true
+    open val layout = "top-to-bottom"
 
     private var dragCallbacks = object : UiDragCallbacks {
         var startX: Int = 0
@@ -63,16 +64,14 @@ abstract class AbstractWindow {
 
     open fun create() {
         element = ui.newModal {
-            classes = setOf("window", "vbox", mainClass)
+            classes = setOf("window", layout, mainClass)
 
             titlebar = addElement("div") {
                 classes = setOf("titlebar")
-                addHBox {
-                    createTitlebar(this)
+                createTitlebar(this)
 
-                    addElement("span") {
-                        classes = setOf("expand", "textured")
-                    }
+                addElement("span") {
+                    classes = setOf("expand", "textured")
                 }
 
                 onDrag(dragCallbacks)

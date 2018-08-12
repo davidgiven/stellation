@@ -55,6 +55,19 @@ $bigshadow: 3px;
     background-repeat: repeat-x;
 }
 
+%border-left {
+    border: none;
+    background: linear-gradient(to left,
+        #ff000000 0%,
+        #ff000000 97%,
+        $primary-color 98%,
+        $primary-color 99%,
+        #ff000000 100%);
+    background-size: 100px 8px;
+    background-position-x: left;
+    background-repeat: repeat-y;
+}
+
 .thickbox {
 	border: 2px solid $primary-color;
 }
@@ -127,14 +140,17 @@ body:after {
 	to { color: unset; }
 }
 
-.hbox, .vbox {
+.hbox, .vbox, .hboxr, .vboxr {
     display: flex;
     align-items: stretch;
 }
 
 .hbox { flex-direction: row; }
 .vbox { flex-direction: column; }
+.hboxr { flex-direction: row-reverse; }
+.vboxr { flex-direction: column-reverse; }
 .expand { flex-grow: 999; }
+.noexpand { flex-shrink: 0; }
 
 .highlight {
     color: white;
@@ -175,18 +191,11 @@ input[type="text"], input[type="password"], input[type="email"] {
     position: absolute;
 
     .titlebar {
-        @extend %border-bottom;
+        @extend .hbox;
+        @extend .noexpand;
         padding: 0.3em;
         font-weight: bold;
         cursor: move;
-
-        .textured {
-            background-color: red;
-            margin-left: 0.5em;
-            background: linear-gradient(#060 50%, #000 50%);
-            background-size: 100% 4px;
-            background-repeat: repeat-y;
-        }
     }
 
     .body {
@@ -203,6 +212,52 @@ input[type="text"], input[type="password"], input[type="email"] {
         cursor: nwse-resize;
     }
 }
+
+.window.top-to-bottom {
+    @extend .vbox;
+
+    .scrollable {
+        direction: ltr;
+        overflow-y: scroll;
+    }
+
+    .titlebar {
+        height: 1em;
+        @extend %border-bottom;
+
+        .textured {
+            margin-left: 0.5em;
+            background: linear-gradient(to bottom, #060 50%, #000 50%);
+            background-size: 100% 4px;
+            background-repeat: repeat-y;
+        }
+    }
+}
+
+.window.right-to-left {
+    @extend .hboxr;
+
+    .scrollable {
+        direction: rtl;
+        overflow-y: scroll;
+
+        > div {
+            direction: ltr;
+        }
+    }
+
+    .titlebar {
+        width: 1.15em;
+        @extend %border-left;
+
+        .textured {
+            margin-top: 0.5em;
+            background: linear-gradient(to right, #060 50%, #000 50%);
+            background-size: 4px 100%;
+            background-repeat: repeat-x;
+        }
+    }
+ }
 
 .form {
     .body {
@@ -236,7 +291,10 @@ input[type="text"], input[type="password"], input[type="email"] {
     min-height: 5em;
 
     .body {
-        overflow-y: scroll;
+        .console {
+            @extend .vbox;
+            @extend .expand;
+        }
 
         .lines {
             @extend .slowadd;
@@ -253,6 +311,18 @@ input[type="text"], input[type="password"], input[type="email"] {
             width: 100%;
             padding-left: 2px;
         }
+    }
+}
+
+.summaryWindow {
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 15em;
+    min-width: 5em;
+
+    .titlebar {
+        writing-mode: vertical-rl;
     }
 }
 
