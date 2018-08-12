@@ -322,6 +322,7 @@ input[type="text"], input[type="password"], input[type="email"] {
 .svg-star {
     r: 5px;
     stroke: white;
+    pointer-events: bounding-box;
 }
 
 circle, rect, line, path {

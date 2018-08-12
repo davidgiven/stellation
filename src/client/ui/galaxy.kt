@@ -62,6 +62,8 @@ class Galaxy(val thing: SGalaxy) {
                 val starElement = createSVGElement<SVGGraphicsElement>("use")
                 val b = star.brightness.toInt()
                 starElement.href = "#svg-star-$b"
+                starElement.onmouseenter = { onStarMouseEnter(star) }
+                starElement.onmouseleave = { onStarMouseLeave(star) }
                 starElement.addTo(mapGroup)
 
                 val textElement = createSVGElement<SVGTextElement>("text")
@@ -143,7 +145,7 @@ class Galaxy(val thing: SGalaxy) {
     private fun onMove(event: MouseEvent) {
         val screenPt = point(event.clientX, event.clientY)
         val svgPt = screenPt.matrixTransform(screenToMapTransform)
-        log("mouseX=${svgPt.x} mouseY=${svgPt.y}")
+//        log("mouseX=${svgPt.x} mouseY=${svgPt.y}")
     }
 
     private fun onDrag(event: MouseEvent) {
@@ -172,5 +174,13 @@ class Galaxy(val thing: SGalaxy) {
             document.onmouseup = null
             false
         }
+    }
+
+    private fun onStarMouseEnter(star: SStar) {
+        log("hover over ${star.name}")
+    }
+
+    private fun onStarMouseLeave(star: SStar) {
+        log("end hover over ${star.name}")
     }
 }
