@@ -5,6 +5,8 @@ package client.ui
 import org.w3c.dom.Element
 import org.w3c.dom.Text
 import org.w3c.dom.asList
+import org.w3c.dom.svg.SVGElement
+import org.w3c.dom.svg.SVGSVGElement
 import kotlin.browser.document
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -12,30 +14,30 @@ import kotlin.reflect.KProperty
 const val SVG_NS = "http://www.w3.org/2000/svg"
 const val XLINK_NS = "http://www.w3.org/1999/xlink"
 
-private val doubleProxy = object : ReadWriteProperty<SVGElement, Double> {
-    override fun setValue(thisRef: SVGElement, property: KProperty<*>, value: Double) =
+private val doubleProxy = object : ReadWriteProperty<SVGE<*>, Double> {
+    override fun setValue(thisRef: SVGE<*>, property: KProperty<*>, value: Double) =
             thisRef.element.setAttribute(property.name, value.toString())
 
-    override fun getValue(thisRef: SVGElement, property: KProperty<*>) =
+    override fun getValue(thisRef: SVGE<*>, property: KProperty<*>) =
             thisRef.element.getAttribute(property.name)!!.toDouble()
 }
 
-private val stringProxy = object : ReadWriteProperty<SVGElement, String> {
-    override fun setValue(thisRef: SVGElement, property: KProperty<*>, value: String) =
+private val stringProxy = object : ReadWriteProperty<SVGE<*>, String> {
+    override fun setValue(thisRef: SVGE<*>, property: KProperty<*>, value: String) =
             thisRef.element.setAttribute(property.name, value)
 
-    override fun getValue(thisRef: SVGElement, property: KProperty<*>) =
+    override fun getValue(thisRef: SVGE<*>, property: KProperty<*>) =
             thisRef.element.getAttribute(property.name)!!
 }
 
-class SVGElement {
-    val element: Element
+class SVGE<T: SVGElement> {
+    val element: T
 
-    constructor(element: Element) {
+    constructor(element: T) {
         this.element = element
     }
 
-    constructor(tag: String): this(document.createElementNS(SVG_NS, tag))
+    constructor(tag: String): this(document.createElementNS(SVG_NS, tag) as T)
 
     var id by stringProxy
 
@@ -78,11 +80,12 @@ class SVGElement {
 
     inline operator fun get(name: String) = element.getAttribute(name)
     inline operator fun set(name: String, value: String) = element.setAttribute(name, value)
-
-    inline fun addTo(e: Element): SVGElement {
-        e.appendChild(element)
-        return this
-    }
-
-    inline fun addTo(e: SVGElement) = addTo(e.element)
 }
+
+inline fun <T: SVGElement> SVGE<T>.addTo(e: Element): SVGE<T> {
+    e.appendChild(element)
+    return this
+}
+
+inline fun <T: SVGElement> SVGE<T>.addTo(e: SVGE<*>) = addTo(e.element)
+
