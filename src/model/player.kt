@@ -71,7 +71,7 @@ fun Model.createNewPlayer(name: String, email: String): SPlayer {
     return player
 }
 
-fun Model.createPlayerFleet(player: SPlayer) {
+fun Model.createPlayerFleet(player: SPlayer): SShip {
     val ship = createObject(SShip::class)
     ship.name = "${player.name}'s seedship"
     ship.owner = player
@@ -88,4 +88,6 @@ fun Model.createPlayerFleet(player: SPlayer) {
     addModule(SAntimatterDistillery::class)
     addModule(SAsteroidMiner::class)
     addModule(SHydroponicsPlant::class)
+
+    return ship
 }

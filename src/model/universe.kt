@@ -58,6 +58,10 @@ fun Model.createNewUniverse(): SUniverse {
         star.moveTo(galaxy)
     }
 
+    /* For test purposes: God shouldn't have ships... */
+
+    createPlayerFleet(god).moveTo(galaxy.contents.getOne()!!)
+
     return universe
 }
 
