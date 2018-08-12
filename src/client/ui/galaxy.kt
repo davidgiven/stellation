@@ -17,18 +17,19 @@ import kotlin.browser.window
 private const val SCALE_STEP = 1.2
 
 private data class StarSlot(
-        var star: SVGE<SVGGraphicsElement>,
-        var text: SVGE<SVGTextElement>)
+        var star: SVGGraphicsElement,
+        var text: SVGTextElement
+)
 
 class Galaxy(val thing: SGalaxy) {
     private val SIZE = SGalaxy.RADIUS * 1.1
 
     private val cache = HashMap<SStar, StarSlot>()
 
-    private val root = SVGE<SVGSVGElement>("svg")
-    private val mapGroup = SVGE<SVGGElement>("g").addTo(root)
-    private var mapToScreenTransform: DOMMatrix = root.element.createSVGMatrix()
-    private var screenToMapTransform: DOMMatrix = root.element.createSVGMatrix()
+    private val root = createSVGElement<SVGSVGElement>("svg")
+    private val mapGroup = createSVGElement<SVGGElement>("g").addTo(root)
+    private var mapToScreenTransform = DOMMatrix()
+    private var screenToMapTransform = DOMMatrix()
     private var graticule = createGraticule().addTo(mapGroup)
     private var width = 0.0
     private var height = 0.0
@@ -40,30 +41,30 @@ class Galaxy(val thing: SGalaxy) {
     init {
         root.classes = setOf("map")
         window.onresize = { update() }
-        root.element.addEventListener("wheel", { onWheelEvent(it as WheelEvent) })
-        root.element.addEventListener("mousedown", { onDrag(it as MouseEvent) })
-        root.element.addEventListener("mousemove", { onMove(it as MouseEvent) })
+        root.onwheel = { onWheelEvent(it as WheelEvent) }
+        root.onmousedown = { onDrag(it as MouseEvent) }
+        root.onmousemove = { onMove(it as MouseEvent) }
     }
 
     fun attach() {
-        document.body!!.insertBefore(root.element, document.body!!.firstElementChild)
+        document.body!!.insertBefore(root, document.body!!.firstElementChild)
         update()
     }
 
-    private fun createGraticule(): SVGE<SVGGraphicsElement> {
-        val graticuleElement = SVGE<SVGGraphicsElement>("use")
+    private fun createGraticule(): SVGGraphicsElement {
+        val graticuleElement = createSVGElement<SVGGraphicsElement>("use")
         graticuleElement.href = "#svg-graticule"
         return graticuleElement
     }
 
     private fun findOrCreateStarSlot(star: SStar) =
             cache.getOrPut(star) {
-                val starElement = SVGE<SVGGraphicsElement>("use")
+                val starElement = createSVGElement<SVGGraphicsElement>("use")
                 val b = star.brightness.toInt()
                 starElement.href = "#svg-star-$b"
                 starElement.addTo(mapGroup)
 
-                val textElement = SVGE<SVGTextElement>("text")
+                val textElement = createSVGElement<SVGTextElement>("text")
                 textElement.text = star.name.toUpperCase()
                 textElement.classes = setOf("star")
                 textElement.addTo(mapGroup)
@@ -76,7 +77,7 @@ class Galaxy(val thing: SGalaxy) {
         var oy = -centreY * scale
 
         mapGroup["transform"] = "translate($ox,$oy)"
-        mapToScreenTransform = graticule.element.getScreenCTM()!!
+        mapToScreenTransform = graticule.getScreenCTM()!!
         screenToMapTransform = mapToScreenTransform.inverse()
     }
 
@@ -131,7 +132,12 @@ class Galaxy(val thing: SGalaxy) {
         }
     }
 
-    private inline fun point(x: Double, y: Double) = DOMPoint(x, y)
+    private inline fun point(x: Double, y: Double): DOMPoint {
+        val p = root.createSVGPoint()
+        p.x = x
+        p.y = y
+        return p
+    }
     private inline fun point(x: Int, y: Int) = point(x.toDouble(), y.toDouble())
 
     private fun onMove(event: MouseEvent) {
