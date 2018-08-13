@@ -17,6 +17,8 @@ abstract class AbstractWindow {
     open val isResizable = true
     open val layout = "top-to-bottom"
 
+    val geometryChangeListeners = HashSet<(AbstractWindow) -> Unit>()
+
     private var dragCallbacks = object : UiDragCallbacks {
         var startX: Int = 0
         var startY: Int = 0
@@ -31,6 +33,7 @@ abstract class AbstractWindow {
             val newX = startX + x
             val newY = startY + y
             element.setPosition(newX, newY)
+            fireGeometryChangeListeners()
         }
 
         override fun onEnd(x: Int, y: Int) {
@@ -52,6 +55,7 @@ abstract class AbstractWindow {
             val newW = max(startX + x, 128)
             val newH = max(startY + y, 128)
             element.setSize(newW, newH)
+            fireGeometryChangeListeners()
         }
 
         override fun onEnd(x: Int, y: Int) {
@@ -89,6 +93,13 @@ abstract class AbstractWindow {
                     onDrag(resizeCallbacks)
                 }
             }
+        }
+        fireGeometryChangeListeners()
+    }
+
+    private fun fireGeometryChangeListeners() {
+        for (listener in geometryChangeListeners) {
+            listener(this)
         }
     }
 }

@@ -10,7 +10,6 @@ import interfaces.ISyncer
 import interfaces.ITime
 import interfaces.nanotime
 import model.Model
-import org.w3c.dom.Element
 import runtime.js.RemoteClientInterface
 import runtime.js.initJsRuntime
 import runtime.js.kickScheduler
@@ -25,8 +24,6 @@ import kotlin.browser.document
 
 fun main(argv: Array<String>) {
     initJsRuntime()
-    val console = Console()
-    bind<IConsole>(console)
     bind<ICommandDispatcher>(CommandDispatcher())
     bind<IClientInterface>(RemoteClientInterface())
     bind<IAuthenticator>(LocalAuthenticator())
@@ -36,12 +33,12 @@ fun main(argv: Array<String>) {
     bind<IClock>(Clock())
     bind<ISyncer>(Syncer())
     val gameloop = bind(GameLoop())
+    bind<IConsole>(gameloop)
 
     val time = inject<ITime>()
     bind(Random(time.nanotime()))
 
     document.getElementById("loading")!!.remove()
-    console.show()
 
     gameloop.startGame()
     kickScheduler()

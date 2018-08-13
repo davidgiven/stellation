@@ -7,7 +7,9 @@ import interfaces.ICommandDispatcher
 import interfaces.IConsole
 import interfaces.IDatastore
 import model.Model
+import runtime.shared.CommandShell
 import ui.AlertForm
+import ui.ConsoleWindow
 import ui.LoginForm
 import ui.SummaryWindow
 import ui.show
@@ -16,16 +18,18 @@ import utils.FaultDomain.PERMISSION
 import utils.Job
 import utils.injection
 
-class GameLoop {
+class GameLoop: IConsole {
     val cookies by injection<Cookies>()
     val clientInterface by injection<IClientInterface>()
     val commandDispatcher by injection<ICommandDispatcher>()
-    val console by injection<IConsole>()
     val datastore by injection<IDatastore>()
     val clock by injection<IClock>()
     val model by injection<Model>()
+    val commandShell by injection<CommandShell>()
 
     var galaxy: Galaxy? = null
+    var consoleWindow: ConsoleWindow? = null
+    var summaryWindow: SummaryWindow? = null
 
     fun startGame() {
         doLogin()
@@ -68,12 +72,32 @@ class GameLoop {
         galaxy = Galaxy(model.getGalaxy())
         galaxy!!.attach()
 
-        val summary = SummaryWindow()
-        summary.show()
+        consoleWindow = ConsoleWindow(::onCommand)
+
+        summaryWindow = SummaryWindow()
+
+        consoleWindow!!.geometryChangeListeners += {
+            val (_, cy) = it.element.getPosition()
+            val (sw, _) = summaryWindow!!.element.getSize()
+            summaryWindow!!.element.setSize(sw, cy-10)
+        }
+
+        summaryWindow!!.show()
+        consoleWindow!!.show()
 
         Job {
-            console.println("Welcome to Stellation VI.")
-            console.println("Try 'help' if you're feeling lucky.")
+            println("Welcome to Stellation VI.")
+            println("Try 'help' if you're feeling lucky.")
         }
+    }
+
+    private fun onCommand(command: String) {
+        Job {
+            commandShell.call(command)
+        }
+    }
+
+    override suspend fun println(message: String) {
+        consoleWindow?.print(message)
     }
 }
