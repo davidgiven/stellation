@@ -217,11 +217,12 @@ class SqlDatastore : IDatastore {
                                 .getValue("count")
                                 .getInt() != 0
 
-                override fun getAll(): List<Oid> =
+                override fun getAll(): Set<Oid> =
                         database.sqlStatement("SELECT value FROM prop_$name WHERE oid = ?")
                                 .bindInt(1, oid)
                                 .executeQuery()
                                 .map { it.getValue("value").getOid()!! }
+                                .toSet()
 
                 override fun getOne(): Oid? =
                         database.sqlStatement("SELECT value FROM prop_$name WHERE oid = ? LIMIT 1")

@@ -4,21 +4,6 @@ class SyncMessage : Message {
     constructor(): super()
     constructor(serialised: String): super(serialised)
 
-    fun addVisibleObject(oid: Oid) {
-        set(oid, "")
-    }
-
-    fun getVisibleObjects(): Set<Oid> =
-            toMap()
-                    .flatMap {
-                        val k = it.key.toIntOrNull()
-                        if (k != null) {
-                            listOf(k)
-                        } else {
-                            emptyList()
-                        }
-                    }.toSet()
-
     fun addChangedProperty(oid: Oid, name: String, value: String) {
         set("$oid.$name", value)
     }

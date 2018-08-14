@@ -1,3 +1,5 @@
+@file:Suppress("NOTHING_TO_INLINE")
+
 package model
 
 import utils.Oid
@@ -18,11 +20,11 @@ interface Aggregate<T : SThing> : Iterable<T> {
     fun remove(item: T): Aggregate<T>
     fun clear(): Aggregate<T>
     operator fun contains(item: T): Boolean
-    fun getAll(): List<T>
     fun getOne(): T?
+    fun replaceAll(items: Iterable<T>): Aggregate<T>
 
-    fun forEach(action: (T) -> Unit) = getAll().forEach(action)
-    override fun iterator(): Iterator<T> = getAll().iterator()
+    fun getAll(): Set<T> = iterator().toSet()
+    fun forEach(action: (T) -> Unit) = iterator().forEach(action)
 
     fun addAll(iterable: Iterable<T>): Aggregate<T> {
         iterable.forEach { add(it) }
@@ -181,19 +183,44 @@ open class SetProperty<T : SThing>(scope: Scope, name: String, val kclass: KClas
 
             override fun contains(item: T): Boolean = set.contains(item.oid)
 
-            override fun getAll(): List<T> =
-                    set.getAll().map { it.load(model, kclass) }
+            override fun iterator(): Iterator<T> =
+                    set.getAll().map { it.load(model, kclass) }.iterator()
 
             override fun getOne(): T? = set.getOne()?.load(model, kclass)
+
+            override fun replaceAll(items: Iterable<T>): Aggregate<T> {
+                val oldOids = set.getAll()
+                val newOids = items.map { it.oid }
+
+                for (o in oldOids) {
+                    if (!newOids.contains(o)) {
+                        set.remove(o)
+                    }
+                }
+
+                for (o in newOids) {
+                    if (!oldOids.contains(o)) {
+                        set.add(o)
+                    }
+                }
+
+                return this
+            }
         }
     }
 }
+
+private inline fun <T> Iterator<T>.toSet() =
+        HashSet<T>().apply {
+            while (hasNext()) {
+                this += next()
+            }
+        }
 
 val BRIGHTNESS = RealProperty(Scope.LOCAL, "brightness")
 val CONTENTS = SetProperty(Scope.LOCAL, "contents", SThing::class)
 val DATA = StringProperty(Scope.LOCAL, "data")
 val EMAIL_ADDRESS = StringProperty(Scope.SERVERONLY, "email_address")
-val FRAMES = SetProperty(Scope.LOCAL, "frames", SFrame::class)
 val GALAXY = RefProperty(Scope.LOCAL, "galaxy", SGalaxy::class)
 val KIND = StringProperty(Scope.LOCAL, "kind")
 val LOCATION = RefProperty(Scope.LOCAL, "location", SThing::class)
@@ -202,6 +229,7 @@ val OWNER = RefProperty(Scope.LOCAL, "owner", SPlayer::class)
 val PASSWORD_HASH = StringProperty(Scope.SERVERONLY, "password_hash")
 val PLAYERS = SetProperty(Scope.SERVERONLY, "players", SPlayer::class)
 val SHIPS = SetProperty(Scope.PRIVATE, "ships", SShip::class)
+val VISIBLE_OBJECTS = SetProperty(Scope.PRIVATE, "visible_objects", SThing::class)
 val XPOS = RealProperty(Scope.LOCAL, "x")
 val YPOS = RealProperty(Scope.LOCAL, "y")
 

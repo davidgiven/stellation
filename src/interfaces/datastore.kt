@@ -7,7 +7,7 @@ interface SetProperty {
     fun remove(item: Oid): SetProperty
     fun clear(): SetProperty
     operator fun contains(item: Oid): Boolean
-    fun getAll(): List<Oid>
+    fun getAll(): Set<Oid>
     fun getOne(): Oid?
 
     fun addAll(new: Iterable<Oid>) {

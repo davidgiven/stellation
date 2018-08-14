@@ -13,6 +13,8 @@ import runtime.jvm.JvmTime
 import runtime.shared.Clock
 import runtime.shared.SqlDatastore
 import runtime.shared.Syncer
+import utils.Oid
+import utils.SyncMessage
 import utils.bind
 import utils.inject
 import utils.resetBindingsForTest
@@ -67,6 +69,7 @@ class SyncTest {
         star2 = model.createObject(SStar::class).moveTo(universe.galaxy!!)
 
         player1 = model.createObject(SPlayer::class)
+        player1.owner = player1
 
         ship1 = model.createObject(SShip::class)
         ship1.owner = player1
@@ -88,6 +91,7 @@ class SyncTest {
 
 
         playerx = model.createObject(SPlayer::class)
+        playerx.owner = playerx
 
         shipx = model.createObject(SShip::class)
         shipx.owner = playerx
@@ -133,7 +137,7 @@ class SyncTest {
                         jumpdrive2.oid,
                         shipx.oid,
                         jumpdrivex.oid),
-                p.getVisibleObjects())
+                objectsInSyncPacket(p))
     }
 
     @Test
@@ -159,8 +163,8 @@ class SyncTest {
 
         ship2.moveTo(star1)
         p = syncer.exportSyncPacket(player1.oid, session)
-        assertFalse(shipx.oid in p.getVisibleObjects())
-        assertFalse(jumpdrivex.oid in p.getVisibleObjects())
+        var v = objectsInSyncPacket(p)
+        assertFalse(shipx.oid in v)
 
         /* Fourth incremental sync; an invisible object changes state. */
 
@@ -172,8 +176,10 @@ class SyncTest {
 
         ship2.moveTo(star2)
         p = syncer.exportSyncPacket(player1.oid, session)
-        assertTrue(shipx.oid in p.getVisibleObjects())
-        assertTrue(jumpdrivex.oid in p.getVisibleObjects())
         assertTrue(p.getChangedProperties().contains(Triple(shipx.oid, "name", "Floop")))
     }
 }
+
+private fun objectsInSyncPacket(sync: SyncMessage): Set<Oid> =
+        sync.getChangedProperties().map {it.first}.toSet()
+

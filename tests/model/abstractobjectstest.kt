@@ -42,6 +42,15 @@ abstract class AbstractObjectsTest {
         assertEquals(7.6, s.brightness)
     }
 
+    @Test fun propertySetReplaceAllTest() {
+        val g = model.createObject(SGalaxy::class)
+        val s1 = model.createObject(SStar::class).moveTo(g)
+        val s2 = model.createObject(SStar::class).moveTo(g)
+        val s3 = model.createObject(SStar::class).moveTo(g)
+
+        assertEquals(setOf(s1, s2, s3), g.contents.getAll())
+    }
+
     @Test
     fun objectSaveAndLoadTest() {
         val s1 = model.createObject(SStar::class)

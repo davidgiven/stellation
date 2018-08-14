@@ -77,7 +77,7 @@ abstract class AbstractDatastoreTest {
         val c = List(5) { datastore.createObject() }
         c.forEach { p.add(it) }
 
-        assertEquals(c, p.getAll())
+        assertEquals(c.toSet(), p.getAll())
     }
 
     @Test
@@ -89,7 +89,7 @@ abstract class AbstractDatastoreTest {
 
         p.remove(c[2])
 
-        assertEquals(listOf(c[0], c[1], c[3], c[4]), p.getAll())
+        assertEquals(setOf(c[0], c[1], c[3], c[4]), p.getAll())
     }
 
     @Test

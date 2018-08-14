@@ -21,13 +21,9 @@ class Syncer : ISyncer {
     override fun importSyncPacket(sync: SyncMessage) {
         /* Remove any objects which have become invisible. */
 
-        val visibleObjects = sync.getVisibleObjects()
-        val oldObjects = datastore.getAllObjects()
-        val deletedObjects = datastore.getAllObjects() - visibleObjects
-        for (oid in deletedObjects) {
-            datastore.destroyObject(oid)
-        }
-        for (oid in visibleObjects) {
+        val changedProperties = sync.getChangedProperties()
+        val objects = changedProperties.map { it.first }.toSet()
+        for (oid in objects) {
             if (!datastore.doesObjectExist(oid)) {
                 datastore.createObject(oid)
             }
@@ -39,23 +35,21 @@ class Syncer : ISyncer {
             val property = allProperties[name]!!
             property.deserialiseFromString(model, oid, value)
         }
-
-        /* Call listeners. */
-
-
     }
 
     override fun exportSyncPacket(player: Oid, session: Int): SyncMessage {
         val p = SyncMessage()
 
         val playerObj = model.loadObject(player, SPlayer::class)
+
+        // TODO: it'd be nice to cache the visible object set every time the hierarchy
+        // changes rather than calculating it every time; but it's not expensive and
+        // this is reliable.
         var visibleObjects =
                 setOf(model.getUniverse(), model.getUniverse().galaxy!!) +
                         model.getUniverse().galaxy!!.contents + playerObj.calculateVisibleObjects()
+        playerObj.visible_objects.replaceAll(visibleObjects)
 
-        for (o in visibleObjects) {
-            p.addVisibleObject(o.oid)
-        }
         val changedProperties = datastore.getPropertiesChangedSince(
                 visibleObjects.map { it.oid }, session)
         for ((oid, propertyName) in changedProperties) {

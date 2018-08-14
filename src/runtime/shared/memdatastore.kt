@@ -1,11 +1,11 @@
 package runtime.shared
 
 import interfaces.IDatastore
-import utils.Oid
 import interfaces.SetProperty
 import interfaces.UNIMPLEMENTED
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
+import utils.Oid
 
 fun throwBadDatastoreTypeException(): Nothing =
         throw Fault(INVALID_ARGUMENT).withDetail("type mismatch on datastore access")
@@ -143,8 +143,8 @@ class InMemoryDatastore : IDatastore {
                 override fun contains(item: Oid): Boolean =
                         value.contains(item) && objects.contains(item)
 
-                override fun getAll(): List<Oid> =
-                        value.filter { objects.contains(it) }
+                override fun getAll(): Set<Oid> =
+                        value.filter { objects.contains(it) }.toSet()
 
                 override fun getOne(): Oid? =
                         value.find { objects.contains(it) }

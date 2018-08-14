@@ -8,8 +8,8 @@ import kotlin.reflect.KClass
 open class SPlayer(model: Model, oid: Oid) : SThing(model, oid) {
     var email by EMAIL_ADDRESS
     var password_hash by PASSWORD_HASH
-    val frames by FRAMES
     val ships by SHIPS
+    val visible_objects by VISIBLE_OBJECTS
 }
 
 fun SPlayer.isGod(): Boolean = (oid == GOD_OID)
@@ -67,6 +67,7 @@ fun Model.createNewPlayer(name: String, email: String): SPlayer {
     val player = createObject(SPlayer::class)
     player.name = name
     player.email = email
+    player.owner = player
     authenticator.registerPlayer(email, player.oid)
     return player
 }

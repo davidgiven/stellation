@@ -49,19 +49,19 @@ class ThingTest {
         val g = model.createObject(SGalaxy::class)
         val s1 = model.createObject(SStar::class).moveTo(g)
         assertEquals(g, s1.location)
-        assertEquals(listOf(s1), g.contents.getAll())
+        assertEquals(setOf(s1), g.contents.getAll())
 
         val s2 = model.createObject(SStar::class).moveTo(g)
         assertEquals(g, s2.location)
-        assertEquals(listOf(s1, s2), g.contents.getAll())
+        assertEquals(setOf(s1, s2), g.contents.getAll())
 
         s1.remove()
         assertEquals(null, s1.location)
-        assertEquals(listOf(s2), g.contents.getAll())
+        assertEquals(setOf(s2), g.contents.getAll())
 
         s2.remove()
         assertEquals(null, s2.location)
-        assertEquals(emptyList(), g.contents.getAll())
+        assertEquals(emptySet(), g.contents.getAll())
     }
 
     @Test
@@ -84,7 +84,7 @@ class ThingTest {
         s.remove()
         s.remove()
         assertEquals(null, s.location)
-        assertEquals(emptyList(), g.contents.getAll())
+        assertEquals(emptySet(), g.contents.getAll())
     }
 
     @Test
