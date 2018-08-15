@@ -1,16 +1,18 @@
 package model
 
+import interfaces.IUiNode
+import interfaces.onPropertyChangedGlobalEvent
 import interfaces.throwPermissionDeniedException
-import utils.Oid
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
+import utils.Oid
 import utils.injection
 
 fun throwRecursiveMoveException(child: Oid): Nothing =
         throw Fault(INVALID_ARGUMENT).withDetail("$child cannot be contained by itself")
 
 
-abstract class SThing(val model: Model, val oid: Oid): Iterable<SThing> {
+abstract class SThing(val model: Model, val oid: Oid) : Iterable<SThing> {
     var kind by KIND
     var owner by OWNER
     var location by LOCATION
@@ -117,4 +119,7 @@ fun <T : SThing> T.remove(): T {
     this.location = null
     return this
 }
+
+fun IUiNode.onPropertyChangedGlobalEvent(thing: SThing, property: Property, callback: () -> Unit) =
+        onPropertyChangedGlobalEvent(thing.oid, property.name, callback)
 

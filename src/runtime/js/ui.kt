@@ -7,12 +7,18 @@ import interfaces.IUiText
 import interfaces.UiDragCallbacks
 import interfaces.UiElementConstructor
 import interfaces.UiTextConstructor
+import org.w3c.dom.EventInit
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
+import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 import kotlin.browser.document
 import kotlin.browser.window
+
+const val GLOBAL_EVENT_ELEMENT = "global-event-listener"
+const val GLOBAL_EVENT_EVENT = "global-event"
+const val GLOBAL_EVENT_ATTRIBUTE = "global-event-name"
 
 class JsUi : IUi {
     abstract class JsUiNode(var element: HTMLElement? = null) : IUiNode {
@@ -117,6 +123,13 @@ class JsUi : IUi {
                 false
             }
         }
+
+        override fun onGlobalEvent(event: String, callback: () -> Unit) {
+            val e = document.createElement(GLOBAL_EVENT_ELEMENT)
+            e.setAttribute(GLOBAL_EVENT_ATTRIBUTE, event)
+            e.addEventListener(GLOBAL_EVENT_EVENT, { callback() })
+            element!!.appendChild(e)
+        }
     }
 
     class JsUiText(element: HTMLElement? = null) : IUiText, JsUiNode(element) {
@@ -198,6 +211,14 @@ class JsUi : IUi {
         element.init()
         document.body!!.appendChild(element.element!!)
         return element
+    }
+
+    override fun fireGlobalEvent(event: String) {
+        val e = Event(GLOBAL_EVENT_EVENT, EventInit(bubbles = false))
+        val listeners = document.querySelectorAll("$GLOBAL_EVENT_ELEMENT[$GLOBAL_EVENT_ATTRIBUTE='$event']").asList()
+        for (listener in listeners) {
+            listener.dispatchEvent(e)
+        }
     }
 }
 

@@ -34,6 +34,7 @@ class JvmStubUi : IUi {
         override fun focus() {}
 
         override fun onDrag(callbacks: UiDragCallbacks) {}
+        override fun onGlobalEvent(event: String, callback: () -> Unit) {}
     }
 
     class JvmUiText(tag: String, id: String? = null, override var text: String) : IUiText, JvmUiNode(tag, id)
@@ -80,4 +81,6 @@ class JvmStubUi : IUi {
         element.init()
         return element
     }
+
+    override fun fireGlobalEvent(event: String) {}
 }

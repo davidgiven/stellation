@@ -1,5 +1,7 @@
 package interfaces
 
+import utils.Oid
+
 typealias UiElementConstructor = IUiElement.() -> Unit
 typealias UiTextConstructor = IUiText.() -> Unit
 
@@ -29,6 +31,7 @@ interface IUiNode {
     fun focus()
 
     fun onDrag(callbacks: UiDragCallbacks)
+    fun onGlobalEvent(event: String, callback: () -> Unit)
 }
 
 interface IUiText : IUiNode {
@@ -62,4 +65,14 @@ interface IUiElement : IUiNode {
 
 interface IUi {
     fun newModal(init: IUiElement.() -> Unit): IUiElement
+
+    fun fireGlobalEvent(event: String)
 }
+
+private fun makePropertyChangedEvent(oid: Oid, property: String) = "property-changed.$oid.$property"
+
+fun IUiNode.onPropertyChangedGlobalEvent(oid: Oid, property: String, callback: () -> Unit) =
+        onGlobalEvent(makePropertyChangedEvent(oid, property), callback)
+
+fun IUi.firePropertyChangedGlobalEvent(oid: Oid, property: String) =
+        fireGlobalEvent(makePropertyChangedEvent(oid, property))

@@ -2,6 +2,8 @@ package runtime.shared
 
 import interfaces.IDatastore
 import interfaces.ISyncer
+import interfaces.IUi
+import interfaces.firePropertyChangedGlobalEvent
 import model.Model
 import model.SPlayer
 import model.SThing
@@ -15,8 +17,7 @@ import utils.injection
 class Syncer : ISyncer {
     private val datastore by injection<IDatastore>()
     private val model by injection<Model>()
-
-    private val listeners = HashMap<Pair<Oid, String>, (Oid, String) -> Unit>()
+    private val ui by injection<IUi>()
 
     override fun importSyncPacket(sync: SyncMessage) {
         /* Remove any objects which have become invisible. */
@@ -34,6 +35,13 @@ class Syncer : ISyncer {
         for ((oid, name, value) in sync.getChangedProperties()) {
             val property = allProperties[name]!!
             property.deserialiseFromString(model, oid, value)
+        }
+
+        /* Fire listeners. (A separate loop to ensure that the database is fully updated before
+        * any listener runs. */
+
+        for ((oid, name, _) in sync.getChangedProperties()) {
+            ui.firePropertyChangedGlobalEvent(oid, name)
         }
     }
 
@@ -63,9 +71,5 @@ class Syncer : ISyncer {
             }
         }
         return p
-    }
-
-    override fun listen(oid: Oid, property: String, callback: (Oid, String) -> Unit) {
-        listeners.put(Pair(oid, property), callback)
     }
 }

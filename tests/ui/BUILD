@@ -11,6 +11,7 @@ kotlin_jvm_test(
     test_class = "ui.AllTestsSuite",
     deps = [
         "//src/interfaces",
+        "//src/model",
         "//src/runtime/jvm",
         "//src/ui",
         "//src/utils",
