@@ -1,7 +1,10 @@
 package interfaces
 
 interface ITime {
+    /* Returns seconds since epoch */
     fun realtime(): Double
+
+    fun formatTime(t: Double): String
 }
 
 fun ITime.millitime() = (this.realtime() * 1000.0).toLong()

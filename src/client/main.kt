@@ -13,7 +13,7 @@ import model.Model
 import runtime.js.RemoteClientInterface
 import runtime.js.initJsRuntime
 import runtime.js.kickScheduler
-import runtime.shared.Clock
+import runtime.shared.ClientClock
 import runtime.shared.CommandShell
 import runtime.shared.Syncer
 import server.LocalAuthenticator
@@ -30,7 +30,7 @@ fun main(argv: Array<String>) {
     bind(CommandShell())
     bind(Model())
     bind(Cookies())
-    bind<IClock>(Clock())
+    bind<IClock>(ClientClock())
     bind<ISyncer>(Syncer())
     val gameloop = bind(GameLoop())
     bind<IConsole>(gameloop)

@@ -6,7 +6,7 @@ import interfaces.IDatastore
 import utils.Oid
 import interfaces.withSqlTransaction
 import runtime.jvm.JvmDatabase
-import runtime.shared.Clock
+import runtime.shared.ServerClock
 import runtime.shared.SqlDatastore
 import utils.bind
 import utils.inject
@@ -30,7 +30,7 @@ class TimersTest {
     @BeforeTest
     fun setup() {
         resetBindingsForTest()
-        bind<IClock>(Clock())
+        bind<IClock>(ServerClock())
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore())
         bind(Model())

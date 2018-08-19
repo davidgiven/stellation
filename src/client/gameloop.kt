@@ -6,6 +6,8 @@ import interfaces.IClock
 import interfaces.ICommandDispatcher
 import interfaces.IConsole
 import interfaces.IDatastore
+import interfaces.IUi
+import interfaces.fireTickGlobalEvent
 import model.Model
 import runtime.shared.CommandShell
 import ui.AlertForm
@@ -17,6 +19,8 @@ import utils.Fault
 import utils.FaultDomain.PERMISSION
 import utils.Job
 import utils.injection
+import kotlin.browser.document
+import kotlin.browser.window
 
 class GameLoop: IConsole {
     val cookies by injection<Cookies>()
@@ -26,6 +30,7 @@ class GameLoop: IConsole {
     val clock by injection<IClock>()
     val model by injection<Model>()
     val commandShell by injection<CommandShell>()
+    val ui by injection<IUi>()
 
     var galaxy: Galaxy? = null
     var consoleWindow: ConsoleWindow? = null
@@ -89,6 +94,13 @@ class GameLoop: IConsole {
             println("Welcome to Stellation VI.")
             println("Try 'help' if you're feeling lucky.")
         }
+
+        window.setTimeout({ onTick() }, 1000)
+    }
+
+    private fun onTick() {
+        ui.fireTickGlobalEvent()
+        window.setTimeout({ onTick() }, 1000)
     }
 
     private fun onCommand(command: String) {

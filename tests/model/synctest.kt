@@ -10,7 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import runtime.jvm.JvmDatabase
 import runtime.jvm.JvmTime
-import runtime.shared.Clock
+import runtime.shared.ServerClock
 import runtime.shared.SqlDatastore
 import runtime.shared.Syncer
 import utils.Oid
@@ -47,7 +47,7 @@ class SyncTest {
     @Before
     fun setup() {
         resetBindingsForTest()
-        bind<IClock>(Clock())
+        bind<IClock>(ServerClock())
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore())
         bind<ISyncer>(Syncer())

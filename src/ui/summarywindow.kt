@@ -1,5 +1,6 @@
 package ui
 
+import interfaces.IClock
 import interfaces.IUiElement
 import model.Model
 import model.currentPlayer
@@ -7,6 +8,7 @@ import utils.injection
 
 class SummaryWindow : AbstractWindow() {
     private val model by injection<Model>()
+    private val clock by injection<IClock>()
 
     override val mainClass = "summaryWindow"
     override val isResizable = false
@@ -23,6 +25,7 @@ class SummaryWindow : AbstractWindow() {
             classes += "scrollable"
 
             addNameViewer(player)
+            addTimeViewer(clock::getTime)
         }
     }
 }

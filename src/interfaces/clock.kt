@@ -1,6 +1,6 @@
 package interfaces
 
 interface IClock {
-    fun setTime(time: Double)
+    fun setTime(serverTime: Double)
     fun getTime(): Double
 }

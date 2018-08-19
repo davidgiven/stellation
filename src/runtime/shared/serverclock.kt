@@ -2,11 +2,11 @@ package runtime.shared
 
 import interfaces.IClock
 
-class Clock : IClock {
+class ServerClock : IClock {
     private var time: Double = 0.0
 
-    override fun setTime(time: Double) {
-        this.time = time
+    override fun setTime(serverTime: Double) {
+        this.time = serverTime
     }
 
     override fun getTime() = time

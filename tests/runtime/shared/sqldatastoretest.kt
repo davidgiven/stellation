@@ -14,7 +14,7 @@ class SqlDatastoreTest : AbstractDatastoreTest() {
     @BeforeTest
     fun setup() {
         resetBindingsForTest()
-        bind<IClock>(Clock())
+        bind<IClock>(ServerClock())
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore())
 

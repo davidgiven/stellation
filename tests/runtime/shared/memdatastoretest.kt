@@ -10,7 +10,7 @@ class InMemoryDatastoreTest : AbstractDatastoreTest() {
     @BeforeTest
     fun setup() {
         resetBindingsForTest()
-        bind<IClock>(Clock())
+        bind<IClock>(ServerClock())
         bind<IDatastore>(InMemoryDatastore())
         datastore.initialiseDatabase()
         createProperties()

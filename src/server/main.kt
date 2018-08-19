@@ -14,7 +14,7 @@ import interfaces.nanotime
 import interfaces.withSqlTransaction
 import model.Model
 import model.Timers
-import runtime.shared.Clock
+import runtime.shared.ServerClock
 import runtime.shared.CommandShell
 import runtime.shared.LocalClientInterface
 import runtime.shared.SqlDatastore
@@ -35,7 +35,7 @@ fun main(argv: Array<String>) {
     bind<ICommandDispatcher>(CommandDispatcher())
     bind(RemoteServer())
     bind(BCrypt())
-    bind<IClock>(Clock())
+    bind<IClock>(ServerClock())
     bind<ISyncer>(Syncer())
 
     val time = inject<ITime>()

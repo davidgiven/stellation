@@ -5,7 +5,7 @@ import interfaces.IDatabase
 import interfaces.IDatastore
 import interfaces.withSqlTransaction
 import runtime.jvm.JvmDatabase
-import runtime.shared.Clock
+import runtime.shared.ServerClock
 import runtime.shared.SqlDatastore
 import utils.Fault
 import utils.FaultDomain.INVALID_ARGUMENT
@@ -27,7 +27,7 @@ class ThingTest {
     @BeforeTest
     fun setup() {
         resetBindingsForTest()
-        bind<IClock>(Clock())
+        bind<IClock>(ServerClock())
         bind<IDatabase>(JvmDatabase())
         bind<IDatastore>(SqlDatastore())
         bind(Model())

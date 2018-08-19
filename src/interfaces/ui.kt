@@ -71,8 +71,16 @@ interface IUi {
 
 private fun makePropertyChangedEvent(oid: Oid, property: String) = "property-changed.$oid.$property"
 
+private const val TICK_GLOBAL_EVENT = "tick"
+
 fun IUiNode.onPropertyChangedGlobalEvent(oid: Oid, property: String, callback: () -> Unit) =
         onGlobalEvent(makePropertyChangedEvent(oid, property), callback)
 
 fun IUi.firePropertyChangedGlobalEvent(oid: Oid, property: String) =
         fireGlobalEvent(makePropertyChangedEvent(oid, property))
+
+fun IUiNode.onTickGlobalEvent(callback: ()->Unit) =
+        onGlobalEvent(TICK_GLOBAL_EVENT, callback)
+
+fun IUi.fireTickGlobalEvent() =
+        fireGlobalEvent(TICK_GLOBAL_EVENT)
