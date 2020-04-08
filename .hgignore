@@ -1,3 +1,5 @@
+.haxe
+.obj
 build
 gradle
 bazel-bin
