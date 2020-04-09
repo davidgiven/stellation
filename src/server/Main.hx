@@ -1,6 +1,7 @@
 package server;
 import sys.db.Sqlite;
-import haxe.ds.ObjectMap;
+import utils.Injectomatic.inject;
+import utils.Injectomatic.bind;
 
 class Main {
 	static public function main() {
@@ -19,20 +20,10 @@ class Main {
 		bind(String, "fnord");
 
 		var a = 7;
-		var s = get(String);
+		var s = inject(String);
 		Console.info('${s}');
 	}
-
-	private static var injections = new ObjectMap<Dynamic, Dynamic>();
-
-	@:generic
-	static function get<T>(t: Class<T>): T {
-		return injections.get(t);
-	}
-
-	@:generic
-	static function bind<T>(t: Class<T>, value: T) {
-		injections.set(t, value);
-	}
 }
+
+// vim: ts=4 sw=4 et
 
