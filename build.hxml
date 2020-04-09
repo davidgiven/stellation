@@ -1,0 +1,12 @@
+-p src
+-lib mconsole
+-debug
+--each
+
+-cpp .obj/server-temp
+-main server.Main
+--next
+
+-js .obj/client/main.js
+-main client.Main
+
