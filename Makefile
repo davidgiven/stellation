@@ -8,7 +8,7 @@ JS_LIBS =
 CPP_LIBS =
 
 SRCS = \
-	$(wildcard src/utils/*.hx)
+	$(shell find src tests -name "*.hx")
 
 all: haxe
 
@@ -23,4 +23,5 @@ haxe:: build.hxml .haxelib $(SRCS)
 	haxelib newrepo
 	haxelib install hxcpp
 	haxelib install mconsole
+	haxelib install hx3compat
 

@@ -10,7 +10,7 @@ class InjectomaticException extends Exception {
 class Injectomatic {
 	private static var injections = new ObjectMap<Dynamic, Dynamic>();
 
-	static function resetBindingsForTest() {
+	public static function resetBindingsForTest() {
 		injections.clear();
 	}
 

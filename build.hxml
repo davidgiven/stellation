@@ -1,12 +1,18 @@
--p src
--lib mconsole
--debug
+--class-path src
+--library mconsole
+--debug
 --each
 
--cpp .obj/server-temp
--main server.Main
+--cpp .obj/server-temp
+--main server.Main
 --next
 
--js .obj/client/main.js
--main client.Main
+--js .obj/client/main.js
+--main client.Main
+--next
+
+--class-path tests
+--library hx3compat
+--interp 
+--main Tests
 
