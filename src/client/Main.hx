@@ -1,5 +1,7 @@
+package client;
 import js.Browser;
-class JSMain {
+
+class Main {
     static function main() {
 	Console.start();
 	Console.info("haxe main start");
