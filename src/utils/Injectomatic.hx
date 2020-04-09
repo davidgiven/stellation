@@ -10,17 +10,17 @@ class InjectomaticException extends Exception {
 class Injectomatic {
 	private static var injections = new ObjectMap<Dynamic, Dynamic>();
 
-	public static function resetBindingsForTest() {
+	public static function resetBindingsForTest(): Void {
 		injections.clear();
 	}
 
-	static function checkBindingDoesNotExist(t: Class<Dynamic>) {
+	static function checkBindingDoesNotExist(t: Class<Dynamic>): Void {
 		if (injections.exists(t)) {
 			throw new InjectomaticException('binding for type ${t} already exists');
 		}
 	}
 
-	static function checkBindingExists(t: Class<Dynamic>) {
+	static function checkBindingExists(t: Class<Dynamic>): Void {
 		if (!injections.exists(t)) {
 			throw new InjectomaticException('no binding for type ${t} exists');
 		}
@@ -33,7 +33,7 @@ class Injectomatic {
 	}
 
 	@:generic
-	public static function bind<T>(t: Class<T>, value: T) {
+	public static function bind<T>(t: Class<T>, value: T): Void {
 		checkBindingDoesNotExist(t);
 		injections.set(t, value);
 	}

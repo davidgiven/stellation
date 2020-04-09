@@ -13,7 +13,7 @@ SRCS = \
 all: haxe
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJ) .haxelib
 
 haxe:: build.hxml .haxelib $(SRCS)
 	haxe build.hxml

@@ -1,14 +1,15 @@
 --class-path src
 --library mconsole
---debug
 --each
 
 --cpp .obj/server-temp
 --main server.Main
+--debug
 --next
 
 --js .obj/client/main.js
 --main client.Main
+--debug
 --next
 
 --class-path tests
