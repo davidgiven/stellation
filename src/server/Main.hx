@@ -2,6 +2,7 @@ package server;
 import sys.db.Sqlite;
 import utils.Injectomatic.inject;
 import utils.Injectomatic.bind;
+import utils.Types.Oid;
 
 class Main {
 	static public function main() {
@@ -19,7 +20,7 @@ class Main {
 
 		bind(String, "fnord");
 
-		var a = 7;
+		var a: Oid = 7;
 		var s = inject(String);
 		Console.info('${s}');
 	}

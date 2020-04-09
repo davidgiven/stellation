@@ -21,7 +21,7 @@ class Injectomatic {
 	}
 
 	static function checkBindingExists(t: Class<Dynamic>) {
-		if (injections.exists(t)) {
+		if (!injections.exists(t)) {
 			throw new InjectomaticException('no binding for type ${t} exists');
 		}
 	}
