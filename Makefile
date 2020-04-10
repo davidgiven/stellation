@@ -24,4 +24,5 @@ haxe:: build.hxml .haxelib $(SRCS)
 	haxelib install hxcpp
 	haxelib install mconsole
 	haxelib install hx3compat
+	haxelib install hamcrest
 
