@@ -21,8 +21,9 @@ haxe:: build.hxml .haxelib $(SRCS)
 
 .haxelib:
 	haxelib newrepo
+	haxelib install crypto
+	haxelib install hamcrest
+	haxelib install hx3compat
 	haxelib install hxcpp
 	haxelib install mconsole
-	haxelib install hx3compat
-	haxelib install hamcrest
 

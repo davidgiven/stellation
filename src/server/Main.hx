@@ -1,8 +1,10 @@
 package server;
 import sys.db.Sqlite;
 import interfaces.IClock;
+import interfaces.ITime;
 import runtime.cpp.CppRuntime.initCppRuntime;
 import runtime.shared.ServerClock;
+import runtime.shared.Time;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
 import utils.Types.Oid;
@@ -12,6 +14,7 @@ class Main {
 		initCppRuntime();
 
 		bind(IClock, new ServerClock());
+		bind(ITime, new Time());
 
 		Sys.println("Hello, world!");
 		var db = Sqlite.open("fnord.sqlite");
