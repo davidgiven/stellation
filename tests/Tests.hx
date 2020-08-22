@@ -7,8 +7,10 @@ import utils.Fault;
 class Tests {
 	public static function main() {
 		var r = new TestRunner();
-		r.add(new utils.InjectomaticTest());
+		r.add(new commands.CommandDispatcherTest());
 		r.add(new utils.ArgifierTest());
+		r.add(new utils.GetOptTest());
+		r.add(new utils.InjectomaticTest());
 		r.run();
 	}
 		

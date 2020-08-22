@@ -1,5 +1,6 @@
 .haxe
 .obj
+bin
 build
 gradle
 bazel-bin
@@ -7,4 +8,8 @@ bazel-genfiles
 bazel-out
 bazel-stellation
 bazel-testlogs
+
+syntax: glob
+**.orig
+**.sqlite
 

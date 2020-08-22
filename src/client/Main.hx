@@ -1,17 +1,22 @@
 package client;
-import js.Browser;
-import utils.Injectomatic.inject;
-import utils.Injectomatic.bind;
+import commands.CommandDispatcher;
+import interfaces.ICommandDispatcher;
 import interfaces.ITime;
+import js.Browser;
 import runtime.shared.Time;
+import utils.Injectomatic.bind;
+import utils.Injectomatic.inject;
+import utils.Random;
 
 class Main {
     static function main() {
         Console.start();
-        Console.info("haxe main start");
 
+        bind(ICommandDispatcher, new CommandDispatcher());
         bind(ITime, new Time());
-        bind(String, "foo");
+        bind(Random, new Random());
+
+        Browser.document.getElementById("loading").remove();
 
         var button = Browser.document.createButtonElement();
         button.textContent = "Click me!";

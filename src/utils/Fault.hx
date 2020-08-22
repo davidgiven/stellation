@@ -1,13 +1,5 @@
 package utils;
-
-enum FaultDomain {
-    INTERNAL;
-    NETWORK;
-    PERMISSION;
-    VISIBILITY;
-    SYNTAX;
-    INVALID_ARGUMENT;
-}
+import utils.FaultDomain.INTERNAL;
 
 class Fault extends Exception {
 	public var status = 500;

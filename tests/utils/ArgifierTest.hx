@@ -5,7 +5,7 @@ import org.hamcrest.Matchers.assertThat;
 import org.hamcrest.Matchers.equalTo;
 import utils.Argifier.argify;
 import utils.Argifier.unargify;
-import utils.Fault.FaultDomain.SYNTAX;
+import utils.FaultDomain.SYNTAX;
 
 class ArgifierTest extends TestCase {
     static final successfulCases = [
