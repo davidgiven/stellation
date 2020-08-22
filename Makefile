@@ -15,9 +15,20 @@ all: haxe
 clean:
 	rm -rf $(OBJ) .haxelib
 
-haxe:: build.hxml .haxelib $(SRCS)
-	haxe build.hxml
+include src/client/build.mk
+
+bin/cgi-bin/stellation.cgi: $(OBJ)/build
+	mkdir -p $(dir $@)
 	cp $(OBJ)/server-temp/Main-debug $@
+
+$(OBJ)/build: build.hxml .haxelib $(SRCS)
+	haxe build.hxml
+	touch $@
+
+haxe: bin/cgi-bin/stellation.cgi $(CLIENT)
+
+serve:: haxe
+	mini_httpd -D -c 'cgi-bin/*' -d bin -p 8080 -l /dev/stdout
 
 .haxelib:
 	haxelib newrepo
