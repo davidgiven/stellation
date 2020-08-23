@@ -1,5 +1,6 @@
 --class-path src
 --library mconsole
+--library tink_await
 --each
 
 --cpp .obj/server-temp

@@ -36,6 +36,6 @@ serve:: haxe
 	haxelib install hx3compat
 	haxelib install hxcpp
 	haxelib install mconsole
-	haxelib install coroutine
+	haxelib install tink_await
 	haxelib install utest
 

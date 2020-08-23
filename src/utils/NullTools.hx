@@ -8,5 +8,13 @@ class NullTools {
 			return n;
 		}
 	}
+
+	public static inline function then<T, P>(n: Null<T>, cb: (T) -> P): Null<P> {
+		if (n == null) {
+			return null;
+		} else {
+			return cb(n);
+		}
+	}
 }
 

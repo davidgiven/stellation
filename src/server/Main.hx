@@ -8,7 +8,6 @@ import runtime.shared.Time;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
 import utils.Types.Oid;
-
 class Main {
 	static public function main(): Void {
 		initCppRuntime();

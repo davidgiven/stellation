@@ -1,10 +1,9 @@
 package commands;
 
-import interfaces.ICommandDispatcher;
-import interfaces.ICommand;
-import interfaces.ICommand.Exceptions.throwCommandNotFoundException;
+import utils.Fault;
+import utils.FaultDomain.SYNTAX;
 
-class CommandDispatcher implements ICommandDispatcher {
+class CommandDispatcher {
 	public var commands: Map<String, () -> AbstractCommand> = [];
 
 	public function new() {
@@ -13,14 +12,14 @@ class CommandDispatcher implements ICommandDispatcher {
 		}
 	}
 
-	public function resolve(argv: Array<String>): ICommand {
+	public function resolve(argv: Array<String>): AbstractCommand {
 		var name = argv[0];
 		var commandConstructor = commands[name];
 		if (commandConstructor == null) {
-			throwCommandNotFoundException(name);
+			throw new Fault(SYNTAX).withDetail('command \'${name}\' not found');
 		}
 		var command = commandConstructor();
-		//command.parseArguments(argc);
+		command.parseArguments(argv);
 		return command;
 	}
 
