@@ -1,8 +1,7 @@
 package utils;
 
 import Tests.faultOf;
-import org.hamcrest.Matchers.assertThat;
-import org.hamcrest.Matchers.equalTo;
+import utest.Assert;
 import utils.Argifier.argify;
 import utils.Argifier.unargify;
 import utils.FaultDomain.SYNTAX;
@@ -44,29 +43,29 @@ class ArgifierTest extends TestCase {
     function testSuccessfulParsing() {
 		for (input => want in successfulCases) {
 			var got = argify(input);
-			assertThat(got, equalTo(want));
+			Assert.same(got, want);
         }
     }
 
 	function testUnterminatedStrings() {
 		for (input in unterminatedStringCases) {
 			var e = faultOf(() -> argify(input));
-			assertThat(e.domain, equalTo(SYNTAX));
+			Assert.same(e.domain, SYNTAX);
 		}
 	}
 
 	function testIllegalEscapeCases() {
 		for (input in illegalEscapeCases) {
 			var e = faultOf(() -> argify(input));
-			assertThat(e.domain, equalTo(SYNTAX));
+			Assert.same(e.domain, SYNTAX);
 		}
 	}
 
     function testUnargify() {
-        assertThat(unargify(["foo", "bar"]), equalTo("foo bar"));
-        assertThat(unargify(["foo bar"]), equalTo("\"foo bar\""));
-        assertThat(unargify(["\"foo"]), equalTo("\\\"foo"));
-        assertThat(unargify(["'foo"]), equalTo("\\'foo"));
+        Assert.same(unargify(["foo", "bar"]), "foo bar");
+        Assert.same(unargify(["foo bar"]), "\"foo bar\"");
+        Assert.same(unargify(["\"foo"]), "\\\"foo");
+        Assert.same(unargify(["'foo"]), "\\'foo");
     }
 }
 

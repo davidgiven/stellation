@@ -1,11 +1,11 @@
 package utils;
 
-import haxe.unit.TestCase;
 import utils.Injectomatic.InjectomaticException;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
 import utils.Injectomatic.resetBindingsForTest;
 import Tests.exceptionOf;
+import utest.Assert;
 
 class Superclass {
 	public function new() {}
@@ -18,7 +18,7 @@ class Subclass extends Superclass {
 }
 
 class InjectomaticTest extends TestCase {
-	override function setup() {
+	function setup() {
 		resetBindingsForTest();
 	}
 
@@ -26,7 +26,7 @@ class InjectomaticTest extends TestCase {
 		var t = new Superclass();
 
 		bind(Superclass, t);
-		assertEquals(t, inject(Superclass));
+		Assert.equals(t, inject(Superclass));
 	}
 
 	public function testComplex() {
@@ -34,7 +34,7 @@ class InjectomaticTest extends TestCase {
 
 		bind(Superclass, t);
 		var got = inject(Superclass);
-		assertEquals(got, inject(Superclass));
+		Assert.equals(got, inject(Superclass));
 	}
 
 	public function testMultipleBindingsFail() {
@@ -43,7 +43,7 @@ class InjectomaticTest extends TestCase {
 			bind(Superclass, new Subclass());
 		});
 
-		assertTrue(Std.is(e, InjectomaticException));
+		Assert.isOfType(e, InjectomaticException);
 	}
 }
 

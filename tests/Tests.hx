@@ -1,17 +1,22 @@
 package;
 
-import haxe.unit.TestRunner;
+import utest.UTest;
 import utils.Exception;
 import utils.Fault;
 
 class Tests {
 	public static function main() {
-		var r = new TestRunner();
-		r.add(new commands.CommandDispatcherTest());
-		r.add(new utils.ArgifierTest());
-		r.add(new utils.GetOptTest());
-		r.add(new utils.InjectomaticTest());
-		r.run();
+		UTest.run([
+			new commands.CommandDispatcherTest(),
+			new utils.ArgifierTest(),
+			new utils.GetOptTest(),
+			new utils.InjectomaticTest(),
+			new utils.MessageTest(),
+		]);
+//
+//		var r = new TestRunner();
+//		r.add(new commands.CommandDispatcherTest());
+//		r.run();
 	}
 		
 	public static function exceptionOf(fn: Void->Void): Exception {

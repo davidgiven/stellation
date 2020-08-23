@@ -14,7 +14,7 @@
 
 --class-path tests
 --library hx3compat
---library hamcrest
+--library utest
 --interp 
 --main Tests
 

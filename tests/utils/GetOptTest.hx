@@ -1,12 +1,9 @@
 package utils;
 
-import org.hamcrest.Matchers.assertThat;
-import org.hamcrest.Matchers.containsString;
-import org.hamcrest.Matchers.equalTo;
-import org.hamcrest.Matchers.isEmpty;
 import utils.FaultDomain.SYNTAX;
 import utils.Flags;
 import utils.GetOpt.getopt;
+import utest.Assert;
 
 class GetOptTest extends TestCase {
 	public var vFlag: Bool;
@@ -18,7 +15,7 @@ class GetOptTest extends TestCase {
 
 	var options: Flags;
 
-	override function setup() {
+	function setup() {
 		options = new Flags()
 				.addFlag("-v", (v) -> vFlag = true)
 				.addString("-f", (v) -> fFlag = v)
@@ -38,99 +35,99 @@ class GetOptTest extends TestCase {
 	
     function testEmpty() {
         var remaining = getopt([], options);
-        assertFalse(vFlag);
-        assertThat(remaining, isEmpty());
+        Assert.isFalse(vFlag);
+        Assert.same(remaining, []);
     }
 
 	function testShortFlag() {
 		var remaining = getopt(["-v"], options);
-        assertTrue(vFlag);
-        assertThat(remaining, isEmpty());
+        Assert.isTrue(vFlag);
+        Assert.same(remaining, []);
     }
 
 	function testLongFlag() {
 		var remaining = getopt(["--verbose"], options);
-        assertTrue(verboseFlag);
-        assertThat(remaining, isEmpty());
+        Assert.isTrue(verboseFlag);
+        Assert.same(remaining, []);
     }
 
 	function testShortWithInlineFlag() {
 		var remaining = getopt(["-fFNORD", "-v"], options);
-		assertEquals("FNORD", fFlag);
-        assertTrue(vFlag);
-        assertThat(remaining, isEmpty());
+		Assert.same("FNORD", fFlag);
+        Assert.isTrue(vFlag);
+        Assert.same(remaining, []);
     }
 
 	function testShortWithOutoflineFlag() {
 		var remaining = getopt(["-f", "FNORD", "-v"], options);
-		assertEquals("FNORD", fFlag);
-        assertTrue(vFlag);
-        assertThat(remaining, isEmpty());
+		Assert.same("FNORD", fFlag);
+        Assert.isTrue(vFlag);
+        Assert.same(remaining, []);
     }
 
 	function testLongWithInlineFlag() {
 		var remaining = getopt(["--file=FNORD", "-v"], options);
-		assertEquals("FNORD", fileFlag);
-        assertTrue(vFlag);
-        assertThat(remaining, isEmpty());
+		Assert.same("FNORD", fileFlag);
+        Assert.isTrue(vFlag);
+        Assert.same(remaining, []);
     }
 
 	function testLongWithOutoflineFlag() {
 		var remaining = getopt(["--file", "FNORD", "-v"], options);
-		assertEquals("FNORD", fileFlag);
-        assertTrue(vFlag);
-        assertThat(remaining, isEmpty());
+		Assert.same("FNORD", fileFlag);
+        Assert.isTrue(vFlag);
+        Assert.same(remaining, []);
     }
 
 	function testWithNonParameterFirst() {
         var remaining = getopt(["FNORD", "--verbose"], options);
-        assertFalse(verboseFlag);
-        assertThat(remaining, equalTo(["FNORD", "--verbose"]));
+        Assert.isFalse(verboseFlag);
+        Assert.same(remaining, ["FNORD", "--verbose"]);
     }
 
 	function testWithNonParameterLast() {
         var remaining = getopt(["--verbose", "FNORD", "--verbose"], options);
-        assertTrue(verboseFlag);
-        assertThat(remaining, equalTo(["FNORD", "--verbose"]));
+        Assert.isTrue(verboseFlag);
+        Assert.same(["FNORD", "--verbose"], remaining);
     }
 
 	function testMissingShortParameter() {
 		try {
 			getopt(["-f"], options);
-			fail("exception not thrown");
+			Assert.fail("exception not thrown");
 		} catch (f: Fault) {
-			assertEquals(FaultDomain.SYNTAX, f.domain);
-			assertThat(f.detail, containsString("missing"));
+			Assert.same(FaultDomain.SYNTAX, f.domain);
+			Assert.stringContains("missing", f.detail);
 		}
 	}
 
 	function testMissingLongParameter() {
 		try {
 			getopt(["--file"], options);
-			fail("exception not thrown");
+			Assert.fail("exception not thrown");
 		} catch (f: Fault) {
-			assertEquals(FaultDomain.SYNTAX, f.domain);
-			assertThat(f.detail, containsString("missing"));
+			Assert.same(FaultDomain.SYNTAX, f.domain);
+			Assert.stringContains("missing", f.detail);
 		}
 	}
 
 	function testInvalidShortParameter() {
 		try {
 			getopt(["-x"], options);
-			fail("exception not thrown");
+			Assert.fail("exception not thrown");
 		} catch (f: Fault) {
-			assertEquals(FaultDomain.SYNTAX, f.domain);
-			assertThat(f.detail, containsString("unrecognised"));
+			Assert.same(FaultDomain.SYNTAX, f.domain);
+			Assert.stringContains("unrecognised", f.detail);
 		}
 	}
 
 	function testInvalidLongParameter() {
 		try {
 			getopt(["--does-not-exist"], options);
-			fail("exception not thrown");
+			Assert.fail("exception not thrown");
 		} catch (f: Fault) {
-			assertEquals(FaultDomain.SYNTAX, f.domain);
-			assertThat(f.detail, containsString("unrecognised"));
+			Assert.same(FaultDomain.SYNTAX, f.domain);
+			Assert.stringContains("unrecognised", f.detail);
 		}
 	}
 }
