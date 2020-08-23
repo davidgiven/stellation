@@ -33,7 +33,8 @@ class Main {
 
 		Browser.document.getElementById("loading").remove();
 
-        hasYield().handle(i -> trace(i));
+        var c = inject(CommandDispatcher).resolve(["help"]);
+        c.run().handle(i -> trace(i));
 
 		var button = Browser.document.createButtonElement();
 		button.textContent = "Click me!";

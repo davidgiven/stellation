@@ -14,6 +14,10 @@ typedef CommandRef = { name: String, constructor: () -> AbstractCommand };
 abstract CommandMessage(Message) {
 	private static var SUCCESS = "_success";
 
+	public function new() {
+		this = new Message();
+	}
+
 	public function setSuccess(success: Bool): Void this.setBool(SUCCESS, success);
 	public function getSuccess(): Bool              return this.getBool(SUCCESS).or(false);
 }
@@ -25,13 +29,13 @@ class AbstractCommand {
     var description: String;
     var flags: Flags;
 
-    public var argv: Array<String>;
-    var input: CommandMessage;
-    var output: CommandMessage;
-
+    public var argv: Array<String> = [];
+    var input: CommandMessage = new CommandMessage();
+    var output: CommandMessage = new CommandMessage();
 
 	public function parseArguments(argv: Array<String>) {
 		this.argv = argv;
+		output.setSuccess(false);
 		var remaining = getopt(argv.slice(1), flags);
 		parseRemainingArguments(remaining);
 		validateArguments();
