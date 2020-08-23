@@ -1,5 +1,6 @@
 package utils;
 
+import utils.Exception.throwInvalidCodecDataException;
 using utils.NullTools;
 using StringTools;
 
@@ -8,6 +9,23 @@ class Message {
 
 	private var _map = new Map<String, String>();
 	public var length = 0;
+
+	public static function deserialise(data: String): Message {
+		var m = new Map<String, String>();
+		for (line in ~/\n/g.split(data)) {
+			var words = ~/=/.split(line);
+			if ((words.length == 1) && (words[0] == "")) {
+				break;
+			}
+			if (words.length != 2) {
+				throwInvalidCodecDataException("couldn't parse line");
+			}
+			var key = decodeString(words[0]);
+			var value = decodeString(words[1]);
+			m[key] = value;
+		}
+		return new Message(m);
+	}
 
 	public function new(?map: Map<String, String>) {
 		if (map != null) {
@@ -50,20 +68,24 @@ class Message {
         return sb.toString();
     }
 
-	private function encodeString(s: String): String {
+	private static function encodeString(s: String): String {
 		return s.replace("%", "%p").replace("\n", "%n").replace("=", "%e");
+	}
+
+	private static function decodeString(s: String): String {
+		return s.replace("%e", "=").replace("%n", "\n").replace("%p", "%");
 	}
 
 	public function exists<T>(key: T) { return _map.exists(Std.string(key)); }
 
-	public function getInt<T>(key: T): Null<Int>       { return Std.parseInt(_map.get(Std.string(key))); }
-	public function getFloat<T>(key: T): Null<Float>   { return Std.parseFloat(_map.get(Std.string(key))); }
-	public function getString<T>(key: T): Null<String> { return _map.get(Std.string(key)); }
+	public function getInt<T>(key: T): Null<Int>       return Std.parseInt(_map.get(Std.string(key)));
+	public function getFloat<T>(key: T): Null<Float>   return Std.parseFloat(_map.get(Std.string(key)));
+	public function getString<T>(key: T): Null<String> return _map.get(Std.string(key));
 
 	public function setInt<T>(key: T, value: Int): Message       { _map.set(Std.string(key), Std.string(value)); return this; }
 	public function setFloat<T>(key: T, value: Float): Message   { _map.set(Std.string(key), Std.string(value)); return this; }
 	public function setString<T>(key: T, value: String): Message { _map.set(Std.string(key), value); return this; }
 
-	public function addString(value: String): Message { return setString(length++, value); }
+	public function addString(value: String): Message return setString(length++, value);
 }
 

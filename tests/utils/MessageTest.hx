@@ -67,5 +67,48 @@ class MessageTest extends TestCase {
 		Assert.same("thingy", m.getString(0));
 		Assert.same(1, m.length);
 	}
+
+	function testDeserialise() {
+		var s = "0=thingy\n_count=1\nbaz=boo\nfoo=bar\n";
+		var m = Message.deserialise(s);
+		Assert.same(["foo" => "bar", "baz" => "boo", "0" => "thingy", Message.LENGTH => "1"], m.toMap());
+		Assert.same(["thingy"], m.toArray());
+		Assert.same("0=thingy\n_count=1\nbaz=boo\nfoo=bar\n", m.serialise());
+		Assert.same("bar", m.getString("foo"));
+		Assert.same("boo", m.getString("baz"));
+		Assert.same("thingy", m.getString("0"));
+		Assert.same("thingy", m.getString(0));
+		Assert.same(1, m.length);
+	}
+
+	function testMissingByName() {
+		var m = new Message();
+		Assert.isNull(m.getString("string"));
+		Assert.isNull(m.getInt("int"));
+		Assert.isNull(m.getFloat("float"));
+	}
+
+    private static var encodeDecodeTests = [
+		/* Remember that encoded strings are sorted by key! */
+		"" => new Map<String, String>(),
+		"foo=bar\n" => ["foo" => "bar"],
+		"föǫ=bà®\n" => ["föǫ" => "bà®"],
+		"baz=boo\nfoo=bar\n" => ["foo" => "bar", "baz" => "boo"],
+		"foo%e=%ebar\n" => ["foo=" => "=bar"],
+		"fo%no=b%nar\n" => ["fo\no" => "b\nar"],
+		"%p=%p%p\n" => ["%" => "%%"]
+	];
+
+	function testEncode() {
+		for (e => m in encodeDecodeTests) {
+			Assert.same(new Message(m).serialise(), e);
+		}
+	}
+
+	function testDecode() {
+		for (e => m in encodeDecodeTests) {
+			Assert.same(m, Message.deserialise(e).toMap());
+		}
+	}
 }
 
