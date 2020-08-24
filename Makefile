@@ -33,9 +33,9 @@ serve:: haxe
 .haxelib:
 	haxelib newrepo
 	haxelib install crypto
-	haxelib install hx3compat
 	haxelib install hxcpp
 	haxelib install mconsole
 	haxelib install tink_await
+	haxelib install tink_lang
 	haxelib install utest
 

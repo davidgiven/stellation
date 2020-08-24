@@ -5,7 +5,7 @@ import interfaces.IConsole;
 import tink.CoreApi;
 
 @await
-class HelpCommand extends AbstractCommand {
+class HelpCommand extends AbstractLocalCommand {
 	public static var REF: CommandRef = { name: "help", constructor: () -> new HelpCommand() };
 
 	public function new() {}

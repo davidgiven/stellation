@@ -2,9 +2,15 @@ package commands;
 
 import utils.Fault;
 import utils.FaultDomain.SYNTAX;
+import interfaces.IConsole;
+import utils.Injectomatic.inject;
+import utils.Argifier.argify;
+import utils.Argifier.unargify;
 
+@async
 class CommandDispatcher {
 	public var commands: Map<String, () -> AbstractCommand> = [];
+	public var console = inject(IConsole);
 
 	public function new() {
 		for (ref in [HelpCommand.REF]) {
@@ -23,6 +29,25 @@ class CommandDispatcher {
 		return command;
 	}
 
+	@async public function call(cmdline: String) {
+		@await callArgv(argify(cmdline));
+	}
+
+	@async public function callArgv(argv: Array<String>) {
+		if (argv.length == 0) {
+			return;
+		}
+
+        try {
+            @await console.println('> ${unargify(argv)}');
+            var command = resolve(argv);
+			@await command.run();
+        } catch (f: Fault) {
+            console.println('Failed: ${f.detail}');
+        } catch (e) {
+            console.println('Internal error: $e');
+        }
+    }
 //    override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
 //
 //    fun populateCommands(): Map<String, () -> AbstractCommand> {

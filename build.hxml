@@ -1,6 +1,7 @@
 --class-path src
 --library mconsole
 --library tink_await
+--library tink_lang
 --each
 
 --cpp .obj/server-temp
@@ -14,7 +15,6 @@
 --next
 
 --class-path tests
---library hx3compat
 --library utest
 --interp 
 --main Tests

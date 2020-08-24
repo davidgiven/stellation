@@ -2,15 +2,18 @@ package client;
 
 import commands.CommandDispatcher;
 import haxe.Timer;
-import interfaces.ITime;
 import interfaces.IConsole;
+import interfaces.ITime;
+import interfaces.IUi;
 import js.Browser;
+import runtime.js.JsUi;
 import runtime.shared.Time;
 import tink.CoreApi;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
 import utils.Message;
 import utils.Random;
+import ui.ConsoleWindow;
 
 class ConsoleImpl implements IConsole {
     public function new(){}
@@ -30,11 +33,13 @@ class Main {
 		bind(CommandDispatcher, new CommandDispatcher());
 		bind(ITime, new Time());
 		bind(Random, new Random());
+        bind(IUi, new JsUi());
 
 		Browser.document.getElementById("loading").remove();
 
-        var c = inject(CommandDispatcher).resolve(["help"]);
-        c.run().handle(i -> trace(i));
+        var w = new ConsoleWindow();
+        w.commandReceived.handle((cmd) -> inject(CommandDispatcher).call(cmd));
+        w.create();
 
 		var button = Browser.document.createButtonElement();
 		button.textContent = "Click me!";

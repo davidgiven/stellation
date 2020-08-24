@@ -7,6 +7,7 @@ import utils.Flags;
 import utils.Message;
 import utils.Fault;
 import utils.FaultDomain.SYNTAX;
+import tink.CoreApi;
 using utils.NullTools;
 
 typedef CommandRef = { name: String, constructor: () -> AbstractCommand };
@@ -52,15 +53,5 @@ class AbstractCommand {
 	@async public function run() {
 		output.setSuccess(true);
 	}
-
-    public function serverRun() {
-		throw new Fault(SYNTAX).withDetail("this command can't be used on the server");
-    }
-
-    public function renderResult() {
-        console.println("OK");
-    }
-
-
 }
 

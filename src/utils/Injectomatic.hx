@@ -1,5 +1,6 @@
 package utils;
 import haxe.ds.ObjectMap;
+import tink.CoreApi;
 
 class InjectomaticException extends Exception {
 	public function new(msg: String) {
@@ -30,6 +31,16 @@ class Injectomatic {
 	public static function inject<T>(t: Class<T>): T {
 		checkBindingExists(t);
 		return injections.get(t);
+	}
+
+	@:generic
+	public static function injectLazy<T>(t: Class<T>): Lazy<T> {
+        return Lazy.ofFunc(
+            () -> {
+                checkBindingExists(t);
+                return injections.get(t);
+            }
+        );
 	}
 
 	@:generic

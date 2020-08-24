@@ -64,7 +64,7 @@ interface IUiElement : IUiNode {
 
 
 interface IUi {
-    fun newModal(init: IUiElement.() -> Unit): IUiElement
+    fun newElement(): IUiElement;
 
     fun fireGlobalEvent(event: String)
 }
