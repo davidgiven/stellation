@@ -19,6 +19,7 @@ class ConsoleImpl implements IConsole {
     public function new(){}
 
     public function println(s: String): Promise<Noise> {
+        inject(ConsoleWindow).print(s);
         trace(s);
         return Noise;
     }
@@ -34,10 +35,11 @@ class Main {
 		bind(ITime, new Time());
 		bind(Random, new Random());
         bind(IUi, new JsUi());
+        bind(ConsoleWindow, new ConsoleWindow());
 
 		Browser.document.getElementById("loading").remove();
 
-        var w = new ConsoleWindow();
+        var w = inject(ConsoleWindow);
         w.commandReceived.handle((cmd) -> inject(CommandDispatcher).call(cmd));
         w.create();
 

@@ -9,11 +9,16 @@ import utils.Argifier.unargify;
 
 @async
 class CommandDispatcher {
+	private static final COMMANDS = [
+		EchoCommand.REF,
+		HelpCommand.REF,
+	];
+
 	public var commands: Map<String, () -> AbstractCommand> = [];
 	public var console = inject(IConsole);
 
 	public function new() {
-		for (ref in [HelpCommand.REF]) {
+		for (ref in COMMANDS) {
 			commands[ref.name] = ref.constructor;
 		}
 	}
@@ -30,24 +35,22 @@ class CommandDispatcher {
 	}
 
 	@async public function call(cmdline: String) {
-		@await callArgv(argify(cmdline));
-	}
+		try {
+			@await console.println('> ${cmdline}');
+			var argv = argify(cmdline);
+			if (argv.length == 0) {
+				return;
+			}
 
-	@async public function callArgv(argv: Array<String>) {
-		if (argv.length == 0) {
-			return;
-		}
-
-        try {
-            @await console.println('> ${unargify(argv)}');
-            var command = resolve(argv);
+			var command = resolve(argv);
 			@await command.run();
         } catch (f: Fault) {
             console.println('Failed: ${f.detail}');
         } catch (e) {
             console.println('Internal error: $e');
         }
-    }
+	}
+
 //    override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
 //
 //    fun populateCommands(): Map<String, () -> AbstractCommand> {

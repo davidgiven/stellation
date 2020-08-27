@@ -27,12 +27,16 @@ abstract CommandMessage(Message) {
 class AbstractCommand {
     var console = inject(IConsole);
 
-    var description: String;
-    var flags: Flags;
-
+    public var description: String;
     public var argv: Array<String> = [];
+
     var input: CommandMessage = new CommandMessage();
     var output: CommandMessage = new CommandMessage();
+    var flags: Flags = new Flags();
+
+	public function new(description: String) {
+		this.description = description;
+	}
 
 	public function parseArguments(argv: Array<String>) {
 		this.argv = argv;

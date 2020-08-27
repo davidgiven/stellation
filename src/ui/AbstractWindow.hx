@@ -10,8 +10,9 @@ class AbstractWindow {
 
 	@:signal public var onGeometryChange: Noise;
 
-	var mainClass = @byDefault "";
-    var layout = @byDefault "top-to-bottom";
+	var isResizable = false;
+	var mainClass = "";
+    var layout = "top-to-bottom";
 
 	var element: IUiElement;
 	var titlebar: IUiElement;
@@ -19,6 +20,7 @@ class AbstractWindow {
 
 	private var dragStartX: Float;
 	private var dragStartY: Float;
+
 	private var dragCallbacks: UiDragCallbacks = {
 		onStart: (x, y) -> {
             var winPos = element.getPosition();
@@ -34,6 +36,23 @@ class AbstractWindow {
 		},
 
 		onEnd: (x, y) -> dragCallbacks.onMove(x, y)
+	};
+
+	private var resizeCallbacks: UiDragCallbacks = {
+		onStart: (x, y) -> {
+            var winSize = element.getSize();
+            dragStartX = winSize.x - x;
+            dragStartY = winSize.y - y;
+		},
+
+		onMove: (x, y) -> {
+			var newW = dragStartX + x;
+			var newH = dragStartY + y;
+			element.setSize(newW, newH);
+			_onGeometryChange.trigger(Noise);
+		},
+
+		onEnd: (x, y) -> resizeCallbacks.onMove(x, y)
 	};
 
 	public function create() {
@@ -54,39 +73,19 @@ class AbstractWindow {
 		createTitlebar(titlebar);
 		createUserInterface(body);
 
+		if (isResizable) {
+			var resizer: IUiElement;
+			element.addNode(
+				resizer = ui.newElement("div")
+					.setClasses(["resizer"])
+			);
+			resizer.onDrag(resizeCallbacks);
+		}
+
 		titlebar.onDrag(dragCallbacks);
 		ui.show(element);
 
 		_onGeometryChange.trigger(Noise);
-//
-//
-//        element = ui.newModal {
-//            classes = setOf("window", layout, mainClass)
-//
-//            titlebar = addElement("div") {
-//                classes = setOf("titlebar")
-//                createTitlebar(this)
-//
-//                addElement("span") {
-//                    classes = setOf("expand", "textured")
-//                }
-//
-//                onDrag(dragCallbacks)
-//            }
-//
-//            addElement("div") {
-//                classes = setOf("body", "expand", "vbox")
-//                createUserInterface(this)
-//            }
-//
-//            if (isResizable) {
-//                addElement("div") {
-//                    classes = setOf("resizer")
-//
-//                    onDrag(resizeCallbacks)
-//                }
-//            }
-//        }
 	}
 
 	function createTitlebar(div: IUiElement) {

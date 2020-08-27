@@ -11,7 +11,10 @@ class ConsoleWindow extends AbstractWindow {
 	private var linesBox: IUiElement;
 	private var textInput: IUiElement;
 
-	public function new() super();
+	public function new() {
+		super();
+		isResizable = true;
+	}
 
 	public override function createTitlebar(div: IUiElement) {
 		div.addNode(
@@ -43,6 +46,7 @@ class ConsoleWindow extends AbstractWindow {
 									)
 									.addNode(
 										textInput = ui.newElement("input")
+											.addClasses(["expand"])
 											.setAttr("type", "text")
 									)
 							)
@@ -74,65 +78,3 @@ class ConsoleWindow extends AbstractWindow {
 	}
 }
 
-//package ui
-//
-//import interfaces.IUiElement
-//
-//typealias ConsoleCommandCallback = (String) -> Unit
-//
-//class ConsoleWindow(val callback: ConsoleCommandCallback) : AbstractWindow() {
-//    lateinit var linesBox: IUiElement
-//    lateinit var textInput: IUiElement
-//
-//    override val mainClass = "consoleWindow"
-//    override val isResizable = false
-//
-//    override fun createTitlebar(div: IUiElement) {
-//        div.addText("span", "Console")
-//    }
-//
-//    override fun createUserInterface(div: IUiElement) {
-//        div.run {
-//            classes += "scrollable"
-//
-//            addElement("div") {
-//                classes += setOf("console")
-//
-//                addElement("label") {
-//                    classes += setOf("expand")
-//
-//                    linesBox = addElement("div") {
-//                        classes += setOf("lines")
-//                    }
-//
-//                    addHBox {
-//                        addText("div", ">") {
-//                            classes += "prompt"
-//                        }
-//
-//                        textInput = addElement("input") {
-//                            set("type", "text")
-//
-//                            onActivate {
-//                                val value = textInput["value"]!!
-//                                textInput["value"] = ""
-//                                callback(value)
-//                            }
-//                        }
-//                    }
-//
-//                    addElement("div") {
-//                        classes += "expand"
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    fun print(s: String) {
-//        linesBox.addText("div", s).classes
-//        textInput.scrollIntoView()
-//    }
-//}
-//
-//
