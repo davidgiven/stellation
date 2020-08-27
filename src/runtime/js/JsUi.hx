@@ -72,10 +72,6 @@ class JsUiNode implements IUiNode {
 }
 
 @:tink
-class JsUiText extends JsUiNode implements IUiText {
-}
-
-@:tink
 class JsUiElement extends JsUiNode implements IUiElement {
 	@:calc var tag = element.tagName;
 	@:calc var id = element.id;
@@ -147,6 +143,10 @@ class JsUiElement extends JsUiNode implements IUiElement {
 	}
 }
 
+@:tink
+class JsUiText extends JsUiElement implements IUiText {
+}
+
 class JsUi implements IUi {
 	public function new() {}
 
@@ -155,8 +155,8 @@ class JsUi implements IUi {
 		return new JsUiElement(e);
 	}
 
-	public function newText(text: String): JsUiText {
-		var e = Browser.document.createElement("span");
+	public function newText(tag: String, text: String): JsUiText {
+		var e = Browser.document.createElement(tag);
 		e.textContent = text;
 		return new JsUiText(e);
 	}

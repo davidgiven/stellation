@@ -18,7 +18,7 @@ class ConsoleWindow extends AbstractWindow {
 
 	public override function createTitlebar(div: IUiElement) {
 		div.addNode(
-			ui.newText("Console")
+			ui.newText("span", "Console")
 		);
 	}
 
@@ -41,7 +41,7 @@ class ConsoleWindow extends AbstractWindow {
 										ui.newElement("div")
 											.addClasses(["prompt"])
 											.addNode(
-												ui.newText(">")
+												ui.newText("span", ">")
 											)
 									)
 									.addNode(
@@ -67,12 +67,9 @@ class ConsoleWindow extends AbstractWindow {
 		);
 	}
 
-	public function print(s: String): Void {
+	public function println(s: String): Void {
 		linesBox.addNode(
-			ui.newElement("div")
-				.addNode(
-					ui.newText(s)
-			)
+			ui.newText("div", s)
 		);
         textInput.scrollIntoView();
 	}

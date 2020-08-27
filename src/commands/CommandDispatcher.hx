@@ -7,6 +7,7 @@ import utils.Injectomatic.inject;
 import utils.Argifier.argify;
 import utils.Argifier.unargify;
 
+@:tink
 @async
 class CommandDispatcher {
 	private static final COMMANDS = [
@@ -15,7 +16,7 @@ class CommandDispatcher {
 	];
 
 	public var commands: Map<String, () -> AbstractCommand> = [];
-	public var console = inject(IConsole);
+	@:lazy public var console = inject(IConsole);
 
 	public function new() {
 		for (ref in COMMANDS) {

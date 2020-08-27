@@ -44,7 +44,7 @@ class Injectomatic {
 	}
 
 	@:generic
-	public static function bind<T>(t: Class<T>, value: T): Void {
+	public static function bind<T>(t: Class<T>, value: T) {
 		checkBindingDoesNotExist(t);
 		injections.set(t, value);
 	}

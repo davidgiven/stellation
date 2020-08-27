@@ -27,9 +27,6 @@ interface IUiNode {
 	public function onDrag(callbacks: UiDragCallbacks): Void;
 }
 
-interface IUiText extends IUiNode {
-}
-
 interface IUiElement extends IUiNode {
 	public function setAttr(name: String, value: String): IUiElement;
 	public function getAttr(name: String): Null<String>;
@@ -46,10 +43,13 @@ interface IUiElement extends IUiNode {
 	public function onActivate(callback: (Dynamic) -> Void): IUiElement;
 }
 
+interface IUiText extends IUiElement {
+}
+
 @:tink
 interface IUi {
 	public function newElement(tag: String): IUiElement;
-	public function newText(text: String): IUiText;
+	public function newText(tag: String, text: String): IUiText;
 	public function show(element: IUiElement): Void;
 
 	public function newHBox(): IUiElement return newElement("div").setClasses(["hbox"]);

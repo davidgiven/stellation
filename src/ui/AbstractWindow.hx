@@ -90,13 +90,13 @@ class AbstractWindow {
 
 	function createTitlebar(div: IUiElement) {
 		div.addNode(
-			ui.newText(Type.getClassName(Type.getClass(this)))
+			ui.newText("span", Type.getClassName(Type.getClass(this)))
 		);
 	}
 
 	function createUserInterface(div: IUiElement) {
 		div.addNode(
-			ui.newText("Empty window")
+			ui.newText("div", "Empty window")
 		);
 	}
 }
