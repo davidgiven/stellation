@@ -83,9 +83,18 @@ class AbstractWindow {
 		}
 
 		titlebar.onDrag(dragCallbacks);
-		ui.show(element);
 
 		_onGeometryChange.trigger(Noise);
+	}
+
+	public function show(): AbstractWindow {
+		ui.show(element);
+		return this;
+	}
+
+	public function hide(): AbstractWindow {
+		element.remove();
+		return this;
 	}
 
 	function createTitlebar(div: IUiElement) {

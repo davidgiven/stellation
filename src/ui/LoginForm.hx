@@ -2,16 +2,18 @@ package ui;
 
 import interfaces.IUi;
 
-class LoginData {
-	public var canceled = false;
-	public var username: String = null;
-	public var password: String = null;
-}
+typedef LoginData = {
+	canceled: Bool,
+	?username: String,
+	?password: String
+};
 
 @await
 class LoginForm extends AbstractForm<LoginData> {
 	private var emailInput: IUiElement;
 	private var passwordInput: IUiElement;
+	private var loginButton: IUiElement;
+	private var registerButton: IUiElement;
 
 	private var defaultUsername: String;
 	private var defaultPassword: String;
@@ -19,6 +21,7 @@ class LoginForm extends AbstractForm<LoginData> {
 	public function new(defaultUsername: String, defaultPassword: String) {
 		super();
 
+		this.mainClass = "loginWindow";
 		this.defaultUsername = defaultUsername;
 		this.defaultPassword = defaultPassword;
 	}
@@ -75,6 +78,30 @@ class LoginForm extends AbstractForm<LoginData> {
 								.setAttr("value", defaultPassword)
 						)
 			)
+		);
+	}
+
+	override function createButtonBox(div: IUiElement) {
+		var buttons = createYesNoButtonBox(div, "Log in", "Register");
+		loginButton = buttons.yes;
+		registerButton = buttons.no;
+
+		loginButton.onActivate(
+			(it) -> {
+				onCompletionTrigger.trigger({
+					canceled: false,
+					username: emailInput.getValue(),
+					password: passwordInput.getValue()
+				});
+			}
+		);
+
+		registerButton.onActivate(
+			(it) -> {
+				onCompletionTrigger.trigger({
+					canceled: true
+				});
+			}
 		);
 	}
 }
