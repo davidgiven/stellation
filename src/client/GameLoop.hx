@@ -5,9 +5,13 @@ import tink.CoreApi;
 import ui.ConsoleWindow;
 import ui.LoginForm;
 import utils.Fault;
+import utils.Injectomatic.inject;
 
+@:tink
 @await
 class GameLoop implements IConsole {
+	var cookies = inject(Cookies);
+
 	var consoleWindow: ConsoleWindow = null;
 
 	public function new() {}
@@ -22,10 +26,8 @@ class GameLoop implements IConsole {
 		while (true) {
 			//datastore.initialiseDatabase()
 
-			var defaultUsername = "";
-			var defaultPassword = "";
-			//val defaultUsername = cookies["username"] ?: ""
-			//val defaultPassword = cookies["password"] ?: ""
+			var defaultUsername = cookies.get("username") | if (null) "";
+			var defaultPassword = cookies.get("password") | if (null) "";
 
 			var loginData = @await new LoginForm(defaultUsername, defaultPassword).execute();
 			if (!loginData.canceled) {
@@ -36,19 +38,23 @@ class GameLoop implements IConsole {
 					//val command = commandDispatcher.resolve(listOf("ping"))
 					//command.run()
 
-					//cookies["username"] = loginData.username
-					//cookies["password"] = loginData.password
-					//doGame()
-					//break
+					cookies.set("username", loginData.username);
+					cookies.set("password", loginData.password);
+					doGame();
+					break;
 				} catch (f: Fault) {
-					//if (f.domain == PERMISSION) {
+					if (f.domain == PERMISSION) {
 					//	AlertForm("Login failed", "Username or password unrecognised.").execute()
-					//} else {
+					} else {
 						throw f;
-					//}
+					}
 				}
 			}
 		}
+	}
+
+	@async
+	public function doGame(): Void {
 	}
 
 	@async

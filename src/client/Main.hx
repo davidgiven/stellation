@@ -23,6 +23,7 @@ class Main {
 		bind(ITime, new Time());
 		bind(Random, new Random());
         bind(IUi, new JsUi());
+        bind(Cookies, new Cookies());
 
         var gameloop = new GameLoop();
         bind(GameLoop, gameloop);
