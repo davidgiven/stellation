@@ -12,6 +12,7 @@ class Tests {
 			new utils.GetOptTest(),
 			new utils.InjectomaticTest(),
 			new utils.MessageTest(),
+			new runtime.shared.InMemoryDatastoreTest(),
 		]);
 //
 //		var r = new TestRunner();

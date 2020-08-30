@@ -13,7 +13,7 @@ class ConsoleWindow extends AbstractWindow {
 
 	public function new() {
 		super();
-		isResizable = true;
+		mainClass = "consoleWindow";
 	}
 
 	public override function createTitlebar(div: IUiElement) {

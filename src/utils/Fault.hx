@@ -2,6 +2,8 @@ package utils;
 import utils.FaultDomain.INTERNAL;
 
 class Fault extends Exception {
+	public static final UNIMPLEMENTED = new Fault(INTERNAL).withDetail("unimplemented operation");
+
 	public var status = 500;
 	public var domain = INTERNAL;
 	public var detail = "Fault";
