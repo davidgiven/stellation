@@ -1,5 +1,6 @@
 package client;
 
+import commands.CommandDispatcher;
 import interfaces.IConsole;
 import tink.CoreApi;
 import ui.ConsoleWindow;
@@ -11,18 +12,20 @@ import utils.Injectomatic.inject;
 @await
 class GameLoop implements IConsole {
 	var cookies = inject(Cookies);
+	var commandDispatcher = inject(CommandDispatcher);
 
 	var consoleWindow: ConsoleWindow = null;
 
 	public function new() {}
 
 	@async
-	public function startGame(): Void {
+	public function startGame(): Noise {
 		doLogin();
+		return Noise;
 	}
 
 	@async
-	public function doLogin(): Void {
+	public function doLogin(): Noise {
 		while (true) {
 			//datastore.initialiseDatabase()
 
@@ -51,10 +54,20 @@ class GameLoop implements IConsole {
 				}
 			}
 		}
+		return Noise;
 	}
 
 	@async
-	public function doGame(): Void {
+	public function doGame(): Noise {
+		consoleWindow = new ConsoleWindow();
+		consoleWindow.create();
+		consoleWindow.onCommandReceived.handle(onCommandReceived);
+		consoleWindow.show();
+
+        @await println("Welcome to Stellation VII.");
+        @await println("Try 'help' if you're feeling lucky.");
+
+		return Noise;
 	}
 
 	@async
@@ -62,6 +75,11 @@ class GameLoop implements IConsole {
 		if (consoleWindow != null) {
 			consoleWindow.println(s);
 		}
+		return Noise;
+	}
+
+	public function onCommandReceived(command: String): Void {
+		commandDispatcher.call(command);
 	}
 }
 

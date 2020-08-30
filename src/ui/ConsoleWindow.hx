@@ -6,7 +6,7 @@ typedef ConsoleCommandCallback = (String) -> Void;
 
 @:tink
 class ConsoleWindow extends AbstractWindow {
-	@:signal public var commandReceived: String;
+	@:signal public var onCommandReceived: String;
 
 	private var linesBox: IUiElement;
 	private var textInput: IUiElement;
@@ -61,8 +61,7 @@ class ConsoleWindow extends AbstractWindow {
 			(it) -> {
 				var value = textInput.getValue();
 				textInput.setValue("");
-				trace(value);
-				_commandReceived.trigger(value);
+				_onCommandReceived.trigger(value);
 			}
 		);
 	}
