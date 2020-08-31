@@ -5,17 +5,17 @@ import utils.Oid;
 import tink.CoreApi;
 import utils.Fault.UNIMPLEMENTED;
 
-class InMemorySetProperty implements SetProperty {
+class InMemoryOidSet implements OidSet {
 	private var data: Map<Oid, Noise> = [];
 
 	public function new() {}
 
-	public function add(oid: Oid): SetProperty {
+	public function add(oid: Oid): OidSet {
 		data[oid] = Noise;
 		return this;
 	}
 
-	public function clear(): SetProperty {
+	public function clear(): OidSet {
 		data.clear();
 		return this;
 	}
@@ -24,7 +24,7 @@ class InMemorySetProperty implements SetProperty {
 		return data.exists(oid);
 	}
 
-	public function remove(oid: Oid): SetProperty {
+	public function remove(oid: Oid): OidSet {
 		data.remove(oid);
 		return this;
 	}
@@ -131,13 +131,13 @@ class InMemoryDatastore implements IDatastore {
 		values[wrap(oid, name)] = value;
 	}
 
-	public function getSetProperty(oid: Oid, name: String): SetProperty {
+	public function getSetProperty(oid: Oid, name: String): OidSet {
 		var value = values[wrap(oid, name)];
 		if (value == null) {
-			value = new InMemorySetProperty();
+			value = new InMemoryOidSet();
 			values[wrap(oid, name)] = value;
 		}
-		return cast(value, InMemorySetProperty);
+		return cast(value, InMemoryOidSet);
 	}
 
 	public function createSyncSession(): Int throw UNIMPLEMENTED;

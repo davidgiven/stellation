@@ -3,12 +3,11 @@ package client;
 import commands.CommandDispatcher;
 import haxe.Timer;
 import interfaces.IConsole;
+import interfaces.IDatastore;
 import interfaces.ITime;
 import interfaces.IUi;
-import interfaces.IDatastore;
 import js.Browser;
 import runtime.js.JsUi;
-import runtime.shared.InMemoryDatastore;
 import runtime.shared.Time;
 import tink.CoreApi;
 import ui.ConsoleWindow;
@@ -26,7 +25,6 @@ class Main {
 		bind(Random, new Random());
         bind(IUi, new JsUi());
         bind(Cookies, new Cookies());
-        bind(IDatastore, new InMemoryDatastore());
 
         var gameloop = new GameLoop();
         bind(GameLoop, gameloop);

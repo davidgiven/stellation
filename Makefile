@@ -37,5 +37,6 @@ serve:: haxe
 	haxelib install mconsole
 	haxelib install tink_await
 	haxelib install tink_lang
+	haxelib install tink_macro
 	haxelib install utest
 

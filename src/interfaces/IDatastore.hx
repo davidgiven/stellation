@@ -3,10 +3,10 @@ package interfaces;
 import utils.Oid;
 import tink.CoreApi;
 
-interface SetProperty {
-    public function add(item: Oid): SetProperty;
-    public function remove(item: Oid): SetProperty;
-    public function clear(): SetProperty;
+interface OidSet {
+    public function add(item: Oid): OidSet;
+    public function remove(item: Oid): OidSet;
+    public function clear(): OidSet;
     public function exists(item: Oid): Bool;
     public function getAll(): Iterable<Oid>;
 	public function getOne(): Null<Oid>;
@@ -37,7 +37,7 @@ interface IDatastore {
     public function setStringProperty(oid: Oid, name: String, value: String): Void;
     public function getStringProperty(oid: Oid, name: String): String;
 
-    public function getSetProperty(oid: Oid, name: String): SetProperty;
+    public function getSetProperty(oid: Oid, name: String): OidSet;
 
     public function createSyncSession(): Int;
     public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>>;

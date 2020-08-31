@@ -13,6 +13,7 @@ class Tests {
 			new utils.InjectomaticTest(),
 			new utils.MessageTest(),
 			new runtime.shared.InMemoryDatastoreTest(),
+            new model.InMemoryObjectsTest(),
 		]);
 //
 //		var r = new TestRunner();

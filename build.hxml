@@ -2,6 +2,7 @@
 --library mconsole
 --library tink_await
 --library tink_lang
+--library tink_macro
 --each
 
 --cpp .obj/server-temp

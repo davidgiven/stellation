@@ -2,6 +2,10 @@ package client;
 
 import commands.CommandDispatcher;
 import interfaces.IConsole;
+import runtime.shared.InMemoryDatastore;
+import utils.Injectomatic.bind;
+import interfaces.IDatastore;
+import model.ObjectLoader;
 import tink.CoreApi;
 import ui.ConsoleWindow;
 import ui.LoginForm;
@@ -59,6 +63,12 @@ class GameLoop implements IConsole {
 
 	@async
 	public function doGame(): Noise {
+		var datastore = new InMemoryDatastore();
+		datastore.initialiseDatabase();
+		bind(IDatastore, datastore);
+
+        bind(ObjectLoader, new ObjectLoader());
+
 		consoleWindow = new ConsoleWindow();
 		consoleWindow.create();
 		consoleWindow.onCommandReceived.handle(onCommandReceived);
