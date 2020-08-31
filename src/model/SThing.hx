@@ -20,16 +20,9 @@ class SThing implements HasProperties {
 	
 	@:sproperty public var owner: Null<SThing>;
 	@:sproperty public var location: Null<SThing>;
-	@:sproperty public var contents: OidSet;
+	@:sproperty public var contents: ObjectSet<SThing>;
 	@:sproperty public var name: String;
-//    var kind by KIND
-//    var owner by OWNER
-//    var location by LOCATION
-//    val contents by CONTENTS
-//    var name by NAME
 
 	public function new() {}
-
-	
 }
 

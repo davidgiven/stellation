@@ -40,6 +40,13 @@ class AbstractDatastoreTest extends TestCase {
 		Assert.same(5, i);
     }
 
+    function testSetGetFloat() {
+        var o = datastore.createObject();
+        datastore.setFloatProperty(o, "real", 1.2);
+        var i = datastore.getFloatProperty(o, "real");
+		Assert.same(1.2, i);
+    }
+
     function testSetGetString() {
         var o = datastore.createObject();
         datastore.setStringProperty(o, "string", "fnord");

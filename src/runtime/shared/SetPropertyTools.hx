@@ -16,8 +16,9 @@ class SetPropertyTools {
         addAll(set, oids);
     }
 
-	public static function toMap(oids: Iterable<Oid>) {
-		var m: Map<Oid, Noise> = [];
+    @:generic
+	public static function toMap<T>(oids: Iterable<T>) {
+		var m: Map<T, Noise> = [];
 		for (item in oids) {
 			m[item] = true;
 		}

@@ -6,14 +6,21 @@ import utils.Oid;
 import utils.Fault;
 import utils.FaultDomain;
 using utils.ArrayTools;
+using Lambda;
 
 class ObjectLoader {
-    private static final CLASSES: Map<String, Class<SThing>> = [
-        "SThing" => SThing,
-        "SUniverse" => SUniverse,
-    ];
+    private static final CLASSES = registerClasses([
+        SFactory,
+        SGalaxy,
+        SModule,
+        SStar,
+        SThing,
+        SUniverse,
+    ]);
 
 	public var datastore = inject(IDatastore);
+
+    public var objectCache: Map<Oid, SThing> = [];
 
 	public function new() {
 	}
@@ -39,8 +46,19 @@ class ObjectLoader {
         throw databaseTypeMismatchException(oid, kind, getSimpleName(klass));
     }
     
-    public function loadObject<T: SThing>(oid: Oid, klass: Class<T>): T {
-        return loadRawObject(oid, klass);
+    public function loadObject<T: SThing>(oid: Null<Oid>, klass: Class<T>): Null<T> {
+        if (oid == null) {
+            return null;
+        }
+        var instance = objectCache[oid];
+        if (instance == null) {
+            instance = loadRawObject(oid, klass);
+            objectCache[oid] = instance;
+        }
+        if (Std.isOfType(instance, klass)) {
+            return Std.downcast(instance, klass);
+        }
+        throw databaseTypeMismatchException(oid, getSimpleName(instance.kind), getSimpleName(klass));
     }
 
     public function createObject<T: SThing>(klass: Class<T>): T {
@@ -63,6 +81,10 @@ class ObjectLoader {
 
     private static function getSimpleName<T: SThing>(klass: Class<T>): String {
         return Type.getClassName(klass).split(".").last();
+    }
+
+    private static function registerClasses(klasses: Iterable<Class<SThing>>): Map<String, Class<SThing>> {
+        return [for (klass in klasses) getSimpleName(klass) => klass];
     }
 }
 
