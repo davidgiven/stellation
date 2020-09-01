@@ -36,7 +36,8 @@ class InMemoryOidSet implements OidSet {
 	}
 
 	public function getOne(): Null<Oid> {
-		return data.keys().next();
+		var i = data.keys();
+		return i.hasNext() ? i.next() : null;
 	}
 }
 
