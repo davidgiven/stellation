@@ -5,18 +5,21 @@
 --library tink_macro
 --each
 
+--cpp .obj/tests-temp
+--class-path tests
+--library utest
+--main Tests
+--next
+
 --cpp .obj/server-temp
+--dce full
 --main server.Main
 --debug
 --next
 
 --js .obj/client/main.js
+--dce full
 --main client.Main
 --debug
 --next
-
---class-path tests
---library utest
---interp 
---main Tests
 
