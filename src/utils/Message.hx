@@ -3,6 +3,7 @@ package utils;
 import utils.Exception.throwInvalidCodecDataException;
 using utils.NullTools;
 using StringTools;
+using Math;
 
 class Message {
 	public static var LENGTH = "_count";
@@ -79,9 +80,13 @@ class Message {
 	public function exists<T>(key: T) { return _map.exists(Std.string(key)); }
 
 	public function getInt<T>(key: T): Null<Int>       return Std.parseInt(_map.get(Std.string(key)));
-	public function getFloat<T>(key: T): Null<Float>   return Std.parseFloat(_map.get(Std.string(key)));
 	public function getString<T>(key: T): Null<String> return _map.get(Std.string(key));
 	public function getBool<T>(key: T): Null<Bool>     return _map.get(Std.string(key)).then(s -> (s == "1"));
+
+	public function getFloat<T>(key: T): Null<Float> {
+        var f = Std.parseFloat(_map.get(Std.string(key)));
+        return f.isNaN() ? null : f;
+    }
 
 	public function setInt<T>(key: T, value: Int): Message       { _map.set(Std.string(key), Std.string(value)); return this; }
 	public function setFloat<T>(key: T, value: Float): Message   { _map.set(Std.string(key), Std.string(value)); return this; }
