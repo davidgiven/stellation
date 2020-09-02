@@ -26,7 +26,7 @@ class ArrayTools {
     @:generic
     public static function map<T1, T2>(iterator: Iterator<T1>, callback: (T1) -> T2): Iterator<T2> {
         return {
-            hasNext: () -> iterator.hasNext(),
+            hasNext: iterator.hasNext,
             next: () -> callback(iterator.next())
         }
     }

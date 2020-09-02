@@ -24,5 +24,14 @@ class SThing implements HasProperties {
 	@:sproperty public var name: String;
 
 	public function new() {}
+
+	public function toString(): String {
+		var n = name;
+		if (n == null) {
+			return '#$oid';
+		} else {
+			return '#$oid("$n")';
+		}
+	}
 }
 

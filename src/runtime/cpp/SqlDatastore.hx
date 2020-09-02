@@ -61,7 +61,7 @@ class SqlOidSet implements OidSet {
         return db.sqlStatement('SELECT value FROM prop_$name WHERE oid = ?')
                 .bindInt(1, oid)
                 .executeQuery()
-                .map((it) -> it.get("value").toOid())
+                .map(it -> it.get("value").toOid())
                 .toArray();
     }
 
@@ -235,10 +235,8 @@ class SqlDatastore implements IDatastore {
     }
 
     public function getStringProperty(oid: Oid, name: String): String {
-        return getStatement(oid, name)
-                .executeSimpleQuery()
-                .get("value")
-                .toString();
+        var results = getStatement(oid, name).executeSimpleQuery();
+        return (results == null) ? null : results.get("value").toString();
     }
 
     public function getSetProperty(oid: Oid, name: String): OidSet {

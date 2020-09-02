@@ -16,6 +16,7 @@ class Tests {
 			new runtime.shared.InMemoryDatastoreTest(),
 			new runtime.shared.SqlDatastoreTest(),
             new model.InMemoryObjectsTest(),
+            new model.SqlObjectsTest(),
 		]);
 	}
 		

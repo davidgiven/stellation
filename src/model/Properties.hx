@@ -175,7 +175,7 @@ class SetProperty<T: SThing> extends AbstractProperty {
     }
 
     public override function createProperty(datastore: IDatastore): Void {
-        datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", false);
+        datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", true);
     }
 }
 
