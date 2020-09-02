@@ -78,6 +78,15 @@ class SqlDatastore implements IDatastore {
 
     public function new(filename: String) {
         db = Sqlite.open(filename);
+        db.executeSql('PRAGMA encoding = "UTF-8"');
+        db.executeSql('PRAGMA synchronous = OFF');
+        db.executeSql('PRAGMA foreign_keys = ON');
+        db.executeSql('PRAGMA temp_store = MEMORY');
+    }
+
+    public function close(): Void {
+        db.close();
+        db = null;
     }
 
     public function initialiseDatabase(): Void {
@@ -122,8 +131,6 @@ class SqlDatastore implements IDatastore {
                 '
                 CREATE INDEX IF NOT EXISTS properties_by_oid ON properties (oid)
             ');
-
-        Properties.createProperties(this);
     }
 
     public function createProperty(name: String, sqlType: String, isAggregate: Bool): Void {
@@ -249,6 +256,17 @@ class SqlDatastore implements IDatastore {
     public function createSyncSession(): Int throw Fault.UNIMPLEMENTED;
     public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>> throw Fault.UNIMPLEMENTED;
     public function propertySeenBy(oid: Oid, name: String, session: Int): Void throw Fault.UNIMPLEMENTED;
+
+	public function withTransaction(callback: () -> Void): Void {
+        db.executeSql("BEGIN");
+        try {
+            callback();
+            db.executeSql("COMMIT");
+        } catch (f) {
+            db.executeSql("ROLLBACK");
+            throw f;
+        }
+    }
 
     public function getHierarchy(root: Oid, containment: String): Map<Oid, Noise> {
         var set: Map<Oid, Noise> = [root => Noise];

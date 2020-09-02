@@ -1,13 +1,23 @@
 package server;
 
 import interfaces.IDatastore;
-import runtime.shared.InMemoryDatastore;
 import model.ObjectLoader;
+import runtime.cpp.SqlDatastore;
+import utils.Flags;
 import utils.Injectomatic.bind;
 import utils.Oid;
+import utils.GetOpt.getopt;
 
-class CliHandler {
-    public function new() {}
+class CliHandler extends AbstractHandler {
+    private static var databaseFile: String = null;
+
+    private static final flags = new Flags()
+        .addString("--db", f -> databaseFile = f)
+    ;
+
+    public function new() {
+        super();
+    }
 
     private function help(arg: String): Void {
         Sys.println("Stellation7 server");
@@ -18,7 +28,20 @@ class CliHandler {
     }
 
     public function main(argv: Array<String>) {
-        help("");
+        var remaining = getopt(argv, flags);
+
+        if (databaseFile == null) {
+            fatalError("you must supply a database filename");
+        }
+
+        withServer(databaseFile, () -> {
+            var universe = findOrCreateUniverse();
+        });
+    }
+
+    public static function fatalError(message: String) {
+        Sys.println(message);
+        Sys.exit(1);
     }
 }
 

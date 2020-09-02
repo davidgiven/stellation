@@ -145,6 +145,10 @@ class InMemoryDatastore implements IDatastore {
 	public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>> throw UNIMPLEMENTED;
 	public function propertySeenBy(oid: Oid, name: String, session: Int): Void throw UNIMPLEMENTED;
 
+	public function withTransaction(callback: () -> Void): Void {
+		callback();
+	}
+
 	public function getHierarchy(root: Oid, containment: String): Map<Oid, Noise> {
         var set: Map<Oid, Noise> = [root => Noise];
         for (child in getSetProperty(root, containment).getAll()) {

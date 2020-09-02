@@ -14,6 +14,7 @@ class AbstractObjectsTest extends TestCase {
 	@:calc var objectLoader = inject(ObjectLoader);
 
     function setup() {
+        objectLoader.initialiseProperties();
     }
 
     function testObjectCreation() {

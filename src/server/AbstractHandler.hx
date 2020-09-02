@@ -1,7 +1,55 @@
 package server;
 
-class AbstractHandler {
+import interfaces.IClock;
+import interfaces.IDatastore;
+import interfaces.ITime;
+import model.ObjectLoader;
+import model.SUniverse;
+import runtime.cpp.SqlDatastore;
+import runtime.shared.ServerClock;
+import runtime.shared.Time;
+import utils.Fault;
+import utils.Injectomatic.bind;
+import utils.Injectomatic.inject;
 
+@:tink
+class AbstractHandler {
+    @:lazy var datastore = inject(IDatastore);
+    @:lazy var objectLoader = inject(ObjectLoader);
+
+    public function findUniverse(): SUniverse {
+        return objectLoader.loadObject(1, SUniverse);
+    }
+
+    public function findOrCreateUniverse(): SUniverse {
+        try {
+            return findUniverse();
+        } catch (f: Fault) {
+            return objectLoader.createUniverse();
+        }
+    }
+
+    public function withServer(filename: String, callback: () -> Void): Void {
+		bind(IClock, new ServerClock());
+		bind(ITime, new Time());
+
+        var datastore = new SqlDatastore(filename);
+        bind(IDatastore, datastore);
+        bind(ObjectLoader, new ObjectLoader());
+
+        datastore.withTransaction(() -> {
+            datastore.initialiseDatabase();
+            objectLoader.initialiseProperties();
+        });
+
+        try {
+            callback();
+            datastore.close();
+        } catch (f) {
+            datastore.close();
+            throw f;
+        }
+    }
 //fun withServer(dbfile: String, callback: () -> Unit) {
 //    val database by injection<IDatabase>()
 //    val datastore by injection<IDatastore>()
@@ -23,6 +71,6 @@ class AbstractHandler {
 //        database.closeDatabase()
 //    }
 //}
-//
+
 }
 

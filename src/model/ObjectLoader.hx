@@ -5,10 +5,14 @@ import utils.Injectomatic.inject;
 import utils.Oid;
 import utils.Fault;
 import utils.FaultDomain;
+import model.Properties;
 using utils.ArrayTools;
 using Lambda;
+using Type;
 
 class ObjectLoader {
+    private static final KIND = Properties.KIND.name;
+
     private static final CLASSES = registerClasses([
         SFactory,
         SGalaxy,
@@ -25,12 +29,21 @@ class ObjectLoader {
 	public function new() {
 	}
 
+    public function initialiseProperties(): Void {
+        for (field in Properties.getClassFields()) {
+            var o = Reflect.field(Properties, field);
+            if (Std.is(o, AbstractProperty)) {
+                cast(o, AbstractProperty).createProperty(datastore);
+            }
+        }
+    }
+
     public function loadRawObject<T: SThing>(oid: Oid, klass: Class<T>): T {
         if (!datastore.doesObjectExist(oid)) {
             throw objectNotVisibleException(oid);
         }
 
-        var kind = datastore.getStringProperty(oid, "kind");
+        var kind = datastore.getStringProperty(oid, KIND);
         var dbklass = CLASSES[kind];
         if (dbklass == null) {
             throw databaseBadKindException(oid, kind);
@@ -63,7 +76,7 @@ class ObjectLoader {
 
     public function createObject<T: SThing>(klass: Class<T>): T {
         var oid = datastore.createObject();
-        datastore.setStringProperty(oid, "kind", getSimpleName(klass));
+        datastore.setStringProperty(oid, KIND, getSimpleName(klass));
         return loadObject(oid, klass);
     }
 
@@ -85,6 +98,16 @@ class ObjectLoader {
 
     private static function registerClasses(klasses: Iterable<Class<SThing>>): Map<String, Class<SThing>> {
         return [for (klass in klasses) getSimpleName(klass) => klass];
+    }
+
+    public function createUniverse(): SUniverse {
+        if (datastore.doesObjectExist(1)) {
+            throw new Fault(INTERNAL).withDetail("cowardly refusing to destroy existing universe");
+        }
+
+        datastore.createSpecificObject(1);
+        datastore.setStringProperty(1, KIND, "SUniverse");
+        return loadObject(1, SUniverse);
     }
 }
 

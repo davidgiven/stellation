@@ -4,10 +4,9 @@ import interfaces.IDatastore;
 import utils.Fault;
 import utils.Oid;
 import utils.Injectomatic.inject;
-using Type;
 
 class AbstractProperty {
-    var name: String;
+    public var name: String;
 
     public function new(name: String) {
         this.name = name;
@@ -180,21 +179,12 @@ class SetProperty<T: SThing> extends AbstractProperty {
 }
 
 class Properties {
+    public static var KIND = new StringProperty("kind");
     public static var BRIGHTNESS = new FloatProperty("brightness");
     public static var CONTENTS = new SetProperty("contents", SThing);
     public static var GALAXY = new ObjectProperty("galaxy", SGalaxy);
-    public static var KIND = new StringProperty("kind");
     public static var LOCATION = new ObjectProperty("location", SThing);
     public static var NAME = new StringProperty("name");
     public static var OWNER = new ObjectProperty("owner", SThing);
-
-    public static function createProperties(datastore: IDatastore): Void {
-        for (field in Properties.getClassFields()) {
-            var o = Reflect.field(Properties, field);
-            if (Std.is(o, AbstractProperty)) {
-                cast(o, AbstractProperty).createProperty(datastore);
-            }
-        }
-    }
 }
 
