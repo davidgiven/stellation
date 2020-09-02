@@ -115,7 +115,6 @@ class SqliteStatement extends Finalizable {
                         return null;
 
                     case Sqlite.ROW:
-                        trace("row", status);
                         var data = new Map<String, SqliteValue>();
                         for (i in 0...columnCount) {
                             data[columnNames[i]] = new SqliteValue(

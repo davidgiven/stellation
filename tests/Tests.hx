@@ -14,7 +14,7 @@ class Tests {
 			new utils.MessageTest(),
             new runtime.cpp.SqliteTest(),
 			new runtime.shared.InMemoryDatastoreTest(),
-//			new runtime.shared.SqlDatastoreTest(),
+			new runtime.shared.SqlDatastoreTest(),
             new model.InMemoryObjectsTest(),
 		]);
 	}

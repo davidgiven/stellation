@@ -4,12 +4,36 @@ import interfaces.IDatastore;
 import utils.Fault;
 import utils.Oid;
 import utils.Injectomatic.inject;
+using Type;
 
 class AbstractProperty {
     var name: String;
 
     public function new(name: String) {
         this.name = name;
+    }
+
+    public function createProperty(datastore: IDatastore): Void {
+        throw Fault.UNIMPLEMENTED;
+    }
+}
+
+class IntProperty extends AbstractProperty {
+    public function new(name: String) {
+        super(name);
+    }
+
+    public function get(thing: SThing): Int {
+        return thing.datastore.getIntProperty(thing.oid, name);
+    }
+
+    public function set(thing: SThing, value: Int): Int {
+        thing.datastore.setIntProperty(thing.oid, name, value);
+        return value;
+    }
+
+    public override function createProperty(datastore: IDatastore): Void {
+        datastore.createProperty(name, "INTEGER", false);
     }
 }
 
@@ -26,6 +50,10 @@ class FloatProperty extends AbstractProperty {
         thing.datastore.setFloatProperty(thing.oid, name, value);
         return value;
     }
+
+    public override function createProperty(datastore: IDatastore): Void {
+        datastore.createProperty(name, "REAL", false);
+    }
 }
 
 class StringProperty extends AbstractProperty {
@@ -40,6 +68,10 @@ class StringProperty extends AbstractProperty {
     public function set(thing: SThing, value: String): String {
         thing.datastore.setStringProperty(thing.oid, name, value);
         return value;
+    }
+
+    public override function createProperty(datastore: IDatastore): Void {
+        datastore.createProperty(name, "TEXT", false);
     }
 }
 
@@ -63,6 +95,10 @@ class ObjectProperty<T: SThing> extends AbstractProperty {
             thing.datastore.setOidProperty(thing.oid, name, value.oid);
         }
         return value;
+    }
+
+    public override function createProperty(datastore: IDatastore): Void {
+        datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", false);
     }
 }
 
@@ -137,6 +173,10 @@ class SetProperty<T: SThing> extends AbstractProperty {
     public function set(thing: SThing, value: ObjectSet<T>): ObjectSet<T> {
         throw Fault.UNIMPLEMENTED;
     }
+
+    public override function createProperty(datastore: IDatastore): Void {
+        datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", false);
+    }
 }
 
 class Properties {
@@ -147,5 +187,14 @@ class Properties {
     public static var LOCATION = new ObjectProperty("location", SThing);
     public static var NAME = new StringProperty("name");
     public static var OWNER = new ObjectProperty("owner", SThing);
+
+    public static function createProperties(datastore: IDatastore): Void {
+        for (field in Properties.getClassFields()) {
+            var o = Reflect.field(Properties, field);
+            if (Std.is(o, AbstractProperty)) {
+                cast(o, AbstractProperty).createProperty(datastore);
+            }
+        }
+    }
 }
 

@@ -5,8 +5,7 @@ import utils.Injectomatic.bind;
 import interfaces.IClock;
 import interfaces.IDatastore;
 import runtime.shared.ServerClock;
-import runtime.shared.InMemoryDatastore;
-import runtime.cpp.Database;
+import runtime.cpp.SqlDatastore;
 import sys.db.Sqlite;
 
 class SqlDatastoreTest extends AbstractDatastoreTest {
@@ -14,13 +13,9 @@ class SqlDatastoreTest extends AbstractDatastoreTest {
 		Injectomatic.resetBindingsForTest();
 		bind(IClock, new ServerClock());
 
-        var database = new Database();
-        bind(Database, database);
-//		var datastore = new SqlDatastore();
-//		bind(IDatastore, datastore);
-
-        database.openDatabase(":memory:");
-//        datastore.initialiseDatabase();
+		var datastore = new SqlDatastore(":memory:");
+        datastore.initialiseDatabase();
+		bind(IDatastore, datastore);
 
 		super.setup();
 	}

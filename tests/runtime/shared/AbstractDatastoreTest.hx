@@ -49,8 +49,8 @@ class AbstractDatastoreTest extends TestCase {
 
     function testSetGetString() {
         var o = datastore.createObject();
-        datastore.setStringProperty(o, "string", "fnord");
-        var i = datastore.getStringProperty(o, "string");
+        datastore.setStringProperty(o, "text", "fnord");
+        var i = datastore.getStringProperty(o, "text");
 		Assert.same("fnord", i);
     }
 
