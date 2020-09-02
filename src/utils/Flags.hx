@@ -91,19 +91,19 @@ class StringFlag extends VarFlag<String> {
 
 class Flags {
 	public static function throwDuplicateFlagException(arg: String) {
-		throw new Fault(SYNTAX).withDetail("flag '$arg' is already defined");
+		throw new Fault(SYNTAX).withDetail('flag \'$arg\' is already defined');
 	}
 
 	public static function throwMissingFlagException(arg: String) {
-		throw new Fault(SYNTAX).withDetail("parameter for flag '$arg' is missing (try --help)");
+		throw new Fault(SYNTAX).withDetail('parameter for flag \'$arg\' is missing (try --help)');
 	}
 
 	public static function throwUnrecognisedFlagException(arg: String) {
-		throw new Fault(SYNTAX).withDetail("unrecognised flag '$arg' (try --help)");
+		throw new Fault(SYNTAX).withDetail('unrecognised flag \'$arg\' (try --help)');
 	}
 
 	public static function throwInvalidFlagValueException(arg: String) {
-		throw new Fault(SYNTAX).withDetail("invalid value for flag '$arg' (try --help)");
+		throw new Fault(SYNTAX).withDetail('invalid value for flag \'$arg\' (try --help)');
 	}
 
     public var map: Map<String, AbstractFlag> = [];
