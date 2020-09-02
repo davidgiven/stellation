@@ -12,13 +12,11 @@ class Tests {
 			new utils.GetOptTest(),
 			new utils.InjectomaticTest(),
 			new utils.MessageTest(),
+            new runtime.cpp.SqliteTest(),
 			new runtime.shared.InMemoryDatastoreTest(),
+//			new runtime.shared.SqlDatastoreTest(),
             new model.InMemoryObjectsTest(),
 		]);
-//
-//		var r = new TestRunner();
-//		r.add(new commands.CommandDispatcherTest());
-//		r.run();
 	}
 		
 	public static function exceptionOf(fn: Void->Void): Exception {

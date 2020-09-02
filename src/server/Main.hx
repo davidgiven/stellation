@@ -2,36 +2,29 @@ package server;
 import sys.db.Sqlite;
 import interfaces.IClock;
 import interfaces.ITime;
-import runtime.cpp.CppRuntime.initCppRuntime;
+import interfaces.IDatastore;
 import runtime.shared.ServerClock;
 import runtime.shared.Time;
+//import runtime.shared.SqlDatastore;
+import model.ObjectLoader;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
-import utils.Types.Oid;
+
 class Main {
 	static public function main(): Void {
-		initCppRuntime();
-
 		bind(IClock, new ServerClock());
 		bind(ITime, new Time());
 
-		Sys.println("Hello, world!");
+        //bind(IDatastore, new SqlDatastore());
+        bind(ObjectLoader, new ObjectLoader());
+
 		var db = Sqlite.open("fnord.sqlite");
 
 		if (Sys.getEnv("GATEWAY_INTERFACE") != null) {
 			Sys.println("cgi invocation");
 		} else {
-			Sys.println("command line invocation");
+            new CliHandler().main(Sys.args());
 		}
-
-		Console.start();
-		Console.info("info");
-
-		bind(String, "fnord");
-
-		var a: Oid = 7;
-		var s = inject(String);
-		Console.info('${s}');
 	}
 }
 

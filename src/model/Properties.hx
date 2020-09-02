@@ -112,7 +112,7 @@ class ObjectSet<T: SThing> {
         return load(underlying.getOne());
     }
 
-    private function load(oid: Oid): Null<T> {
+    private function load(oid: Null<Oid>): Null<T> {
         if (oid == null) {
             return null;
         } else {

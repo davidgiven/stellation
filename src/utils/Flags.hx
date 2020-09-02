@@ -40,7 +40,7 @@ class VarFlag<T> extends AbstractFlag {
 	}
 
 	function translate(input: String): T {
-		return null;
+		throw Fault.UNIMPLEMENTED;
 	}
 
     public override function set(input: String): Bool {

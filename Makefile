@@ -10,7 +10,7 @@ CPP_LIBS =
 SRCS = \
 	$(shell find src tests -name "*.hx")
 
-all: haxe $(OBJ)/tests
+all: haxe
 
 clean:
 	rm -rf $(OBJ) .haxelib
@@ -23,10 +23,6 @@ bin/cgi-bin/stellation.cgi: $(OBJ)/build
 
 $(OBJ)/build: build.hxml .haxelib $(SRCS)
 	haxe build.hxml
-	touch $@
-
-$(OBJ)/tests: $(OBJ)/build
-	$(OBJ)/tests-temp/Tests
 	touch $@
 
 haxe: bin/cgi-bin/stellation.cgi $(CLIENT)

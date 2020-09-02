@@ -9,6 +9,8 @@
 --class-path tests
 --library utest
 --main Tests
+--debug
+--cmd .obj/tests-temp/Tests-debug
 --next
 
 --cpp .obj/server-temp
