@@ -179,6 +179,7 @@ class SetProperty<T: SThing> extends AbstractProperty {
 }
 
 class Properties {
+	public static var PLAYERS = new SetProperty("players", SPlayer);
 	public static var X = new FloatProperty("x");
 	public static var Y = new FloatProperty("y");
     public static var BRIGHTNESS = new FloatProperty("brightness");

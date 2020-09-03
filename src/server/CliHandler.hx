@@ -5,12 +5,14 @@ import model.ObjectLoader;
 import model.SGalaxy;
 import model.SUniverse;
 import runtime.cpp.SqlDatastore;
+import commands.CommandDispatcher;
 import utils.Flags;
 import utils.GetOpt.getopt;
 import utils.Injectomatic.bind;
 import utils.Oid;
 import utils.Fault;
 
+@async
 class CliHandler extends AbstractHandler {
     private static var databaseFile: String = null;
 
@@ -30,6 +32,7 @@ class CliHandler extends AbstractHandler {
         Sys.exit(0);
     }
 
+    @await
     public function main(argv: Array<String>) {
         var remaining = getopt(argv, flags);
 
@@ -37,8 +40,16 @@ class CliHandler extends AbstractHandler {
             fatalError("you must supply a database filename");
         }
 
+        var commandDispatcher = new CommandDispatcher();
+        bind(CommandDispatcher, commandDispatcher);
+
         withServer(databaseFile, () -> {
             var universe = datastore.withTransaction(() -> findOrCreateUniverse());
+
+            var commandShell = 
+            datastore.withTransaction(() -> {
+                @await commandDispatcher.callArgv(remaining);
+            });
         });
     }
 
@@ -47,9 +58,14 @@ class CliHandler extends AbstractHandler {
             return findUniverse();
         } catch (f: Fault) {
             var universe = objectLoader.createUniverse();
-			universe.galaxy = objectLoader.createObject(SGalaxy);
-			universe.galaxy.initialiseGalaxy();
-			return universe;
+            var god = objectLoader.createGod();
+
+            universe.galaxy = objectLoader.createObject(SGalaxy);
+            universe.galaxy.initialiseGalaxy();
+
+            god.name = "God";
+
+            return universe;
         }
     }
 

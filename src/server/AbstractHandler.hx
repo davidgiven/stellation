@@ -3,8 +3,10 @@ package server;
 import interfaces.IClock;
 import interfaces.IDatastore;
 import interfaces.ITime;
+import interfaces.IConsole;
 import model.ObjectLoader;
 import model.SUniverse;
+import runtime.cpp.Console;
 import runtime.cpp.SqlDatastore;
 import runtime.shared.ServerClock;
 import runtime.shared.Time;
@@ -26,6 +28,7 @@ class AbstractHandler {
 		bind(IClock, new ServerClock());
 		bind(ITime, new Time());
 		bind(Random, new Random());
+		bind(IConsole, new Console());
 
         var datastore = new SqlDatastore(filename);
         bind(IDatastore, datastore);

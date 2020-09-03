@@ -11,9 +11,13 @@ using Lambda;
 using Type;
 
 class ObjectLoader {
+	public static final UNIVERSE_OID = 1;
+	public static final GOD_OID = 2;
+
     private static final KIND = Properties.KIND.name;
 
     private static final CLASSES = registerClasses([
+		SPlayer,
         SFactory,
         SGalaxy,
         SModule,
@@ -101,13 +105,23 @@ class ObjectLoader {
     }
 
     public function createUniverse(): SUniverse {
-        if (datastore.doesObjectExist(1)) {
+        if (datastore.doesObjectExist(UNIVERSE_OID)) {
             throw new Fault(INTERNAL).withDetail("cowardly refusing to destroy existing universe");
         }
 
-        datastore.createSpecificObject(1);
-        datastore.setStringProperty(1, KIND, "SUniverse");
-        return loadObject(1, SUniverse);
+        datastore.createSpecificObject(UNIVERSE_OID);
+        datastore.setStringProperty(UNIVERSE_OID, KIND, "SUniverse");
+        return loadObject(UNIVERSE_OID, SUniverse);
     }
+
+	public function createGod(): SPlayer {
+		if (datastore.doesObjectExist(GOD_OID)) {
+            throw new Fault(INTERNAL).withDetail("this universe already contains a god");
+        }
+
+		datastore.createSpecificObject(GOD_OID);
+		datastore.setStringProperty(GOD_OID, KIND, "SPlayer");
+		return loadObject(GOD_OID, SPlayer);
+	}
 }
 

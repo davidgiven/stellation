@@ -20,7 +20,6 @@ class Main {
 	static function main() {
 		Console.start();
 
-		bind(CommandDispatcher, new CommandDispatcher());
 		bind(ITime, new Time());
 		bind(Random, new Random());
         bind(IUi, new JsUi());

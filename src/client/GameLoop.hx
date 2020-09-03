@@ -63,6 +63,8 @@ class GameLoop implements IConsole {
 
 	@async
 	public function doGame(): Noise {
+		bind(CommandDispatcher, new CommandDispatcher());
+
 		var datastore = new InMemoryDatastore();
 		datastore.initialiseDatabase();
 		bind(IDatastore, datastore);

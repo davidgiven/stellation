@@ -6,6 +6,7 @@ import interfaces.IConsole;
 import utils.Injectomatic.inject;
 import utils.Argifier.argify;
 import utils.Argifier.unargify;
+import tink.CoreApi;
 
 @:tink
 @async
@@ -35,21 +36,27 @@ class CommandDispatcher {
 		return command;
 	}
 
-	@async public function call(cmdline: String) {
+	@async public function call(cmdline: String): Noise {
 		try {
 			@await console.println('> ${cmdline}');
 			var argv = argify(cmdline);
-			if (argv.length == 0) {
-				return;
-			}
-
-			var command = resolve(argv);
-			@await command.run();
+			callArgv(argv);
         } catch (f: Fault) {
             console.println('Failed: ${f.detail}');
         } catch (e) {
             console.println('Internal error: $e');
         }
+		return Noise;
+	}
+
+	@async public function callArgv(argv: Array<String>): Noise {
+		if (argv.length == 0) {
+			return Noise;
+		}
+
+		var command = resolve(argv);
+		@await command.run();
+		return Noise;
 	}
 
 //    override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
