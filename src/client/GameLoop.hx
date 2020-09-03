@@ -16,7 +16,7 @@ import utils.Injectomatic.inject;
 @await
 class GameLoop implements IConsole {
 	var cookies = inject(Cookies);
-	var commandDispatcher = inject(CommandDispatcher);
+	@:calc var commandDispatcher = inject(CommandDispatcher);
 
 	var consoleWindow: ConsoleWindow = null;
 

@@ -4,19 +4,23 @@ import commands.AbstractCommand;
 import interfaces.IConsole;
 import tink.CoreApi;
 
+typedef Args = Array<String>;
+
 @await
-class EchoCommand extends AbstractLocalCommand {
-	public static var REF: CommandRef = { name: "echo", constructor: () -> new EchoCommand() };
+class EchoCommand extends AbstractLocalCommand<Args, Args> {
+    @:keep public static final NAME = "echo";
+    @:keep public static final DESCRIPTION = "displays a string on the console";
 
-	public function new() {
-		super("displays a string to the console");
-	}
-
-    override function parseRemainingArguments(argv: Array<String>) {
+    @:keep override function parse(argv: Array<String>): Args {
+        return argv;
     }
 
-	@async public override function run() {
-        console.println(argv.slice(1).join(" "));
+    @async override function run(argv: Array<String>, req: Args): Args {
+        return req;
+    }
+
+	public override function render(res: Args): Void {
+        console.println(res.slice(1).join(" "));
 	}
 }
 

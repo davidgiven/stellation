@@ -40,7 +40,7 @@ class GetOpt {
 
 			var flag = flags.map[key];
 			if (flag == null) {
-				Flags.throwUnrecognisedFlagException(key);
+				throw Flags.unrecognisedFlagException(key);
 			}
 			var consumed = flag.set(value);
 			if (consume) {
@@ -48,7 +48,7 @@ class GetOpt {
 					index++;
 				}
 				if (index >= argv.length) {
-					Flags.throwMissingFlagException(key);
+					throw Flags.missingFlagException(key);
 				}
 			}
 			index++;

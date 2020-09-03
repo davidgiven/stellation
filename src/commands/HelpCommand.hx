@@ -3,17 +3,26 @@ package commands;
 import commands.AbstractCommand;
 import interfaces.IConsole;
 import tink.CoreApi;
+import utils.Flags;
 
 @await
-class HelpCommand extends AbstractLocalCommand {
-	public static var REF: CommandRef = { name: "help", constructor: () -> new HelpCommand() };
+class HelpCommand extends AbstractLocalCommand<Noise, Noise> {
+    @:keep public static final NAME = "help";
+    @:keep public static final DESCRIPTION = "displays command line help";
 
-	public function new() {
-		super("displays command line help");
-	}
+    @:keep override function parse(argv: Array<String>): Noise {
+        if (argv.length != 1) {
+            throw Flags.unrecognisedFlagException(argv[1]);
+        }
+        return Noise;
+    }
 
-	@async public override function run() {
-		console.println("Hello, world!");
+    @async override function run(argv: Array<String>, req: Noise): Noise {
+        return Noise;
+    }
+
+	override function render(res: Noise) {
+		console.println("This is not helpful!");
 	}
 }
 

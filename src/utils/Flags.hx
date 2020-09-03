@@ -60,8 +60,7 @@ class BooleanFlag extends VarFlag<Bool> {
 			case "true": return true;
 			case "false": return false;
 		}
-		Flags.throwInvalidFlagValueException(input);
-		return false;
+		throw Flags.invalidFlagValueException(input);
 	}
 }
 
@@ -73,7 +72,7 @@ class IntFlag extends VarFlag<Int> {
 	override function translate(input: String): Int {
 		var i = parseInt(input);
 		if (i == null) {
-			Flags.throwInvalidFlagValueException(input);
+			throw Flags.invalidFlagValueException(input);
 		}
 		return i;
 	}
@@ -90,20 +89,20 @@ class StringFlag extends VarFlag<String> {
 }
 
 class Flags {
-	public static function throwDuplicateFlagException(arg: String) {
-		throw new Fault(SYNTAX).withDetail('flag \'$arg\' is already defined');
+	public static function duplicateFlagException(arg: String): Fault {
+		return new Fault(SYNTAX).withDetail('flag \'$arg\' is already defined');
 	}
 
-	public static function throwMissingFlagException(arg: String) {
-		throw new Fault(SYNTAX).withDetail('parameter for flag \'$arg\' is missing (try --help)');
+	public static function missingFlagException(arg: String): Fault {
+		return new Fault(SYNTAX).withDetail('parameter for flag \'$arg\' is missing (try --help)');
 	}
 
-	public static function throwUnrecognisedFlagException(arg: String) {
-		throw new Fault(SYNTAX).withDetail('unrecognised flag \'$arg\' (try --help)');
+	public static function unrecognisedFlagException(arg: String): Fault {
+		return new Fault(SYNTAX).withDetail('unrecognised parameter \'$arg\' (try --help)');
 	}
 
-	public static function throwInvalidFlagValueException(arg: String) {
-		throw new Fault(SYNTAX).withDetail('invalid value for flag \'$arg\' (try --help)');
+	public static function invalidFlagValueException(arg: String): Fault {
+		return new Fault(SYNTAX).withDetail('invalid value for flag \'$arg\' (try --help)');
 	}
 
     public var map: Map<String, AbstractFlag> = [];
@@ -112,7 +111,7 @@ class Flags {
 
     public function add(flag: AbstractFlag): Flags {
         if (map.exists(flag.name)) {
-            throwDuplicateFlagException(flag.name);
+            throw duplicateFlagException(flag.name);
         }
 		map[flag.name] = flag;
         return this;

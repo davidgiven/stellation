@@ -11,7 +11,6 @@ class Tests {
 			new utils.ArgifierTest(),
 			new utils.GetOptTest(),
 			new utils.InjectomaticTest(),
-			new utils.MessageTest(),
             new runtime.cpp.SqliteTest(),
 			new runtime.shared.InMemoryDatastoreTest(),
 			new runtime.shared.SqlDatastoreTest(),

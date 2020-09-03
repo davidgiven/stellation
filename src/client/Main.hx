@@ -13,7 +13,6 @@ import tink.CoreApi;
 import ui.ConsoleWindow;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
-import utils.Message;
 import utils.Random;
 
 class Main {

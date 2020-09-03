@@ -7,34 +7,45 @@ import utils.Injectomatic.inject;
 import utils.Argifier.argify;
 import utils.Argifier.unargify;
 import tink.CoreApi;
+using Type;
+
+typedef CommandRecord = {
+	name: String,
+	description: String,
+	klass: Class<Any>
+};
 
 @:tink
-@async
+@await
 class CommandDispatcher {
-	private static final COMMANDS = [
-		EchoCommand.REF,
-		HelpCommand.REF,
-		PingCommand.REF,
+	private static final COMMANDS: Array<Dynamic> = [
+		EchoCommand,
+		HelpCommand,
+		PingCommand,
 	];
 
-	public var commands: Map<String, () -> AbstractCommand> = [];
+	public var commands: Map<String, CommandRecord> = [];
 	@:lazy public var console = inject(IConsole);
 
 	public function new() {
 		for (ref in COMMANDS) {
-			commands[ref.name] = ref.constructor;
+			var name = Reflect.field(ref, "NAME");
+			var description = Reflect.field(ref, "DESCRIPTION");
+			commands[name] = {
+				name: name,
+				description: description,
+				klass: cast(ref, Class<Dynamic>)
+			};
 		}
 	}
 
-	public function resolve(argv: Array<String>): AbstractCommand {
+	public function resolve(argv: Array<String>): AbstractCommand<Dynamic, Dynamic> {
 		var name = argv[0];
-		var commandConstructor = commands[name];
-		if (commandConstructor == null) {
+		var record = commands[name];
+		if (record == null) {
 			throw new Fault(SYNTAX).withDetail('command \'${name}\' not found');
 		}
-		var command = commandConstructor();
-		command.parseArguments(argv);
-		return command;
+		return record.klass.createInstance([]);
 	}
 
 	@async public function call(cmdline: String): Noise {
@@ -56,7 +67,9 @@ class CommandDispatcher {
 		}
 
 		var command = resolve(argv);
-		@await command.run();
+		var req = command.parse(argv);
+		var res = @await command.run(argv, req);
+		command.render(res);
 		return Noise;
 	}
 

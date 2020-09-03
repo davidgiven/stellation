@@ -1,5 +1,5 @@
 package commands;
 
-class AbstractLocalCommand extends AbstractCommand {
+class AbstractLocalCommand<Req, Res> extends AbstractCommand<Req, Res> {
 }
 
