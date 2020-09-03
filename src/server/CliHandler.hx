@@ -2,11 +2,14 @@ package server;
 
 import interfaces.IDatastore;
 import model.ObjectLoader;
+import model.SGalaxy;
+import model.SUniverse;
 import runtime.cpp.SqlDatastore;
 import utils.Flags;
+import utils.GetOpt.getopt;
 import utils.Injectomatic.bind;
 import utils.Oid;
-import utils.GetOpt.getopt;
+import utils.Fault;
 
 class CliHandler extends AbstractHandler {
     private static var databaseFile: String = null;
@@ -35,8 +38,19 @@ class CliHandler extends AbstractHandler {
         }
 
         withServer(databaseFile, () -> {
-            var universe = findOrCreateUniverse();
+            var universe = datastore.withTransaction(() -> findOrCreateUniverse());
         });
+    }
+
+    public function findOrCreateUniverse(): SUniverse {
+        try {
+            return findUniverse();
+        } catch (f: Fault) {
+            var universe = objectLoader.createUniverse();
+			universe.galaxy = objectLoader.createObject(SGalaxy);
+			universe.galaxy.initialiseGalaxy();
+			return universe;
+        }
     }
 
     public static function fatalError(message: String) {

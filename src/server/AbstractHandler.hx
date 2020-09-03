@@ -11,6 +11,7 @@ import runtime.shared.Time;
 import utils.Fault;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
+import utils.Random;
 
 @:tink
 class AbstractHandler {
@@ -21,17 +22,10 @@ class AbstractHandler {
         return objectLoader.loadObject(1, SUniverse);
     }
 
-    public function findOrCreateUniverse(): SUniverse {
-        try {
-            return findUniverse();
-        } catch (f: Fault) {
-            return objectLoader.createUniverse();
-        }
-    }
-
     public function withServer(filename: String, callback: () -> Void): Void {
 		bind(IClock, new ServerClock());
 		bind(ITime, new Time());
+		bind(Random, new Random());
 
         var datastore = new SqlDatastore(filename);
         bind(IDatastore, datastore);
@@ -46,6 +40,7 @@ class AbstractHandler {
             callback();
             datastore.close();
         } catch (f) {
+			trace(f);
             datastore.close();
             throw f;
         }

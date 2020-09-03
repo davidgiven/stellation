@@ -21,7 +21,7 @@ class SqliteTest extends TestCase {
     function testOpenClose() {
         var fault: Fault = null;
         try {
-            var db = Sqlite.open(":memory");
+            var db = Sqlite.open(":memory:");
             db.close();
         } catch (f: Fault) {
             fault = f;

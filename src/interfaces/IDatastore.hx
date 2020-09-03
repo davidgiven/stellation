@@ -42,7 +42,7 @@ interface IDatastore {
     public function createSyncSession(): Int;
     public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>>;
     public function propertySeenBy(oid: Oid, name: String, session: Int): Void;
-	public function withTransaction(callback: () -> Void): Void;
+	public function withTransaction<T>(callback: () -> T): T;
 
     public function getHierarchy(root: Oid, containment: String): Map<Oid, Noise>;
 }

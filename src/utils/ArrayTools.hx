@@ -1,5 +1,7 @@
 package utils;
 
+import tink.CoreApi;
+
 class ArrayTools {
 	@:generic
 	public static function getOrElse<T>(array: Array<T>, index: Int, def: T): T {
@@ -30,5 +32,13 @@ class ArrayTools {
             next: () -> callback(iterator.next())
         }
     }
+
+	@:generic
+	public static function zip<T1, T2>(i1: Iterator<T1>, i2: Iterator<T2>): Iterator<Pair<T1, T2>> {
+		return {
+			hasNext: () -> i1.hasNext() || i2.hasNext(),
+			next: () -> new Pair(i1.next(), i2.next())
+		}
+	}
 }
 

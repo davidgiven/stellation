@@ -257,11 +257,12 @@ class SqlDatastore implements IDatastore {
     public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>> throw Fault.UNIMPLEMENTED;
     public function propertySeenBy(oid: Oid, name: String, session: Int): Void throw Fault.UNIMPLEMENTED;
 
-	public function withTransaction(callback: () -> Void): Void {
+	public function withTransaction<T>(callback: () -> T): T {
         db.executeSql("BEGIN");
         try {
-            callback();
+            var result = callback();
             db.executeSql("COMMIT");
+			return result;
         } catch (f) {
             db.executeSql("ROLLBACK");
             throw f;

@@ -10,5 +10,10 @@ class Random {
     public function randomInt(min: Int, max: Int): Int {
 		return Std.int(randomFloat(min, max));
     }
+
+	public function getRandomMember<T>(list: Array<T>): T {
+		var i = randomInt(0, list.length);
+		return list[i];
+	}
 }
 

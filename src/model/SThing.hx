@@ -2,6 +2,7 @@ package model;
 
 import utils.Oid;
 import utils.Injectomatic.inject;
+import utils.Random;
 import interfaces.IDatastore;
 import model.Properties;
 using Lambda;
@@ -17,6 +18,7 @@ class SThing implements HasProperties {
 
 	public var datastore = inject(IDatastore);
 	public var objectLoader = inject(ObjectLoader);
+	@:lazy private var random = inject(Random);
 	
 	@:sproperty public var owner: Null<SThing>;
 	@:sproperty public var location: Null<SThing>;
