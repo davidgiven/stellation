@@ -14,6 +14,7 @@ class CommandDispatcher {
 	private static final COMMANDS = [
 		EchoCommand.REF,
 		HelpCommand.REF,
+		PingCommand.REF,
 	];
 
 	public var commands: Map<String, () -> AbstractCommand> = [];

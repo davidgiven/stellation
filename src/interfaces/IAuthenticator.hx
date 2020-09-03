@@ -2,16 +2,19 @@ package interfaces;
 
 import tink.CoreApi;
 import utils.Oid;
+import model.SPlayer;
 
 @async
 interface IAuthenticator {
     public function initialiseDatabase(): Void;
 
-    public function setAuthenticatedPlayer(oid: Null<Oid>): Void;
+    public function setAuthenticatedPlayer(player: SPlayer): Void;
     @async public function authenticatePlayer(username: String, password: String): Noise;
-    public function getAuthenticatedPlayer(): Null<Oid>;
+    public function getAuthenticatedPlayer(): SPlayer;
 
-    public function setPassword(playerOid: Oid, password: String): Void;
-    public function registerPlayer(username: String, playerOid: Oid): Void;
+    public function setPassword(player: SPlayer, password: String): Void;
+    public function registerPlayer(player: SPlayer): Void;
+
+    public function getPlayers(): Iterable<SPlayer>;
 }
 

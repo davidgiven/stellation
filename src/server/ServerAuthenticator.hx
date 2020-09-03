@@ -16,7 +16,7 @@ class ServerAuthenticator implements IAuthenticator {
     @:lazy private var objectLoader = inject(ObjectLoader);
     @:lazy private var database = inject(SqliteDatabase);
 
-    private var authenticatedPlayer: Null<Oid> = null;
+    private var authenticatedPlayer: SPlayer = null;
 
     public function new() {}
 
@@ -29,23 +29,32 @@ class ServerAuthenticator implements IAuthenticator {
         ');
     }
 
-    public function setAuthenticatedPlayer(oid: Null<Oid>): Void {
-        var player = objectLoader.loadObject(oid, SPlayer);
-        authenticatedPlayer = oid;
+    public function setAuthenticatedPlayer(player: SPlayer): Void {
+        authenticatedPlayer = player;
     }
 
-    public function getAuthenticatedPlayer(): Null<Oid> {
+    public function getAuthenticatedPlayer(): SPlayer {
         return authenticatedPlayer;
     }
 
     @async public function authenticatePlayer(username: String, password: String): Noise throw Fault.UNIMPLEMENTED;
-    public function setPassword(playerOid: Oid, password: String): Void throw Fault.UNIMPLEMENTED;
 
-    public function registerPlayer(username: String, playerOid: Oid): Void {
+    public function setPassword(player: SPlayer, password: String): Void throw Fault.UNIMPLEMENTED;
+
+    public function registerPlayer(player: SPlayer): Void {
         database.sqlStatement('INSERT OR REPLACE INTO players (username, oid) VALUES (?, ?)')
-                .bindString(1, username)
-                .bindOid(2, playerOid)
+                .bindString(1, player.username)
+                .bindOid(2, player.oid)
                 .executeStatement();
+    }
+
+    public function getPlayers(): Iterable<SPlayer> {
+        var results = new Array<SPlayer>();
+        for (result in database.sqlStatement('SELECT oid FROM players').executeQuery()) {
+            var oid = result.get("oid").toOid();
+            results.push(objectLoader.loadObject(oid, SPlayer));
+        }
+        return results;
     }
 }
 

@@ -4,6 +4,7 @@ import interfaces.IDatastore;
 import model.ObjectLoader;
 import model.SGalaxy;
 import model.SUniverse;
+import model.SPlayer;
 import runtime.cpp.SqlDatastore;
 import commands.CommandDispatcher;
 import utils.Flags;
@@ -48,7 +49,9 @@ class CliHandler extends AbstractHandler {
 
         withServer(databaseFile, () -> {
             var universe = datastore.withTransaction(() -> findOrCreateUniverse());
-            authenticator.setAuthenticatedPlayer(userOid);
+
+            var player = objectLoader.loadObject(userOid, SPlayer);
+            authenticator.setAuthenticatedPlayer(player);
 
             var commandShell = 
             datastore.withTransaction(() -> {
@@ -69,7 +72,7 @@ class CliHandler extends AbstractHandler {
 
             god.name = "God";
             god.username = "god";
-            authenticator.registerPlayer(god.username, god.oid);
+            authenticator.registerPlayer(god);
 
             return universe;
         }
