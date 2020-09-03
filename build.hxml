@@ -3,6 +3,7 @@
 --library tink_await
 --library tink_lang
 --library tink_macro
+--library crypto
 --each
 
 --cpp .obj/tests-temp

@@ -1,5 +1,6 @@
 package server;
 
+import interfaces.IAuthenticator;
 import interfaces.IClock;
 import interfaces.IDatastore;
 import interfaces.ITime;
@@ -7,6 +8,7 @@ import interfaces.IConsole;
 import model.ObjectLoader;
 import model.SUniverse;
 import runtime.cpp.Console;
+import runtime.cpp.Sqlite;
 import runtime.cpp.SqlDatastore;
 import runtime.shared.ServerClock;
 import runtime.shared.Time;
@@ -19,6 +21,7 @@ import utils.Random;
 class AbstractHandler {
     @:lazy var datastore = inject(IDatastore);
     @:lazy var objectLoader = inject(ObjectLoader);
+	@:lazy var authenticator = inject(IAuthenticator);
 
     public function findUniverse(): SUniverse {
         return objectLoader.loadObject(1, SUniverse);
@@ -29,22 +32,25 @@ class AbstractHandler {
 		bind(ITime, new Time());
 		bind(Random, new Random());
 		bind(IConsole, new Console());
+		bind(IAuthenticator, new ServerAuthenticator());
 
-        var datastore = new SqlDatastore(filename);
-        bind(IDatastore, datastore);
+		var database = Sqlite.open(filename);
+		bind(SqliteDatabase, database);
+        bind(IDatastore, new SqlDatastore());
         bind(ObjectLoader, new ObjectLoader());
 
         datastore.withTransaction(() -> {
             datastore.initialiseDatabase();
             objectLoader.initialiseProperties();
+			authenticator.initialiseDatabase();
         });
 
         try {
             callback();
-            datastore.close();
+            database.close();
         } catch (f) {
 			trace(f);
-            datastore.close();
+            database.close();
             throw f;
         }
     }

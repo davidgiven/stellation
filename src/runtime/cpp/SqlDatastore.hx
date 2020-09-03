@@ -1,11 +1,12 @@
 package runtime.cpp;
 
-import runtime.cpp.Sqlite;
 import interfaces.IDatastore;
-import utils.Fault;
-import utils.Oid;
-import tink.CoreApi;
 import model.Properties;
+import runtime.cpp.Sqlite;
+import tink.CoreApi;
+import utils.Fault;
+import utils.Injectomatic.inject;
+import utils.Oid;
 using utils.ArrayTools;
 
 class SqlOidSet implements OidSet {
@@ -74,10 +75,9 @@ class SqlOidSet implements OidSet {
 }
 
 class SqlDatastore implements IDatastore {
-    var db: SqliteDatabase;
+	var db = inject(SqliteDatabase);
 
-    public function new(filename: String) {
-        db = Sqlite.open(filename);
+    public function new() {
         db.executeSql('PRAGMA encoding = "UTF-8"');
         db.executeSql('PRAGMA synchronous = OFF');
         db.executeSql('PRAGMA foreign_keys = ON');

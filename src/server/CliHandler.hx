@@ -15,9 +15,11 @@ import utils.Fault;
 @async
 class CliHandler extends AbstractHandler {
     private static var databaseFile: String = null;
+    private static var userOid: Null<Oid> = null;
 
     private static final flags = new Flags()
         .addString("--db", f -> databaseFile = f)
+        .addInt("--user", i -> userOid = i)
     ;
 
     public function new() {
@@ -29,6 +31,7 @@ class CliHandler extends AbstractHandler {
         Sys.println("Syntax: stellation [<option>] <command> [<command args>]");
         Sys.println("  --help            Shows this message");
         Sys.println("  --db=<filename>   Use this filename for the database file");
+        Sys.println("  --user=<oid>      OID of user to act as (otherwise, nobody)");
         Sys.exit(0);
     }
 
@@ -45,6 +48,7 @@ class CliHandler extends AbstractHandler {
 
         withServer(databaseFile, () -> {
             var universe = datastore.withTransaction(() -> findOrCreateUniverse());
+            authenticator.setAuthenticatedPlayer(userOid);
 
             var commandShell = 
             datastore.withTransaction(() -> {
@@ -64,6 +68,8 @@ class CliHandler extends AbstractHandler {
             universe.galaxy.initialiseGalaxy();
 
             god.name = "God";
+            god.username = "god";
+            authenticator.registerPlayer(god.username, god.oid);
 
             return universe;
         }

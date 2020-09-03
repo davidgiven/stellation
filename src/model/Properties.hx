@@ -189,5 +189,6 @@ class Properties {
     public static var LOCATION = new ObjectProperty("location", SThing);
     public static var NAME = new StringProperty("name");
     public static var OWNER = new ObjectProperty("owner", SThing);
+    public static var USERNAME = new StringProperty("name");
 }
 
