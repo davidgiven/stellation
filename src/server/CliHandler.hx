@@ -73,6 +73,7 @@ class CliHandler extends AbstractHandler {
             god.name = "God";
             god.username = "god";
             authenticator.registerPlayer(god);
+            authenticator.setPassword(god, "fnord");
 
             return universe;
         }

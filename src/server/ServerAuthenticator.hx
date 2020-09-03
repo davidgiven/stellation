@@ -24,6 +24,7 @@ class ServerAuthenticator implements IAuthenticator {
         database.executeSql('
             CREATE TABLE IF NOT EXISTS players (
                 username TEXT PRIMARY KEY,
+                password TEXT,
                 oid NOT NULL REFERENCES objects(oid) ON DELETE CASCADE
             )
         ');
@@ -37,9 +38,31 @@ class ServerAuthenticator implements IAuthenticator {
         return authenticatedPlayer;
     }
 
-    @async public function authenticatePlayer(username: String, password: String): Noise throw Fault.UNIMPLEMENTED;
+    @async public function authenticatePlayer(username: String, password: String): Noise {
+        var result = database.sqlStatement('SELECT oid, password FROM players WHERE username=?')
+                .executeSimpleQuery();
+        if (result == null) {
+            throw Fault.AUTH_FAILED;
+        }
+        var oid = result["oid"].toOid();
+        var hash = result["password"].toString();
 
-    public function setPassword(player: SPlayer, password: String): Void throw Fault.UNIMPLEMENTED;
+        if (!BCrypt.verify(password, hash)) {
+            throw Fault.AUTH_FAILED;
+        }
+        authenticatedPlayer = objectLoader.loadObject(oid, SPlayer);
+        return Noise;
+    }
+
+    public function setPassword(player: SPlayer, password: String): Void {
+        var salt = BCrypt.generateSalt(10, BCrypt.Revision2B);
+        var hashed = BCrypt.encode(password, salt);
+
+        database.sqlStatement('UPDATE players SET password=? WHERE username=?')
+                .bindString(1, hashed)
+                .bindString(2, player.username)
+                .executeStatement();
+    }
 
     public function registerPlayer(player: SPlayer): Void {
         database.sqlStatement('INSERT OR REPLACE INTO players (username, oid) VALUES (?, ?)')
