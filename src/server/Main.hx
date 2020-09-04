@@ -7,7 +7,7 @@ import utils.Injectomatic.inject;
 class Main {
 	static public function main(): Void {
 		if (Sys.getEnv("GATEWAY_INTERFACE") != null) {
-			Sys.println("cgi invocation");
+            new CgiHandler().main();
 		} else {
             new CliHandler().main(Sys.args());
 		}

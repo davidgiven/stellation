@@ -76,18 +76,16 @@ class GameLoop implements IConsole {
 		consoleWindow.onCommandReceived.handle(onCommandReceived);
 		consoleWindow.show();
 
-        @await println("Welcome to Stellation VII.");
-        @await println("Try 'help' if you're feeling lucky.");
+        println("Welcome to Stellation VII.");
+        println("Try 'help' if you're feeling lucky.");
 
 		return Noise;
 	}
 
-	@async
-	public function println(s: String): Noise {
+	public function println(s: String): Void {
 		if (consoleWindow != null) {
 			consoleWindow.println(s);
 		}
-		return Noise;
 	}
 
 	public function onCommandReceived(command: String): Void {

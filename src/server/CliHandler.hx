@@ -12,8 +12,9 @@ import utils.GetOpt.getopt;
 import utils.Injectomatic.bind;
 import utils.Oid;
 import utils.Fault;
+import tink.CoreApi;
 
-@async
+@await
 class CliHandler extends AbstractHandler {
     private static var databaseFile: String = null;
     private static var userOid: Null<Oid> = null;
@@ -36,16 +37,13 @@ class CliHandler extends AbstractHandler {
         Sys.exit(0);
     }
 
-    @await
-    public function main(argv: Array<String>) {
+    @async
+    public function main(argv: Array<String>): Noise {
         var remaining = getopt(argv, flags);
 
         if (databaseFile == null) {
             fatalError("you must supply a database filename");
         }
-
-        var commandDispatcher = new CommandDispatcher();
-        bind(CommandDispatcher, commandDispatcher);
 
         withServer(databaseFile, () -> {
             var universe = datastore.withTransaction(() -> findOrCreateUniverse());
@@ -55,9 +53,12 @@ class CliHandler extends AbstractHandler {
 
             var commandShell = 
             datastore.withTransaction(() -> {
-                @await commandDispatcher.callArgv(remaining);
+				var command = commandDispatcher.resolve(remaining);
+				@await command.localCall(remaining);
             });
         });
+
+		return Noise;
     }
 
     public function findOrCreateUniverse(): SUniverse {

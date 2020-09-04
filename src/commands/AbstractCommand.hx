@@ -13,6 +13,13 @@ using utils.NullTools;
 class AbstractCommand<Req, Res> {
     var console = inject(IConsole);
 
+	@async public function localCall(argv: Array<String>): Noise {
+		var req = parse(argv);
+		var res = @await run(argv, req);
+		render(res);
+		return Noise;
+	}
+
 	public function parse(argv: Array<String>): Req {
         throw Fault.UNIMPLEMENTED;
 	}

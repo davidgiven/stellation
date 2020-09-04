@@ -50,26 +50,19 @@ class CommandDispatcher {
 
 	@async public function call(cmdline: String): Noise {
 		try {
-			@await console.println('> ${cmdline}');
+			console.println('> ${cmdline}');
 			var argv = argify(cmdline);
-			callArgv(argv);
+			if (argv.length == 0) {
+				return Noise;
+			}
+
+			var command = resolve(argv);
+			@await command.localCall(argv);
         } catch (f: Fault) {
             console.println('Failed: ${f.detail}');
         } catch (e) {
             console.println('Internal error: $e');
         }
-		return Noise;
-	}
-
-	@async public function callArgv(argv: Array<String>): Noise {
-		if (argv.length == 0) {
-			return Noise;
-		}
-
-		var command = resolve(argv);
-		var req = command.parse(argv);
-		var res = @await command.run(argv, req);
-		command.render(res);
 		return Noise;
 	}
 
