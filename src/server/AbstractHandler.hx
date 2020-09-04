@@ -7,6 +7,7 @@ import interfaces.IConsole;
 import interfaces.IDatastore;
 import interfaces.ITime;
 import model.ObjectLoader;
+import model.SPlayer;
 import model.SUniverse;
 import runtime.cpp.Console;
 import runtime.cpp.SqlDatastore;
@@ -26,7 +27,7 @@ class AbstractHandler {
 	@:lazy var commandDispatcher = inject(CommandDispatcher);
 
     public function findUniverse(): SUniverse {
-        return objectLoader.loadObject(1, SUniverse);
+        return objectLoader.findUniverse();
     }
 
     public function withServer(filename: String, callback: () -> Void): Void {

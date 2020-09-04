@@ -67,10 +67,14 @@ class CommandDispatcher {
 	}
 
 	public function serverCall(argv: Array<String>): Void {
-			var command = resolve(argv);
-			command.callSync(argv);
+		var command = resolve(argv);
+		command.callSync(argv);
 	}
 
+	public function remoteCall(argv: Array<String>): Dynamic {
+		var command = resolve(argv);
+		return command.callRemote(argv);
+	}
 //    override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
 //
 //    fun populateCommands(): Map<String, () -> AbstractCommand> {

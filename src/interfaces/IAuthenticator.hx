@@ -9,7 +9,7 @@ interface IAuthenticator {
     public function initialiseDatabase(): Void;
 
     public function setAuthenticatedPlayer(player: SPlayer): Void;
-    @async public function authenticatePlayer(username: String, password: String): Noise;
+    public function authenticatePlayer(username: String, password: String): SPlayer;
     public function getAuthenticatedPlayer(): SPlayer;
 
     public function setPassword(player: SPlayer, password: String): Void;

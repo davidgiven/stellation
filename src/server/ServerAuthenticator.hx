@@ -39,7 +39,7 @@ class ServerAuthenticator implements IAuthenticator {
         return authenticatedPlayer;
     }
 
-    @async public function authenticatePlayer(username: String, password: String): Noise {
+    public function authenticatePlayer(username: String, password: String): SPlayer {
         var result = database.sqlStatement('SELECT oid, password FROM players WHERE username=?')
 				.bindString(1, username)
                 .executeSimpleQuery();
@@ -53,7 +53,7 @@ class ServerAuthenticator implements IAuthenticator {
             throw Fault.AUTH_FAILED;
         }
         authenticatedPlayer = objectLoader.loadObject(oid, SPlayer);
-        return Noise;
+        return authenticatedPlayer;
     }
 
     public function setPassword(player: SPlayer, password: String): Void {

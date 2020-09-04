@@ -8,6 +8,7 @@ class Fault extends Exception {
 	@:calc public static final AUTH_FAILED = new Fault(PERMISSION).withStatus(401).withDetail("authentication failed");
 	@:calc public static final NOBODY_LOGGED_IN = new Fault(PERMISSION).withStatus(401).withDetail("nobody is logged in");
 	@:calc public static final PERMISSION_DENIED = new Fault(PERMISSION).withStatus(403).withDetail("you're not allowed to do that");
+	@:calc public static final PROTOCOL = new Fault(INTERNAL).withStatus(403).withDetail("protocol error");
 
 	public var status = 500;
 	public var domain = INTERNAL;

@@ -2,6 +2,7 @@ package server;
 
 import utils.Fault;
 import utils.FaultDomain;
+import haxe.Serializer;
 import haxe.Unserializer;
 import tink.CoreApi;
 import interfaces.ILogger.Logger.log;
@@ -29,15 +30,29 @@ class CgiHandler extends AbstractHandler {
 			u.setResolver(null);
 
 			withServer(Configuration.DATABASE_PATH, () -> {
-				var session = u.unserialize();
-				var username = u.unserialize();
-				var password = u.unserialize();
+				var session: Int = u.unserialize();
+				var username: String = u.unserialize();
+				var password: String = u.unserialize();
 				log('start request from $username');
-				authenticator.authenticatePlayer(username, password);
+				var player = authenticator.authenticatePlayer(username, password);
+				log('authenticated as ${player.oid}');
 
+				var argv: Array<String> = u.unserialize();
+				var res: Dynamic;
+				datastore.withTransaction(() -> {
+					log('running: $argv');
+					res = commandDispatcher.remoteCall(argv);
+					log('response: $res');
+				});
+				
 				Sys.println("Content-type: text/plain; charset=utf-8");
 				Sys.println("");
-				Sys.println("fnord");
+				var s = new Serializer();
+				s.useCache = true;
+				s.serialize(session);
+				s.serialize(null); /* server fault */
+				s.serialize(res);
+				Sys.println(s.toString());
 			});
 		} catch (f: Fault) {
 			log('fail: $f');

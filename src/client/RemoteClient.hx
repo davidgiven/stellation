@@ -7,6 +7,7 @@ import haxe.Unserializer;
 import js.html.XMLHttpRequest;
 import haxe.Exception;
 import tink.CoreApi;
+import interfaces.ILogger.Logger.log;
 
 @:tink
 @await
@@ -26,7 +27,8 @@ class RemoteClient implements IRemoteClient {
 		var s = new Serializer();
 		s.useCache = true;
 
-		s.serialize(session);
+		var thisSession = session++;
+		s.serialize(thisSession);
 		s.serialize(username);
 		s.serialize(password);
 		s.serialize(argv);
@@ -52,8 +54,15 @@ class RemoteClient implements IRemoteClient {
 			xhr.send(s.toString());
 		});
 
-		trace(response);
-		throw Fault.UNIMPLEMENTED;
+		var u = new Unserializer(response);
+		var sessionReply: Int = u.unserialize();
+		log('sessionReply=$sessionReply thisSession=$thisSession');
+		if (sessionReply != thisSession) {
+			throw Fault.PROTOCOL;
+		}
+		var serverFault = u.unserialize();
+		var res = u.unserialize();
+		return res;
 	}
 //        val sendMessage = ServerMessage()
 //        sendMessage.setCommandInput(command.argv)

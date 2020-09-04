@@ -104,6 +104,10 @@ class ObjectLoader {
         return [for (klass in klasses) getSimpleName(klass) => klass];
     }
 
+    public function findUniverse(): SUniverse {
+        return loadObject(UNIVERSE_OID, SUniverse);
+    }
+
     public function createUniverse(): SUniverse {
         if (datastore.doesObjectExist(UNIVERSE_OID)) {
             throw new Fault(INTERNAL).withDetail("cowardly refusing to destroy existing universe");
