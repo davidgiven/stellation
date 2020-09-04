@@ -4,7 +4,8 @@ import utils.Fault;
 import interfaces.IRemoteClient;
 import haxe.Serializer;
 import haxe.Unserializer;
-import haxe.Http;
+import js.html.XMLHttpRequest;
+import haxe.Exception;
 import tink.CoreApi;
 
 @:tink
@@ -31,14 +32,24 @@ class RemoteClient implements IRemoteClient {
 		s.serialize(argv);
 
 		var response = @await Future.async((handler: Outcome<String, Error> -> Void) -> {
-			var http = new Http("http://locazzzzzzzzzzzlhost:8080");
-			http.setPostData(s.toString());
-			http.onData = data -> handler(Success(data));
-			http.onError = error -> {
-				trace(error);
-				handler(Failure(Error.withData("HTTP error", error)));
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = () -> {
+				if (xhr.readyState == XMLHttpRequest.DONE) {
+					switch (xhr.status) {
+						case 200:
+							handler(Success(xhr.responseText));
+
+						case 401:
+							handler(Failure(tink.await.Error.fromAny(Fault.AUTH_FAILED)));
+
+						default:
+							var f = new Fault(NETWORK).withDetail("network error");
+							handler(Failure(tink.await.Error.fromAny(f)));
+					}
+				}
 			}
-			http.request(true);
+			xhr.open("POST", "http://localhost:8080/cgi-bin/stellation.cgi", true);
+			xhr.send(s.toString());
 		});
 
 		trace(response);
