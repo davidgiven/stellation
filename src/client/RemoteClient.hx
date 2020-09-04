@@ -48,7 +48,7 @@ class RemoteClient implements IRemoteClient {
 					}
 				}
 			}
-			xhr.open("POST", "http://localhost:8080/cgi-bin/stellation.cgi", true);
+			xhr.open("POST", Configuration.SERVER_URL, true);
 			xhr.send(s.toString());
 		});
 

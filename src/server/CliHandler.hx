@@ -36,7 +36,7 @@ class CliHandler extends AbstractHandler {
         Sys.exit(0);
     }
 
-    public function main(argv: Array<String>): Noise {
+    public function main(argv: Array<String>): Void {
         var remaining = getopt(argv, flags);
 
         if (databaseFile == null) {
@@ -53,8 +53,6 @@ class CliHandler extends AbstractHandler {
 				commandDispatcher.serverCall(remaining);
             });
         });
-
-		return Noise;
     }
 
     public function findOrCreateUniverse(): SUniverse {

@@ -53,7 +53,6 @@ class AbstractHandler {
             callback();
             database.close();
         } catch (f) {
-			trace(f);
             database.close();
             throw f;
         }

@@ -1,11 +1,13 @@
 package utils;
 import utils.FaultDomain.INTERNAL;
+import haxe.Exception;
 
+@:tink
 class Fault extends Exception {
-	public static final UNIMPLEMENTED = new Fault(INTERNAL).withDetail("unimplemented operation");
-	public static final AUTH_FAILED = new Fault(PERMISSION).withStatus(401).withDetail("authentication failed");
-	public static final NOBODY_LOGGED_IN = new Fault(PERMISSION).withStatus(401).withDetail("nobody is logged in");
-	public static final PERMISSION_DENIED = new Fault(PERMISSION).withStatus(403).withDetail("you're not allowed to do that");
+	@:calc public static final UNIMPLEMENTED = new Fault(INTERNAL).withDetail("unimplemented operation");
+	@:calc public static final AUTH_FAILED = new Fault(PERMISSION).withStatus(401).withDetail("authentication failed");
+	@:calc public static final NOBODY_LOGGED_IN = new Fault(PERMISSION).withStatus(401).withDetail("nobody is logged in");
+	@:calc public static final PERMISSION_DENIED = new Fault(PERMISSION).withStatus(403).withDetail("you're not allowed to do that");
 
 	public var status = 500;
 	public var domain = INTERNAL;

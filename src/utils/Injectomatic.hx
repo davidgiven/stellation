@@ -1,6 +1,7 @@
 package utils;
 import haxe.ds.ObjectMap;
 import tink.CoreApi;
+import haxe.Exception;
 
 class InjectomaticException extends Exception {
 	public function new(msg: String) {

@@ -1,13 +1,12 @@
 package;
 
 import utest.UTest;
-import utils.Exception;
+import haxe.Exception;
 import utils.Fault;
 
 class Tests {
 	public static function main() {
 		UTest.run([
-			new commands.CommandDispatcherTest(),
 			new utils.ArgifierTest(),
 			new utils.GetOptTest(),
 			new utils.InjectomaticTest(),

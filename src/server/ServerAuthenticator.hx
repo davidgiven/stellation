@@ -9,6 +9,7 @@ import runtime.cpp.Sqlite;
 import model.ObjectLoader;
 import model.SPlayer;
 import haxe.crypto.BCrypt;
+import interfaces.ILogger.Logger.log;
 
 @:tink
 @async
@@ -40,6 +41,7 @@ class ServerAuthenticator implements IAuthenticator {
 
     @async public function authenticatePlayer(username: String, password: String): Noise {
         var result = database.sqlStatement('SELECT oid, password FROM players WHERE username=?')
+				.bindString(1, username)
                 .executeSimpleQuery();
         if (result == null) {
             throw Fault.AUTH_FAILED;

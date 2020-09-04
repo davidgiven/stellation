@@ -6,9 +6,11 @@ import interfaces.IConsole;
 import interfaces.IDatastore;
 import interfaces.ITime;
 import interfaces.IUi;
+import interfaces.ILogger;
 import js.Browser;
 import runtime.js.JsUi;
 import runtime.shared.Time;
+import runtime.shared.TraceLogger;
 import tink.CoreApi;
 import ui.ConsoleWindow;
 import utils.Injectomatic.bind;
@@ -17,8 +19,7 @@ import utils.Random;
 
 class Main {
 	static function main() {
-		Console.start();
-
+        bind(ILogger, new TraceLogger());
 		bind(ITime, new Time());
 		bind(Random, new Random());
         bind(IUi, new JsUi());

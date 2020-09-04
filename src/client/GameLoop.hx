@@ -43,10 +43,10 @@ class GameLoop implements IConsole {
 						remoteClient.setCredentials(loginData.username, loginData.password);
 						//clock.setTime(0.0)
 
-						@await new PingCommand().callAsync(["ping"]);
-
 						cookies.set("username", loginData.username);
 						cookies.set("password", loginData.password);
+						@await new PingCommand().callAsync(["ping"]);
+
 						break;
 					} catch (f: Fault) {
 						trace("caught error:", f);
