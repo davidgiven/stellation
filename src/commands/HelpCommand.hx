@@ -5,7 +5,6 @@ import interfaces.IConsole;
 import tink.CoreApi;
 import utils.Flags;
 
-@await
 class HelpCommand extends AbstractLocalCommand<Noise, Noise> {
     @:keep public static final NAME = "help";
     @:keep public static final DESCRIPTION = "displays command line help";
@@ -17,7 +16,7 @@ class HelpCommand extends AbstractLocalCommand<Noise, Noise> {
         return Noise;
     }
 
-    @async override function run(argv: Array<String>, req: Noise): Noise {
+    override function run(argv: Array<String>, req: Noise): Noise {
         return Noise;
     }
 

@@ -13,18 +13,25 @@ using utils.NullTools;
 class AbstractCommand<Req, Res> {
     var console = inject(IConsole);
 
-	@async public function localCall(argv: Array<String>): Noise {
-		var req = parse(argv);
-		var res = @await run(argv, req);
-		render(res);
+	@async public function callAsync(argv: Array<String>): Noise {
+		callSync(argv);
 		return Noise;
+	}
+
+	public function callSync(argv: Array<String>): Void {
+		render(callRemote(argv));
+	}
+		
+	public function callRemote(argv: Array<String>): Res {
+		var req = parse(argv);
+		return run(argv, req);
 	}
 
 	public function parse(argv: Array<String>): Req {
         throw Fault.UNIMPLEMENTED;
 	}
 
-	@async public function run(argv: Array<String>, req: Req): Res {
+	public function run(argv: Array<String>, req: Req): Res {
         throw Fault.UNIMPLEMENTED;
 	}
 

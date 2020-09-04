@@ -14,7 +14,6 @@ import utils.Oid;
 import utils.Fault;
 import tink.CoreApi;
 
-@await
 class CliHandler extends AbstractHandler {
     private static var databaseFile: String = null;
     private static var userOid: Null<Oid> = null;
@@ -37,7 +36,6 @@ class CliHandler extends AbstractHandler {
         Sys.exit(0);
     }
 
-    @async
     public function main(argv: Array<String>): Noise {
         var remaining = getopt(argv, flags);
 
@@ -51,10 +49,8 @@ class CliHandler extends AbstractHandler {
             var player = objectLoader.loadObject(userOid, SPlayer);
             authenticator.setAuthenticatedPlayer(player);
 
-            var commandShell = 
             datastore.withTransaction(() -> {
-				var command = commandDispatcher.resolve(remaining);
-				@await command.localCall(remaining);
+				commandDispatcher.serverCall(remaining);
             });
         });
 

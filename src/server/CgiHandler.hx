@@ -6,7 +6,6 @@ import haxe.Unserializer;
 import tink.CoreApi;
 
 @:tink
-@await
 class CgiHandler extends AbstractHandler {
 	private static final DATABASE = "/home/dg/nonshared/stellation/stellation.sqlite";
 
@@ -14,7 +13,6 @@ class CgiHandler extends AbstractHandler {
 		super();
 	}
 
-    @async
     public function main(): Noise {
 		if (Sys.getEnv("REQUEST_METHOD") != "POST") {
 			throw badCgiException("request is not POST");
@@ -35,7 +33,7 @@ class CgiHandler extends AbstractHandler {
         withServer(DATABASE, () -> {
 			var username = u.unserialize();
 			var password = u.unserialize();
-			@await authenticator.authenticatePlayer(username, password);
+			authenticator.authenticatePlayer(username, password);
 		});
 
 		return Noise;

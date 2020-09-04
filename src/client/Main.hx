@@ -29,7 +29,7 @@ class Main {
         bind(IConsole, gameloop);
 
 		Browser.document.getElementById("loading").remove();
-        gameloop.startGame();
+        gameloop.execute();
 	}
 }
 // vim: ts=4 sw=4 et

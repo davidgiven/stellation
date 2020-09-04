@@ -48,7 +48,7 @@ class CommandDispatcher {
 		return record.klass.createInstance([]);
 	}
 
-	@async public function call(cmdline: String): Noise {
+	@async public function clientCall(cmdline: String): Noise {
 		try {
 			console.println('> ${cmdline}');
 			var argv = argify(cmdline);
@@ -57,13 +57,18 @@ class CommandDispatcher {
 			}
 
 			var command = resolve(argv);
-			@await command.localCall(argv);
+			@await command.callAsync(argv);
         } catch (f: Fault) {
             console.println('Failed: ${f.detail}');
         } catch (e) {
             console.println('Internal error: $e');
         }
 		return Noise;
+	}
+
+	public function serverCall(argv: Array<String>): Void {
+			var command = resolve(argv);
+			command.callSync(argv);
 	}
 
 //    override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
