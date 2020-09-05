@@ -1,5 +1,4 @@
 --class-path src
---library mconsole
 --library tink_await
 --library tink_lang
 --library tink_macro
