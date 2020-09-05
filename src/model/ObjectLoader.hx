@@ -26,9 +26,9 @@ class ObjectLoader {
         SUniverse,
     ]);
 
-	public var datastore = inject(IDatastore);
-
-    public var objectCache: Map<Oid, SThing> = [];
+	private var datastore = inject(IDatastore);
+    private var objectCache: Map<Oid, SThing> = [];
+	private var allProperties: Map<String, AbstractProperty> = [];
 
 	public function new() {
 	}
@@ -37,10 +37,16 @@ class ObjectLoader {
         for (field in Properties.getClassFields()) {
             var o = Reflect.field(Properties, field);
             if (Std.is(o, AbstractProperty)) {
-                cast(o, AbstractProperty).createProperty(datastore);
+				var p = cast(o, AbstractProperty);
+				p.createProperty(datastore);
+				allProperties[p.name] = p;
             }
         }
     }
+
+	public function findProperty(name: String): AbstractProperty {
+		return allProperties[name];
+	}
 
     public function loadRawObject<T: SThing>(oid: Oid, klass: Class<T>): T {
         if (!datastore.doesObjectExist(oid)) {
@@ -117,6 +123,10 @@ class ObjectLoader {
         datastore.setStringProperty(UNIVERSE_OID, KIND, "SUniverse");
         return loadObject(UNIVERSE_OID, SUniverse);
     }
+
+	public function findGod(): SPlayer {
+		return loadObject(GOD_OID, SPlayer);
+	}
 
 	public function createGod(): SPlayer {
 		if (datastore.doesObjectExist(GOD_OID)) {

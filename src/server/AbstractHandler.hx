@@ -38,7 +38,6 @@ class AbstractHandler {
 		bind(IAuthenticator, new ServerAuthenticator());
         bind(CommandDispatcher, new CommandDispatcher());
 
-
 		var database = Sqlite.open(filename);
 		bind(SqliteDatabase, database);
         bind(IDatastore, new SqlDatastore());

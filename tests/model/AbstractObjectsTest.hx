@@ -6,7 +6,7 @@ import utest.Assert;
 import utils.Fault;
 import utils.FaultDomain;
 import utils.Injectomatic.inject;
-using runtime.shared.SetPropertyTools;
+using interfaces.OidSetTools;
 using model.ThingTools;
 using utils.ArrayTools;
 

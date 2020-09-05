@@ -1,10 +1,12 @@
 package model;
 
 import utils.Fault;
+import model.Properties;
 
 @:tink
 class SPlayer extends SThing {
 	@:sproperty public var username: String;
+	@:sproperty public var visibleObjects: ObjectSet<SThing>;
 
 	public function isGod(): Bool {
 		return oid == ObjectLoader.GOD_OID;
@@ -14,6 +16,10 @@ class SPlayer extends SThing {
 		if (!isGod()) {
 			throw Fault.PERMISSION_DENIED;
 		}
+	}
+
+	public function calculateVisibleObjects(): Iterable<SThing> {
+		return [];
 	}
 }
 

@@ -57,5 +57,13 @@ class ArrayTools {
 		}
 		return s.join(separator);
 	}
+
+	@:generic
+	public static function addAll<T>(map: Map<T, Noise>, items: Iterable<T>): Map<T, Noise> {
+		for (item in items) {
+			map[item] = Noise;
+		}
+		return map;
+	}
 }
 

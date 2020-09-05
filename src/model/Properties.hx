@@ -4,9 +4,18 @@ import interfaces.IDatastore;
 import utils.Fault;
 import utils.Oid;
 import utils.Injectomatic.inject;
+using model.ObjectSetTools;
+
+enum Scope {
+    SERVERONLY;
+    PRIVATE;
+    LOCAL;
+    GLOBAL;
+}
 
 class AbstractProperty {
     public var name: String;
+	public var scope = LOCAL;
 
     public function new(name: String) {
         this.name = name;
@@ -15,6 +24,10 @@ class AbstractProperty {
     public function createProperty(datastore: IDatastore): Void {
         throw Fault.UNIMPLEMENTED;
     }
+
+	public function getDynamicValue(): Dynamic {
+		throw Fault.UNIMPLEMENTED;
+	}
 }
 
 class IntProperty extends AbstractProperty {
@@ -178,8 +191,9 @@ class SetProperty<T: SThing> extends AbstractProperty {
     }
 }
 
+@:tink
 class Properties {
-	public static var PLAYERS = new SetProperty("players", SPlayer);
+	public static var PLAYERS = new SetProperty("players", SPlayer).setScope(SERVERONLY);
 	public static var X = new FloatProperty("x");
 	public static var Y = new FloatProperty("y");
     public static var BRIGHTNESS = new FloatProperty("brightness");
@@ -190,5 +204,7 @@ class Properties {
     public static var NAME = new StringProperty("name");
     public static var OWNER = new ObjectProperty("owner", SThing);
     public static var USERNAME = new StringProperty("name");
+	public static var EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);
+	public static var VISIBLEOBJECTS = new SetProperty("visible_objects", SThing).setScope(PRIVATE);
 }
 

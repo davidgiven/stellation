@@ -45,6 +45,8 @@ class CliHandler extends AbstractHandler {
 
         withServer(databaseFile, () -> {
             var universe = datastore.withTransaction(() -> findOrCreateUniverse());
+			bind(SUniverse, universe);
+			bind(SGalaxy, universe.galaxy);
 
             var player = objectLoader.loadObject(userOid, SPlayer);
             authenticator.setAuthenticatedPlayer(player);

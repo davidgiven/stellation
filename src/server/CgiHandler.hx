@@ -6,6 +6,9 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import tink.CoreApi;
 import interfaces.ILogger.Logger.log;
+import utils.Injectomatic.bind;
+import model.SUniverse;
+import model.SGalaxy;
 
 @:tink
 class CgiHandler extends AbstractHandler {
@@ -30,6 +33,10 @@ class CgiHandler extends AbstractHandler {
 			u.setResolver(null);
 
 			withServer(Configuration.DATABASE_PATH, () -> {
+				var universe = findUniverse();
+				bind(SUniverse, universe);
+				bind(SGalaxy, universe.galaxy);
+
 				var session: Int = u.unserialize();
 				var username: String = u.unserialize();
 				var password: String = u.unserialize();

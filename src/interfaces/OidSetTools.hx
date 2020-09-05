@@ -1,10 +1,10 @@
-package runtime.shared;
+package interfaces;
 
 import interfaces.IDatastore;
 import utils.Oid;
 import tink.CoreApi;
 
-class SetPropertyTools {
+class OidSetTools {
     public static inline function addAll(set: OidSet, oids: Iterable<Oid>) {
         for (oid in oids) {
             set.add(oid);

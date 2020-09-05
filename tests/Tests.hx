@@ -7,14 +7,15 @@ import utils.Fault;
 class Tests {
 	public static function main() {
 		UTest.run([
+			new runtime.shared.InMemoryDatastoreTest(),
+			new runtime.shared.SqlDatastoreTest(),
 			new utils.ArgifierTest(),
 			new utils.GetOptTest(),
 			new utils.InjectomaticTest(),
-            new runtime.cpp.SqliteTest(),
-			new runtime.shared.InMemoryDatastoreTest(),
-			new runtime.shared.SqlDatastoreTest(),
             new model.InMemoryObjectsTest(),
             new model.SqlObjectsTest(),
+            new model.SyncerTest(),
+            new runtime.cpp.SqliteTest(),
 		]);
 	}
 		
