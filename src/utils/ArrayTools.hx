@@ -59,8 +59,16 @@ class ArrayTools {
 	}
 
 	@:generic
-	public static function addAll<T>(map: Map<T, Noise>, items: Iterable<T>): Map<T, Noise> {
+	public static function addArray<T>(map: Map<T, Noise>, items: Iterable<T>): Map<T, Noise> {
 		for (item in items) {
+			map[item] = Noise;
+		}
+		return map;
+	}
+
+	@:generic
+	public static function addMap<T>(map: Map<T, Noise>, items: Map<T, Noise>): Map<T, Noise> {
+		for (item in items.keys()) {
 			map[item] = Noise;
 		}
 		return map;

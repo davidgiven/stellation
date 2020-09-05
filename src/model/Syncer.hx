@@ -27,8 +27,8 @@ class Syncer {
          * this is reliable.
 		 */
 		var visibleObjects: Map<SThing, Noise> = [universe => Noise, galaxy => Noise];
-		visibleObjects.addAll(galaxy.contents.getAll());
-		visibleObjects.addAll([for (k in player.calculateVisibleObjects().keys()) k]);
+		visibleObjects.addArray(galaxy.contents.getAll());
+		visibleObjects.addMap(player.calculateVisibleObjects());
 		player.visibleObjects.replaceAll([for (k in visibleObjects.keys()) k]);
 
 		var changedProperties = datastore.getPropertiesChangedSince(

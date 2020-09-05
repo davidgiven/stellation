@@ -39,9 +39,7 @@ class SPlayer extends SThing {
 		var set = new Map<SThing, Noise>();
 		set[this] = Noise;
 		for (star => n in calculateVisibleStars()) {
-			for (thing in star.calculateHierarchicalContents().keys()) {
-				set[thing] = Noise;
-			}
+			set.addMap(star.calculateHierarchicalContents());
 		}
 		return set;
 	}
