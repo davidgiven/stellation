@@ -5,7 +5,9 @@ import utils.Injectomatic.inject;
 import utils.Random;
 import interfaces.IDatastore;
 import model.Properties;
+import tink.CoreApi;
 using Lambda;
+using utils.ArrayTools;
 
 @:remove
 @:autoBuild(model.HasPropertiesMacro.build())
@@ -34,6 +36,30 @@ class SThing implements HasProperties {
 		} else {
 			return '#$oid("$n")';
 		}
+	}
+
+	@:generic
+	public inline function findChild<T: SThing>(klass: Class<Dynamic>): Null<T> {
+		var o: Dynamic = contents.getAll().find(o -> o.kind == klass);
+		return o;
+	}
+
+	public function getContainingStar(): SStar {
+		var loc: SThing = this;
+		while (loc != null) {
+			if (loc.kind == SStar) {
+				return cast(loc, SStar);
+			}
+			loc = loc.location;
+		}
+		return null;
+	}
+
+	public function calculateHierarchicalContents(): Map<SThing, Noise> {
+		return [
+			for (oid in datastore.getHierarchy(oid, "contents").keys())
+			objectLoader.loadObject(oid, SThing)
+		].toMap();
 	}
 }
 

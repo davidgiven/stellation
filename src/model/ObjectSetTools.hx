@@ -13,6 +13,14 @@ class ObjectSetTools {
 	}
 
 	@:generic
+	public static function addMap<T: SThing>(set: ObjectSet<T>, items: Map<T, Noise>): ObjectSet<T> {
+		for (item in items.keys()) {
+			set.add(item);
+		}
+		return set;
+	}
+
+	@:generic
 	public static function replaceAll<T: SThing>(set: ObjectSet<T>, items: Iterable<T>): ObjectSet<T> {
 		set.clear();
 		for (item in items) {

@@ -2,6 +2,9 @@ package model;
 
 import utils.Fault;
 import model.Properties;
+import tink.CoreApi;
+using utils.ArrayTools;
+using model.ObjectSetTools;
 
 @:tink
 class SPlayer extends SThing {
@@ -19,8 +22,28 @@ class SPlayer extends SThing {
 		}
 	}
 
-	public function calculateVisibleObjects(): Iterable<SThing> {
-		return [];
+	public function calculateVisibleStars(): Map<SStar, Noise> {
+		var set = new Map<SStar, Noise>();
+		for (ship in ships.getAll()) {
+			if (ship.findChild(SJumpdrive) != null) {
+				var star = ship.getContainingStar();
+				if (star != null) {
+					set[star] = Noise;
+				}
+			}
+		}
+		return set;
+	}
+
+	public function calculateVisibleObjects(): Map<SThing, Noise> {
+		var set = new Map<SThing, Noise>();
+		set[this] = Noise;
+		for (star => n in calculateVisibleStars()) {
+			for (thing in star.calculateHierarchicalContents().keys()) {
+				set[thing] = Noise;
+			}
+		}
+		return set;
 	}
 }
 

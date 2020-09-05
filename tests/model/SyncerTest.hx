@@ -17,6 +17,7 @@ import model.SJumpdrive;
 import model.ObjectLoader;
 import utest.Assert;
 using model.ThingTools;
+using utils.ArrayTools;
 
 class SyncerTest extends TestCase {
 	var datastore: SqlDatastore;
@@ -103,5 +104,14 @@ class SyncerTest extends TestCase {
         Assert.same(1, datastore.createSyncSession());
         Assert.same(2, datastore.createSyncSession());
     }
+
+	public function testVisibleObjects() {
+		Assert.same(
+			[star1, player1, ship1, jumpdrive1, star2, ship2, jumpdrive2, shipx, jumpdrivex].toMap(),
+			player1.calculateVisibleObjects());
+		Assert.same(
+			[star2, playerx, shipx, jumpdrivex, ship2, jumpdrive2].toMap(),
+			playerx.calculateVisibleObjects());
+	}
 }
 
