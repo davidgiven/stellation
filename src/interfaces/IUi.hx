@@ -31,14 +31,19 @@ interface IUiElement extends IUiNode {
 	public function setAttr(name: String, value: String): IUiElement;
 	public function getAttr(name: String): Null<String>;
 
-	public function getClasses(): Array<String>;
-	public function addClasses(classes: Array<String>): IUiElement;
-	public function setClasses(classes: Array<String>): IUiElement;
+	public function getClasses(): Iterable<String>;
+	public function addClasses(classes: Iterable<String>): IUiElement;
+	public function removeClasses(classes: Iterable<String>): IUiElement;
+	public function setClasses(classes: Iterable<String>): IUiElement;
 
 	public function addNode(element: IUiNode): IUiElement;
 
 	public function getValue(): String;
 	public function setValue(value: String): IUiElement;
+
+	public function hide(): IUiElement;
+	public function show(): IUiElement;
+	public function focus(): IUiElement;
 
 	public function onActivate(callback: (Dynamic) -> Void): IUiElement;
 }

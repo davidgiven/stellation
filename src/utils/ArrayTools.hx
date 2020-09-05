@@ -26,6 +26,15 @@ class ArrayTools {
     }
 
     @:generic
+	public static function toMap<T>(iterable: Iterable<T>) {
+		var m: Map<T, Noise> = [];
+		for (item in iterable) {
+			m[item] = Noise;
+		}
+		return m;
+	}
+
+    @:generic
     public static function map<T1, T2>(iterator: Iterator<T1>, callback: (T1) -> T2): Iterator<T2> {
         return {
             hasNext: iterator.hasNext,
@@ -39,6 +48,14 @@ class ArrayTools {
 			hasNext: () -> i1.hasNext() || i2.hasNext(),
 			next: () -> new Pair(i1.next(), i2.next())
 		}
+	}
+
+	public static function join(iterator: Iterator<String>, separator: String): String {
+		var s: Array<String> = [];
+		for (i in iterator) {
+			s.push(i);
+		}
+		return s.join(separator);
 	}
 }
 

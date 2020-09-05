@@ -5,6 +5,7 @@ import utest.Assert;
 import utils.Injectomatic.inject;
 using Lambda;
 using runtime.shared.SetPropertyTools;
+using utils.ArrayTools;
 
 @:tink
 class AbstractDatastoreTest extends TestCase {

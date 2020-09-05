@@ -14,8 +14,7 @@ class AbstractCommand<Req, Res> {
     var console = inject(IConsole);
 
 	@async public function callAsync(argv: Array<String>): Noise {
-		callSync(argv);
-		return Noise;
+		throw Fault.UNIMPLEMENTED;
 	}
 
 	public function callSync(argv: Array<String>): Void {

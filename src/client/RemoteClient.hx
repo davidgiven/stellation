@@ -62,6 +62,9 @@ class RemoteClient implements IRemoteClient {
 		}
 		var serverFault = u.unserialize();
 		var res = u.unserialize();
+		if (serverFault != null) {
+			throw new Fault(serverFault.domain).withStatus(serverFault.status).withDetail(serverFault.detail);
+		}
 		return res;
 	}
 //        val sendMessage = ServerMessage()

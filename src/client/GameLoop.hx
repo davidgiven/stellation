@@ -91,8 +91,10 @@ class GameLoop implements IConsole {
 		}
 	}
 
+	@await
 	public function onCommandReceived(command: String): Void {
-		commandDispatcher.clientCall(command);
+		@await commandDispatcher.clientCall(command);
+		consoleWindow.setReady();
 	}
 }
 

@@ -38,19 +38,34 @@ class CgiHandler extends AbstractHandler {
 				log('authenticated as ${player.oid}');
 
 				var argv: Array<String> = u.unserialize();
-				var res: Dynamic;
+				var res: Dynamic = null;
+				var fault: Fault = null;
 				datastore.withTransaction(() -> {
 					log('running: $argv');
-					res = commandDispatcher.remoteCall(argv);
-					log('response: $res');
+					try {
+						res = commandDispatcher.remoteCall(argv);
+						log('response: $res');
+					} catch (f: Fault) {
+						log('fault: $f');
+						fault = f;
+					}
 				});
 				
 				Sys.println("Content-type: text/plain; charset=utf-8");
 				Sys.println("");
+
 				var s = new Serializer();
 				s.useCache = true;
 				s.serialize(session);
-				s.serialize(null); /* server fault */
+				if (fault != null) {
+					s.serialize({
+						status: fault.status,
+						domain: fault.domain,
+						detail: fault.detail
+					});
+				} else {
+					s.serialize(null);
+				}
 				s.serialize(res);
 				Sys.println(s.toString());
 			});

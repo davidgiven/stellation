@@ -3,7 +3,9 @@ package runtime.js;
 import interfaces.IUi;
 import js.Browser;
 import js.html.*;
+using Lambda;
 using StringTools;
+using utils.ArrayTools;
 
 @:tink
 class JsUiNode implements IUiNode {
@@ -85,19 +87,29 @@ class JsUiElement extends JsUiNode implements IUiElement {
 		return element.getAttribute(name);
 	}
 
-	public function getClasses(): Array<String> {
+	public function getClasses(): Iterable<String> {
 		var s = element.getAttribute("class") | if (null) "";
 		return s.split(" ");
 	}
 
-	public function setClasses(classes: Array<String>): IUiElement {
-		element.setAttribute("class", classes.join(" "));
+	public function setClasses(classes: Iterable<String>): IUiElement {
+		element.setAttribute("class", classes.list().join(" "));
 		return this;
 	}
 
-	public function addClasses(classes: Array<String>): IUiElement {
+	public function addClasses(classes: Iterable<String>): IUiElement {
 		var s = element.getAttribute("class") | if (null) "";
-		element.setAttribute("class", s + " " + classes.join(" "));
+		element.setAttribute("class", s + " " + classes.list().join(" "));
+		return this;
+	}
+
+	public function removeClasses(classes: Iterable<String>): IUiElement {
+		var s = element.getAttribute("class") | if (null) "";
+		var ss = s.split(" ").toMap();
+		for (c in classes) {
+			ss.remove(c);
+		}
+		element.setAttribute("class", ss.keys().join(" "));
 		return this;
 	}
 
@@ -113,6 +125,21 @@ class JsUiElement extends JsUiNode implements IUiElement {
 
 	public function setValue(value: String): IUiElement {
 		cast(element, InputElement).value = value;
+		return this;
+	}
+
+	public function hide(): IUiElement {
+		addClasses(["hide"]);
+		return this;
+	}
+
+	public function show(): IUiElement {
+		removeClasses(["hide"]);
+		return this;
+	}
+
+	public function focus(): IUiElement {
+		element.focus();
 		return this;
 	}
 

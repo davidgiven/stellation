@@ -8,6 +8,7 @@ import utils.FaultDomain;
 import utils.Injectomatic.inject;
 using runtime.shared.SetPropertyTools;
 using model.ThingTools;
+using utils.ArrayTools;
 
 @:tink
 class AbstractObjectsTest extends TestCase {
