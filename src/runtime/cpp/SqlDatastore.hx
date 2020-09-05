@@ -3,6 +3,7 @@ package runtime.cpp;
 import interfaces.IDatastore;
 import model.Properties;
 import runtime.cpp.Sqlite;
+import runtime.shared.Time;
 import tink.CoreApi;
 import utils.Fault;
 import utils.Injectomatic.inject;
@@ -75,6 +76,7 @@ class SqlOidSet implements OidSet {
 }
 
 class SqlDatastore implements IDatastore {
+	var time = inject(Time);
 	var db = inject(SqliteDatabase);
 
     public function new() {
@@ -253,7 +255,16 @@ class SqlDatastore implements IDatastore {
     public function propertyChanged(oid: Oid, name: String): Void {
     }
 
-    public function createSyncSession(): Int throw Fault.UNIMPLEMENTED;
+    public function createSyncSession(): Int {
+		db.sqlStatement('INSERT INTO sessions (lastused) VALUES (?)')
+                .bindFloat(1, time.realtime())
+                .executeStatement();
+        return db.sqlStatement('SELECT last_insert_rowid() AS session')
+                .executeSimpleQuery()
+				.get("session")
+				.toInt();
+	}
+
     public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>> throw Fault.UNIMPLEMENTED;
     public function propertySeenBy(oid: Oid, name: String, session: Int): Void throw Fault.UNIMPLEMENTED;
 

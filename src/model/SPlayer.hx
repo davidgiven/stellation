@@ -7,6 +7,7 @@ import model.Properties;
 class SPlayer extends SThing {
 	@:sproperty public var username: String;
 	@:sproperty public var visibleObjects: ObjectSet<SThing>;
+	@:sproperty public var ships: ObjectSet<SShip>;
 
 	public function isGod(): Bool {
 		return oid == ObjectLoader.GOD_OID;

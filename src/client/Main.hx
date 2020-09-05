@@ -4,7 +4,6 @@ import commands.CommandDispatcher;
 import haxe.Timer;
 import interfaces.IConsole;
 import interfaces.IDatastore;
-import interfaces.ITime;
 import interfaces.IUi;
 import interfaces.ILogger;
 import js.Browser;
@@ -20,7 +19,7 @@ import utils.Random;
 class Main {
 	static function main() {
         bind(ILogger, new TraceLogger());
-		bind(ITime, new Time());
+		bind(Time, new Time());
 		bind(Random, new Random());
         bind(IUi, new JsUi());
         bind(Cookies, new Cookies());

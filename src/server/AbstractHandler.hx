@@ -5,7 +5,6 @@ import interfaces.IAuthenticator;
 import interfaces.IClock;
 import interfaces.IConsole;
 import interfaces.IDatastore;
-import interfaces.ITime;
 import model.ObjectLoader;
 import model.SPlayer;
 import model.SUniverse;
@@ -32,7 +31,7 @@ class AbstractHandler {
 
     public function withServer(filename: String, callback: () -> Void): Void {
 		bind(IClock, new ServerClock());
-		bind(ITime, new Time());
+		bind(Time, new Time());
 		bind(Random, new Random());
 		bind(IConsole, new Console());
 		bind(IAuthenticator, new ServerAuthenticator());

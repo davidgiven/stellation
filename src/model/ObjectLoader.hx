@@ -17,7 +17,9 @@ class ObjectLoader {
     private static final KIND = Properties.KIND.name;
 
     private static final CLASSES = registerClasses([
+		SJumpdrive,
 		SPlayer,
+		SShip,
         SFactory,
         SGalaxy,
         SModule,

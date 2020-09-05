@@ -198,6 +198,7 @@ class Properties {
 	public static var Y = new FloatProperty("y");
     public static var BRIGHTNESS = new FloatProperty("brightness");
     public static var CONTENTS = new SetProperty("contents", SThing);
+    public static var SHIPS = new SetProperty("ships", SShip);
     public static var GALAXY = new ObjectProperty("galaxy", SGalaxy);
     public static var KIND = new StringProperty("kind");
     public static var LOCATION = new ObjectProperty("location", SThing);
