@@ -16,12 +16,10 @@
 --cpp .obj/server-temp
 --dce full
 --main server.Main
---debug
 --next
 
 --js .obj/client/main.js
 --dce full
 --main client.Main
---debug
 --next
 
