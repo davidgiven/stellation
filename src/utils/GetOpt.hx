@@ -6,6 +6,7 @@ using utils.Flags;
 
 class GetOpt {
 	public static function getopt(argv: Array<String>, flags: Flags): Array<String> {
+		var remaining: Array<String> = [];
 		var index = 0;
 		while (index < argv.length) {
 			var arg = argv[index];
@@ -35,7 +36,8 @@ class GetOpt {
 					value = arg.substring(2);
 				}
 			} else {
-				return argv.slice(index);
+				remaining = argv.slice(index);
+				break;
 			}
 
 			var flag = flags.map[key];
@@ -54,7 +56,15 @@ class GetOpt {
 			index++;
 		}
 
-		return [];
+		if (flags.remainingSetter != null) {
+			if (remaining.length != flags.expectRemaining) {
+				throw Flags.expectParameters(flags.expectRemaining, remaining.length);
+			}
+			flags.remainingSetter(remaining);
+			return null;
+		} else {
+			return remaining;
+		}
 	}
 }
 

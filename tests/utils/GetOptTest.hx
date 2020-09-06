@@ -130,5 +130,31 @@ class GetOptTest extends TestCase {
 			Assert.stringContains("unrecognised", f.detail);
 		}
 	}
+
+	function testRemaining() {
+		var remaining: Iterable<String> = null;
+		options = new Flags()
+				.addFlag("-v", (v) -> vFlag = true)
+				.withRemaining(2, r -> remaining = r);
+
+        var result = getopt(["-v", "opt1", "opt2"], options);
+		Assert.same(null, result);
+		Assert.same(["opt1", "opt2"], remaining);
+	}
+
+	function testRemainingIncorrectCount() {
+		var remaining: Iterable<String> = null;
+		options = new Flags()
+				.addFlag("-v", (v) -> vFlag = true)
+				.withRemaining(2, r -> remaining = r);
+
+		try {
+			getopt(["-v", "opt1"], options);
+			Assert.fail("exception not thrown");
+		} catch (f: Fault) {
+			Assert.same(FaultDomain.SYNTAX, f.domain);
+			Assert.stringContains("parameters", f.detail);
+		}
+	}
 }
 

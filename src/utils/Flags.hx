@@ -105,7 +105,13 @@ class Flags {
 		return new Fault(SYNTAX).withDetail('invalid value for flag \'$arg\' (try --help)');
 	}
 
+	public static function expectParameters(wanted: Int, got: Int): Fault {
+		return new Fault(SYNTAX).withDetail('expected $wanted parameters but got $got');
+	}
+
     public var map: Map<String, AbstractFlag> = [];
+	public var remainingSetter: Iterable<String> -> Void = null;
+	public var expectRemaining: Int = 0;
 
 	public function new() {}
 
@@ -131,6 +137,12 @@ class Flags {
 
     public function addString(name: String, setter: (String) -> Void): Flags {
         return add(new StringFlag(name, setter));
+	}
+
+	public function withRemaining(count: Int, setter: Iterable<String> -> Void): Flags {
+		expectRemaining = count;
+		remainingSetter = setter;
+		return this;
 	}
 }
 
