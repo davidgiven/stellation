@@ -7,6 +7,7 @@ import utils.Injectomatic.inject;
 import tink.CoreApi;
 using model.ObjectSetTools;
 using utils.ArrayTools;
+using interfaces.OidSetTools;
 
 enum Scope {
     SERVERONLY;
@@ -26,6 +27,10 @@ class AbstractProperty {
     public function createProperty(datastore: IDatastore): Void {
         throw Fault.UNIMPLEMENTED;
     }
+
+	public function setDynamicValue(thing: SThing, value: Dynamic): Void {
+		throw Fault.UNIMPLEMENTED;
+	}
 
 	public function getDynamicValue(thing: SThing): Dynamic {
 		throw Fault.UNIMPLEMENTED;
@@ -50,6 +55,10 @@ class IntProperty extends AbstractProperty {
         datastore.createProperty(name, "INTEGER", false);
     }
 
+	public override function setDynamicValue(thing: SThing, value: Dynamic): Void {
+		set(thing, value);
+	}
+
 	public override function getDynamicValue(thing: SThing): Dynamic {
 		return get(thing);
 	}
@@ -73,6 +82,10 @@ class FloatProperty extends AbstractProperty {
         datastore.createProperty(name, "REAL", false);
     }
 
+	public override function setDynamicValue(thing: SThing, value: Dynamic): Void {
+		set(thing, value);
+	}
+
 	public override function getDynamicValue(thing: SThing): Dynamic {
 		return get(thing);
 	}
@@ -95,6 +108,10 @@ class StringProperty extends AbstractProperty {
     public override function createProperty(datastore: IDatastore): Void {
         datastore.createProperty(name, "TEXT", false);
     }
+
+	public override function setDynamicValue(thing: SThing, value: Dynamic): Void {
+		set(thing, value);
+	}
 
 	public override function getDynamicValue(thing: SThing): Dynamic {
 		return get(thing);
@@ -127,8 +144,17 @@ class ObjectProperty<T: SThing> extends AbstractProperty {
         datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", false);
     }
 
+	public override function setDynamicValue(thing: SThing, value: Dynamic): Void {
+		thing.datastore.setOidProperty(thing.oid, name, value);
+	}
+
 	public override function getDynamicValue(thing: SThing): Dynamic {
-		return get(thing);
+		var o = get(thing);
+		if (o == null) {
+			return null;
+		} else {
+			return o.oid;
+		}
 	}
 }
 
@@ -227,8 +253,13 @@ class SetProperty<T: SThing> extends AbstractProperty {
         datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", true);
     }
 
+	public override function setDynamicValue(thing: SThing, value: Dynamic): Void {
+        var oidSet = thing.datastore.getSetProperty(thing.oid, name);
+		oidSet.clear().addAll(value);
+	}
+
 	public override function getDynamicValue(thing: SThing): Dynamic {
-		return [for (k in get(thing).getAll()) k];
+		return [for (k in get(thing).getAll()) k.oid];
 	}
 }
 

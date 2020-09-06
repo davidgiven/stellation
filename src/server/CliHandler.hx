@@ -61,7 +61,7 @@ class CliHandler extends AbstractHandler {
         try {
             return findUniverse();
         } catch (f: Fault) {
-            var universe = findUniverse();
+            var universe = objectLoader.createUniverse();
             var god = objectLoader.createGod();
 
             universe.galaxy = objectLoader.createObject(SGalaxy);

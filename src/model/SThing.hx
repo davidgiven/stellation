@@ -39,6 +39,15 @@ class SThing implements HasProperties {
 	}
 
 	@:generic
+	public inline function as<T>(klass: Class<T>): T {
+		if (Std.isOfType(this, klass)) {
+			return cast(this);
+		} else {
+			return null;
+		}
+	}
+
+	@:generic
 	public inline function findChild<T: SThing>(klass: Class<Dynamic>): Null<T> {
 		var o: Dynamic = contents.getAll().find(o -> o.kind == klass);
 		return o;

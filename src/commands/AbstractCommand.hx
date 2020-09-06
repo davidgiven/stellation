@@ -7,13 +7,19 @@ import utils.Flags;
 import utils.Fault;
 import utils.FaultDomain.SYNTAX;
 import tink.CoreApi;
+import model.ObjectLoader;
+import model.SUniverse;
+import model.SGalaxy;
 using utils.NullTools;
 
-@await
+@:tink
 class AbstractCommand<Req, Res> {
-    var console = inject(IConsole);
+    @:lazy var console = inject(IConsole);
+	@:lazy var objectLoader = inject(ObjectLoader);
+	@:lazy var universe = inject(SUniverse);
+	@:lazy var galaxy = inject(SGalaxy);
 
-	@async public function callAsync(argv: Array<String>): Noise {
+	public function callAsync(argv: Array<String>): Promise<Noise> {
 		throw Fault.UNIMPLEMENTED;
 	}
 

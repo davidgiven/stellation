@@ -6,6 +6,9 @@ import interfaces.IConsole;
 import interfaces.IDatastore;
 import interfaces.IRemoteClient;
 import model.ObjectLoader;
+import model.Syncer;
+import model.SUniverse;
+import model.SGalaxy;
 import runtime.shared.InMemoryDatastore;
 import tink.CoreApi;
 import ui.ConsoleWindow;
@@ -20,6 +23,8 @@ class GameLoop implements IConsole {
 	var cookies = inject(Cookies);
 	@:calc var commandDispatcher = inject(CommandDispatcher);
 	@:calc var remoteClient = inject(IRemoteClient);
+	@:calc var datastore = inject(IDatastore);
+	@:calc var objectLoader = inject(ObjectLoader);
 
 	var consoleWindow: ConsoleWindow = null;
 	@:signal var onTerminateGame: Noise;
@@ -27,9 +32,6 @@ class GameLoop implements IConsole {
 	public function new() {}
 
 	@await public function execute() {
-		bind(IRemoteClient, new RemoteClient());
-		bind(CommandDispatcher, new CommandDispatcher());
-
 		while (true) {
 			/* Attempt to log in */
 
@@ -40,12 +42,27 @@ class GameLoop implements IConsole {
 				var loginData = @await new LoginForm(defaultUsername, defaultPassword).execute();
 				if (!loginData.canceled) {
 					try {
-						remoteClient.setCredentials(loginData.username, loginData.password);
 						//clock.setTime(0.0)
+
+						bind(IDatastore, new InMemoryDatastore());
+						datastore.initialiseDatabase();
+
+						bind(ObjectLoader, new ObjectLoader());
+						objectLoader.initialiseProperties();
+
+						bind(Syncer, new Syncer());
+
+						bind(IRemoteClient, new RemoteClient());
+						remoteClient.setCredentials(loginData.username, loginData.password);
+
+						bind(CommandDispatcher, new CommandDispatcher());
 
 						cookies.set("username", loginData.username);
 						cookies.set("password", loginData.password);
 						@await new PingCommand().callAsync(["ping"]);
+
+						bind(SUniverse, objectLoader.findUniverse()); 
+						bind(SGalaxy, objectLoader.findGalaxy()); 
 
 						break;
 					} catch (f: Fault) {
@@ -55,19 +72,14 @@ class GameLoop implements IConsole {
 //						} else {
 //							throw f;
 //						}
-					} catch (f) {
-						trace("uncaught error:", f);
+					} catch (d: Dynamic) {
+						trace("uncaught error:", d);
+						throw d;
 					}
 				}
 			}
 
 			/* Actually run the game */
-
-			var datastore = new InMemoryDatastore();
-			datastore.initialiseDatabase();
-			bind(IDatastore, datastore);
-
-			bind(ObjectLoader, new ObjectLoader());
 
 			consoleWindow = new ConsoleWindow();
 			consoleWindow.create();

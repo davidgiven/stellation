@@ -1,6 +1,9 @@
 package utils;
 import utils.FaultDomain.INTERNAL;
 import haxe.Exception;
+import haxe.CallStack;
+import haxe.io.Output;
+using StringTools;
 
 @:tink
 class Fault extends Exception {
@@ -13,10 +16,13 @@ class Fault extends Exception {
 	public var status = 500;
 	public var domain = INTERNAL;
 	public var detail = "Fault";
+	public var stackTrace: Array<StackItem>;
+	public var cause: Fault = null;
 
 	public function new(domain: FaultDomain) {
-		withDomain(domain);
 		super(detail);
+		withDomain(domain);
+		stackTrace = CallStack.exceptionStack();
 	}
 
 	public function withDomain(domain: FaultDomain): Fault {
@@ -34,42 +40,33 @@ class Fault extends Exception {
 		return this;
 	}
 
+	public function withCause(cause: Fault): Fault {
+		this.cause = cause;
+		return this;
+	}
+
 	public override function toString(): String {
 		return '${detail}: ${domain}.${status}';
 	}
+
+	public function rethrow(): Fault {
+		return new Fault(domain).withStatus(status).withDetail(detail).withCause(this);
+	}
+
+	public function dumpStackTrace(output: Output): Void {
+		var f = this;
+		while (f != null) {
+			for (item in CallStack.toString(f.stackTrace).split("\n")) {
+				if (item == "") continue;
+				output.writeString("  ");
+				output.writeString(item.replace("Called from", "| at"));
+				output.writeString("\n");
+			}
+			f = f.cause;
+			if (f != null) {
+				output.writeString("Caused by:\n");
+			}
+		}
+	}
 }
 
-
-//private const val STATUS = "status"
-//private const val DOMAIN = "domain"
-//private const val DETAIL = "detail"
-//
-//class Fault : Exception {
-//    override val message: String?
-//        get() = "$detail: $domain.$status"
-//
-//    constructor() : super()
-//
-//    constructor(e: Throwable?) : super(e)
-//
-//    constructor(domain: FaultDomain) : super() {
-//        this.domain = domain
-//    }
-//
-//    constructor(encoded: String) : super() {
-//        val p = Message(encoded)
-//        status = p.getInt(STATUS)
-//        val domainOrdinal = p.getInt(DOMAIN)
-//        domain = FaultDomain.values()[domainOrdinal]
-//        detail = p[DETAIL]
-//    }
-//
-//    fun serialise(): String {
-//        val p = Message()
-//        p.setInt(STATUS, status)
-//        p.setInt(DOMAIN, domain.ordinal)
-//        p[DETAIL] = detail
-//        return p.serialise()
-//    }
-//}
-//

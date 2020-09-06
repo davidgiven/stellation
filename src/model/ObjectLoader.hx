@@ -41,13 +41,13 @@ class ObjectLoader {
             if (Std.is(o, AbstractProperty)) {
 				var p = cast(o, AbstractProperty);
 				p.createProperty(datastore);
-				allProperties[p.name] = p;
+				allProperties[p.name.toLowerCase()] = p;
             }
         }
     }
 
 	public function findProperty(name: String): AbstractProperty {
-		return allProperties[name];
+		return allProperties[name.toLowerCase()];
 	}
 
     public function loadRawObject<T: SThing>(oid: Oid, klass: Class<T>): T {
@@ -114,6 +114,10 @@ class ObjectLoader {
 
     public function findUniverse(): SUniverse {
         return loadObject(UNIVERSE_OID, SUniverse);
+    }
+
+    public function findGalaxy(): SGalaxy {
+		return findUniverse().galaxy;
     }
 
     public function createUniverse(): SUniverse {

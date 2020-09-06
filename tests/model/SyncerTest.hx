@@ -7,8 +7,10 @@ import runtime.cpp.Sqlite;
 import runtime.cpp.SqlDatastore;
 import interfaces.IDatastore;
 import interfaces.IClock;
+import interfaces.ILogger;
 import runtime.shared.ServerClock;
 import runtime.shared.Time;
+import runtime.shared.TraceLogger;
 import model.SUniverse;
 import model.SGalaxy;
 import model.SStar;
@@ -49,6 +51,7 @@ class SyncerTest extends TestCase {
 		Injectomatic.resetBindingsForTest();
 		bind(IClock, new ServerClock());
 		bind(Time, new Time());
+		bind(ILogger, new TraceLogger());
 
         bind(SqliteDatabase, Sqlite.open(":memory:"));
 		datastore = new SqlDatastore();

@@ -51,10 +51,13 @@ class AbstractHandler {
         try {
             callback();
             database.close();
-        } catch (f) {
+        } catch (f: Fault) {
             database.close();
-            throw f;
-        }
+			throw f.rethrow();
+        } catch (d: Dynamic) {
+            database.close();
+			throw d;
+		}
     }
 //fun withServer(dbfile: String, callback: () -> Unit) {
 //    val database by injection<IDatabase>()

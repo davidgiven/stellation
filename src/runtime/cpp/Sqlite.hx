@@ -94,7 +94,7 @@ class SqliteStatement extends Finalizable {
     public function executeStatement(): Void {
         var e: Int = untyped __cpp__("sqlite3_step({0})", stmt);
         if (e != Sqlite.DONE) {
-            throw Sqlite.sqlException('Statement execution error $e ${Sqlite.sqliteError(db)}');
+            throw Sqlite.sqlException('Statement execution error $e: ${Sqlite.sqliteError(db)}');
         }
     }
 

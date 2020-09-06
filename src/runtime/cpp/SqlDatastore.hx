@@ -331,10 +331,13 @@ class SqlDatastore implements IDatastore {
             var result = callback();
             db.executeSql("COMMIT");
 			return result;
-        } catch (f) {
+        } catch (f: Fault) {
             db.executeSql("ROLLBACK");
-            throw f;
-        }
+            throw f.rethrow();
+        } catch (d: Dynamic) {
+			db.executeSql("ROLLBACK");
+			throw d;
+		}
     }
 
     public function getHierarchy(root: Oid, containment: String): Map<Oid, Noise> {

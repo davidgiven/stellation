@@ -39,9 +39,12 @@ class CgiHandler extends AbstractHandler {
 				bind(SGalaxy, universe.galaxy);
 
 				var session: Int = u.unserialize();
+				if (session == 0) {
+					session = datastore.createSyncSession();
+				}
 				var username: String = u.unserialize();
 				var password: String = u.unserialize();
-				log('start request from $username');
+				log('start request from $username, session $session');
 				var player = authenticator.authenticatePlayer(username, password);
 				log('authenticated as ${player.oid}');
 
@@ -75,7 +78,15 @@ class CgiHandler extends AbstractHandler {
 					s.serialize(null);
 				}
 				s.serialize(res);
-				s.serialize(new Syncer().exportSyncPacket(player, session));
+				datastore.withTransaction(() -> {
+					try {
+						s.serialize(new Syncer().exportSyncPacket(player, session));
+					} catch (f: Fault) {
+						log('sync failure: $f');
+						throw f.rethrow();
+					}
+				});
+
 				Sys.println(s.toString());
 			});
 		} catch (f: Fault) {
@@ -84,13 +95,13 @@ class CgiHandler extends AbstractHandler {
             Sys.println('Status: ${f.status}');
             Sys.println("");
 			Sys.println(f.detail);
-			trace(f);
+			f.dumpStackTrace(Sys.stdout());
 		} catch (d: Dynamic) {
 			log('fail: $d');
             Sys.println("Content-type: text/plain; charset=utf-8");
             Sys.println('Status: 500');
             Sys.println("");
-			trace(d);
+			throw d;
 		}
 	}
 

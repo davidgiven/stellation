@@ -1,17 +1,21 @@
 package client;
 
-import utils.Fault;
-import interfaces.IRemoteClient;
+import haxe.Exception;
 import haxe.Serializer;
 import haxe.Unserializer;
-import js.html.XMLHttpRequest;
-import haxe.Exception;
-import tink.CoreApi;
 import interfaces.ILogger.Logger.log;
+import interfaces.IRemoteClient;
+import js.html.XMLHttpRequest;
+import model.Syncer;
+import tink.CoreApi;
+import utils.Fault;
+import utils.Injectomatic.inject;
 
 @:tink
 @await
 class RemoteClient implements IRemoteClient {
+	private var syncer = inject(Syncer);
+
 	private var username: String;
 	private var password: String;
 	private var session = 0;
@@ -27,8 +31,7 @@ class RemoteClient implements IRemoteClient {
 		var s = new Serializer();
 		s.useCache = true;
 
-		var thisSession = session++;
-		s.serialize(thisSession);
+		s.serialize(session);
 		s.serialize(username);
 		s.serialize(password);
 		s.serialize(argv);
@@ -55,15 +58,16 @@ class RemoteClient implements IRemoteClient {
 		});
 
 		var u = new Unserializer(response);
-		var sessionReply: Int = u.unserialize();
-		log('sessionReply=$sessionReply thisSession=$thisSession');
-		if (sessionReply != thisSession) {
-			throw Fault.PROTOCOL;
-		}
+		session = u.unserialize();
 		var serverFault = u.unserialize();
 		var res = u.unserialize();
 		if (serverFault != null) {
 			throw new Fault(serverFault.domain).withStatus(serverFault.status).withDetail(serverFault.detail);
+		}
+
+		var syncPacket = u.unserialize();
+		if (syncPacket != null) {
+			syncer.importSyncPacket(syncPacket);
 		}
 		return res;
 	}

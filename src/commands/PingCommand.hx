@@ -9,7 +9,9 @@ class PingCommand extends AbstractRemoteCommand<Noise, Noise> {
     @:keep public static final NAME = "ping";
     @:keep public static final DESCRIPTION = "pings the server for a status update";
 
-	public function new() {}
+	public function new() {
+		super();
+	}
 
     @:keep override function parse(argv: Array<String>): Noise {
         if (argv.length != 1) {
