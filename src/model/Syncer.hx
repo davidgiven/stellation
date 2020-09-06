@@ -46,7 +46,7 @@ class Syncer {
 					g = [];
 					p[oid] = g;
 				}
-				g[propertyName] = property.getDynamicValue();
+				g[propertyName] = property.getDynamicValue(thing);
 				datastore.propertySeenBy(oid, propertyName, session);
 			}
 		}

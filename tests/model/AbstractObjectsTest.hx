@@ -47,8 +47,6 @@ class AbstractObjectsTest extends TestCase {
         var s2 = objectLoader.createObject(SStar).moveTo(g);
         var s3 = objectLoader.createObject(SStar).moveTo(g);
 
-        trace(s1, s2, s3);
-        trace(g.contents.getAll().toMap());
         Assert.same([s1, s2, s3].toMap(), g.contents.getAll().toMap());
     }
 

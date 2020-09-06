@@ -207,6 +207,7 @@ class SqlDatastore implements IDatastore {
     public function setOidProperty(oid: Oid, name: String, value: Null<Oid>): Void {
         setStatement(oid, name).bindOid(2, value)
                 .executeStatement();
+		propertyChanged(oid, name);
     }
 
     public function getOidProperty(oid: Oid, name: String): Null<Oid> {
@@ -217,6 +218,7 @@ class SqlDatastore implements IDatastore {
     public function setIntProperty(oid: Oid, name: String, value: Int): Void {
         setStatement(oid, name).bindInt(2, value)
                 .executeStatement();
+		propertyChanged(oid, name);
     }
 
     public function getIntProperty(oid: Oid, name: String): Int {
@@ -229,6 +231,7 @@ class SqlDatastore implements IDatastore {
     public function setFloatProperty(oid: Oid, name: String, value: Float): Void {
         setStatement(oid, name).bindFloat(2, value)
                 .executeStatement();
+		propertyChanged(oid, name);
     }
 
     public function getFloatProperty(oid: Oid, name: String): Float {
@@ -241,6 +244,7 @@ class SqlDatastore implements IDatastore {
     public function setStringProperty(oid: Oid, name: String, value: String): Void {
         setStatement(oid, name).bindString(2, value)
                 .executeStatement();
+		propertyChanged(oid, name);
     }
 
     public function getStringProperty(oid: Oid, name: String): String {
@@ -253,6 +257,14 @@ class SqlDatastore implements IDatastore {
     }
 
     public function propertyChanged(oid: Oid, name: String): Void {
+        db.sqlStatement('INSERT OR IGNORE INTO properties (oid, name) VALUES (?, ?)')
+                .bindOid(1, oid)
+                .bindString(2, name)
+                .executeStatement();
+        db.sqlStatement('DELETE FROM seen_by WHERE oid = ? AND name = ?')
+                .bindOid(1, oid)
+                .bindString(2, name)
+                .executeStatement();
     }
 
     public function createSyncSession(): Int {
@@ -265,8 +277,53 @@ class SqlDatastore implements IDatastore {
 				.toInt();
 	}
 
-    public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>> throw Fault.UNIMPLEMENTED;
-    public function propertySeenBy(oid: Oid, name: String, session: Int): Void throw Fault.UNIMPLEMENTED;
+    public function getPropertiesChangedSince(oids: Iterable<Oid>, session: Int): Iterable<Pair<Oid, String>> {
+		db.executeSql('DROP TABLE IF EXISTS _temp_oids');
+		db.executeSql(
+			'CREATE TEMPORARY TABLE _temp_oids (
+				oid INTEGER PRIMARY KEY
+			)');
+		for (oid in oids) {
+			db.sqlStatement('INSERT INTO _temp_oids (oid) VALUES (?)')
+				.bindOid(1, oid)
+				.executeStatement();
+		}
+
+		var results: Array<Pair<Oid, String>> = [];
+        for (row in db.sqlStatement('
+                    SELECT
+                        oid, name
+                    FROM
+                        properties
+                    WHERE
+                        EXISTS (SELECT * FROM _temp_oids WHERE _temp_oids.oid = properties.oid)
+                        AND NOT EXISTS (
+                            SELECT
+                                *
+                            FROM
+                                seen_by
+                            WHERE
+                                seen_by.oid = properties.oid
+                                AND seen_by.name = properties.name
+                                AND seen_by.session = ?
+                        )
+                ')
+                .bindInt(1, session)
+                .executeQuery()) {
+			var oid = row.get("oid").toOid();
+			var name = row.get("name").toString();
+			results.push(new Pair(oid, name));
+		}
+		return results;
+	}
+
+    public function propertySeenBy(oid: Oid, name: String, session: Int): Void {
+        db.sqlStatement('INSERT INTO seen_by (oid, name, session) VALUES (?, ?, ?)')
+                .bindOid(1, oid)
+                .bindString(2, name)
+                .bindInt(3, session)
+                .executeStatement();
+	}
 
 	public function withTransaction<T>(callback: () -> T): T {
         db.executeSql("BEGIN");

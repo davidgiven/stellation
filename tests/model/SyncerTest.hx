@@ -54,6 +54,8 @@ class SyncerTest extends TestCase {
 		universe = objectLoader.createUniverse();
 		bind(SUniverse, universe);
 
+		var god = objectLoader.createGod();
+
 		universe.galaxy = objectLoader.createObject(SGalaxy);
 		bind(SGalaxy, universe.galaxy);
 
@@ -112,6 +114,25 @@ class SyncerTest extends TestCase {
 		Assert.same(
 			[star2, playerx, shipx, jumpdrivex, ship2, jumpdrive2].toMap(),
 			playerx.calculateVisibleObjects());
+	}
+
+	public function testInitialSync() {
+		var session = datastore.createSyncSession();
+
+		var p = syncer.exportSyncPacket(player1, session);
+		Assert.same([
+			universe.oid,
+			universe.galaxy.oid,
+			star1.oid,
+			star2.oid,
+			player1.oid,
+			ship1.oid,
+			jumpdrive1.oid,
+			ship2.oid,
+			jumpdrive2.oid,
+			shipx.oid,
+			jumpdrivex.oid
+		].toMap(), [for (k in p.keys()) k].toMap());
 	}
 }
 

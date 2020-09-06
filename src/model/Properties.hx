@@ -25,7 +25,7 @@ class AbstractProperty {
         throw Fault.UNIMPLEMENTED;
     }
 
-	public function getDynamicValue(): Dynamic {
+	public function getDynamicValue(thing: SThing): Dynamic {
 		throw Fault.UNIMPLEMENTED;
 	}
 }
@@ -47,6 +47,10 @@ class IntProperty extends AbstractProperty {
     public override function createProperty(datastore: IDatastore): Void {
         datastore.createProperty(name, "INTEGER", false);
     }
+
+	public override function getDynamicValue(thing: SThing): Dynamic {
+		return get(thing);
+	}
 }
 
 class FloatProperty extends AbstractProperty {
@@ -66,6 +70,10 @@ class FloatProperty extends AbstractProperty {
     public override function createProperty(datastore: IDatastore): Void {
         datastore.createProperty(name, "REAL", false);
     }
+
+	public override function getDynamicValue(thing: SThing): Dynamic {
+		return get(thing);
+	}
 }
 
 class StringProperty extends AbstractProperty {
@@ -85,6 +93,10 @@ class StringProperty extends AbstractProperty {
     public override function createProperty(datastore: IDatastore): Void {
         datastore.createProperty(name, "TEXT", false);
     }
+
+	public override function getDynamicValue(thing: SThing): Dynamic {
+		return get(thing);
+	}
 }
 
 class ObjectProperty<T: SThing> extends AbstractProperty {
@@ -112,6 +124,10 @@ class ObjectProperty<T: SThing> extends AbstractProperty {
     public override function createProperty(datastore: IDatastore): Void {
         datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", false);
     }
+
+	public override function getDynamicValue(thing: SThing): Dynamic {
+		return get(thing);
+	}
 }
 
 class ObjectSet<T: SThing> {
@@ -189,6 +205,10 @@ class SetProperty<T: SThing> extends AbstractProperty {
     public override function createProperty(datastore: IDatastore): Void {
         datastore.createProperty(name, "INTEGER REFERENCES objects(oid) ON DELETE CASCADE", true);
     }
+
+	public override function getDynamicValue(thing: SThing): Dynamic {
+		return get(thing).getAll();
+	}
 }
 
 @:tink
