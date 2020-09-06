@@ -15,7 +15,7 @@ import model.SPlayer;
 using utils.NullTools;
 
 @:tink
-class AbstractCommand<Req, Res> {
+class AbstractCommand<Res> {
     @:lazy var console = inject(IConsole);
 	@:lazy var objectLoader = inject(ObjectLoader);
 	@:lazy var datastore = inject(IDatastore);
@@ -23,24 +23,31 @@ class AbstractCommand<Req, Res> {
 	@:lazy var galaxy = inject(SGalaxy);
 	@:lazy var player = inject(SPlayer);
 
-	public function callAsync(argv: Array<String>): Promise<Noise> {
+	var argv: Array<String> = [];
+
+	public function setArgv(argv: Array<String>): AbstractCommand<Res> {
+		this.argv = argv;
+		return this;
+	}
+	
+	public function callAsync(): Promise<Noise> {
 		throw Fault.UNIMPLEMENTED;
 	}
 
-	public function callSync(argv: Array<String>): Void {
-		render(callRemote(argv));
+	public function callSync(): Void {
+		render(callRemote());
 	}
 		
-	public function callRemote(argv: Array<String>): Res {
-		var req = parse(argv);
-		return run(argv, req);
+	public function callRemote(): Res {
+		parse();
+		return run();
 	}
 
-	public function parse(argv: Array<String>): Req {
+	public function parse(): Void {
         throw Fault.UNIMPLEMENTED;
 	}
 
-	public function run(argv: Array<String>, req: Req): Res {
+	public function run(): Res {
         throw Fault.UNIMPLEMENTED;
 	}
 

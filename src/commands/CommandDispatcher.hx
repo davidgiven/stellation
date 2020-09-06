@@ -43,13 +43,15 @@ class CommandDispatcher {
 		}
 	}
 
-	public function resolve(argv: Array<String>): AbstractCommand<Dynamic, Dynamic> {
+	public function resolve(argv: Array<String>): AbstractCommand<Dynamic> {
 		var name = argv[0];
 		var record = commands[name];
 		if (record == null) {
 			throw new Fault(SYNTAX).withDetail('command \'${name}\' not found');
 		}
-		return record.klass.createInstance([]);
+		var command: AbstractCommand<Dynamic> = record.klass.createInstance([]);
+		command.setArgv(argv);
+		return command;
 	}
 
 	@async public function clientCall(cmdline: String): Noise {
@@ -61,7 +63,7 @@ class CommandDispatcher {
 			}
 
 			var command = resolve(argv);
-			@await command.callAsync(argv);
+			@await command.callAsync();
         } catch (f: Fault) {
             console.println('Failed: ${f.detail}');
         } catch (e) {
@@ -72,46 +74,13 @@ class CommandDispatcher {
 
 	public function serverCall(argv: Array<String>): Void {
 		var command = resolve(argv);
-		command.callSync(argv);
+		command.callSync();
 	}
 
 	public function remoteCall(argv: Array<String>): Dynamic {
 		var command = resolve(argv);
-		return command.callRemote(argv);
+		return command.callRemote();
 	}
-//    override val commands: Map<String, () -> AbstractCommand> by lazy { populateCommands() }
-//
-//    fun populateCommands(): Map<String, () -> AbstractCommand> {
-//        var commands: Map<String, () -> AbstractCommand> = emptyMap()
-//
-//        val commandsList = listOf(
-//                ::HelpCommand,
-//                ::EchoCommand,
-//                ::PingCommand,
-//                ::SetPasswordCommand,
-//                ::WhoAmICommand,
-//                ::StarsCommand,
-//                ::ExCommand,
-//                ::RenameCommand
-//        )
-//
-//        for (c in commandsList) {
-//            val name = c().name
-//            check(name !in commands)
-//            commands += name to c
-//        }
-//
-//        return commands
-//    }
-//
-//    override fun resolve(argv: List<String>): AbstractCommand {
-//        val name = argv[0]
-//        val constructor = commands.get(name) ?: throwCommandNotFoundException(name)
-//        val command = constructor()
-//        command.parseArguments(argv)
-//        command.output.setSuccess(false)
-//        return command
-//    }
 }
 
 

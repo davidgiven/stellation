@@ -7,7 +7,7 @@ import model.SThing;
 import utils.Flags;
 import utils.Oid;
 
-class RenameCommand extends AbstractRemoteCommand<Noise, Noise> {
+class RenameCommand extends AbstractRemoteCommand<Noise> {
     @:keep public static final NAME = "rename";
     @:keep public static final DESCRIPTION = "renames something";
 
@@ -18,7 +18,7 @@ class RenameCommand extends AbstractRemoteCommand<Noise, Noise> {
 		super();
 	}
 
-    @:keep override function parse(argv: Array<String>): Noise {
+    @:keep override function parse(): Void {
         if (argv.length != 3) {
             throw Flags.unrecognisedFlagException(argv[1]);
         }
@@ -27,10 +27,9 @@ class RenameCommand extends AbstractRemoteCommand<Noise, Noise> {
             throw Flags.unrecognisedFlagException(argv[1]);
 		}
 		newName = argv[2];
-        return Noise;
     }
 
-    override function run(argv: Array<String>, req: Noise): Noise {
+    override function run(): Noise {
         var o = objectLoader.loadObject(oid, SThing);
         o.checkModificationAccess();
         o.name = newName;

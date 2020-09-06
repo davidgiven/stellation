@@ -13,6 +13,7 @@ import runtime.shared.InMemoryDatastore;
 import tink.CoreApi;
 import ui.ConsoleWindow;
 import ui.LoginForm;
+import haxe.io.BytesOutput;
 import utils.Fault;
 import utils.Injectomatic.rebind;
 import utils.Injectomatic.bind;
@@ -60,19 +61,21 @@ class GameLoop implements IConsole {
 
 						cookies.set("username", loginData.username);
 						cookies.set("password", loginData.password);
-						@await new PingCommand().callAsync(["ping"]);
+						@await new PingCommand().setArgv(["ping"]).callAsync();
 
 						rebind(SUniverse, objectLoader.findUniverse()); 
 						rebind(SGalaxy, objectLoader.findGalaxy()); 
 
 						break;
 					} catch (f: Fault) {
-						trace("caught error:", f);
-//						if (f.domain == PERMISSION) {
+						if (f.domain == PERMISSION) {
 //						//	AlertForm("Login failed", "Username or password unrecognised.").execute()
-//						} else {
-//							throw f;
-//						}
+						} else {
+							var b = new BytesOutput();
+							b.writeString('${f.detail}\n');
+							f.dumpStackTrace(b);
+							trace(b.getBytes().toString());
+						}
 					} catch (d: Dynamic) {
 						trace("uncaught error:", d);
 						throw d;

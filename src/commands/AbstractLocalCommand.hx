@@ -3,9 +3,9 @@ package commands;
 import tink.CoreApi;
 
 @await
-class AbstractLocalCommand<Req, Res> extends AbstractCommand<Req, Res> {
-	@async public override function callAsync(argv: Array<String>): Noise {
-		callSync(argv);
+class AbstractLocalCommand<Res> extends AbstractCommand<Res> {
+	@async public override function callAsync(): Noise {
+		callSync();
 		return Noise;
 	}
 

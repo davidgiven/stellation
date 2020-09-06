@@ -8,8 +8,10 @@ import tink.CoreApi;
 import interfaces.ILogger.Logger.log;
 import interfaces.RPC;
 import utils.Injectomatic.bind;
+import haxe.Exception;
 import model.SUniverse;
 import model.SGalaxy;
+import model.SPlayer;
 import model.Syncer;
 
 @:tink
@@ -46,6 +48,7 @@ class CgiHandler extends AbstractHandler {
 				log('start request from $rpcReq.username, session $rpcReq.session');
 				var player = authenticator.authenticatePlayer(rpcReq.username, rpcReq.password);
 				log('authenticated as ${player.oid}');
+				bind(SPlayer, player);
 
 				var res: Dynamic = null;
 				var fault: Fault = null;
@@ -83,12 +86,14 @@ class CgiHandler extends AbstractHandler {
             Sys.println("");
 			Sys.println(f.detail);
 			f.dumpStackTrace(Sys.stdout());
-		} catch (d: Dynamic) {
-			log('fail: $d');
+		} catch (e: Exception) {
+			log('fail: $e');
             Sys.println("Content-type: text/plain; charset=utf-8");
             Sys.println('Status: 500');
             Sys.println("");
-			throw d;
+			var f = Fault.wrap(e);
+			Sys.println(f.detail);
+			f.dumpStackTrace(Sys.stdout());
 		}
 	}
 

@@ -6,16 +6,15 @@ import tink.CoreApi;
 
 typedef Args = Array<String>;
 
-class EchoCommand extends AbstractLocalCommand<Args, Args> {
+class EchoCommand extends AbstractLocalCommand<Args> {
     @:keep public static final NAME = "echo";
     @:keep public static final DESCRIPTION = "displays a string on the console";
 
-    @:keep override function parse(argv: Array<String>): Args {
-        return argv;
+    @:keep override function parse(): Void {
     }
 
-    override function run(argv: Array<String>, req: Args): Args {
-        return req;
+    override function run(): Args {
+        return argv;
     }
 
 	override function render(res: Args): Void {

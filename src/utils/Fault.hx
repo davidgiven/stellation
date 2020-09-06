@@ -4,9 +4,10 @@ import haxe.Exception;
 import haxe.CallStack;
 import haxe.io.Output;
 using StringTools;
+using haxe.EnumTools;
 
 typedef SerialisedFault = {
-	domain: FaultDomain,
+	domain: Int,
 	detail: String,
 	status: Int,
 }
@@ -29,7 +30,7 @@ class Fault extends Exception {
 		return new Fault(INTERNAL).withException(e);
 	}
 
-	public function new(domain: FaultDomain) {
+	public function new(domain: FaultDomain = INTERNAL) {
 		super(detail);
 		withDomain(domain);
 		stackTrace = CallStack.exceptionStack();
@@ -93,9 +94,16 @@ class Fault extends Exception {
 	public function serialise(): SerialisedFault {
 		return {
 			status: status,
-			domain: domain,
+			domain: domain.getIndex(),
 			detail: detail
 		};
+	}
+
+	public function withSerialisedFault(f: SerialisedFault): Fault {
+		this.status = f.status;
+		this.domain = FaultDomain.createByIndex(f.domain);
+		this.detail = f.detail;
+		return this;
 	}
 }
 

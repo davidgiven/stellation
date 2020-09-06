@@ -7,13 +7,13 @@ import model.SThing;
 import utils.Oid;
 import utils.Flags;
 
-class ExCommand extends AbstractLocalCommand<Noise, Noise> {
+class ExCommand extends AbstractLocalCommand<Noise> {
     @:keep public static final NAME = "ex";
     @:keep public static final DESCRIPTION = "examines an object";
 
 	private var oid: Null<Oid> = null;
 
-    @:keep override function parse(argv: Array<String>): Noise {
+    @:keep override function parse(): Void {
 		if (argv.length != 2) {
             throw Flags.unrecognisedFlagException(argv[1]);
 		}
@@ -21,12 +21,10 @@ class ExCommand extends AbstractLocalCommand<Noise, Noise> {
 		if (oid == null) {
             throw Flags.unrecognisedFlagException(argv[1]);
 		}
-			
-        return Noise;
     }
 
-    override function run(argv: Array<String>, req: Noise): Noise {
-        return req;
+    override function run(): Noise {
+        return Noise;
     }
 
 	override function render(res: Noise): Void {

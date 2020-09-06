@@ -5,21 +5,20 @@ import tink.CoreApi;
 import utils.GetOpt.getopt;
 import utils.Flags;
 
-class StarsCommand extends AbstractLocalCommand<Noise, Noise> {
+class StarsCommand extends AbstractLocalCommand<Noise> {
     @:keep public static final NAME = "stars";
     @:keep public static final DESCRIPTION = "lists interesting (or otherwise) stars";
 
 	private var showAll = false;
 
-    @:keep override function parse(argv: Array<String>): Noise {
+    @:keep override function parse(): Void {
 		var remaining = getopt(argv.slice(1), new Flags()
 				.addFlag("-a", s -> showAll = true)
 				.addFlag("--all", s -> showAll = true)
 		);
-		return Noise;
     }
 
-    override function run(argv: Array<String>, req: Noise): Noise {
+    override function run(): Noise {
         return Noise;
     }
 

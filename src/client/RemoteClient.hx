@@ -71,9 +71,7 @@ class RemoteClient implements IRemoteClient {
 		u.setResolver(null);
 		var rpcRes: RpcResponse = u.unserialize();
 		if (rpcRes.fault != null) {
-			throw new Fault(rpcRes.fault.domain)
-					.withStatus(rpcRes.fault.status)
-					.withDetail(rpcRes.fault.detail);
+			throw new Fault().withSerialisedFault(rpcRes.fault);
 		}
 
 		if (rpcRes.player != 0) {
