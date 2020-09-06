@@ -24,6 +24,7 @@ class CommandDispatcher {
 		PingCommand,
 		RenameCommand,
 		StarsCommand,
+		WhoAmICommand,
 	];
 
 	public var commands: Map<String, CommandRecord> = [];

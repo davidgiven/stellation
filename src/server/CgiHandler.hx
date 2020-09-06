@@ -62,6 +62,7 @@ class CgiHandler extends AbstractHandler {
 				
 				var rpcRes: RpcResponse = {
 					syncSession: rpcReq.syncSession,
+					player: player.oid,
 					fault: if (fault != null) fault.serialise() else null,
 					syncData: new Syncer().exportSyncPacket(player, rpcReq.syncSession),
 					response: res

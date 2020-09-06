@@ -43,5 +43,9 @@ class SPlayer extends SThing {
 		}
 		return set;
 	}
+
+	public function canSee(object: SThing): Bool {
+		return visibleObjects.exists(object);
+	}
 }
 

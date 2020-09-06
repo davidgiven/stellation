@@ -10,6 +10,7 @@ import tink.CoreApi;
 import model.ObjectLoader;
 import model.SUniverse;
 import model.SGalaxy;
+import model.SPlayer;
 using utils.NullTools;
 
 @:tink
@@ -18,6 +19,7 @@ class AbstractCommand<Req, Res> {
 	@:lazy var objectLoader = inject(ObjectLoader);
 	@:lazy var universe = inject(SUniverse);
 	@:lazy var galaxy = inject(SGalaxy);
+	@:lazy var player = inject(SPlayer);
 
 	public function callAsync(argv: Array<String>): Promise<Noise> {
 		throw Fault.UNIMPLEMENTED;

@@ -6,6 +6,7 @@ import utils.Random;
 import interfaces.IDatastore;
 import model.Properties;
 import tink.CoreApi;
+import utils.Fault;
 using Lambda;
 using utils.ArrayTools;
 
@@ -72,15 +73,19 @@ class SThing implements HasProperties {
 	}
 
     public function checkModificationAccess(?player: SPlayer): Void {
-//        if (player.isGod()) {
-//            return
-//        }
-//        if (!player.canSee(this)) {
-//            throwObjectNotVisibleException(oid)
-//        }
-//        if (player != owner) {
-//            throwPermissionDeniedException()
-//        }
+		if (player == null) {
+			player = inject(SPlayer);
+		}
+
+        if (player.isGod()) {
+            return;
+        }
+        if (!player.canSee(this)) {
+			throw ObjectLoader.objectNotVisibleException(oid);
+        }
+        if (player != owner) {
+			throw Fault.PERMISSION_DENIED;
+        }
     }
 
 }

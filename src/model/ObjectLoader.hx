@@ -14,7 +14,7 @@ class ObjectLoader {
 	public static final UNIVERSE_OID = 1;
 	public static final GOD_OID = 2;
 
-    private static final KIND = Properties.KIND.name;
+    public static final KIND = Properties.KIND.name;
 
     private static final CLASSES = registerClasses([
 		SJumpdrive,
@@ -92,7 +92,13 @@ class ObjectLoader {
         return loadObject(oid, klass);
     }
 
-    private static function objectNotVisibleException(oid: Oid): Fault {
+	public function createSpecificObject<T: SThing>(oid: Oid, klass: Class<T>): T {
+		datastore.createSpecificObject(oid);
+        datastore.setStringProperty(oid, KIND, getSimpleName(klass));
+        return loadObject(oid, klass);
+	}
+
+    public static function objectNotVisibleException(oid: Oid): Fault {
         return new Fault(INVALID_ARGUMENT).withDetail('object $oid does not exist or is not visible');
     }
 

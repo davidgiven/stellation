@@ -61,12 +61,12 @@ class Syncer {
 			if (!datastore.doesObjectExist(oid)) {
 				datastore.createSpecificObject(oid);
 			}
-			var kind = props["kind"];
+			var kind = props[ObjectLoader.KIND];
 			if (kind != null) {
 				/* This property is being created. Set the kind now, so we can
 				 * load it. */
-				datastore.setStringProperty(oid, "kind", kind);
-				props.remove("kind");
+				datastore.setStringProperty(oid, ObjectLoader.KIND, kind);
+				props.remove(ObjectLoader.KIND);
 			}
 
 			var thing = objectLoader.loadObject(oid, SThing);

@@ -5,17 +5,23 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import interfaces.ILogger.Logger.log;
 import interfaces.IRemoteClient;
+import interfaces.IDatastore;
 import interfaces.RPC;
+import model.SPlayer;
 import js.html.XMLHttpRequest;
 import model.Syncer;
+import model.ObjectLoader;
 import tink.CoreApi;
 import utils.Fault;
 import utils.Injectomatic.inject;
+import utils.Injectomatic.rebind;
 
 @:tink
 @await
 class RemoteClient implements IRemoteClient {
 	private var syncer = inject(Syncer);
+	private var datastore = inject(IDatastore);
+	private var objectLoader = inject(ObjectLoader);
 
 	private var username: String;
 	private var password: String;
@@ -68,6 +74,13 @@ class RemoteClient implements IRemoteClient {
 			throw new Fault(rpcRes.fault.domain)
 					.withStatus(rpcRes.fault.status)
 					.withDetail(rpcRes.fault.detail);
+		}
+
+		if (rpcRes.player != 0) {
+			if (!datastore.doesObjectExist(rpcRes.player)) {
+				var player = objectLoader.createSpecificObject(rpcRes.player, SPlayer);
+				rebind(SPlayer, player);
+			}
 		}
 
 		session = rpcRes.syncSession;

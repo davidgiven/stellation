@@ -27,7 +27,7 @@ class StarsCommand extends AbstractLocalCommand<Noise, Noise> {
         for (o in galaxy.contents.getAll()) {
 			var star = o.as(SStar);
             if (star != null) {
-				if (showAll) {
+				if (showAll || player.canSee(star)) {
 					console.println('  ${star.name} at ${star.x}, ${star.y} (#${star.oid})');
 				}
             }

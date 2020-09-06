@@ -15,6 +15,7 @@ typedef RpcRequest = {
 
 typedef RpcResponse = {
 	response: Dynamic,
+	player: Oid,
 	fault: SerialisedFault,
 	syncSession: Int,
 	syncData: SyncMessage,
