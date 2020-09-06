@@ -10,7 +10,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: apt
-      run: sudo sudo add-apt-repository ppa:haxe/releases -y && apt update && sudo apt install haxe sassc gpp
+      run: sudo add-apt-repository ppa:haxe/releases -y && apt update && sudo apt install haxe sassc gpp
     - name: make
       run: make
 
