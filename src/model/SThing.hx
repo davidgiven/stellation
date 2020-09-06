@@ -32,9 +32,9 @@ class SThing implements HasProperties {
 	public function toString(): String {
 		var n = name;
 		if (n == null) {
-			return '#$oid';
+			return '#$oid:$kind';
 		} else {
-			return '#$oid("$n")';
+			return '#$oid:$kind("$n")';
 		}
 	}
 

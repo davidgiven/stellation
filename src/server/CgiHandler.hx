@@ -9,6 +9,7 @@ import interfaces.ILogger.Logger.log;
 import utils.Injectomatic.bind;
 import model.SUniverse;
 import model.SGalaxy;
+import model.Syncer;
 
 @:tink
 class CgiHandler extends AbstractHandler {
@@ -74,6 +75,7 @@ class CgiHandler extends AbstractHandler {
 					s.serialize(null);
 				}
 				s.serialize(res);
+				s.serialize(new Syncer().exportSyncPacket(player, session));
 				Sys.println(s.toString());
 			});
 		} catch (f: Fault) {

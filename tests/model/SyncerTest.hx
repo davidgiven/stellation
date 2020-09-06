@@ -2,6 +2,7 @@ package model;
 
 import utils.Injectomatic;
 import utils.Injectomatic.bind;
+import utils.Oid;
 import runtime.cpp.Sqlite;
 import runtime.cpp.SqlDatastore;
 import interfaces.IDatastore;
@@ -15,9 +16,16 @@ import model.SPlayer;
 import model.SShip;
 import model.SJumpdrive;
 import model.ObjectLoader;
+import model.Syncer;
 import utest.Assert;
+import tink.CoreApi;
 using model.ThingTools;
 using utils.ArrayTools;
+
+typedef PropTuple = {
+	oid: Oid,
+	name: String
+};
 
 class SyncerTest extends TestCase {
 	var datastore: SqlDatastore;
@@ -133,6 +141,61 @@ class SyncerTest extends TestCase {
 			shipx.oid,
 			jumpdrivex.oid
 		].toMap(), [for (k in p.keys()) k].toMap());
+	}
+
+	public function testIncrementalSync() {
+        var session = datastore.createSyncSession();
+
+        /* Initial sync */
+
+        syncer.exportSyncPacket(player1, session);
+
+        /* First incremental sync, with no changes. */
+
+		var p = syncer.exportSyncPacket(player1, session);
+		Assert.same(([]: Array<PropTuple>), getChangedProperties(p));
+
+		/* Change one property and try again. */
+
+        star1.name = "Fnord";
+		p = syncer.exportSyncPacket(player1, session);
+		Assert.same([
+				{ oid: star1.oid, name: "name" },
+			].toMap(), getChangedProperties(p).toMap());
+		Assert.same("Fnord", p[star1.oid]["name"]);
+
+        /* Sync again with no changes. */
+
+        p = syncer.exportSyncPacket(player1, session);
+        Assert.same(([]: Array<PropTuple>), getChangedProperties(p));
+
+        /* ship2 moves to star1, rendering star2 invisible. */
+
+        ship2.moveTo(star1);
+        p = syncer.exportSyncPacket(player1, session);
+		Assert.isFalse(p.exists(shipx.oid)); /* can't see shipx any more */
+
+        /* An invisible object changes state. */
+
+        shipx.name = "Floop";
+        p = syncer.exportSyncPacket(player1, session);
+        Assert.same(([]: Array<PropTuple>), getChangedProperties(p));
+
+        /* ship2 moves back to star2. Now player1 can see shipx's new name. */
+
+        ship2.moveTo(star2);
+        p = syncer.exportSyncPacket(player1, session);
+		Assert.same("Floop", p[shipx.oid]["name"]);
+	}
+
+	private static function getChangedProperties(syncMessage: SyncMessage): Array<PropTuple> {
+		var r: Array<PropTuple> = [];
+		for (oid => ps in syncMessage) {
+			for (name => value in ps) {
+				r.push({ oid: oid, name: name });
+			}
+		}
+		return r;
 	}
 }
 

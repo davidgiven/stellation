@@ -4,7 +4,9 @@ import interfaces.IDatastore;
 import utils.Fault;
 import utils.Oid;
 import utils.Injectomatic.inject;
+import tink.CoreApi;
 using model.ObjectSetTools;
+using utils.ArrayTools;
 
 enum Scope {
     SERVERONLY;
@@ -172,6 +174,25 @@ class ObjectSet<T: SThing> {
         };
     }
 
+	public function replaceAll(items: Iterable<T>): ObjectSet<T> {
+		var oldOids = [for (oid in underlying.getAll()) oid => Noise];
+		var newOids = [for (o in items) o.oid => Noise];
+
+		for (oid => n in oldOids) {
+			if (!newOids.exists(oid)) {
+				underlying.remove(oid);
+			}
+		}
+
+		for (oid => n in newOids) {
+			if (!oldOids.exists(oid)) {
+				underlying.add(oid);
+			}
+		}
+
+		return this;
+	}
+
 	public function getOne(): Null<T> {
         return load(underlying.getOne());
     }
@@ -207,7 +228,7 @@ class SetProperty<T: SThing> extends AbstractProperty {
     }
 
 	public override function getDynamicValue(thing: SThing): Dynamic {
-		return get(thing).getAll();
+		return [for (k in get(thing).getAll()) k];
 	}
 }
 
