@@ -50,6 +50,10 @@ class ObjectLoader {
 		return allProperties[name.toLowerCase()];
 	}
 
+	public function getAllProperties(): Iterable<AbstractProperty> {
+		return [for (k => v in allProperties) v];
+	}
+
     public function loadRawObject<T: SThing>(oid: Oid, klass: Class<T>): T {
         if (!datastore.doesObjectExist(oid)) {
             throw objectNotVisibleException(oid);

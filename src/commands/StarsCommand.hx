@@ -24,14 +24,24 @@ class StarsCommand extends AbstractLocalCommand<Noise, Noise> {
     }
 
 	override function render(res: Noise): Void {
-        for (o in galaxy.contents.getAll()) {
-			var star = o.as(SStar);
-            if (star != null) {
-				if (showAll || player.canSee(star)) {
-					console.println('  ${star.name} at ${star.x}, ${star.y} (#${star.oid})');
+		if (showAll) {
+			for (o in galaxy.contents.getAll()) {
+				var star = o.as(SStar);
+				if (star != null) {
+					showStar(star);
 				}
-            }
-        }
+			}
+		} else {
+			for (ship in player.ships.getAll()) {
+				if (player.canSee(ship)) {
+					showStar(ship.getContainingStar());
+				}
+			}
+		}
+	}
+
+	private function showStar(star: SStar) {
+		console.println('  ${star.name} at ${star.x}, ${star.y} (#${star.oid})');
 	}
 }
 

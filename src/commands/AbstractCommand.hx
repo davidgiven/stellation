@@ -1,6 +1,7 @@
 package commands;
 
 import interfaces.IConsole;
+import interfaces.IDatastore;
 import utils.GetOpt.getopt;
 import utils.Injectomatic.inject;
 import utils.Flags;
@@ -17,6 +18,7 @@ using utils.NullTools;
 class AbstractCommand<Req, Res> {
     @:lazy var console = inject(IConsole);
 	@:lazy var objectLoader = inject(ObjectLoader);
+	@:lazy var datastore = inject(IDatastore);
 	@:lazy var universe = inject(SUniverse);
 	@:lazy var galaxy = inject(SGalaxy);
 	@:lazy var player = inject(SPlayer);

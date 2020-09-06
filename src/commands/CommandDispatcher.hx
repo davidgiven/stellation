@@ -20,6 +20,7 @@ typedef CommandRecord = {
 class CommandDispatcher {
 	private static final COMMANDS: Array<Dynamic> = [
 		EchoCommand,
+		ExCommand,
 		HelpCommand,
 		PingCommand,
 		RenameCommand,

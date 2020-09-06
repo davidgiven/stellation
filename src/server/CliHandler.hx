@@ -5,6 +5,9 @@ import model.ObjectLoader;
 import model.SGalaxy;
 import model.SUniverse;
 import model.SPlayer;
+import model.SShip;
+import model.SJumpdrive;
+import model.SStar;
 import runtime.cpp.SqlDatastore;
 import commands.CommandDispatcher;
 import utils.Flags;
@@ -13,6 +16,8 @@ import utils.Injectomatic.bind;
 import utils.Oid;
 import utils.Fault;
 import tink.CoreApi;
+import haxe.Exception;
+using model.ThingTools;
 
 class CliHandler extends AbstractHandler {
     private static var databaseFile: String = null;
@@ -50,9 +55,21 @@ class CliHandler extends AbstractHandler {
 
             var player = objectLoader.loadObject(userOid, SPlayer);
             authenticator.setAuthenticatedPlayer(player);
+			bind(SPlayer, player);
 
             datastore.withTransaction(() -> {
-				commandDispatcher.serverCall(remaining);
+				try {
+					commandDispatcher.serverCall(remaining);
+				} catch (f: Fault) {
+					Sys.println(f.detail);
+					f.dumpStackTrace(Sys.stdout());
+					f.rethrow();
+				} catch (e: Exception) {
+					var f = Fault.wrap(e);
+					Sys.println(f.detail);
+					f.dumpStackTrace(Sys.stdout());
+					f.rethrow();
+				}
             });
         });
     }
@@ -71,6 +88,22 @@ class CliHandler extends AbstractHandler {
             god.username = "god";
             authenticator.registerPlayer(god);
             authenticator.setPassword(god, "fnord");
+
+			var player = objectLoader.createObject(SPlayer);
+			player.name = "Player";
+			player.username = "player";
+			player.owner = player;
+			authenticator.registerPlayer(player);
+			authenticator.setPassword(player, "fnord");
+
+			var ship = objectLoader.createObject(SShip);
+			ship.owner = player;
+			ship.moveTo(objectLoader.loadObject(4, SStar));
+			player.ships.add(ship);
+
+			var jumpdrive = objectLoader.createObject(SJumpdrive);
+			jumpdrive.owner = player;
+			jumpdrive.moveTo(ship);
 
             return universe;
         }

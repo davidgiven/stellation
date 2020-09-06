@@ -25,6 +25,10 @@ class Fault extends Exception {
 	public var stackTrace: Array<StackItem>;
 	public var cause: Fault = null;
 
+	public static function wrap(e: Exception): Fault {
+		return new Fault(INTERNAL).withException(e);
+	}
+
 	public function new(domain: FaultDomain) {
 		super(detail);
 		withDomain(domain);
@@ -51,6 +55,17 @@ class Fault extends Exception {
 		return this;
 	}
 
+	public function withException(exception: Exception): Fault {
+		this.detail = exception.message;
+		this.stackTrace = [];
+		var i = 0;
+		while (i < exception.stack.length) {
+			this.stackTrace[i] = exception.stack[i];
+			i++;
+		}
+		return this;
+	}
+
 	public override function toString(): String {
 		return '${detail}: ${domain}.${status}';
 	}
@@ -58,7 +73,7 @@ class Fault extends Exception {
 	public function rethrow(): Fault {
 		return new Fault(domain).withStatus(status).withDetail(detail).withCause(this);
 	}
-
+	
 	public function dumpStackTrace(output: Output): Void {
 		var f = this;
 		while (f != null) {
