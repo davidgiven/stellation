@@ -19,7 +19,7 @@ include src/client/build.mk
 
 bin/cgi-bin/stellation.cgi: $(OBJ)/build
 	mkdir -p $(dir $@)
-	cp $(OBJ)/server-temp/Main-debug $@
+	cp $(OBJ)/server-temp/Main $@
 
 $(OBJ)/build: build.hxml .haxelib $(SRCS)
 	haxe build.hxml
