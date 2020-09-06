@@ -5,6 +5,12 @@ import haxe.CallStack;
 import haxe.io.Output;
 using StringTools;
 
+typedef SerialisedFault = {
+	domain: FaultDomain,
+	detail: String,
+	status: Int,
+}
+
 @:tink
 class Fault extends Exception {
 	@:calc public static final UNIMPLEMENTED = new Fault(INTERNAL).withDetail("unimplemented operation");
@@ -67,6 +73,14 @@ class Fault extends Exception {
 				output.writeString("Caused by:\n");
 			}
 		}
+	}
+
+	public function serialise(): SerialisedFault {
+		return {
+			status: status,
+			domain: domain,
+			detail: detail
+		};
 	}
 }
 

@@ -35,18 +35,13 @@ class Injectomatic {
 	}
 
 	@:generic
-	public static function injectLazy<T>(t: Class<T>): Lazy<T> {
-        return Lazy.ofFunc(
-            () -> {
-                checkBindingExists(t);
-                return injections.get(t);
-            }
-        );
+	public static function bind<T>(t: Class<T>, value: T) {
+		checkBindingDoesNotExist(t);
+		injections.set(t, value);
 	}
 
 	@:generic
-	public static function bind<T>(t: Class<T>, value: T) {
-		checkBindingDoesNotExist(t);
+	public static function rebind<T>(t: Class<T>, value: T) {
 		injections.set(t, value);
 	}
 }

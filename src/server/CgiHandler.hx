@@ -6,6 +6,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import tink.CoreApi;
 import interfaces.ILogger.Logger.log;
+import interfaces.RPC;
 import utils.Injectomatic.bind;
 import model.SUniverse;
 import model.SGalaxy;
@@ -32,29 +33,26 @@ class CgiHandler extends AbstractHandler {
 
 			var u = new Unserializer(body);
 			u.setResolver(null);
+			var rpcReq: RpcRequest = u.unserialize();
 
 			withServer(Configuration.DATABASE_PATH, () -> {
 				var universe = findUniverse();
 				bind(SUniverse, universe);
 				bind(SGalaxy, universe.galaxy);
 
-				var session: Int = u.unserialize();
-				if (session == 0) {
-					session = datastore.createSyncSession();
+				if (rpcReq.syncSession == 0) {
+					rpcReq.syncSession = datastore.createSyncSession();
 				}
-				var username: String = u.unserialize();
-				var password: String = u.unserialize();
-				log('start request from $username, session $session');
-				var player = authenticator.authenticatePlayer(username, password);
+				log('start request from $rpcReq.username, session $rpcReq.session');
+				var player = authenticator.authenticatePlayer(rpcReq.username, rpcReq.password);
 				log('authenticated as ${player.oid}');
 
-				var argv: Array<String> = u.unserialize();
 				var res: Dynamic = null;
 				var fault: Fault = null;
 				datastore.withTransaction(() -> {
-					log('running: $argv');
+					log('running: $rpcReq');
 					try {
-						res = commandDispatcher.remoteCall(argv);
+						res = commandDispatcher.remoteCall(rpcReq.argv);
 						log('response: $res');
 					} catch (f: Fault) {
 						log('fault: $f');
@@ -62,31 +60,19 @@ class CgiHandler extends AbstractHandler {
 					}
 				});
 				
-				Sys.println("Content-type: text/plain; charset=utf-8");
-				Sys.println("");
+				var rpcRes: RpcResponse = {
+					syncSession: rpcReq.syncSession,
+					fault: if (fault != null) fault.serialise() else null,
+					syncData: new Syncer().exportSyncPacket(player, rpcReq.syncSession),
+					response: res
+				};
 
 				var s = new Serializer();
 				s.useCache = true;
-				s.serialize(session);
-				if (fault != null) {
-					s.serialize({
-						status: fault.status,
-						domain: fault.domain,
-						detail: fault.detail
-					});
-				} else {
-					s.serialize(null);
-				}
-				s.serialize(res);
-				datastore.withTransaction(() -> {
-					try {
-						s.serialize(new Syncer().exportSyncPacket(player, session));
-					} catch (f: Fault) {
-						log('sync failure: $f');
-						throw f.rethrow();
-					}
-				});
+				s.serialize(rpcRes);
 
+				Sys.println("Content-type: text/plain; charset=utf-8");
+				Sys.println("");
 				Sys.println(s.toString());
 			});
 		} catch (f: Fault) {

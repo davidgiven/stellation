@@ -14,6 +14,7 @@ import tink.CoreApi;
 import ui.ConsoleWindow;
 import ui.LoginForm;
 import utils.Fault;
+import utils.Injectomatic.rebind;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
 
@@ -44,25 +45,25 @@ class GameLoop implements IConsole {
 					try {
 						//clock.setTime(0.0)
 
-						bind(IDatastore, new InMemoryDatastore());
+						rebind(IDatastore, new InMemoryDatastore());
 						datastore.initialiseDatabase();
 
-						bind(ObjectLoader, new ObjectLoader());
+						rebind(ObjectLoader, new ObjectLoader());
 						objectLoader.initialiseProperties();
 
-						bind(Syncer, new Syncer());
+						rebind(Syncer, new Syncer());
 
-						bind(IRemoteClient, new RemoteClient());
+						rebind(IRemoteClient, new RemoteClient());
 						remoteClient.setCredentials(loginData.username, loginData.password);
 
-						bind(CommandDispatcher, new CommandDispatcher());
+						rebind(CommandDispatcher, new CommandDispatcher());
 
 						cookies.set("username", loginData.username);
 						cookies.set("password", loginData.password);
 						@await new PingCommand().callAsync(["ping"]);
 
-						bind(SUniverse, objectLoader.findUniverse()); 
-						bind(SGalaxy, objectLoader.findGalaxy()); 
+						rebind(SUniverse, objectLoader.findUniverse()); 
+						rebind(SGalaxy, objectLoader.findGalaxy()); 
 
 						break;
 					} catch (f: Fault) {

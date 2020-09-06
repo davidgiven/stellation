@@ -5,6 +5,7 @@ import haxe.Serializer;
 import haxe.Unserializer;
 import interfaces.ILogger.Logger.log;
 import interfaces.IRemoteClient;
+import interfaces.RPC;
 import js.html.XMLHttpRequest;
 import model.Syncer;
 import tink.CoreApi;
@@ -28,13 +29,16 @@ class RemoteClient implements IRemoteClient {
 	}
 
 	@async public function call<Res>(argv: Array<String>): Res {
+		var rpcReq: RpcRequest = {
+			syncSession: session,
+			argv: argv,
+			username: username,
+			password: password
+		};
+
 		var s = new Serializer();
 		s.useCache = true;
-
-		s.serialize(session);
-		s.serialize(username);
-		s.serialize(password);
-		s.serialize(argv);
+		s.serialize(rpcReq);
 
 		var response = @await Future.async((handler: Outcome<String, Error> -> Void) -> {
 			var xhr = new XMLHttpRequest();
@@ -58,18 +62,19 @@ class RemoteClient implements IRemoteClient {
 		});
 
 		var u = new Unserializer(response);
-		session = u.unserialize();
-		var serverFault = u.unserialize();
-		var res = u.unserialize();
-		if (serverFault != null) {
-			throw new Fault(serverFault.domain).withStatus(serverFault.status).withDetail(serverFault.detail);
+		u.setResolver(null);
+		var rpcRes: RpcResponse = u.unserialize();
+		if (rpcRes.fault != null) {
+			throw new Fault(rpcRes.fault.domain)
+					.withStatus(rpcRes.fault.status)
+					.withDetail(rpcRes.fault.detail);
 		}
 
-		var syncPacket = u.unserialize();
-		if (syncPacket != null) {
-			syncer.importSyncPacket(syncPacket);
+		session = rpcRes.syncSession;
+		if (rpcRes.syncData != null) {
+			syncer.importSyncPacket(rpcRes.syncData);
 		}
-		return res;
+		return rpcRes.response;
 	}
 //        val sendMessage = ServerMessage()
 //        sendMessage.setCommandInput(command.argv)

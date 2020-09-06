@@ -18,8 +18,8 @@ class SThing implements HasProperties {
 	public var oid: Oid;
 	public var kind: Class<SThing>;
 
-	public var datastore = inject(IDatastore);
-	public var objectLoader = inject(ObjectLoader);
+	@:lazy public var datastore = inject(IDatastore);
+	@:lazy public var objectLoader = inject(ObjectLoader);
 	@:lazy private var random = inject(Random);
 	
 	@:sproperty public var owner: Null<SThing>;
@@ -70,5 +70,18 @@ class SThing implements HasProperties {
 			objectLoader.loadObject(oid, SThing)
 		].toMap();
 	}
+
+    public function checkModificationAccess(?player: SPlayer): Void {
+//        if (player.isGod()) {
+//            return
+//        }
+//        if (!player.canSee(this)) {
+//            throwObjectNotVisibleException(oid)
+//        }
+//        if (player != owner) {
+//            throwPermissionDeniedException()
+//        }
+    }
+
 }
 

@@ -21,6 +21,7 @@ import model.ObjectLoader;
 import model.Syncer;
 import utest.Assert;
 import tink.CoreApi;
+import interfaces.RPC;
 using model.ThingTools;
 using utils.ArrayTools;
 

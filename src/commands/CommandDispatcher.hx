@@ -22,6 +22,7 @@ class CommandDispatcher {
 		EchoCommand,
 		HelpCommand,
 		PingCommand,
+		RenameCommand,
 		StarsCommand,
 	];
 

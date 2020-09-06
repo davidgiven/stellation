@@ -6,11 +6,10 @@ import model.Properties;
 import interfaces.IDatastore;
 import utils.Oid;
 import interfaces.ILogger.Logger.log;
+import interfaces.RPC;
 using utils.ArrayTools;
 using model.ObjectSetTools;
 using interfaces.OidSetTools;
-
-typedef SyncMessage = Map<Oid, Map<String, Dynamic>>;
 
 @:tink
 class Syncer {
