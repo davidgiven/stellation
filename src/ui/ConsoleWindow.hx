@@ -1,17 +1,18 @@
 package ui;
 
 import interfaces.IUi;
+import tink.CoreApi;
 
 typedef ConsoleCommandCallback = (String) -> Void;
 
 @:tink
 class ConsoleWindow extends AbstractWindow {
-	@:signal public var onCommandReceived: String;
-
 	private var linesBox: IUiElement;
 	private var inputBox: IUiElement;
 	private var textInput: IUiElement;
 	private var busy: Bool;
+
+	private var onCommandReceivedTrigger: SignalTrigger<String> = Signal.trigger();
 
 	public function new() {
 		super();
@@ -65,11 +66,15 @@ class ConsoleWindow extends AbstractWindow {
 					var value = textInput.getValue();
 					textInput.setValue("");
 					setBusy();
-					_onCommandReceived.trigger(value);
+					onCommandReceivedTrigger.trigger(value);
 				}
 			}
 		);
 		setReady();
+	}
+
+	public function onCommandReceived(): Signal<String> {
+		return onCommandReceivedTrigger.asSignal();
 	}
 
 	public function println(s: String): Void {

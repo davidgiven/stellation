@@ -26,7 +26,7 @@ class SummaryWindow extends AbstractWindow {
 	public override function createUserInterface(div: IUiElement) {
 		div.addClasses(["scrollable"])
 			.addNode(
-				ui.newTimeViewer()
+				ui.newCurrentTimeViewer()
 			)
 			.addNode(
 				ui.newStringViewer(player, NAME)

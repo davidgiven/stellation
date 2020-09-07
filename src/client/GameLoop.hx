@@ -95,7 +95,7 @@ class GameLoop implements IConsole {
 
 			consoleWindow = new ConsoleWindow();
 			consoleWindow.create();
-			consoleWindow.onCommandReceived.handle(onCommandReceived);
+			consoleWindow.onCommandReceived().handle(onCommandReceived);
 			consoleWindow.show();
 
 			summaryWindow = new SummaryWindow();
