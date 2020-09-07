@@ -19,5 +19,6 @@ typedef RpcResponse = {
 	fault: SerialisedFault,
 	syncSession: Int,
 	syncData: SyncMessage,
+	clock: Float,
 };
 

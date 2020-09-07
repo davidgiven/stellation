@@ -55,7 +55,7 @@ class AbstractWindow {
 		onEnd: (x, y) -> resizeCallbacks.onMove(x, y)
 	};
 
-	public function create() {
+	public function create(): AbstractWindow {
 		element = ui.newElement("div")
 			.addClasses(["window", layout, mainClass])
 			.addNode(
@@ -85,6 +85,23 @@ class AbstractWindow {
 		titlebar.onDrag(dragCallbacks);
 
 		_onGeometryChange.trigger(Noise);
+		return this;
+	}
+
+	public function getSize(): UiPoint {
+		return element.getSize();
+	}
+
+	public function setSize(w: Float, h: Float): Void {
+		element.setSize(w, h);
+	}
+
+	public function getPosition(): UiPoint {
+		return element.getPosition();
+	}
+
+	public function setPosition(x: Float, y: Float): Void {
+		element.setPosition(x, y);
 	}
 
 	public function show(): AbstractWindow {

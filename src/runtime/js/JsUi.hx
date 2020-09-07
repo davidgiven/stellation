@@ -172,6 +172,14 @@ class JsUiElement extends JsUiNode implements IUiElement {
 
 @:tink
 class JsUiText extends JsUiElement implements IUiText {
+	public override function getValue(): String {
+		return element.textContent;
+	}
+
+	public override function setValue(value: String): IUiElement {
+		element.textContent = value;
+		return this;
+	}
 }
 
 class JsUi implements IUi {

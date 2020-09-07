@@ -12,6 +12,7 @@ import model.ObjectLoader;
 import model.SUniverse;
 import model.SGalaxy;
 import model.SPlayer;
+import utils.GetOpt.getopt;
 using utils.NullTools;
 
 @:tink
@@ -43,8 +44,12 @@ class AbstractCommand<Res> {
 		return run();
 	}
 
+	public function getFlags(): Flags {
+		return new Flags().withRemaining(0, a -> {});
+	}
+
 	public function parse(): Void {
-        throw Fault.UNIMPLEMENTED;
+		getopt(argv.slice(1), getFlags());
 	}
 
 	public function run(): Res {

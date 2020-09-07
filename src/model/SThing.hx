@@ -19,14 +19,17 @@ class SThing implements HasProperties {
 	public var oid: Oid;
 	public var kind: Class<SThing>;
 
-	@:lazy public var datastore = inject(IDatastore);
-	@:lazy public var objectLoader = inject(ObjectLoader);
-	@:lazy private var random = inject(Random);
+	@:lazy var datastore = inject(IDatastore);
+	@:lazy var objectLoader = inject(ObjectLoader);
+	@:lazy var random = inject(Random);
+	@:lazy var player = inject(SPlayer);
 	
 	@:sproperty public var owner: Null<SThing>;
 	@:sproperty public var location: Null<SThing>;
 	@:sproperty public var contents: ObjectSet<SThing>;
 	@:sproperty public var name: String;
+
+	var propertyListeners: Map<AbstractProperty, SignalTrigger<Noise>> = [];
 
 	public function new() {}
 
@@ -88,5 +91,20 @@ class SThing implements HasProperties {
         }
     }
 
+	public function propertyChanged(property: AbstractProperty): Void {
+		var trigger = propertyListeners[property];
+		if (trigger != null) {
+			trigger.trigger(Noise);
+		}
+	}
+	
+	public function onPropertyChanged(property: AbstractProperty): Signal<Noise> {
+		var s = propertyListeners[property];
+		if (s == null) {
+			s = Signal.trigger();
+			propertyListeners[property] = s;
+		}
+		return s.asSignal();
+	}
 }
 

@@ -13,12 +13,6 @@ class PingCommand extends AbstractRemoteCommand<Noise> {
 		super();
 	}
 
-    @:keep override function parse(): Void {
-        if (argv.length != 1) {
-            throw Flags.unrecognisedFlagException(argv[1]);
-        }
-    }
-
     override function run(): Noise {
         return Noise;
     }

@@ -50,6 +50,8 @@ class CgiHandler extends AbstractHandler {
 				log('authenticated as ${player.oid}');
 				bind(SPlayer, player);
 
+				clock.setTime(time.realtime());
+
 				var res: Dynamic = null;
 				var fault: Fault = null;
 				datastore.withTransaction(() -> {
@@ -68,7 +70,8 @@ class CgiHandler extends AbstractHandler {
 					player: player.oid,
 					fault: if (fault != null) fault.serialise() else null,
 					syncData: new Syncer().exportSyncPacket(player, rpcReq.syncSession),
-					response: res
+					response: res,
+					clock: clock.getTime()
 				};
 
 				var s = new Serializer();

@@ -24,6 +24,8 @@ class AbstractHandler {
     @:lazy var objectLoader = inject(ObjectLoader);
 	@:lazy var authenticator = inject(IAuthenticator);
 	@:lazy var commandDispatcher = inject(CommandDispatcher);
+	@:lazy var clock = inject(IClock);
+	@:lazy var time = inject(Time);
 
     public function findUniverse(): SUniverse {
         return objectLoader.findUniverse();

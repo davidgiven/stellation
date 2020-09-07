@@ -78,29 +78,17 @@ class Syncer {
 			}
 		}
 
-//        /* Remove any objects which have become invisible. */
-//
-//        val changedProperties = sync.getChangedProperties()
-//        val objects = changedProperties.map { it.first }.toSet()
-//        for (oid in objects) {
-//            if (!datastore.doesObjectExist(oid)) {
-//                datastore.createObject(oid)
-//            }
-//        }
-//
-//        /* Merge in changed properties. */
-//
-//        for ((oid, name, value) in sync.getChangedProperties()) {
-//            val property = allProperties[name]!!
-//            property.deserialiseFromString(model, oid, value)
-//        }
-//
-//        /* Fire listeners. (A separate loop to ensure that the database is fully updated before
-//        * any listener runs. */
-//
-//        for ((oid, name, _) in sync.getChangedProperties()) {
-//            ui.firePropertyChangedGlobalEvent(oid, name)
-//        }
+		/* Fire any listeners (only after the database has been updated). */
+
+		for (oid => props in message) {
+			var thing = objectLoader.loadObject(oid, SThing);
+			for (propertyName => value in props) {
+				var property = objectLoader.findProperty(propertyName);
+				if (property != null) {
+					thing.propertyChanged(property);
+				}
+			}
+		}
 	}
 }
 

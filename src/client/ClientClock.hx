@@ -1,10 +1,10 @@
-package runtime.shared;
+package client;
 
 import interfaces.IClock;
 import utils.Fault;
 import tink.CoreApi;
 
-class ServerClock implements IClock {
+class ClientClock implements IClock {
     var time = 0.0;
 
 	public function new() {}
@@ -21,4 +21,5 @@ class ServerClock implements IClock {
 		throw Fault.UNIMPLEMENTED;
 	}
 }
+
 

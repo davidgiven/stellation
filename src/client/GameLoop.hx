@@ -5,6 +5,7 @@ import commands.PingCommand;
 import interfaces.IConsole;
 import interfaces.IDatastore;
 import interfaces.IRemoteClient;
+import interfaces.IClock;
 import model.ObjectLoader;
 import model.Syncer;
 import model.SUniverse;
@@ -12,8 +13,10 @@ import model.SGalaxy;
 import runtime.shared.InMemoryDatastore;
 import tink.CoreApi;
 import ui.ConsoleWindow;
+import ui.SummaryWindow;
 import ui.LoginForm;
 import haxe.io.BytesOutput;
+import haxe.Exception;
 import utils.Fault;
 import utils.Injectomatic.rebind;
 import utils.Injectomatic.bind;
@@ -29,6 +32,7 @@ class GameLoop implements IConsole {
 	@:calc var objectLoader = inject(ObjectLoader);
 
 	var consoleWindow: ConsoleWindow = null;
+	var summaryWindow: SummaryWindow = null;
 	@:signal var onTerminateGame: Noise;
 
 	public function new() {}
@@ -53,6 +57,7 @@ class GameLoop implements IConsole {
 						objectLoader.initialiseProperties();
 
 						rebind(Syncer, new Syncer());
+						rebind(IClock, new ClientClock());
 
 						rebind(IRemoteClient, new RemoteClient());
 						remoteClient.setCredentials(loginData.username, loginData.password);
@@ -76,9 +81,12 @@ class GameLoop implements IConsole {
 							f.dumpStackTrace(b);
 							trace(b.getBytes().toString());
 						}
-					} catch (d: Dynamic) {
-						trace("uncaught error:", d);
-						throw d;
+					} catch (d: Exception) {
+						var f = new Fault().withException(d);
+						var b = new BytesOutput();
+						b.writeString('${f.detail}\n');
+						f.dumpStackTrace(b);
+						trace(b.getBytes().toString());
 					}
 				}
 			}
@@ -89,6 +97,18 @@ class GameLoop implements IConsole {
 			consoleWindow.create();
 			consoleWindow.onCommandReceived.handle(onCommandReceived);
 			consoleWindow.show();
+
+			summaryWindow = new SummaryWindow();
+			summaryWindow.create().show();
+
+			var updateWindowSizes = n -> {
+				var pos = consoleWindow.getPosition();
+				var size = summaryWindow.getSize();
+				summaryWindow.setSize(size.x, pos.y-10);
+			};
+
+			consoleWindow.onGeometryChange.handle(updateWindowSizes);
+			updateWindowSizes(Noise);
 
 			println("Welcome to Stellation VII.");
 			println("Try 'help' if you're feeling lucky.");

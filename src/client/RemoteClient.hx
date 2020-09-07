@@ -6,6 +6,7 @@ import haxe.Unserializer;
 import interfaces.ILogger.Logger.log;
 import interfaces.IRemoteClient;
 import interfaces.IDatastore;
+import interfaces.IClock;
 import interfaces.RPC;
 import model.SPlayer;
 import js.html.XMLHttpRequest;
@@ -22,6 +23,7 @@ class RemoteClient implements IRemoteClient {
 	private var syncer = inject(Syncer);
 	private var datastore = inject(IDatastore);
 	private var objectLoader = inject(ObjectLoader);
+	private var clock = inject(IClock);
 
 	private var username: String;
 	private var password: String;
@@ -80,6 +82,8 @@ class RemoteClient implements IRemoteClient {
 				rebind(SPlayer, player);
 			}
 		}
+
+		clock.setTime(rpcRes.clock);
 
 		session = rpcRes.syncSession;
 		if (rpcRes.syncData != null) {

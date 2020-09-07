@@ -16,7 +16,7 @@ class AbstractForm<T> extends AbstractWindow {
 		onCompletion = onCompletionTrigger.asSignal();
 	}
 
-	override public function create(): Void {
+	override public function create(): AbstractForm<T> {
 		super.create();
 		element.addClasses(["form"]);
 
@@ -26,6 +26,7 @@ class AbstractForm<T> extends AbstractWindow {
 				.setClasses(["buttonbox"])
 		);
 		createButtonBox(buttonbox);
+		return this;
 	}
 
 	public function createButtonBox(div: IUiElement): Void {
