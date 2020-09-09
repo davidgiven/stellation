@@ -10,6 +10,8 @@ using utils.ArrayTools;
 
 @:tink
 class JsUiNode implements IUiNode {
+	public static var onResizeTrigger: SignalTrigger<Noise> = Signal.trigger();
+
 	public var element: Element = _;
 	public var onClickTrigger: SignalTrigger<Noise> = Signal.trigger();
 
@@ -73,6 +75,10 @@ class JsUiNode implements IUiNode {
 	public function onClick(): Signal<Noise> {
 		element.onclick = it -> onClickTrigger.trigger(Noise);
 		return onClickTrigger.asSignal();
+	}
+
+	public function onResize(): Signal<Noise> {
+		return onResizeTrigger.asSignal();
 	}
 
 	private static function fromPixels(s: String): Float {
@@ -190,7 +196,9 @@ class JsUiText extends JsUiElement implements IUiText {
 }
 
 class JsUi implements IUi {
-	public function new() {}
+	public function new() {
+		Browser.window.addEventListener("resize", it -> JsUiNode.onResizeTrigger.trigger(Noise));
+	}
 
 	public function newElement(tag: String): JsUiElement {
 		var e = Browser.document.createElement(tag);
@@ -203,8 +211,8 @@ class JsUi implements IUi {
 		return new JsUiText(e);
 	}
 
-	public function show(element: IUiElement): Void {
-		var e = cast(element, JsUiElement);
+	public function show(element: IUiNode): Void {
+		var e = cast(element, JsUiNode);
 		Browser.document.body.appendChild(e.element);
 	}
 }

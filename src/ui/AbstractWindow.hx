@@ -84,6 +84,7 @@ class AbstractWindow {
 
 		titlebar.onDrag(dragCallbacks);
 
+		element.onResize().handle(n -> _onGeometryChange.trigger(Noise));
 		_onGeometryChange.trigger(Noise);
 		return this;
 	}

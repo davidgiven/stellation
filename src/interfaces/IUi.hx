@@ -26,6 +26,7 @@ interface IUiNode {
 
 	public function onDrag(callbacks: UiDragCallbacks): Void;
 	public function onClick(): Signal<Noise>;
+	public function onResize(): Signal<Noise>;
 }
 
 interface IUiElement extends IUiNode {
@@ -56,7 +57,7 @@ interface IUiText extends IUiElement {
 interface IUi {
 	public function newElement(tag: String): IUiElement;
 	public function newText(tag: String, text: String): IUiText;
-	public function show(element: IUiElement): Void;
+	public function show(element: IUiNode): Void;
 
 	public function newHBox(): IUiElement return newElement("div").setClasses(["hbox"]);
 	public function newVBox(): IUiElement return newElement("div").setClasses(["vbox"]);

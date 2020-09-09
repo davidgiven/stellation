@@ -397,12 +397,11 @@ a:hover {
 }
 
 .map {
-    width: 100%;
-    height: 100%;
-
-    stroke: $primary-color;
-    stroke-width: 1px;
-    fill: none;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
 }
 
 .svg-graticule-heavy, .svg-graticule-light {

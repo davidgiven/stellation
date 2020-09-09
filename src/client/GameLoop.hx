@@ -7,6 +7,7 @@ import interfaces.IDatastore;
 import interfaces.IRemoteClient;
 import interfaces.IGame;
 import interfaces.IClock;
+import interfaces.IUi;
 import model.ObjectLoader;
 import model.Syncer;
 import model.SUniverse;
@@ -29,11 +30,13 @@ import utils.Injectomatic.inject;
 @await
 class GameLoop implements IConsole implements IGame {
 	var cookies = inject(Cookies);
+	@:calc var ui = inject(IUi);
 	@:calc var commandDispatcher = inject(CommandDispatcher);
 	@:calc var remoteClient = inject(IRemoteClient);
 	@:calc var datastore = inject(IDatastore);
 	@:calc var objectLoader = inject(ObjectLoader);
 
+	var mapViewer: MapViewer = null;
 	var consoleWindow: ConsoleWindow = null;
 	var summaryWindow: SummaryWindow = null;
 	@:signal var onTerminateGame: Noise;
@@ -94,6 +97,10 @@ class GameLoop implements IConsole implements IGame {
 			}
 
 			/* Actually run the game */
+
+			mapViewer = new MapViewer();
+			ui.show(mapViewer);
+			mapViewer.redraw();
 
 			consoleWindow = new ConsoleWindow();
 			consoleWindow.create();
