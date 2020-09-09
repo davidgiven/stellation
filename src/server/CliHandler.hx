@@ -98,6 +98,7 @@ class CliHandler extends AbstractHandler {
 
 			var ship = objectLoader.createObject(SShip);
 			ship.owner = player;
+			ship.name = '${player.name}\'s First Ship';
 			ship.moveTo(objectLoader.loadObject(4, SStar));
 			player.ships.add(ship);
 

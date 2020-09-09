@@ -222,6 +222,13 @@ input[type="text"], input[type="password"], input[type="email"] {
         background-color: red;
         cursor: nwse-resize;
     }
+
+	.separator {
+		font-family: "CommodorePet", "arial";
+		font-size: 50%;
+		border-bottom: 1px solid;
+		margin-bottom: 0.5em;
+	}
 }
 
 .window.top-to-bottom {

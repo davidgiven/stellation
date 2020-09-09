@@ -21,8 +21,13 @@ class UiTools {
 
     }
 
+	public static function newSeparator(ui: IUi, text: String): IUiElement {
+		return ui.newText("div", text)
+			.addClasses(["separator"]);
+	}
+
     public static function newStringViewer(ui: IUi, thing: SThing, property: StringProperty): IUiElement {
-        var div = ui.newText("div", "");
+        var div = ui.newText("span", "");
         var update = n -> {
             div.setValue(property.get(thing));
         };
@@ -35,7 +40,7 @@ class UiTools {
     public static function newCurrentTimeViewer(ui: IUi): IUiElement {
         var clock = inject(IClock);
 
-        var div = ui.newText("div", "");
+        var div = ui.newText("span", "");
         var update = time -> {
             div.setValue(formatTime(time));
         };
