@@ -5,11 +5,14 @@ import commands.PingCommand;
 import interfaces.IConsole;
 import interfaces.IDatastore;
 import interfaces.IRemoteClient;
+import interfaces.IGame;
 import interfaces.IClock;
 import model.ObjectLoader;
 import model.Syncer;
 import model.SUniverse;
 import model.SGalaxy;
+import model.SStar;
+import model.SShip;
 import runtime.shared.InMemoryDatastore;
 import tink.CoreApi;
 import ui.ConsoleWindow;
@@ -24,7 +27,7 @@ import utils.Injectomatic.inject;
 
 @:tink
 @await
-class GameLoop implements IConsole {
+class GameLoop implements IConsole implements IGame {
 	var cookies = inject(Cookies);
 	@:calc var commandDispatcher = inject(CommandDispatcher);
 	@:calc var remoteClient = inject(IRemoteClient);
@@ -48,8 +51,7 @@ class GameLoop implements IConsole {
 				var loginData = @await new LoginForm(defaultUsername, defaultPassword).execute();
 				if (!loginData.canceled) {
 					try {
-						//clock.setTime(0.0)
-
+						rebind(IGame, this);
 						rebind(IDatastore, new InMemoryDatastore());
 						datastore.initialiseDatabase();
 
@@ -131,6 +133,14 @@ class GameLoop implements IConsole {
 	public function onCommandReceived(command: String): Void {
 		@await commandDispatcher.clientCall(command);
 		consoleWindow.setReady();
+	}
+
+	@await
+	public function onStarClicked(star: SStar): Void {
+	}
+
+	@await
+	public function onShipClicked(ship: SShip): Void {
 	}
 }
 

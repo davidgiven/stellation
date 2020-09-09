@@ -3,6 +3,7 @@ package runtime.js;
 import interfaces.IUi;
 import js.Browser;
 import js.html.*;
+import tink.CoreApi;
 using Lambda;
 using StringTools;
 using utils.ArrayTools;
@@ -10,6 +11,7 @@ using utils.ArrayTools;
 @:tink
 class JsUiNode implements IUiNode {
 	public var element: Element = _;
+	public var onClickTrigger: SignalTrigger<Noise> = Signal.trigger();
 
 	public function remove(): Void {
 		element.parentElement.removeChild(element);
@@ -66,6 +68,11 @@ class JsUiNode implements IUiNode {
 				return false;
 			};
 		};
+	}
+
+	public function onClick(): Signal<Noise> {
+		element.onclick = it -> onClickTrigger.trigger(Noise);
+		return onClickTrigger.asSignal();
 	}
 
 	private static function fromPixels(s: String): Float {

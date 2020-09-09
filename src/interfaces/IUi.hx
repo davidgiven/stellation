@@ -25,6 +25,7 @@ interface IUiNode {
 	public function scrollIntoView(): Void;
 
 	public function onDrag(callbacks: UiDragCallbacks): Void;
+	public function onClick(): Signal<Noise>;
 }
 
 interface IUiElement extends IUiNode {

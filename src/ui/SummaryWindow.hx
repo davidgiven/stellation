@@ -68,11 +68,11 @@ class SummaryWindow extends AbstractWindow {
 	private function newShipViewer(ship: SShip): IUiElement {
 		var element = ui.newElement("div").addClasses(["ship-summary"]);
 		element.addNode(
-			ui.newStringViewer(ship, NAME)
+			ui.newShipViewer(ship)
 		).addNode(
 			ui.newText("span", " at ")
 		).addNode(
-			ui.newStringViewer(ship.getContainingStar(), NAME)
+			ui.newStarViewer(ship.getContainingStar())
 		);
 		return element;
 	}

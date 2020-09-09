@@ -195,6 +195,16 @@ input[type="text"], input[type="password"], input[type="email"] {
     @extend %text, %border-bottom;
 }
 
+a {
+	@extend .reverseable;
+	color: $primary-color;
+	text-decoration: underline dotted;
+}
+
+a:hover {
+	@extend .reverse;
+}
+
 .window {
     @extend .box;
     padding: 0;
