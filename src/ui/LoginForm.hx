@@ -8,6 +8,7 @@ typedef LoginData = {
 	?password: String
 };
 
+@:tink
 @await
 class LoginForm extends AbstractForm<LoginData> {
 	private var emailInput: IUiElement;
@@ -86,23 +87,19 @@ class LoginForm extends AbstractForm<LoginData> {
 		loginButton = buttons.yes;
 		registerButton = buttons.no;
 
-		loginButton.onActivate(
-			(it) -> {
-				onCompletionTrigger.trigger({
-					canceled: false,
-					username: emailInput.getValue(),
-					password: passwordInput.getValue()
-				});
-			}
-		);
+		loginButton.onActivate().handle(n -> {
+			onCompletionTrigger.trigger({
+				canceled: false,
+				username: emailInput.getValue(),
+				password: passwordInput.getValue()
+			});
+		});
 
-		registerButton.onActivate(
-			(it) -> {
-				onCompletionTrigger.trigger({
-					canceled: true
-				});
-			}
-		);
+		registerButton.onActivate().handle(n -> {
+			onCompletionTrigger.trigger({
+				canceled: true
+			});
+		});
 	}
 }
 

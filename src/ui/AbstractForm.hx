@@ -30,13 +30,21 @@ class AbstractForm<T> extends AbstractWindow {
 	}
 
 	public function createButtonBox(div: IUiElement): Void {
+		createOkButtonBox(div);
+	}
+
+	public function createOkButtonBox(div: IUiElement, text: String = "OK"): IUiElement {
+		var button;
+
 		div.addNode(
-			ui.newElement("button")
+			button = ui.newElement("button")
 				.addClasses(["button", "defaultbutton"])
 				.addNode(
-					ui.newText("span", "OK")
+					ui.newText("span", text)
 				)
 		);
+
+		return button;
 	}
 
 	public function createYesNoButtonBox(div: IUiElement, yes: String = "Yes", no: String = "No"): YesNoButtons {

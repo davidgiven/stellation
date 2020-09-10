@@ -38,13 +38,14 @@ class MapViewer extends JsUiElement {
 		ctx.stroke();
 
 		var scale = 10.0;
+		var radius = 4.0;
 		ctx.beginPath();
 		for (o in galaxy.contents.getAll()) {
 			var star = cast(o, SStar);
 			var x = (w/2) + star.x*scale;
 			var y = (h/2) + star.y*scale;
-			ctx.moveTo(x, y);
-			ctx.arc(x, y, 4, 0, 2*Math.PI);
+			ctx.moveTo(x+radius, y);
+			ctx.arc(x, y, radius, 0, 2*Math.PI);
 		}
 		ctx.stroke();
 	}

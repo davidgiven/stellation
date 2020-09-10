@@ -60,16 +60,14 @@ class ConsoleWindow extends AbstractWindow {
 					)
 			);
 
-		textInput.onActivate(
-			(it) -> {
-				if (!busy) {
-					var value = textInput.getValue();
-					textInput.setValue("");
-					setBusy();
-					onCommandReceivedTrigger.trigger(value);
-				}
+		textInput.onActivate().handle(n -> {
+			if (!busy) {
+				var value = textInput.getValue();
+				textInput.setValue("");
+				setBusy();
+				onCommandReceivedTrigger.trigger(value);
 			}
-		);
+		});
 		setReady();
 	}
 

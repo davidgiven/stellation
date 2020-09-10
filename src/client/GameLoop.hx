@@ -19,6 +19,7 @@ import tink.CoreApi;
 import ui.ConsoleWindow;
 import ui.SummaryWindow;
 import ui.LoginForm;
+import ui.AlertForm;
 import haxe.io.BytesOutput;
 import haxe.Exception;
 import utils.Fault;
@@ -52,6 +53,7 @@ class GameLoop implements IConsole implements IGame {
 				var defaultPassword = cookies.get("password") | if (null) "";
 
 				var loginData = @await new LoginForm(defaultUsername, defaultPassword).execute();
+				var resultPromise: Promise<Noise> = null;
 				if (!loginData.canceled) {
 					try {
 						rebind(IGame, this);
@@ -79,7 +81,8 @@ class GameLoop implements IConsole implements IGame {
 						break;
 					} catch (f: Fault) {
 						if (f.domain == PERMISSION) {
-//						//	AlertForm("Login failed", "Username or password unrecognised.").execute()
+							/* @await here triggers a tink bug. */
+							resultPromise = new AlertForm("Login failed", "Username or password unrecognised.").execute();
 						} else {
 							var b = new BytesOutput();
 							b.writeString('${f.detail}\n');
@@ -92,6 +95,9 @@ class GameLoop implements IConsole implements IGame {
 						b.writeString('${f.detail}\n');
 						f.dumpStackTrace(b);
 						trace(b.getBytes().toString());
+					}
+					if (resultPromise != null) {
+						@await resultPromise;
 					}
 				}
 			}

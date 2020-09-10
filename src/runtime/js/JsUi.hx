@@ -90,6 +90,7 @@ class JsUiNode implements IUiNode {
 class JsUiElement extends JsUiNode implements IUiElement {
 	@:calc var tag = element.tagName;
 	@:calc var id = element.id;
+	var onActivateTrigger: SignalTrigger<Dynamic> = Signal.trigger();
 
 	public function setAttr(name: String, value: String): IUiElement {
 		element.setAttribute(name, value);
@@ -156,16 +157,16 @@ class JsUiElement extends JsUiNode implements IUiElement {
 		return this;
 	}
 
-	public function onActivate(callback: (Dynamic) -> Void): IUiElement {
+	public function onActivate(): Signal<Dynamic> {
 		function addClick() {
-			element.onclick = callback;
+			element.onclick = it -> onActivateTrigger.trigger(it);
 		}
 
 		function addReturn() {
 			element.onkeyup = (it) -> {
 				var k = cast(it, KeyboardEvent);
 				if ((Browser.document.activeElement == element) && (k.keyCode == 13)) {
-					callback(it);
+					onActivateTrigger.trigger(it);
 				}
 			}
 		}
@@ -179,7 +180,7 @@ class JsUiElement extends JsUiNode implements IUiElement {
 				addReturn();
 		}
 
-		return this;
+		return onActivateTrigger.asSignal();
 	}
 }
 

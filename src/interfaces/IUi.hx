@@ -47,7 +47,7 @@ interface IUiElement extends IUiNode {
 	public function show(): IUiElement;
 	public function focus(): IUiElement;
 
-	public function onActivate(callback: (Dynamic) -> Void): IUiElement;
+	public function onActivate(): Signal<Dynamic>;
 }
 
 interface IUiText extends IUiElement {
