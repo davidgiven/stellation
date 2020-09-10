@@ -48,27 +48,37 @@ class JsUiNode implements IUiNode {
 		element.style.height = '${y}px';
 	}
 
-	public function onDrag(callbacks: UiDragCallbacks): Void {
+	public function onDrag(): UiDragCallbacks {
+		var onStartTrigger: SignalTrigger<UiPoint> = Signal.trigger();
+		var onMoveTrigger: SignalTrigger<UiPoint> = Signal.trigger();
+		var onEndTrigger: SignalTrigger<UiPoint> = Signal.trigger();
+
 		element.onmousedown = (it) -> {
 			var me = cast(it, MouseEvent);
 			me.preventDefault();
-			callbacks.onStart(me.clientX, me.clientY);
+			onStartTrigger.trigger({x: me.clientX, y: me.clientY });
 
 			Browser.document.onmousemove = (it) -> {
 				var me = cast(it, MouseEvent);
 				me.preventDefault();
-				callbacks.onMove(me.clientX, me.clientY);
+				onMoveTrigger.trigger({x: me.clientX, y: me.clientY });
 				return false;
 			};
 
 			Browser.document.onmouseup = (it) -> {
 				var me = cast(it, MouseEvent);
 				me.preventDefault();
-				callbacks.onEnd(me.clientX, me.clientY);
+				onEndTrigger.trigger({x: me.clientX, y: me.clientY });
 				Browser.document.onmousemove = null;
 				Browser.document.onmouseup = null;
 				return false;
 			};
+		};
+
+		return {
+			onStart: onStartTrigger,
+			onMove: onMoveTrigger,
+			onEnd: onEndTrigger
 		};
 	}
 

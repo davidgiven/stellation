@@ -18,43 +18,6 @@ class AbstractWindow {
 	var titlebar: IUiElement;
 	var body: IUiElement;
 
-	private var dragStartX: Float;
-	private var dragStartY: Float;
-
-	private var dragCallbacks: UiDragCallbacks = {
-		onStart: (x, y) -> {
-            var winPos = element.getPosition();
-            dragStartX = winPos.x - x;
-            dragStartY = winPos.y - y;
-		},
-
-		onMove: (x, y) -> {
-			var newX = dragStartX + x;
-			var newY = dragStartY + y;
-			element.setPosition(newX, newY);
-			_onGeometryChange.trigger(Noise);
-		},
-
-		onEnd: (x, y) -> dragCallbacks.onMove(x, y)
-	};
-
-	private var resizeCallbacks: UiDragCallbacks = {
-		onStart: (x, y) -> {
-            var winSize = element.getSize();
-            dragStartX = winSize.x - x;
-            dragStartY = winSize.y - y;
-		},
-
-		onMove: (x, y) -> {
-			var newW = dragStartX + x;
-			var newH = dragStartY + y;
-			element.setSize(newW, newH);
-			_onGeometryChange.trigger(Noise);
-		},
-
-		onEnd: (x, y) -> resizeCallbacks.onMove(x, y)
-	};
-
 	public function create(): AbstractWindow {
 		element = ui.newElement("div")
 			.addClasses(["window", layout, mainClass])
@@ -79,10 +42,10 @@ class AbstractWindow {
 				resizer = ui.newElement("div")
 					.setClasses(["resizer"])
 			);
-			resizer.onDrag(resizeCallbacks);
+			setResizeCallbacks(resizer.onDrag());
 		}
 
-		titlebar.onDrag(dragCallbacks);
+		setDragCallbacks(titlebar.onDrag());
 
 		element.onResize().handle(n -> _onGeometryChange.trigger(Noise));
 		_onGeometryChange.trigger(Noise);
@@ -126,5 +89,47 @@ class AbstractWindow {
 			ui.newText("div", "Empty window")
 		);
 	}
+
+	private function setDragCallbacks(cbs: UiDragCallbacks): Void {
+		var x = 0.0;
+		var y = 0.0;
+
+		cbs.onStart.handle(p -> {
+            var winPos = element.getPosition();
+            x = winPos.x - p.x;
+            y = winPos.y - p.y;
+		});
+
+		var move_cb = p -> {
+			var newX = x + p.x;
+			var newY = y + p.y;
+			element.setPosition(newX, newY);
+			_onGeometryChange.trigger(Noise);
+		};
+
+		cbs.onMove.handle(move_cb);
+		cbs.onEnd.handle(move_cb);
+	};
+
+	private function setResizeCallbacks(cbs: UiDragCallbacks): Void {
+		var x = 0.0;
+		var y = 0.0;
+
+		cbs.onStart.handle(p -> {
+            var winSize = element.getSize();
+            x = winSize.x - p.x;
+            y = winSize.y - p.y;
+		});
+
+		var move_cb = p -> {
+			var newW = x + p.x;
+			var newH = x + p.y;
+			element.setSize(newW, newH);
+			_onGeometryChange.trigger(Noise);
+		};
+
+		cbs.onMove.handle(move_cb);
+		cbs.onEnd.handle(move_cb);
+	};
 }
 

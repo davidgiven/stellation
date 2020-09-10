@@ -2,15 +2,15 @@ package interfaces;
 
 import tink.CoreApi;
 
-typedef UiDragCallbacks = {
-	onStart: (clientX: Float, clientY: Float) -> Void,
-	onMove: (clientX: Float, clientY: Float) -> Void,
-	onEnd: (clientX: Float, clientY: Float) -> Void,
-};
-
 typedef UiPoint = {
 	x: Float,
 	y: Float
+};
+
+typedef UiDragCallbacks = {
+	onStart: Signal<UiPoint>,
+	onMove: Signal<UiPoint>,
+	onEnd: Signal<UiPoint>
 };
 
 interface IUiNode {
@@ -24,7 +24,7 @@ interface IUiNode {
 
 	public function scrollIntoView(): Void;
 
-	public function onDrag(callbacks: UiDragCallbacks): Void;
+	public function onDrag(): UiDragCallbacks;
 	public function onClick(): Signal<Noise>;
 	public function onResize(): Signal<Noise>;
 }
