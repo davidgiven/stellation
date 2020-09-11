@@ -13,7 +13,8 @@ class JsUiNode implements IUiNode {
 	public static var onResizeTrigger: SignalTrigger<Noise> = Signal.trigger();
 
 	public var element: Element = _;
-	public var onClickTrigger: SignalTrigger<Noise> = Signal.trigger();
+	public var onWheelTrigger: SignalTrigger<UiWheelEvent> = Signal.trigger();
+	public var onClickTrigger: SignalTrigger<UiClickEvent> = Signal.trigger();
 
 	public function remove(): Void {
 		element.parentElement.removeChild(element);
@@ -82,9 +83,21 @@ class JsUiNode implements IUiNode {
 		};
 	}
 
-	public function onClick(): Signal<Noise> {
-		element.onclick = it -> onClickTrigger.trigger(Noise);
+	public function onClick(): Signal<UiClickEvent> {
+		element.onclick = it -> onClickTrigger.trigger({
+			mouseX: it.clientX,
+			mouseY: it.clientY
+		});
 		return onClickTrigger.asSignal();
+	}
+
+	public function onWheel(): Signal<UiWheelEvent> {
+		element.onwheel = it -> onWheelTrigger.trigger({
+			deltaY: it.deltaY,
+			mouseX: it.clientX,
+			mouseY: it.clientY
+		});
+		return onWheelTrigger.asSignal();
 	}
 
 	public function onResize(): Signal<Noise> {

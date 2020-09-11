@@ -13,6 +13,17 @@ typedef UiDragCallbacks = {
 	onEnd: Signal<UiPoint>
 };
 
+typedef UiClickEvent = {
+	mouseX: Float,
+	mouseY: Float
+};
+
+typedef UiWheelEvent = {
+	deltaY: Float,
+	mouseX: Float,
+	mouseY: Float
+};
+
 interface IUiNode {
 	public function remove(): Void;
 
@@ -25,7 +36,8 @@ interface IUiNode {
 	public function scrollIntoView(): Void;
 
 	public function onDrag(): UiDragCallbacks;
-	public function onClick(): Signal<Noise>;
+	public function onWheel(): Signal<UiWheelEvent>;
+	public function onClick(): Signal<UiClickEvent>;
 	public function onResize(): Signal<Noise>;
 }
 
