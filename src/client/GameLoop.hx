@@ -45,6 +45,8 @@ class GameLoop implements IConsole implements IGame {
 	public function new() {}
 
 	@await public function execute() {
+		@await Images.loadImages();
+
 		while (true) {
 			/* Attempt to log in */
 

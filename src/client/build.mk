@@ -19,4 +19,5 @@ CLIENT = \
 	bin/client.html \
 	bin/COMMODORE_PET.woff2 \
 	bin/COMMODORE_PET_2y.woff \
+	bin/galaxy.png \
 
