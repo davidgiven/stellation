@@ -3,6 +3,7 @@ package client;
 import interfaces.IUi;
 import runtime.js.JsUi;
 import model.SGalaxy;
+import model.SPlayer;
 import model.SStar;
 import model.Properties.CONTENTS;
 import utils.Injectomatic.inject;
@@ -13,11 +14,13 @@ import client.Images;
 import interfaces.ILogger.Logger.log;
 import Math;
 using Math;
+using StringTools;
 
 @:tink
 class MapViewer extends JsUiElement {
 	var ui = inject(IUi);
 	var galaxy = inject(SGalaxy);
+	var player = inject(SPlayer);
 	var width = 0.0;
 	var height = 0.0;
 	var deltaX = 0.0;
@@ -49,16 +52,32 @@ class MapViewer extends JsUiElement {
 		var gw = SGalaxy.RADIUS*1.3*scale;
 		ctx.drawImage(galaxyImage, -gw, -gw, gw*2, gw*2);
 
-		ctx.beginPath();
+		var textAlpha = (scale - 10.0) / 20.0;
+		if (textAlpha < 0.0) {
+			textAlpha = 0;0;
+		}
+		if (textAlpha > 1.0) {
+			textAlpha = 1.0;
+		}
+
+		ctx.strokeStyle = "#fff";
+		ctx.fillStyle = "#fff" + Std.int(textAlpha*15.0).hex();
+		ctx.font = "8px CommodorePet";
 		for (o in galaxy.contents.getAll()) {
 			var star = cast(o, SStar);
 			var x = star.x*scale;
 			var y = star.y*scale;
+			ctx.beginPath();
 			ctx.moveTo(x+starRadius, y);
 			ctx.arc(x, y, starRadius, 0, 2*Math.PI);
+			ctx.stroke();
+
+			if (textAlpha > 0.0) {
+				var starName = star.name.toUpperCase();
+				var metrics = ctx.measureText(starName);
+				ctx.fillText(starName, x - metrics.width/2, y+12);
+			}
 		}
-		ctx.strokeStyle = "#fff";
-		ctx.stroke();
 	}
 
 	private function resize(event: UiWheelEvent) {
