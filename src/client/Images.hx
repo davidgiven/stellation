@@ -4,7 +4,7 @@ import tink.CoreApi;
 import js.Browser;
 import js.html.*;
 
-enum Image {
+enum ImageId {
 	GALAXY;
 }
 
@@ -15,7 +15,7 @@ class Images {
 		GALAXY => newImage("galaxy.png")
 	];
 
-	public static function get(image: Image): ImageElement {
+	public static function get(image: ImageId): ImageElement {
 		return imageMap.get(image);
 	}
 

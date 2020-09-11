@@ -9,6 +9,7 @@ import utils.Injectomatic.inject;
 import js.Browser;
 import js.html.*;
 import tink.CoreApi;
+import client.Images;
 import Math;
 
 @:tink
@@ -39,6 +40,11 @@ class MapViewer extends JsUiElement {
 
 		var scale = 10.0;
 		var radius = 4.0;
+
+		var galaxyImage = Images.get(ImageId.GALAXY);
+		var gw = SGalaxy.RADIUS*1.3*scale;
+		ctx.drawImage(galaxyImage, w/2 - gw, h/2 - gw, gw*2, gw*2);
+
 		ctx.beginPath();
 		for (o in galaxy.contents.getAll()) {
 			var star = cast(o, SStar);
