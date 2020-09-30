@@ -25,6 +25,7 @@ class CommandDispatcher {
 		PingCommand,
 		RenameCommand,
 		ShipsCommand,
+		ShowStarCommand,
 		StarsCommand,
 		WhoAmICommand,
 	];

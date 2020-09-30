@@ -11,6 +11,7 @@ import interfaces.ILogger;
 import runtime.shared.ServerClock;
 import runtime.shared.Time;
 import runtime.shared.TraceLogger;
+import model.Properties;
 import model.SUniverse;
 import model.SGalaxy;
 import model.SStar;
@@ -37,6 +38,7 @@ class SyncerTest extends TestCase {
 	var syncer: Syncer;
 	var star1: SStar;
 	var star2: SStar;
+	var star3: SStar;
 
 	var player1: SPlayer;
 	var ship1: SShip;
@@ -72,7 +74,11 @@ class SyncerTest extends TestCase {
 		bind(SGalaxy, universe.galaxy);
 
         star1 = objectLoader.createObject(SStar).moveTo(universe.galaxy);
+		star1.name = "Star 1";
         star2 = objectLoader.createObject(SStar).moveTo(universe.galaxy);
+		star2.name = "Star 2";
+        star3 = objectLoader.createObject(SStar).moveTo(universe.galaxy);
+		star3.name = "Star 3";
 
 		/* Player 1 has two ships, one each in star1 and star2 */
 
@@ -137,6 +143,7 @@ class SyncerTest extends TestCase {
 			universe.galaxy.oid,
 			star1.oid,
 			star2.oid,
+			star3.oid,
 			player1.oid,
 			ship1.oid,
 			jumpdrive1.oid,
@@ -145,6 +152,9 @@ class SyncerTest extends TestCase {
 			shipx.oid,
 			jumpdrivex.oid
 		].toMap(), [for (k in p.keys()) k].toMap());
+		Assert.isTrue(p[star1.oid].exists("name"));
+		Assert.isTrue(p[star2.oid].exists("name"));
+		Assert.isTrue(p[star3.oid].exists("name"));
 	}
 
 	public function testIncrementalSync() {

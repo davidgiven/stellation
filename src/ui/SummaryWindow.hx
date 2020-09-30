@@ -16,7 +16,6 @@ class SummaryWindow extends AbstractWindow {
 	public function new() {
 		super();
 		mainClass = "summaryWindow";
-		isResizable = false;
 		layout = "right-to-left";
 	}
 

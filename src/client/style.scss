@@ -12,6 +12,11 @@ $bigshadow: 3px;
     src: url("COMMODORE_PET.woff2") format('woff2');
 }
 
+@font-face {
+    font-family: "Thintel";
+    src: url("Thintel.woff2") format('woff2');
+}
+
 :focus {
 	outline: yellow dotted 2px;
 	outline-offset: 2px;
@@ -205,6 +210,12 @@ a:hover {
 	@extend .reverse;
 }
 
+.table {
+	display: grid;
+	grid-template-columns: auto auto;
+	column-gap: 1em;
+}
+
 .window {
     @extend .box;
     padding: 0;
@@ -217,6 +228,16 @@ a:hover {
         padding: 0.3em;
         font-weight: bold;
         cursor: move;
+
+		button {
+			padding: 0;
+			border-radius: 0;
+		}
+
+		button.close-button {
+			width: 15px;
+			height: 15px;
+		}
     }
 
     .body {
@@ -234,10 +255,11 @@ a:hover {
     }
 
 	.separator {
-		font-family: "CommodorePet", "arial";
-		font-size: 50%;
+		font-family: "Thintel", "arial";
+		font-size: 16px;
 		border-bottom: 1px solid;
 		margin-bottom: 0.5em;
+		line-height: normal;
 	}
 }
 
@@ -255,6 +277,7 @@ a:hover {
 
         .textured {
             margin-left: 0.5em;
+			margin-right: 0.5em;
             background: linear-gradient(to bottom, #060 50%, #000 50%);
             background-size: 100% 4px;
             background-repeat: repeat-y;
@@ -275,11 +298,12 @@ a:hover {
     }
 
     .titlebar {
-        width: 1.15em;
+        width: 1em;
         @extend %border-left;
 
         .textured {
             margin-top: 0.5em;
+			margin-bottom: 0.5em;
             background: linear-gradient(to right, #060 50%, #000 50%);
             background-size: 4px 100%;
             background-repeat: repeat-x;

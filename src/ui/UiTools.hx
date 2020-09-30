@@ -14,6 +14,11 @@ import Std.string;
 using StringTools;
 using Math;
 
+typedef UiTableRow = {
+	label: String,
+	element: IUiElement
+};
+
 class UiTools {
     public static function formatTime(time: Float): String {
         var t = time / 3600.0;
@@ -25,15 +30,57 @@ class UiTools {
 
     }
 
+	public static function addText(element: IUiElement, tag: String, text: String): IUiElement {
+		var ui = inject(IUi);
+		return element.addNode(ui.newText(tag, text));
+	}
+
 	public static function newSeparator(ui: IUi, text: String): IUiElement {
 		return ui.newText("div", text)
 			.addClasses(["separator"]);
+	}
+
+	public static function newTable(ui: IUi, rows: Iterable<UiTableRow>): IUiElement {
+		var table = ui.newElement("div").addClasses(["table"]);
+		for (row in rows) {
+			table.addNode(
+				ui.newText("div", row.label)
+			).addNode(
+				ui.newElement("div")
+					.addNode(
+						row.element
+					)
+			);
+		}
+		return table;
 	}
 
     public static function newStringViewer(ui: IUi, thing: SThing, property: StringProperty): IUiElement {
         var div = ui.newText("span", "");
         var update = n -> {
             div.setValue(property.get(thing));
+        };
+
+        thing.onPropertyChanged(property).handle(update);
+        update(Noise);
+        return div;
+    }
+
+    public static function newFloatViewer(ui: IUi, thing: SThing, property: FloatProperty): IUiElement {
+        var div = ui.newText("span", "");
+        var update = n -> {
+            div.setValue(string(property.get(thing)));
+        };
+
+        thing.onPropertyChanged(property).handle(update);
+        update(Noise);
+        return div;
+    }
+
+    public static function newIntViewer(ui: IUi, thing: SThing, property: IntProperty): IUiElement {
+        var div = ui.newText("span", "");
+        var update = n -> {
+            div.setValue(string(property.get(thing)));
         };
 
         thing.onPropertyChanged(property).handle(update);
@@ -59,19 +106,45 @@ class UiTools {
     }
 
     public static function newStarViewer(ui: IUi, star: SStar): IUiElement {
-        var div = ui.newText("a", "")
-			.setAttr("href", "#");
+		var detailsLink: IUiElement;
+		var mapLink: IUiElement;
+        var div = ui.newElement("span")
+				.addNode(
+					detailsLink = ui.newText("a", "")
+						.setAttr("href", "#")
+				).addNode(
+					mapLink = ui.newText("a", "§")
+						.setAttr("href", "#")
+				);
 
-		div.onClick().handle(n -> {
+		detailsLink.onClick().handle(n -> {
 			inject(IGame).onStarClicked(star);
 		});
 
         var update = n -> {
-            div.setValue(star.name);
+            detailsLink.setValue(star.name);
         };
 
         star.onPropertyChanged(NAME).handle(update);
         update(Noise);
+        return div;
+    }
+
+    public static function newLocationViewer(ui: IUi, thing: SThing, xprop: FloatProperty, yprop: FloatProperty): IUiElement {
+        var div = ui.newElement("a")
+				.setAttr("href", "#")
+				.addNode(
+					ui.newText("span", "(")
+				).addNode(
+					newFloatViewer(ui, thing, xprop)
+				).addNode(
+					ui.newText("span", ", ")
+				).addNode(
+					newFloatViewer(ui, thing, yprop)
+				).addNode(
+					ui.newText("span", ")")
+				);
+
         return div;
     }
 

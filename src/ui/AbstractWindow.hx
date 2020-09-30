@@ -10,13 +10,15 @@ class AbstractWindow {
 
 	@:signal public var onGeometryChange: Noise;
 
-	var isResizable = false;
+	var isResizeable = false;
+	var isCloseable = false;
 	var mainClass = "";
     var layout = "top-to-bottom";
 
 	var element: IUiElement;
 	var titlebar: IUiElement;
 	var body: IUiElement;
+	var closeButton: IUiElement;
 
 	public function create(): AbstractWindow {
 		element = ui.newElement("div")
@@ -24,6 +26,10 @@ class AbstractWindow {
 			.addNode(
 				titlebar = ui.newElement("div")
 					.setClasses(["titlebar"])
+					.addNode(
+						closeButton = ui.newElement("button")
+							.setClasses(["close-button"])
+					)
 					.addNode(
 						ui.newElement("span")
 							.setClasses(["expand", "textured"])
@@ -36,7 +42,13 @@ class AbstractWindow {
 		createTitlebar(titlebar);
 		createUserInterface(body);
 
-		if (isResizable) {
+		if (!isCloseable) {
+			closeButton.hide();
+		} else {
+			closeButton.onClick().handle(ev -> close());
+		}
+
+		if (isResizeable) {
 			var resizer: IUiElement;
 			element.addNode(
 				resizer = ui.newElement("div")
@@ -76,6 +88,10 @@ class AbstractWindow {
 	public function hide(): AbstractWindow {
 		element.remove();
 		return this;
+	}
+
+	public function close(): Void {
+		hide();
 	}
 
 	function createTitlebar(div: IUiElement) {
@@ -123,7 +139,7 @@ class AbstractWindow {
 
 		var move_cb = p -> {
 			var newW = x + p.x;
-			var newH = x + p.y;
+			var newH = y + p.y;
 			element.setSize(newW, newH);
 			_onGeometryChange.trigger(Noise);
 		};

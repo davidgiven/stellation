@@ -62,7 +62,7 @@ class MapViewer extends JsUiElement {
 
 		ctx.strokeStyle = "#fff";
 		ctx.fillStyle = "#fff" + Std.int(textAlpha*15.0).hex();
-		ctx.font = "8px CommodorePet";
+		ctx.font = "16px Thintel";
 		for (o in galaxy.contents.getAll()) {
 			var star = cast(o, SStar);
 			var x = star.x*scale;
@@ -73,7 +73,10 @@ class MapViewer extends JsUiElement {
 			ctx.stroke();
 
 			if (textAlpha > 0.0) {
-				var starName = star.name.toUpperCase();
+				var starName = star.name;
+				if (starName == null)
+					starName = "<?>";
+				starName = starName.toUpperCase();
 				var metrics = ctx.measureText(starName);
 				ctx.fillText(starName, x - metrics.width/2, y+12);
 			}
