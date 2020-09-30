@@ -30,10 +30,10 @@ class Syncer {
 			universe => Noise,
 			universe.galaxy => Noise
 		];
-		visibleObjects.addArray(universe.galaxy.contents.getAll());
 		visibleObjects.addMap(player.calculateVisibleObjects());
 		player.visibleObjects.replaceAll([for (k in visibleObjects.keys()) k]);
 
+		visibleObjects.addArray(universe.galaxy.contents.getAll());
 		var changedProperties = datastore.getPropertiesChangedSince(
 			[for (o => n in visibleObjects) o.oid], session);
 			
@@ -43,7 +43,11 @@ class Syncer {
 			var property = objectLoader.findProperty(propertyName);
 			var thing = objectLoader.loadObject(oid, SThing);
 			var owner = thing.owner | if (null) objectLoader.findGod();
-			if ((property.scope == Scope.LOCAL) || ((property.scope == Scope.PRIVATE) && (owner == player))) {
+			var scope = property.scope;
+			var visible = player.canSee(thing);
+			if (((scope == Scope.LOCAL) && visible)
+					|| ((scope == Scope.PRIVATE) && (owner == player))
+					|| thing.hasGlobalVisibility(property)) {
 				var g = p[oid];
 				if (g == null) {
 					g = [];

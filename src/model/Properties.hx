@@ -13,7 +13,6 @@ enum Scope {
     SERVERONLY;
     PRIVATE;
     LOCAL;
-    GLOBAL;
 }
 
 class AbstractProperty {
@@ -263,21 +262,22 @@ class SetProperty<T: SThing> extends AbstractProperty {
 	}
 }
 
-@:tink
 class Properties {
-	public static var PLAYERS = new SetProperty("players", SPlayer).setScope(SERVERONLY);
-	public static var X = new FloatProperty("x");
-	public static var Y = new FloatProperty("y");
-    public static var BRIGHTNESS = new FloatProperty("brightness");
-    public static var CONTENTS = new SetProperty("contents", SThing);
-    public static var SHIPS = new SetProperty("ships", SShip);
-    public static var GALAXY = new ObjectProperty("galaxy", SGalaxy);
-    public static var KIND = new StringProperty("kind");
-    public static var LOCATION = new ObjectProperty("location", SThing);
-    public static var NAME = new StringProperty("name");
-    public static var OWNER = new ObjectProperty("owner", SThing);
-    public static var USERNAME = new StringProperty("name");
-	public static var EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);
-	public static var VISIBLEOBJECTS = new SetProperty("visible_objects", SThing).setScope(PRIVATE);
+	public static final PLAYERS = new SetProperty("players", SPlayer).setScope(SERVERONLY);
+	public static final X = new FloatProperty("x");
+	public static final Y = new FloatProperty("y");
+    public static final ASTEROIDSC = new IntProperty("asteroidsc");
+    public static final ASTEROIDSM = new IntProperty("asteroidsm");
+    public static final BRIGHTNESS = new FloatProperty("brightness");
+    public static final CONTENTS = new SetProperty("contents", SThing);
+    public static final SHIPS = new SetProperty("ships", SShip);
+    public static final GALAXY = new ObjectProperty("galaxy", SGalaxy);
+    public static final KIND = new StringProperty("kind");
+    public static final LOCATION = new ObjectProperty("location", SThing);
+    public static final NAME = new StringProperty("name");
+    public static final OWNER = new ObjectProperty("owner", SThing);
+    public static final USERNAME = new StringProperty("name");
+	public static final EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);
+	public static final VISIBLEOBJECTS = new SetProperty("visible_objects", SThing).setScope(PRIVATE);
 }
 

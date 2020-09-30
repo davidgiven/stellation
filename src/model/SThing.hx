@@ -5,6 +5,7 @@ import utils.Injectomatic.inject;
 import utils.Random;
 import interfaces.IDatastore;
 import model.Properties;
+import model.Properties.KIND;
 import tink.CoreApi;
 import utils.Fault;
 using Lambda;
@@ -105,6 +106,12 @@ class SThing implements HasProperties {
 			propertyListeners[property] = s;
 		}
 		return s.asSignal();
+	}
+
+	public function hasGlobalVisibility(property: AbstractProperty): Bool {
+		if (property == KIND)
+			return true;
+		return false;
 	}
 }
 

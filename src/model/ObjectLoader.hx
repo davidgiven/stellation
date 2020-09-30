@@ -6,6 +6,7 @@ import utils.Oid;
 import utils.Fault;
 import utils.FaultDomain;
 import model.Properties;
+import model.Properties.NAME;
 using utils.ArrayTools;
 using Lambda;
 using Type;
@@ -40,8 +41,12 @@ class ObjectLoader {
             var o = Reflect.field(Properties, field);
             if (Std.is(o, AbstractProperty)) {
 				var p = cast(o, AbstractProperty);
-				p.createProperty(datastore);
-				allProperties[p.name.toLowerCase()] = p;
+				var n = p.name.toLowerCase();
+
+				if (!allProperties.exists(n)) {
+					p.createProperty(datastore);
+					allProperties[p.name.toLowerCase()] = p;
+				}
             }
         }
     }

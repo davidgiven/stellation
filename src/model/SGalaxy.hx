@@ -58,6 +58,8 @@ class SGalaxy extends SThing {
 			star.x = pair.b.x;
 			star.y = pair.b.y;
 			star.brightness = random.randomFloat(0.0, 10.0).roundBy(10.0);
+			star.asteroidsm = random.randomInt(10, 20);
+			star.asteroidsc = random.randomInt(10, 20);
 			star.moveTo(this);
 		}
 	}
