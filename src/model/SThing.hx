@@ -58,6 +58,8 @@ class SThing implements HasProperties {
 		return o;
 	}
 
+	public function init(): Void {}
+
 	public function getContainingStar(): SStar {
 		var loc: SThing = this;
 		while (loc != null) {

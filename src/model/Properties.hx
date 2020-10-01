@@ -307,6 +307,7 @@ class StructProperty<T> extends AbstractProperty {
 }
 
 class Properties {
+	public static final ACTIVE = new IntProperty("active");
 	public static final ASTEROIDS = new StructProperty<MC>("asteroids");
 	public static final CONSUMPTION = new StructProperty<AMO>("consumption");
 	public static final EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);

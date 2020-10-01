@@ -110,6 +110,7 @@ class CliHandler extends AbstractHandler {
 
 			var tank = objectLoader.createObject(STank);
 			tank.owner = player;
+			tank.fuel = { a: 1000.0, m: 1000.0, o: 1000.0 };
 			tank.moveTo(ship);
 
 			var drones = objectLoader.createObject(SDrones);

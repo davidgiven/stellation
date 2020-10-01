@@ -100,7 +100,9 @@ class ObjectLoader {
     public function createObject<T: SThing>(klass: Class<T>): T {
         var oid = datastore.createObject();
         datastore.setStringProperty(oid, KIND, getSimpleName(klass));
-        return loadObject(oid, klass);
+        var object = loadObject(oid, klass);
+		object.init();
+		return object;
     }
 
 	public function createSpecificObject<T: SThing>(oid: Oid, klass: Class<T>): T {

@@ -11,6 +11,12 @@ class SShip extends SPhysicalThing {
 
 	@:sproperty public var consumption: AMO;
 	@:sproperty public var fuel: AMO;
+	@:sproperty public var mass: Float;
+
+	public override function init() {
+		update();
+		super.init();
+	}
 
 	public override function hasGlobalVisibility(property: AbstractProperty) {
 		if (GLOBAL_PROPERTIES.exists(property))
