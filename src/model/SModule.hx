@@ -1,5 +1,5 @@
 package model;
 
-class SModule extends SThing {
+class SModule extends SPhysicalThing {
 }
 

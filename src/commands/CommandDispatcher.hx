@@ -25,6 +25,7 @@ class CommandDispatcher {
 		PingCommand,
 		RenameCommand,
 		ShipsCommand,
+		ShowShipCommand,
 		ShowStarCommand,
 		StarsCommand,
 		WhoAmICommand,
@@ -60,6 +61,23 @@ class CommandDispatcher {
 		try {
 			console.println('> ${cmdline}');
 			var argv = argify(cmdline);
+			if (argv.length == 0) {
+				return Noise;
+			}
+
+			var command = resolve(argv);
+			@await command.callAsync();
+        } catch (f: Fault) {
+            console.println('Failed: ${f.detail}');
+        } catch (e) {
+            console.println('Internal error: $e');
+        }
+		return Noise;
+	}
+
+	@async public function clientCallV(argv: Array<String>): Noise {
+		try {
+			console.println('> ${unargify(argv)}');
 			if (argv.length == 0) {
 				return Noise;
 			}

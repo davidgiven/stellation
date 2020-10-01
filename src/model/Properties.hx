@@ -263,21 +263,22 @@ class SetProperty<T: SThing> extends AbstractProperty {
 }
 
 class Properties {
+	public static final EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);
 	public static final PLAYERS = new SetProperty("players", SPlayer).setScope(SERVERONLY);
+	public static final VISIBLEOBJECTS = new SetProperty("visible_objects", SThing).setScope(PRIVATE);
 	public static final X = new FloatProperty("x");
 	public static final Y = new FloatProperty("y");
     public static final ASTEROIDSC = new IntProperty("asteroidsc");
     public static final ASTEROIDSM = new IntProperty("asteroidsm");
     public static final BRIGHTNESS = new FloatProperty("brightness");
     public static final CONTENTS = new SetProperty("contents", SThing);
-    public static final SHIPS = new SetProperty("ships", SShip);
     public static final GALAXY = new ObjectProperty("galaxy", SGalaxy);
     public static final KIND = new StringProperty("kind");
     public static final LOCATION = new ObjectProperty("location", SThing);
+    public static final MASS = new FloatProperty("brightness");
     public static final NAME = new StringProperty("name");
     public static final OWNER = new ObjectProperty("owner", SThing);
+    public static final SHIPS = new SetProperty("ships", SShip);
     public static final USERNAME = new StringProperty("name");
-	public static final EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);
-	public static final VISIBLEOBJECTS = new SetProperty("visible_objects", SThing).setScope(PRIVATE);
 }
 

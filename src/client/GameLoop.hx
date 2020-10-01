@@ -33,7 +33,7 @@ import utils.Injectomatic.inject;
 class GameLoop implements IConsole implements IGame {
 	var cookies = inject(Cookies);
 	@:calc var ui = inject(IUi);
-	@:calc var commandDispatcher = inject(CommandDispatcher);
+	@:calc var commandDispatcher: CommandDispatcher = inject(CommandDispatcher);
 	@:calc var remoteClient = inject(IRemoteClient);
 	@:calc var datastore = inject(IDatastore);
 	@:calc var objectLoader = inject(ObjectLoader);
@@ -146,17 +146,24 @@ class GameLoop implements IConsole implements IGame {
 	}
 
 	@await
+	private function callInternalCommand(argv: Array<String>) {
+		consoleWindow.setBusy();
+		@await commandDispatcher.clientCallV(argv);
+		consoleWindow.setReady();
+	}
+
+	@await
 	public function onCommandReceived(command: String): Void {
 		@await commandDispatcher.clientCall(command);
 		consoleWindow.setReady();
 	}
 
-	@await
 	public function onStarClicked(star: SStar): Void {
+		callInternalCommand(["show-star", Std.string(star.oid)]);
 	}
 
-	@await
 	public function onShipClicked(ship: SShip): Void {
+		callInternalCommand(["show-ship", Std.string(ship.oid)]);
 	}
 }
 
