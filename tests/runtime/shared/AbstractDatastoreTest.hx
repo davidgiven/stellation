@@ -15,6 +15,7 @@ class AbstractDatastoreTest extends TestCase {
 		for (t in ["INTEGER", "REAL", "TEXT"]) {
 			datastore.createProperty(t.toLowerCase(), t, false);
 		}
+		datastore.createProperty("struct", "TEXT", false);
 
         datastore.createProperty(
                 "oid",
@@ -60,6 +61,13 @@ class AbstractDatastoreTest extends TestCase {
         datastore.setStringProperty(o, "text", null);
         var i = datastore.getStringProperty(o, "text");
 		Assert.same(null, i);
+    }
+
+    function testSetGetStruct() {
+        var o = datastore.createObject();
+        datastore.setStructProperty(o, "struct", { a: 1, b: "B" });
+        var i = datastore.getStructProperty(o, "struct");
+		Assert.same({ a: 1, b: "B" }, i);
     }
 
     function testHasProperty() {

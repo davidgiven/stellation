@@ -1,5 +1,7 @@
 package runtime.cpp;
 
+import haxe.Serializer;
+import haxe.Unserializer;
 import interfaces.IDatastore;
 import model.Properties;
 import runtime.cpp.Sqlite;
@@ -251,6 +253,20 @@ class SqlDatastore implements IDatastore {
         var results = getStatement(oid, name).executeSimpleQuery();
         return (results == null) ? null : results.get("value").toString();
     }
+
+    public function setStructProperty<T>(oid: Oid, name: String, value: T): Void {
+		var s = new Serializer();
+		s.useCache = true;
+		s.serialize(value);
+		setStringProperty(oid, name, s.toString());
+	}
+
+    public function getStructProperty<T>(oid: Oid, name: String): T {
+		var bytes = getStringProperty(oid, name);
+		var u = new Unserializer(bytes);
+		u.setResolver(null);
+		return u.unserialize();
+	}
 
     public function getSetProperty(oid: Oid, name: String): OidSet {
         return new SqlOidSet(this, db, oid, name);

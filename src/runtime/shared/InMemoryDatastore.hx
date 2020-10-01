@@ -2,6 +2,7 @@ package runtime.shared;
 
 import interfaces.IDatastore;
 import utils.Oid;
+import utils.Fault;
 import tink.CoreApi;
 import utils.Fault.UNIMPLEMENTED;
 
@@ -130,6 +131,14 @@ class InMemoryDatastore implements IDatastore {
 
 	public function setStringProperty(oid: Oid, name: String, value: String): Void {
 		values[wrap(oid, name)] = value;
+	}
+
+    public function setStructProperty<T>(oid: Oid, name: String, value: T): Void {
+		values[wrap(oid, name)] = value;
+	}
+
+    public function getStructProperty<T>(oid: Oid, name: String): T {
+		return values[wrap(oid, name)];
 	}
 
 	public function getSetProperty(oid: Oid, name: String): OidSet {

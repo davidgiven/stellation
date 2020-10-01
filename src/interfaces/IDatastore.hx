@@ -37,6 +37,9 @@ interface IDatastore {
     public function setStringProperty(oid: Oid, name: String, value: String): Void;
     public function getStringProperty(oid: Oid, name: String): String;
 
+    public function setStructProperty<T>(oid: Oid, name: String, value: T): Void;
+    public function getStructProperty<T>(oid: Oid, name: String): T;
+
     public function getSetProperty(oid: Oid, name: String): OidSet;
 
     public function createSyncSession(): Int;

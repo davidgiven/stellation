@@ -5,8 +5,6 @@ import utils.Fault;
 import utils.Oid;
 import utils.Injectomatic.inject;
 import tink.CoreApi;
-import haxe.Serializer;
-import haxe.Unserializer;
 using model.ObjectSetTools;
 using utils.ArrayTools;
 using interfaces.OidSetTools;
@@ -287,19 +285,13 @@ class StructProperty<T> extends AbstractProperty {
     }
 
     public function get(thing: SThing): T {
-        var bytes = thing.datastore.getStringProperty(thing.oid, name);
-		var u = new Unserializer(bytes);
-		u.setResolver(null);
-		return u.unserialize();
+        return thing.datastore.getStructProperty(thing.oid, name);
     }
 
     public function set(thing: SThing, value: T): T {
-		var s = new Serializer();
-		s.useCache = true;
-		s.serialize(value);
-        thing.datastore.setStringProperty(thing.oid, name, s.toString());
+        thing.datastore.setStructProperty(thing.oid, name, value);
         return value;
-    }
+	}
 
     public override function createProperty(datastore: IDatastore): Void {
         datastore.createProperty(name, "TEXT", false);
