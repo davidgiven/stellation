@@ -17,7 +17,11 @@ class ExCommand extends AbstractLocalCommand<Noise> {
 		if (argv.length != 2) {
             throw Flags.unrecognisedFlagException(argv[1]);
 		}
-		oid = Std.parseInt(argv[1]);
+		if (argv[1] == "me") {
+			oid = player.oid;
+		} else {
+			oid = Std.parseInt(argv[1]);
+		}
 		if (oid == null) {
             throw Flags.unrecognisedFlagException(argv[1]);
 		}
