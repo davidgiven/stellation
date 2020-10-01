@@ -3,10 +3,8 @@ package ui;
 import interfaces.IUi;
 import model.Properties.NAME;
 import model.Properties.BRIGHTNESS;
-import model.Properties.X;
-import model.Properties.Y;
-import model.Properties.ASTEROIDSM;
-import model.Properties.ASTEROIDSC;
+import model.Properties.POSITION;
+import model.Properties.ASTEROIDS;
 import model.SStar;
 using ui.UiTools;
 
@@ -33,17 +31,8 @@ class StarWindow extends AbstractWindow {
 					ui.newTable([
 						{ label: "Name:",        element: ui.newStringViewer(star, NAME) },
 						{ label: "Brightness:",  element: ui.newFloatViewer(star, BRIGHTNESS) },
-						{ label: "Location:",    element: ui.newLocationViewer(star, X, Y) },
-						{ label: "Asteroids:",   element: ui.newElement("span")
-															.addNode(
-																ui.newIntViewer(star, ASTEROIDSM)
-															)
-															.addText("span", "M, ")
-															.addNode(
-																ui.newIntViewer(star, ASTEROIDSC)
-															)
-															.addText("span", "C ")
-															},
+						{ label: "Coordinates:", element: ui.newPositionViewer(star, POSITION) },
+						{ label: "Asteroids:",   element: ui.newAsteroidsViewer(star, ASTEROIDS) },
 					])
 				)
 		);

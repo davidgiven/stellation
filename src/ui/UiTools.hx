@@ -130,22 +130,87 @@ class UiTools {
         return div;
     }
 
-    public static function newLocationViewer(ui: IUi, thing: SThing, xprop: FloatProperty, yprop: FloatProperty): IUiElement {
-        var div = ui.newElement("a")
-				.setAttr("href", "#")
+    public static function newPositionViewer(ui: IUi, thing: SThing, property: StructProperty<XY>): IUiElement {
+		var xspan: IUiText;
+		var yspan: IUiText;
+        var span = ui.newElement("span")
 				.addNode(
 					ui.newText("span", "(")
 				).addNode(
-					newFloatViewer(ui, thing, xprop)
+					xspan = ui.newText("span", "")
 				).addNode(
 					ui.newText("span", ", ")
 				).addNode(
-					newFloatViewer(ui, thing, yprop)
+					yspan = ui.newText("span", "")
 				).addNode(
 					ui.newText("span", ")")
 				);
 
-        return div;
+		var update = n -> {
+			var a = property.get(thing);
+            xspan.setValue(string(a.x));
+			yspan.setValue(string(a.y));
+        };
+		thing.onPropertyChanged(property).handle(update);
+		update(Noise);
+
+        return span;
+    }
+
+    public static function newAsteroidsViewer(ui: IUi, thing: SThing, property: StructProperty<MC>): IUiElement {
+		var mspan: IUiText;
+		var cspan: IUiText;
+        var span = ui.newElement("span")
+				.addNode(
+					ui.newText("span", "M:")
+				).addNode(
+					mspan = ui.newText("span", "")
+				).addNode(
+					ui.newText("span", " C:")
+				).addNode(
+					cspan = ui.newText("span", "")
+				);
+
+		var update = n -> {
+			var a = property.get(thing);
+            mspan.setValue(string(a.m));
+			cspan.setValue(string(a.c));
+        };
+		thing.onPropertyChanged(property).handle(update);
+		update(Noise);
+
+        return span;
+    }
+
+    public static function newAMOViewer(ui: IUi, thing: SThing, property: StructProperty<AMO>): IUiElement {
+		var aspan: IUiText;
+		var mspan: IUiText;
+		var ospan: IUiText;
+        var span = ui.newElement("span")
+				.addNode(
+					ui.newText("span", "A:")
+				).addNode(
+					aspan = ui.newText("span", "")
+				).addNode(
+					ui.newText("span", " M:")
+				).addNode(
+					mspan = ui.newText("span", "")
+				).addNode(
+					ui.newText("span", " O:")
+				).addNode(
+					ospan = ui.newText("span", "")
+				);
+
+		var update = n -> {
+			var a = property.get(thing);
+            aspan.setValue(string(a.a));
+			mspan.setValue(string(a.m));
+			ospan.setValue(string(a.o));
+        };
+		thing.onPropertyChanged(property).handle(update);
+		update(Noise);
+
+        return span;
     }
 
     public static function newCurrentTimeViewer(ui: IUi): IUiElement {

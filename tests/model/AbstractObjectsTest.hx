@@ -50,6 +50,13 @@ class AbstractObjectsTest extends TestCase {
         Assert.same([s1, s2, s3].toMap(), g.contents.getAll().toMap());
     }
 
+	function testStructSetGet() {
+		var s = objectLoader.createObject(SStar);
+		s.asteroids = { c: 3, m: 4 };
+
+		Assert.same({ c: 3, m: 4 }, s.asteroids);
+	}
+
     function testObjectSaveAndLoad() {
         var s1 = objectLoader.createObject(SStar);
         s1.name = "Foo";

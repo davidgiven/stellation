@@ -116,6 +116,8 @@ class CliHandler extends AbstractHandler {
 			drones.owner = player;
 			drones.moveTo(ship);
 
+			ship.update();
+
             return universe;
         }
     }

@@ -5,9 +5,27 @@ import utils.Fault;
 import utils.Oid;
 import utils.Injectomatic.inject;
 import tink.CoreApi;
+import haxe.Serializer;
+import haxe.Unserializer;
 using model.ObjectSetTools;
 using utils.ArrayTools;
 using interfaces.OidSetTools;
+
+typedef XY = {
+	x: Float,
+	y: Float
+};
+
+typedef AMO = {
+	a: Float,
+	m: Float,
+	o: Float
+};
+
+typedef MC = {
+	m: Int,
+	c: Int
+};
 
 enum Scope {
     SERVERONLY;
@@ -262,20 +280,55 @@ class SetProperty<T: SThing> extends AbstractProperty {
 	}
 }
 
+@:generic
+class StructProperty<T> extends AbstractProperty {
+    public function new(name: String) {
+        super(name);
+    }
+
+    public function get(thing: SThing): T {
+        var bytes = thing.datastore.getStringProperty(thing.oid, name);
+		var u = new Unserializer(bytes);
+		u.setResolver(null);
+		return u.unserialize();
+    }
+
+    public function set(thing: SThing, value: T): T {
+		var s = new Serializer();
+		s.useCache = true;
+		s.serialize(value);
+        thing.datastore.setStringProperty(thing.oid, name, s.toString());
+        return value;
+    }
+
+    public override function createProperty(datastore: IDatastore): Void {
+        datastore.createProperty(name, "TEXT", false);
+    }
+
+	public override function setDynamicValue(thing: SThing, value: Dynamic): Void {
+		set(thing, value);
+	}
+
+	public override function getDynamicValue(thing: SThing): Dynamic {
+		return get(thing);
+	}
+}
+
 class Properties {
+	public static final ASTEROIDS = new StructProperty<MC>("asteroids");
+	public static final CONSUMPTION = new StructProperty<AMO>("consumption");
 	public static final EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);
+	public static final FUEL = new StructProperty<AMO>("fuel");
 	public static final PLAYERS = new SetProperty("players", SPlayer).setScope(SERVERONLY);
+	public static final POSITION = new StructProperty<XY>("position");
+	public static final PRODUCTION = new StructProperty<AMO>("production");
 	public static final VISIBLEOBJECTS = new SetProperty("visible_objects", SThing).setScope(PRIVATE);
-	public static final X = new FloatProperty("x");
-	public static final Y = new FloatProperty("y");
-    public static final ASTEROIDSC = new IntProperty("asteroidsc");
-    public static final ASTEROIDSM = new IntProperty("asteroidsm");
     public static final BRIGHTNESS = new FloatProperty("brightness");
     public static final CONTENTS = new SetProperty("contents", SThing);
     public static final GALAXY = new ObjectProperty("galaxy", SGalaxy);
     public static final KIND = new StringProperty("kind");
     public static final LOCATION = new ObjectProperty("location", SThing);
-    public static final MASS = new FloatProperty("brightness");
+    public static final MASS = new FloatProperty("mass");
     public static final NAME = new StringProperty("name");
     public static final OWNER = new ObjectProperty("owner", SThing);
     public static final SHIPS = new SetProperty("ships", SShip);

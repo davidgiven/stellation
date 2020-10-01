@@ -40,7 +40,7 @@ class StarsCommand extends AbstractLocalCommand<Noise> {
 	}
 
 	private function showStar(star: SStar) {
-		console.println('  ${star.name} at ${star.x}, ${star.y} (#${star.oid})');
+		console.println('  ${star.name} at ${star.position.x}, ${star.position.y} (#${star.oid})');
 	}
 }
 

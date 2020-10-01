@@ -65,8 +65,9 @@ class MapViewer extends JsUiElement {
 		ctx.font = "16px Thintel";
 		for (o in galaxy.contents.getAll()) {
 			var star = cast(o, SStar);
-			var x = star.x*scale;
-			var y = star.y*scale;
+			var position = star.position;
+			var x = position.x*scale;
+			var y = position.y*scale;
 			ctx.beginPath();
 			ctx.moveTo(x+starRadius, y);
 			ctx.arc(x, y, starRadius, 0, 2*Math.PI);

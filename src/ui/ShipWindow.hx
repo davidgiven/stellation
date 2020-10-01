@@ -1,9 +1,11 @@
 package ui;
 
 import interfaces.IUi;
-import model.Properties.NAME;
+import model.Properties.CONSUMPTION;
 import model.Properties.CONTENTS;
 import model.Properties.KIND;
+import model.Properties.MASS;
+import model.Properties.NAME;
 import model.SThing;
 import model.SModule;
 import model.SShip;
@@ -35,6 +37,8 @@ class ShipWindow extends AbstractWindow {
 						{ label: "Name:",        element: ui.newStringViewer(ship, NAME) },
 						{ label: "Owner:",       element: ui.newStringViewer(ship.owner, NAME) },
 						{ label: "Location:",    element: ui.newStarViewer(ship.getContainingStar()) },
+						{ label: "Mass:",        element: ui.newFloatViewer(ship, MASS) },
+						{ label: "Consumption:", element: ui.newAMOViewer(ship, CONSUMPTION) },
 					])
 				)
 				.addNode(
