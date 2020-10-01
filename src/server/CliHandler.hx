@@ -7,6 +7,8 @@ import model.SUniverse;
 import model.SPlayer;
 import model.SShip;
 import model.SJumpdrive;
+import model.STank;
+import model.SDrones;
 import model.SStar;
 import runtime.cpp.SqlDatastore;
 import commands.CommandDispatcher;
@@ -105,6 +107,14 @@ class CliHandler extends AbstractHandler {
 			var jumpdrive = objectLoader.createObject(SJumpdrive);
 			jumpdrive.owner = player;
 			jumpdrive.moveTo(ship);
+
+			var tank = objectLoader.createObject(STank);
+			tank.owner = player;
+			tank.moveTo(ship);
+
+			var drones = objectLoader.createObject(SDrones);
+			drones.owner = player;
+			drones.moveTo(ship);
 
             return universe;
         }
