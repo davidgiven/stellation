@@ -42,6 +42,10 @@ class CgiHandler extends AbstractHandler {
 				bind(SUniverse, universe);
 				bind(SGalaxy, universe.galaxy);
 
+				datastore.withTransaction(() -> {
+					catchup();
+				});
+
 				if (rpcReq.syncSession == 0) {
 					rpcReq.syncSession = datastore.createSyncSession();
 				}
@@ -49,8 +53,6 @@ class CgiHandler extends AbstractHandler {
 				var player = authenticator.authenticatePlayer(rpcReq.username, rpcReq.password);
 				log('authenticated as ${player.oid}');
 				bind(SPlayer, player);
-
-				clock.setTime(time.realtime());
 
 				var res: Dynamic = null;
 				var fault: Fault = null;

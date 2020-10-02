@@ -3,6 +3,7 @@ import utils.FaultDomain.INTERNAL;
 import haxe.Exception;
 import haxe.CallStack;
 import haxe.io.Output;
+import haxe.io.BytesOutput;
 using StringTools;
 using haxe.EnumTools;
 
@@ -89,6 +90,12 @@ class Fault extends Exception {
 				output.writeString("Caused by:\n");
 			}
 		}
+	}
+
+	public function getStackTrace(): String {
+		var bo = new BytesOutput();
+		dumpStackTrace(bo);
+		return bo.getBytes().toString();
 	}
 
 	public function serialise(): SerialisedFault {

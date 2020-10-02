@@ -15,6 +15,7 @@ class Tests {
             new model.InMemoryObjectsTest(),
             new model.SqlObjectsTest(),
             new model.SyncerTest(),
+			new model.TimersTest(),
             new runtime.cpp.SqliteTest(),
 		]);
 	}

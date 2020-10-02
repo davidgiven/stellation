@@ -3,6 +3,7 @@ package runtime.cpp;
 import haxe.Serializer;
 import haxe.Unserializer;
 import interfaces.IDatastore;
+import interfaces.ITimers;
 import model.Properties;
 import runtime.cpp.Sqlite;
 import runtime.shared.Time;
@@ -77,7 +78,7 @@ class SqlOidSet implements OidSet {
     }
 }
 
-class SqlDatastore implements IDatastore {
+class SqlDatastore implements IDatastore implements ITimers {
 	var time = inject(Time);
 	var db = inject(SqliteDatabase);
 
@@ -134,6 +135,20 @@ class SqlDatastore implements IDatastore {
         db.executeSql(
                 '
                 CREATE INDEX IF NOT EXISTS properties_by_oid ON properties (oid)
+            ');
+
+        db.executeSql(
+                '
+                CREATE TABLE IF NOT EXISTS timers (
+                    oid INTEGER NOT NULL REFERENCES objects(oid) ON DELETE CASCADE,
+					method TEXT,
+                    expiry INTEGER,
+					PRIMARY KEY (oid, method, expiry)
+                )
+            ');
+        db.executeSql(
+                '
+                CREATE INDEX IF NOT EXISTS timers_by_expiry ON timers (expiry ASC)
             ');
     }
 
@@ -365,5 +380,42 @@ class SqlDatastore implements IDatastore {
         }
         return set;
     }
+
+	public function setTimer(oid: Oid, method: String, expiry: Float): Void {
+        db.sqlStatement("INSERT OR REPLACE INTO timers (oid, method, expiry) VALUES (?, ?, ?)")
+                .bindOid(1, oid)
+                .bindString(2, method)
+                .bindFloat(3, expiry)
+                .executeStatement();
+	}
+
+	public function popOldestTimer(maxTime: Float): Null<Timer> {
+        var results = db.sqlStatement(
+                '
+                    SELECT oid, method, expiry FROM timers
+                    WHERE expiry < ?
+                    ORDER BY expiry ASC
+                    LIMIT 1
+                ')
+                .bindFloat(1, maxTime)
+                .executeSimpleQuery();
+		if (results == null) {
+			return null;
+		}
+
+		var timer = {
+			oid: results.get("oid").toOid(),
+			method: results.get("method").toString(),
+			expiry: results.get("expiry").toFloat()
+		};
+
+		db.sqlStatement("DELETE FROM timers WHERE oid = ? AND method = ? AND expiry = ?")
+				.bindOid(1, timer.oid)
+				.bindString(2, timer.method)
+				.bindFloat(3, timer.expiry)
+				.executeStatement();
+
+		return timer;
+	}
 }
 

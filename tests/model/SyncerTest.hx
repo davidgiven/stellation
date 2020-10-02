@@ -8,6 +8,7 @@ import runtime.cpp.SqlDatastore;
 import interfaces.IDatastore;
 import interfaces.IClock;
 import interfaces.ILogger;
+import interfaces.ITimers;
 import runtime.shared.ServerClock;
 import runtime.shared.Time;
 import runtime.shared.TraceLogger;
@@ -60,6 +61,7 @@ class SyncerTest extends TestCase {
 		datastore = new SqlDatastore();
         datastore.initialiseDatabase();
 		bind(IDatastore, datastore);
+		bind(ITimers, new FakeTimers());
 		
 		objectLoader = new ObjectLoader();
 		bind(ObjectLoader, objectLoader);

@@ -5,9 +5,12 @@ import interfaces.IAuthenticator;
 import interfaces.IClock;
 import interfaces.IConsole;
 import interfaces.IDatastore;
+import interfaces.ITimers;
+import interfaces.ILogger.Logger.log;
 import model.ObjectLoader;
 import model.SPlayer;
 import model.SUniverse;
+import model.SThing;
 import runtime.cpp.Console;
 import runtime.cpp.SqlDatastore;
 import runtime.cpp.Sqlite;
@@ -17,6 +20,7 @@ import utils.Fault;
 import utils.Injectomatic.bind;
 import utils.Injectomatic.inject;
 import utils.Random;
+import haxe.Exception;
 
 @:tink
 class AbstractHandler {
@@ -26,6 +30,7 @@ class AbstractHandler {
 	@:lazy var commandDispatcher = inject(CommandDispatcher);
 	@:lazy var clock = inject(IClock);
 	@:lazy var time = inject(Time);
+	@:lazy var timers = inject(ITimers);
 
     public function findUniverse(): SUniverse {
         return objectLoader.findUniverse();
@@ -39,9 +44,13 @@ class AbstractHandler {
 		bind(IAuthenticator, new ServerAuthenticator());
         bind(CommandDispatcher, new CommandDispatcher());
 
+		clock.setTime(time.realtime());
+
 		var database = Sqlite.open(filename);
 		bind(SqliteDatabase, database);
-        bind(IDatastore, new SqlDatastore());
+		var datastore = new SqlDatastore();
+        bind(IDatastore, datastore);
+		bind(ITimers, datastore);
         bind(ObjectLoader, new ObjectLoader());
 
         datastore.withTransaction(() -> {
@@ -61,6 +70,29 @@ class AbstractHandler {
 			throw d;
 		}
     }
+
+	public function catchup(): Void {
+		var now = clock.getTime();
+
+		while (true) {
+			var timer = timers.popOldestTimer(now);
+			if (timer == null)
+				break;
+
+			log('process timer ${timer}');
+			try {
+				var object = objectLoader.loadObject(timer.oid, SThing);
+				var cb = Reflect.field(object, timer.method);
+				cb(0);
+			} catch (f: Fault) {
+				log('timer failed: ${f.detail} ${f.getStackTrace()}');
+			} catch (e: Exception) {
+				var f = Fault.wrap(e);
+				log('timer failed: ${f.detail} ${f.getStackTrace()}');
+			}
+		}
+	}
+
 //fun withServer(dbfile: String, callback: () -> Unit) {
 //    val database by injection<IDatabase>()
 //    val datastore by injection<IDatastore>()

@@ -1,6 +1,7 @@
 package server;
 
 import interfaces.IDatastore;
+import interfaces.ILogger.Logger.log;
 import model.ObjectLoader;
 import model.SGalaxy;
 import model.SUniverse;
@@ -58,6 +59,10 @@ class CliHandler extends AbstractHandler {
             var player = objectLoader.loadObject(userOid, SPlayer);
             authenticator.setAuthenticatedPlayer(player);
 			bind(SPlayer, player);
+
+			datastore.withTransaction(() -> {
+				catchup();
+			});
 
             datastore.withTransaction(() -> {
 				try {

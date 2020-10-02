@@ -4,6 +4,8 @@ import utils.Oid;
 import utils.Injectomatic.inject;
 import utils.Random;
 import interfaces.IDatastore;
+import interfaces.ITimers;
+import interfaces.IClock;
 import model.Properties;
 import model.Properties.KIND;
 import tink.CoreApi;
@@ -24,6 +26,8 @@ class SThing implements HasProperties {
 	@:lazy var objectLoader = inject(ObjectLoader);
 	@:lazy var random = inject(Random);
 	@:lazy var player = inject(SPlayer);
+	@:lazy var timers = inject(ITimers);
+	@:lazy var clock = inject(IClock);
 	
 	@:sproperty public var owner: Null<SThing>;
 	@:sproperty public var location: Null<SThing>;
