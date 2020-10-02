@@ -9,6 +9,7 @@ using Math;
 
 class SShip extends SPhysicalThing {
 	private static final GLOBAL_PROPERTIES = [OWNER, MASS].toMap();
+	private static final TICK = 10.0; /* seconds */
 
 	@:sproperty public var consumption: AMO;
 	@:sproperty public var mass: Float;
@@ -17,7 +18,7 @@ class SShip extends SPhysicalThing {
 		update();
 		super.init();
 
-		pokeMaintenanceTimer();
+		kickTick();
 	}
 
 	public override function hasGlobalVisibility(property: AbstractProperty) {
@@ -42,12 +43,15 @@ class SShip extends SPhysicalThing {
 		mass = m;
 	}
 
-	@:keep
-	public function consumeMaintenanceCosts(duration: Float): Void {
+	public function starve() {
+	}
+
+	@:ifFeature("model.SShip.kickTick")
+	public function onTick(): Void {
 		var c = consumption;
-		var ca = c.a * duration;
-		var cm = c.m * duration;
-		var co = c.o * duration;
+		var ca = c.a * TICK;
+		var cm = c.m * TICK;
+		var co = c.o * TICK;
 		for (thing in contents.getAll()) {
 			if (Std.is(thing, STank)) {
 				var tank: STank = cast thing;
@@ -66,11 +70,15 @@ class SShip extends SPhysicalThing {
 			}
 		}
 
-		pokeMaintenanceTimer();
+		if ((ca > 0.0) || (cm > 0.0) || (co > 0.0)) {
+			starve();
+		}
+
+		kickTick();
 	}
 
-	public function pokeMaintenanceTimer() {
-		timers.setTimer(oid, "consumeMaintenanceCosts", clock.getTime() + 10.0);
+	public function kickTick() {
+		timers.setTimer(oid, "onTick", clock.getTime() + TICK);
 	}
 }
 

@@ -81,9 +81,10 @@ class AbstractHandler {
 
 			log('process timer ${timer}');
 			try {
+				clock.setTime(timer.expiry);
 				var object = objectLoader.loadObject(timer.oid, SThing);
 				var cb = Reflect.field(object, timer.method);
-				cb(0);
+				cb();
 			} catch (f: Fault) {
 				log('timer failed: ${f.detail} ${f.getStackTrace()}');
 			} catch (e: Exception) {
@@ -91,6 +92,8 @@ class AbstractHandler {
 				log('timer failed: ${f.detail} ${f.getStackTrace()}');
 			}
 		}
+
+		clock.setTime(now);
 	}
 
 //fun withServer(dbfile: String, callback: () -> Unit) {
