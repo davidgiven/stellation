@@ -29,7 +29,7 @@ class SThing implements HasProperties {
 	@:lazy var timers = inject(ITimers);
 	@:lazy var clock = inject(IClock);
 	
-	@:sproperty public var owner: Null<SThing>;
+	@:sproperty public var owner: Null<SPlayer>;
 	@:sproperty public var location: Null<SThing>;
 	@:sproperty public var contents: ObjectSet<SThing>;
 	@:sproperty public var name: String;

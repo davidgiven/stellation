@@ -16,6 +16,7 @@ class Tests {
             new model.SqlObjectsTest(),
             new model.SyncerTest(),
 			new model.TimersTest(),
+			new model.SHullTest(),
             new runtime.cpp.SqliteTest(),
 		]);
 	}

@@ -318,6 +318,8 @@ class Properties {
 	public static final CONSUMPTION = new StructProperty<AMO>("consumption");
 	public static final EMAILADDRESS = new StringProperty("email_address").setScope(SERVERONLY);
 	public static final FUEL = new StructProperty<AMO>("fuel");
+	public static final HULLDATA = new StructProperty<Hull>("hull_data");
+	public static final MODULEINDEX = new IntProperty("module_index");
 	public static final PLAYERS = new SetProperty("players", SPlayer).setScope(SERVERONLY);
 	public static final POSITION = new StructProperty<XY>("position");
 	public static final PRODUCTION = new StructProperty<AMO>("production");
@@ -325,14 +327,13 @@ class Properties {
     public static final BRIGHTNESS = new FloatProperty("brightness");
     public static final CONTENTS = new SetProperty("contents", SThing);
     public static final GALAXY = new ObjectProperty("galaxy", SGalaxy);
+    public static final HULLS = new SetProperty("hull", SHull).setScope(PRIVATE);
     public static final KIND = new StringProperty("kind");
     public static final LOCATION = new ObjectProperty("location", SThing);
     public static final MASS = new FloatProperty("mass");
     public static final NAME = new StringProperty("name");
-    public static final OWNER = new ObjectProperty("owner", SThing);
+    public static final OWNER = new ObjectProperty("owner", SPlayer);
     public static final SHIPS = new SetProperty("ships", SShip);
-    public static final HULLS = new SetProperty("hull", SHull).setScope(PRIVATE);
     public static final USERNAME = new StringProperty("name");
-	public static final HULLDATA = new StructProperty<Hull>("hull_data");
 }
 

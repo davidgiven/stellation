@@ -4,6 +4,7 @@ import model.Properties;
 
 class SModule extends SPhysicalThing {
 	@:sproperty public var active: Int;
+	@:sproperty public var moduleIndex: Int;
 
 	public override function init(): Void {
 		active = 0;

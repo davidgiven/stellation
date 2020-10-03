@@ -107,41 +107,23 @@ class CliHandler extends AbstractHandler {
 			var hull = objectLoader.createObject(SHull);
 			hull.owner = player;
 			hull.name = "Default hull";
-			hull.hullData = {
+			hull.setFrameData({
 				width: 5,
 				height: 5,
 				modules: 
 					[
-						"SJumpDrive",	"STank",	"SDrones",		null,		null,
+						"SJumpdrive",	"STank",	"SDrones",		null,		null,
 						null,			null,		null,			null,		null,
 						null,			null,		null,			null,		null,
 						null,			null,		null,			null,		null,
 						null,			null,		null,			null,		null,
 					]
-			};
+			});
 			player.hulls.add(hull);
 			hull.moveTo(player);
 
-			var ship = objectLoader.createObject(SShip);
-			ship.owner = player;
-			ship.name = '${player.name}\'s First Ship';
-			ship.hullData = hull.hullData;
+			var ship = hull.createShip();
 			ship.moveTo(objectLoader.loadObject(4, SStar));
-			player.ships.add(ship);
-
-			var jumpdrive = objectLoader.createObject(SJumpdrive);
-			jumpdrive.owner = player;
-			jumpdrive.moveTo(ship);
-
-			var tank = objectLoader.createObject(STank);
-			tank.owner = player;
-			tank.fuel = { a: 1000.0, m: 1000.0, o: 1000.0 };
-			tank.moveTo(ship);
-
-			var drones = objectLoader.createObject(SDrones);
-			drones.owner = player;
-			drones.moveTo(ship);
-
 			ship.update();
 
             return universe;

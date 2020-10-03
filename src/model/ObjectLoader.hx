@@ -62,6 +62,10 @@ class ObjectLoader {
 		return [for (k => v in allProperties) v];
 	}
 
+	public function getAllClasses(): Map<String, Class<SThing>> {
+		return CLASSES;
+	}
+
     public function loadRawObject<T: SThing>(oid: Oid, klass: Class<T>): T {
         if (!datastore.doesObjectExist(oid)) {
             throw objectNotVisibleException(oid);
@@ -113,15 +117,15 @@ class ObjectLoader {
 	}
 
     public static function objectNotVisibleException(oid: Oid): Fault {
-        return new Fault(INVALID_ARGUMENT).withDetail('object $oid does not exist or is not visible');
+        return new Fault(INVALID_ARGUMENT).withDetail('#$oid does not exist or is not visible');
     }
 
     private static function databaseTypeMismatchException(oid: Oid, kind: String, desired: String): Fault {
-        return new Fault(INVALID_ARGUMENT).withDetail('expected $oid to be a $desired, but it was a $kind');
+        return new Fault(INVALID_ARGUMENT).withDetail('expected #$oid to be a $desired, but it was a $kind');
     }
 
     private static function databaseBadKindException(oid: Oid, kind: String): Fault {
-        return new Fault(INTERNAL).withDetail('database $oid has kind $kind which I don\'t understand');
+        return new Fault(INTERNAL).withDetail('#$oid has kind $kind which I don\'t understand');
     }
 
     private static function getSimpleName<T: SThing>(klass: Class<T>): String {
