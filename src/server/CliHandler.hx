@@ -7,6 +7,7 @@ import model.SGalaxy;
 import model.SUniverse;
 import model.SPlayer;
 import model.SShip;
+import model.SHull;
 import model.SJumpdrive;
 import model.STank;
 import model.SDrones;
@@ -103,9 +104,28 @@ class CliHandler extends AbstractHandler {
 			authenticator.registerPlayer(player);
 			authenticator.setPassword(player, "fnord");
 
+			var hull = objectLoader.createObject(SHull);
+			hull.owner = player;
+			hull.name = "Default hull";
+			hull.hullData = {
+				width: 5,
+				height: 5,
+				modules: 
+					[
+						"SJumpDrive",	"STank",	"SDrones",		null,		null,
+						null,			null,		null,			null,		null,
+						null,			null,		null,			null,		null,
+						null,			null,		null,			null,		null,
+						null,			null,		null,			null,		null,
+					]
+			};
+			player.hulls.add(hull);
+			hull.moveTo(player);
+
 			var ship = objectLoader.createObject(SShip);
 			ship.owner = player;
 			ship.name = '${player.name}\'s First Ship';
+			ship.hullData = hull.hullData;
 			ship.moveTo(objectLoader.loadObject(4, SStar));
 			player.ships.add(ship);
 

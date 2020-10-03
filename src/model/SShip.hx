@@ -13,6 +13,7 @@ class SShip extends SPhysicalThing {
 
 	@:sproperty public var consumption: AMO;
 	@:sproperty public var mass: Float;
+	@:sproperty public var hullData: Hull;
 
 	public override function init() {
 		update();

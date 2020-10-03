@@ -11,6 +11,7 @@ class SPlayer extends SThing {
 	@:sproperty public var username: String;
 	@:sproperty public var visibleObjects: ObjectSet<SThing>;
 	@:sproperty public var ships: ObjectSet<SShip>;
+	@:sproperty public var hulls: ObjectSet<SHull>;
 
 	public function isGod(): Bool {
 		return oid == ObjectLoader.GOD_OID;
@@ -38,6 +39,9 @@ class SPlayer extends SThing {
 	public function calculateVisibleObjects(): Map<SThing, Noise> {
 		var set = new Map<SThing, Noise>();
 		set[this] = Noise;
+		for (thing in contents.getAll()) {
+			set.addMap(thing.calculateHierarchicalContents());
+		}
 		for (star => n in calculateVisibleStars()) {
 			set.addMap(star.calculateHierarchicalContents());
 		}

@@ -25,6 +25,12 @@ typedef MC = {
 	c: Int
 };
 
+typedef Hull = {
+	width: Int,
+	height: Int,
+	modules: Array<String>
+}
+
 enum Scope {
     SERVERONLY;
     PRIVATE;
@@ -325,6 +331,8 @@ class Properties {
     public static final NAME = new StringProperty("name");
     public static final OWNER = new ObjectProperty("owner", SThing);
     public static final SHIPS = new SetProperty("ships", SShip);
+    public static final HULLS = new SetProperty("hull", SHull).setScope(PRIVATE);
     public static final USERNAME = new StringProperty("name");
+	public static final HULLDATA = new StructProperty<Hull>("hull_data");
 }
 

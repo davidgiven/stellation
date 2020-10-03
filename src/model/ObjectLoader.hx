@@ -22,6 +22,7 @@ class ObjectLoader {
 		SJumpdrive,
 		SPlayer,
 		SShip,
+		SHull,
 		STank,
         SFactory,
         SGalaxy,

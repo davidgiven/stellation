@@ -13,10 +13,14 @@ import runtime.shared.ServerClock;
 import runtime.shared.Time;
 import runtime.shared.TraceLogger;
 import model.Properties;
+import model.Properties.NAME;
+import model.Properties.HULLS;
+import model.Properties.HULLDATA;
 import model.SUniverse;
 import model.SGalaxy;
 import model.SStar;
 import model.SPlayer;
+import model.SHull;
 import model.SShip;
 import model.SJumpdrive;
 import model.ObjectLoader;
@@ -42,6 +46,7 @@ class SyncerTest extends TestCase {
 	var star3: SStar;
 
 	var player1: SPlayer;
+	var hull: SHull;
 	var ship1: SShip;
 	var ship2: SShip;
 	var jumpdrive1: SJumpdrive;
@@ -85,7 +90,15 @@ class SyncerTest extends TestCase {
 		/* Player 1 has two ships, one each in star1 and star2 */
 
         player1 = objectLoader.createObject(SPlayer);
+		player1.name = "Player 1";
         player1.owner = player1;
+
+		hull = objectLoader.createObject(SHull);
+		hull.owner = player1;
+		hull.name = "Test hull";
+		hull.hullData = { width: 10, height: 10, modules: [] };
+		player1.hulls.add(hull);
+		hull.moveTo(player1);
 
         ship1 = objectLoader.createObject(SShip);
         ship1.owner = player1;
@@ -108,6 +121,7 @@ class SyncerTest extends TestCase {
 		/* Player x has one ship, in star2 */
 
         playerx = objectLoader.createObject(SPlayer);
+		playerx.name = "Player X";
         playerx.owner = player1;
 
         shipx = objectLoader.createObject(SShip);
@@ -129,7 +143,7 @@ class SyncerTest extends TestCase {
 
 	public function testVisibleObjects() {
 		Assert.same(
-			[star1, player1, ship1, jumpdrive1, star2, ship2, jumpdrive2, shipx, jumpdrivex].toMap(),
+			[star1, player1, hull, ship1, jumpdrive1, star2, ship2, jumpdrive2, shipx, jumpdrivex].toMap(),
 			player1.calculateVisibleObjects());
 		Assert.same(
 			[star2, playerx, shipx, jumpdrivex, ship2, jumpdrive2].toMap(),
@@ -147,6 +161,7 @@ class SyncerTest extends TestCase {
 			star2.oid,
 			star3.oid,
 			player1.oid,
+			hull.oid,
 			ship1.oid,
 			jumpdrive1.oid,
 			ship2.oid,
@@ -154,9 +169,10 @@ class SyncerTest extends TestCase {
 			shipx.oid,
 			jumpdrivex.oid
 		].toMap(), [for (k in p.keys()) k].toMap());
-		Assert.isTrue(p[star1.oid].exists("name"));
-		Assert.isTrue(p[star2.oid].exists("name"));
-		Assert.isTrue(p[star3.oid].exists("name"));
+		Assert.isTrue(p[star1.oid].exists(NAME.name));
+		Assert.isTrue(p[star2.oid].exists(NAME.name));
+		Assert.isTrue(p[star3.oid].exists(NAME.name));
+		Assert.isTrue(p[player1.oid].exists(NAME.name));
 	}
 
 	public function testIncrementalSync() {
@@ -176,9 +192,9 @@ class SyncerTest extends TestCase {
         star1.name = "Fnord";
 		p = syncer.exportSyncPacket(player1, session);
 		Assert.same([
-				{ oid: star1.oid, name: "name" },
+				{ oid: star1.oid, name: NAME.name },
 			].toMap(), getChangedProperties(p).toMap());
-		Assert.same("Fnord", p[star1.oid]["name"]);
+		Assert.same("Fnord", p[star1.oid][NAME.name]);
 
         /* Sync again with no changes. */
 
@@ -201,7 +217,17 @@ class SyncerTest extends TestCase {
 
         ship2.moveTo(star2);
         p = syncer.exportSyncPacket(player1, session);
-		Assert.same("Floop", p[shipx.oid]["name"]);
+		Assert.same("Floop", p[shipx.oid][NAME.name]);
+	}
+
+	/* Hulls are a bit weird as they're globally visible to the owning player. */
+	public function testHull() {
+        var session = datastore.createSyncSession();
+        var p = syncer.exportSyncPacket(player1, session);
+
+		Assert.isTrue(p[player1.oid].exists(NAME.name));
+		Assert.isTrue(p[player1.oid].exists(HULLS.name));
+		Assert.isTrue(p[hull.oid].exists(HULLDATA.name));
 	}
 
 	private static function getChangedProperties(syncMessage: SyncMessage): Array<PropTuple> {
