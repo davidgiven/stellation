@@ -70,6 +70,19 @@ class AbstractDatastoreTest extends TestCase {
 		Assert.same({ a: 1, b: "B" }, i);
     }
 
+    function testSetGetNullStruct() {
+        var o = datastore.createObject();
+        datastore.setStructProperty(o, "struct", null);
+        var i = datastore.getStructProperty(o, "struct");
+		Assert.same(null, i);
+    }
+
+    function testGetUndefinedStruct() {
+        var o = datastore.createObject();
+        var i = datastore.getStructProperty(o, "struct");
+		Assert.same(null, i);
+    }
+
     function testHasProperty() {
         var o = datastore.createObject();
 		Assert.isFalse(datastore.hasProperty(o, "integer"));

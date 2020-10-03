@@ -278,6 +278,9 @@ class SqlDatastore implements IDatastore implements ITimers {
 
     public function getStructProperty<T>(oid: Oid, name: String): T {
 		var bytes = getStringProperty(oid, name);
+		if (bytes == null) {
+			return null;
+		}
 		var u = new Unserializer(bytes);
 		u.setResolver(null);
 		return u.unserialize();
